@@ -12,6 +12,16 @@ module.exports = BaseView.extend({
 
     this.$el.append((new SplashWelcomeView()).$el);
     this.$el.append((new MyAppsView()).$el);
+    this._initGotoStore();
+  },
+
+  _initGotoStore: function() {
+    this.$('a.goto-store').click(_.debounce(function() {
+      nwGui.Shell.openExternal('https://www.leapmotion.com/apps');
+      return false;
+    }, 350));
   }
+
+
 });
 

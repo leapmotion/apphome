@@ -1,3 +1,10 @@
 .page-container
   h1
     color green
+  a.goto-store
+    position: absolute
+    top 10px
+    right 10px
+    font-size 18px
+    color red
+    cursor pointer

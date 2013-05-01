@@ -9,9 +9,9 @@
   <script>
     global.$ = window.$;
     global._ = window._;
-    window.gui = require('nw.gui');
+    global.nwGui = window.nwGui = require('nw.gui');
     window.onload = function() {
-      gui.Window.get().show();
+      nwGui.Window.get().show();
     };
     require('./app/airspace.js')
   </script>
