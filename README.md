@@ -2,11 +2,11 @@
 
 Mac / Linux:
 
-    bin/airtime.sh
+    bin/airspace.sh
 
 Windows:
 
-double click bin/airtime.cmd
+double click bin/airspace.cmd
 
 ## Notes
 
