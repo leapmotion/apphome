@@ -1,4 +1,4 @@
-var PageContainerView = require('./views/page-container/view.js');
+var PageContainerView = require('./views/page-container/page-container.js');
 var uiGlobals = require('./ui-globals.js');
 
 $(window.document).ready(function() {

@@ -1,18 +1,21 @@
 var fs = require('fs');
+var path = require('path');
 var stylus = require('stylus');
 var jade = require('jade');
 
-var cssRegistry = {};
+var injectedCssFiles = {};
 
 module.exports = window.Backbone.View.extend({
 
   injectCss: function() {
-    var dir = this.viewDir;
-    if (dir && !cssRegistry[dir]) {
-      cssRegistry[dir] = true;
-      var path = dir + '/' + 'style.stylus';
-      var src = fs.readFileSync(path, 'utf8');
-      stylus.render(src, { filename: path }, function(err, css){
+    if (!this.viewDir) {
+      throw new Error('this.viewDir not set');
+    }
+    var cssPath = path.join(this.viewDir, path.basename(this.viewDir) + '.stylus');
+    if (!injectedCssFiles[cssPath]) {
+      injectedCssFiles[cssPath] = true;
+      var src = fs.readFileSync(cssPath, 'utf8');
+      stylus.render(src, { filename: cssPath }, function(err, css){
         if (err) {
           throw err;
         } else {
@@ -23,13 +26,13 @@ module.exports = window.Backbone.View.extend({
   },
 
   templateHtml: function(data, jadeOpts) {
-    if (!this.templateFn) {
-      var path = this.viewDir + '/' + 'template.jade';
-      var src = fs.readFileSync(path, 'utf8');
-      this.templateFn = jade.compile(src, jadeOpts || {});
+    if (!this.viewDir) {
+      throw new Error('this.viewDir not set');
     }
     if (!this.templateFn) {
-      throw new Error('template.jade not found in view directory: ' + this.viewDir);
+      var templatePath = path.join(this.viewDir, path.basename(this.viewDir) + '.jade');
+      var src = fs.readFileSync(templatePath, 'utf8');
+      this.templateFn = jade.compile(src, jadeOpts || {});
     }
     return this.templateFn(data);
   }

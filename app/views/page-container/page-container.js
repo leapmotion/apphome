@@ -1,6 +1,6 @@
 var BaseView = require('../base-view.js');
-var SplashWelcomeView = require('../splash-welcome/view.js');
-var MyAppsView = require('../my-apps/view.js');
+var SplashWelcomeView = require('../splash-welcome/splash-welcome.js');
+var MyAppsView = require('../my-apps/my-apps.js');
 
 module.exports = BaseView.extend({
   viewDir: __dirname,

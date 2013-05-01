@@ -1,5 +1,5 @@
 var BaseView = require('../base-view.js');
-var InstalledAppView = require('../installed-app/view.js');
+var InstalledAppView = require('../installed-app/installed-app.js');
 
 module.exports = BaseView.extend({
   viewDir: __dirname,
