@@ -1,0 +1,5 @@
+.my-apps
+  list-style none
+
+  li
+    float left

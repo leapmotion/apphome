@@ -1,2 +1,5 @@
-console.log('hi!!!! window.onload in index.js');
+function todoSomething(msg) {
+  console.log('tmp - ' + msg);
+};
 
+module.exports.todoSomething = todoSomething;

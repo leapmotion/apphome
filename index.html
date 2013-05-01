@@ -2,16 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8"/>
+  <script src="./static/js/jquery-2.0.0.js"></script>
+  <script src="./static/js/underscore-1.4.4.js"></script>
+  <script src="./static/js/backbone-1.0.0.js"></script>
+  <link rel="stylesheet" type="text/css" href="./static/css/shared.css"/>
   <script>
+    global.$ = window.$;
+    global._ = window._;
     window.gui = require('nw.gui');
     window.onload = function() {
       gui.Window.get().show();
     };
+    require('./app/airspace.js')
   </script>
 </head>
 <body>
-  <script src="app/utils/db.js"></script>
-  <script src="app/airspace.js"></script>
 </body>
 </html>
 

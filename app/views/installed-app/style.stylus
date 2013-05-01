@@ -1,0 +1,9 @@
+.installed-app
+  img
+    width 48px
+    height 48px
+    cursor pointer
+  margin 20px
+
+  .launching
+    background-color #efefef

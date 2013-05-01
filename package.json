@@ -5,10 +5,14 @@
   "main": "index.html",
   "node-main": "preloaded.js",
   "window": {
-    "show": false
+    "show": false,
+    "toolbar": true
   },
   "dependencies": {
-    "jade": "0.30.0"
+    "underscore": "1.4.4",
+    "backbone": "1.0.0",
+    "jade": "0.30.0",
+    "stylus": "0.32.1"
   },
   "devDependencies": {
     "vows": "0.5.x",
