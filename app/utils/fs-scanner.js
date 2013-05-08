@@ -19,7 +19,6 @@ function FsScanner(args) {
   } else {
     this._allowedAppNames = args.allowedAppNames;
   }
-
 }
 
 FsScanner.prototype = {
@@ -60,9 +59,10 @@ FsScanner.prototype = {
       }
       var parsedPlist = plist.parseStringSync(stdout.toString());
       var keyFile = path.dirname(path.dirname(plistPath));
+
       var attributes = {
         name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
-        version: parsedPlist.CFBundleVersion,
+        version: parsedPlist.CFBundleVersion || parsedPlist.CFBundleShortVersionString,
         keyFile: keyFile
       };
 
@@ -107,7 +107,7 @@ FsScanner.prototype = {
       name: extractValueForKey('DisplayName'),
       version: extractValueForKey('DisplayVersion'),
       keyFile: extractValueForKey('InstallLocation')
-    }
+    };
 
     cb(null, this._createLocalLeapApp(attributes));
   },
@@ -117,9 +117,11 @@ FsScanner.prototype = {
         !attributes.version || !this._isAllowedAppName(attributes.name)) {
       return null;
     }
+
     var md5hash = crypto.createHash('md5');
     md5hash.update(attributes.keyFile);
     attributes.id = md5hash.digest('hex');
+
     return new LocalLeapApp(attributes);
   },
 
