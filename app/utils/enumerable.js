@@ -30,4 +30,3 @@ function makeEnum(arrayOrMapOfArrays, namespace) {
 }
 
 exports.make = makeEnum;
-

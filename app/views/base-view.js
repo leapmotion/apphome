@@ -36,4 +36,5 @@ module.exports = window.Backbone.View.extend({
     }
     return this.templateFn(data);
   }
+
 });

@@ -1,5 +1,3 @@
-var Backbone = require('backbone');
-
-module.exports = Backbone.Model.extend({
+module.exports = window.Backbone.Model.extend({
 
 });

@@ -4,6 +4,6 @@ var uiGlobals = _.extend({}, window.Backbone.Events);
 
 uiGlobals.Event = enumerable.make([
   'SplashWelcomeClosed'
-], 'UIGlobalEvent');
+], 'UiGlobalEvent');
 
 module.exports = uiGlobals;
