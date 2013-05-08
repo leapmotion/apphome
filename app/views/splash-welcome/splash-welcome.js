@@ -1,17 +1,17 @@
 var BaseView = require('../base-view.js');
 
 module.exports = BaseView.extend({
+
   viewDir: __dirname,
 
   initialize: function() {
-    var itself = this;
-    itself.injectCss();
-    itself.setElement($(itself.templateHtml()));
+    this.injectCss();
+    this.setElement($(this.templateHtml()));
 
-    itself.$el.on('click', function() {
+    this.$el.on('click', function() {
       uiGlobals.trigger(uiGlobals.Event.SplashWelcomeClosed);
-      itself.$el.remove();
-    });
+      this.$el.remove();
+    }.bind(this));
   }
-});
 
+});

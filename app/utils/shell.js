@@ -3,4 +3,3 @@ function escape(string) {
 }
 
 exports.escape = escape;
-

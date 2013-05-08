@@ -3,7 +3,9 @@ var SplashWelcomeView = require('../splash-welcome/splash-welcome.js');
 var MyAppsView = require('../my-apps/my-apps.js');
 
 module.exports = BaseView.extend({
+
   viewDir: __dirname,
+
   className: 'page-container',
 
   initialize: function() {
@@ -22,6 +24,4 @@ module.exports = BaseView.extend({
     }, 350));
   }
 
-
 });
-
