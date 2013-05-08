@@ -42,28 +42,50 @@ function mockFsScannerForPlatform(platform, args) {
 
 describe('FsScanner', function() {
   describe('scan on Windows', function() {
-    var fsScanner = mockFsScannerForPlatform('win32', {
-      allowedAppNames: [ 'microsoft silverlight', 'quickbooks' ]
-    });
-    it('should work', function(done) {
+
+    it('should only return the allowed apps', function(done) {
+      var fsScanner = mockFsScannerForPlatform('win32', {
+        allowedAppNames: [ 'microsoft silverlight', 'quickbooks' ]
+      });
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
         assert.equal(apps.length, 2, '2 apps matching allowed names');
         done();
       });
     });
+
+    it('should list all apps when no whitelist is specified', function(done) {
+      var fsScanner = mockFsScannerForPlatform('win32');
+      fsScanner.scan(function(err, apps) {
+        assert.ok(!err, err && err.stack);
+        assert.equal(apps.length, 55, '55 total apps');
+        done();
+      });
+    });
+
   });
 
   describe('scan on Mac', function() {
-    var fsScanner = mockFsScannerForPlatform('darwin', {
-      allowedAppNames: [ 'microsoft powerpoint', 'SketchUp' ]
-    });
-    it('should work', function(done) {
+
+    it('should only return the allowed apps', function(done) {
+      var fsScanner = mockFsScannerForPlatform('darwin', {
+        allowedAppNames: [ 'microsoft powerpoint', 'SketchUp' ]
+      });
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
         assert.equal(apps.length, 2, '2 apps matching allowed names');
         done();
       });
     });
+
+    it('should list all apps when no whitelist is specified', function(done) {
+      var fsScanner = mockFsScannerForPlatform('darwin');
+      fsScanner.scan(function(err, apps) {
+        assert.ok(!err, err && err.stack);
+        assert.equal(apps.length, 103, '103 total apps');
+        done();
+      });
+    });
+
   });
 });

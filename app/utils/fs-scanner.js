@@ -82,7 +82,7 @@ FsScanner.prototype = {
       if (err) {
         return cb(err);
       }
-      var registryChunks = _.invoke(stdouts, 'toString').join('\n').split('HKEY_LOCAL_MACHINE');
+      var registryChunks = _.invoke(stdouts, 'toString').join('\n').split(/^HKEY_LOCAL_MACHINE/m);
       registryChunks.shift(); // remove empty first chunk
       async.map(registryChunks, this._createLeapAppFromRegistryChunk.bind(this),
         function(err, leapApps) {
