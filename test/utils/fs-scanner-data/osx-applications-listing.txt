@@ -1,0 +1,104 @@
+/Applications/Address Book.app/Contents/Info.plist
+/Applications/Adium.app/Contents/Info.plist
+/Applications/Adobe Download Assistant.app/Contents/Info.plist
+/Applications/App Store.app/Contents/Info.plist
+/Applications/Automator.app/Contents/Info.plist
+/Applications/Calculator.app/Contents/Info.plist
+/Applications/Charles.app/Contents/Info.plist
+/Applications/Chess.app/Contents/Info.plist
+/Applications/Chromium.app/Contents/Info.plist
+/Applications/Dashboard.app/Contents/Info.plist
+/Applications/Dictionary.app/Contents/Info.plist
+/Applications/Divvy.app/Contents/Info.plist
+/Applications/DivX/DivX Community.app/Contents/Info.plist
+/Applications/DivX/DivX Products.app/Contents/Info.plist
+/Applications/DivX/DivX Support.app/Contents/Info.plist
+/Applications/DivX/Uninstall DivX for Mac.app/Contents/Info.plist
+/Applications/DivX Converter.app/Contents/Info.plist
+/Applications/DivX Plus Player.app/Contents/Info.plist
+/Applications/Dropbox.app/Contents/Info.plist
+/Applications/DVD Player.app/Contents/Info.plist
+/Applications/Firefox.app/Contents/Info.plist
+/Applications/Flowdock.app/Contents/Info.plist
+/Applications/Flux.app/Contents/Info.plist
+/Applications/Font Book.app/Contents/Info.plist
+/Applications/Front Row.app/Contents/Info.plist
+/Applications/GarageBand.app/Contents/Info.plist
+/Applications/Google Chrome Canary.app/Contents/Info.plist
+/Applications/Google Chrome.app/Contents/Info.plist
+/Applications/Google Drive.app/Contents/Info.plist
+/Applications/Google SketchUp 8/SketchUp.app/Contents/Info.plist
+/Applications/GrabBox.app/Contents/Info.plist
+/Applications/iCal.app/Contents/Info.plist
+/Applications/iChat.app/Contents/Info.plist
+/Applications/IcoMaker.app/Contents/Info.plist
+/Applications/iDVD.app/Contents/Info.plist
+/Applications/Image Capture.app/Contents/Info.plist
+/Applications/iMovie.app/Contents/Info.plist
+/Applications/iPhoto.app/Contents/Info.plist
+/Applications/iSync.app/Contents/Info.plist
+/Applications/iTunes.app/Contents/Info.plist
+/Applications/iWeb.app/Contents/Info.plist
+/Applications/iWork '09/Keynote.app/Contents/Info.plist
+/Applications/iWork '09/Numbers.app/Contents/Info.plist
+/Applications/iWork '09/Pages.app/Contents/Info.plist
+/Applications/join.me.app/Contents/Info.plist
+/Applications/Leap.app/Contents/Info.plist
+/Applications/LimeChat.app/Contents/Info.plist
+/Applications/Mail.app/Contents/Info.plist
+/Applications/Microsoft Office 2008/Microsoft Entourage.app/Contents/Info.plist
+/Applications/Microsoft Office 2008/Microsoft Excel.app/Contents/Info.plist
+/Applications/Microsoft Office 2008/Microsoft Messenger.app/Contents/Info.plist
+/Applications/Microsoft Office 2008/Microsoft PowerPoint.app/Contents/Info.plist
+/Applications/Microsoft Office 2008/Microsoft Word.app/Contents/Info.plist
+/Applications/OpenOffice.org.app/Contents/Info.plist
+/Applications/Photo Booth.app/Contents/Info.plist
+/Applications/Preview.app/Contents/Info.plist
+/Applications/QuickTime Player.app/Contents/Info.plist
+/Applications/RescueTime.app/Contents/Info.plist
+/Applications/RubyMine.app/Contents/Info.plist
+/Applications/Safari.app/Contents/Info.plist
+/Applications/Seashore.app/Contents/Info.plist
+/Applications/Skype.app/Contents/Info.plist
+/Applications/StarCraft II/StarCraft II Editor.app/Contents/Info.plist
+/Applications/StarCraft II/StarCraft II Public Test.app/Contents/Info.plist
+/Applications/StarCraft II/StarCraft II.app/Contents/Info.plist
+/Applications/Stickies.app/Contents/Info.plist
+/Applications/Sublime Text 2.app/Contents/Info.plist
+/Applications/System Preferences.app/Contents/Info.plist
+/Applications/TextEdit.app/Contents/Info.plist
+/Applications/Time Machine.app/Contents/Info.plist
+/Applications/Transmission.app/Contents/Info.plist
+/Applications/Twitter.app/Contents/Info.plist
+/Applications/Utilities/Activity Monitor.app/Contents/Info.plist
+/Applications/Utilities/Adobe AIR Application Installer.app/Contents/Info.plist
+/Applications/Utilities/Adobe AIR Uninstaller.app/Contents/Info.plist
+/Applications/Utilities/Adobe Flash Player Install Manager.app/Contents/Info.plist
+/Applications/Utilities/AirPort Utility.app/Contents/Info.plist
+/Applications/Utilities/AppleScript Editor.app/Contents/Info.plist
+/Applications/Utilities/Audio MIDI Setup.app/Contents/Info.plist
+/Applications/Utilities/Bluetooth File Exchange.app/Contents/Info.plist
+/Applications/Utilities/Boot Camp Assistant.app/Contents/Info.plist
+/Applications/Utilities/ColorSync Utility.app/Contents/Info.plist
+/Applications/Utilities/Console.app/Contents/Info.plist
+/Applications/Utilities/DigitalColor Meter.app/Contents/Info.plist
+/Applications/Utilities/Disk Utility.app/Contents/Info.plist
+/Applications/Utilities/Expose.app/Contents/Info.plist
+/Applications/Utilities/Grab.app/Contents/Info.plist
+/Applications/Utilities/Grapher.app/Contents/Info.plist
+/Applications/Utilities/Java Preferences.app/Contents/Info.plist
+/Applications/Utilities/Keychain Access.app/Contents/Info.plist
+/Applications/Utilities/Migration Assistant.app/Contents/Info.plist
+/Applications/Utilities/Network Utility.app/Contents/Info.plist
+/Applications/Utilities/Podcast Capture.app/Contents/Info.plist
+/Applications/Utilities/RAID Utility.app/Contents/Info.plist
+/Applications/Utilities/Remote Install Mac OS X.app/Contents/Info.plist
+/Applications/Utilities/Spaces.app/Contents/Info.plist
+/Applications/Utilities/System Profiler.app/Contents/Info.plist
+/Applications/Utilities/Terminal.app/Contents/Info.plist
+/Applications/Utilities/VoiceOver Utility.app/Contents/Info.plist
+/Applications/Utilities/X11.app/Contents/Info.plist
+/Applications/VLC.app/Contents/Info.plist
+/Applications/VMware Fusion.app/Contents/Info.plist
+/Applications/WebStorm.app/Contents/Info.plist
+/Applications/Wireshark.app/Contents/Info.plist

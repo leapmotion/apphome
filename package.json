@@ -9,12 +9,15 @@
     "toolbar": true
   },
   "dependencies": {
-    "underscore": "1.4.4",
-    "backbone": "1.0.0",
     "jade": "0.30.0",
-    "stylus": "0.32.1"
+    "stylus": "0.32.1",
+    "async": "0.2.8",
+    "plist": "git://github.com/proxv/node-plist.git#0323990bddd438332db5ee62b4d261799a58b210"
   },
   "devDependencies": {
+    "mocha": "1.9.x",
+    "rewire": "1.1.3",
+    "underscore": "1.4.4"
   },
   "engine": "node >= 0.10.0"
 }

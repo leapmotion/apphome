@@ -1,0 +1,1025 @@
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\AddressBook
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\CNXT_AUDIO_HDA
+    DisplayName    REG_SZ    Conexant HD Audio
+    DisplayVersion    REG_SZ    8.54.8.50
+    VersionMajor    REG_SZ    8
+    VersionMinor    REG_SZ    0
+    Publisher    REG_SZ    Conexant
+    DisplayIcon    REG_SZ    C:\Program Files\CONEXANT\CNXT_AUDIO_HDA\UIU64a.exe
+    UninstallString    REG_SZ    C:\Program Files\CONEXANT\CNXT_AUDIO_HDA\UIU64a.exe -U -G -IAcrPebwa.inf
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Connection Manager
+    SystemComponent    REG_DWORD    0x1
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\CxAudMsg
+    UninstallString    REG_SZ    C:\Program Files\Conexant\CxAudMsg\SETUP64.EXE -U -ICxAudMsg
+    CorrespondingDevice    REG_SZ    {4d36e96c-e325-11ce-bfc1-08002be10318}\0001
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\DirectDrawEx
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\DXM_Runtime
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Elantech
+    DisplayName    REG_SZ    ETDWare PS/2-X64 8.0.6.0_WHQL
+    UninstallString    REG_EXPAND_SZ    %ProgramFiles%\Elantech\ETDUn_inst.exe
+    DisplayVersion    REG_SZ    8.0.6.0
+    DisplayIcon    REG_EXPAND_SZ    %ProgramFiles%\Elantech\ETDCtrl.exe
+    Publisher    REG_SZ    ELAN Microelectronic Corp.
+    URLInfoAbout    REG_SZ    www.emc.com.tw
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Fontcore
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\IE40
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\IE4Data
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\IE5BAKEX
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\IEData
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft .NET Framework 4 Client Profile
+    DisplayIcon    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Client\DisplayIcon.ico
+    DisplayName    REG_SZ    Microsoft .NET Framework 4 Client Profile
+    DisplayVersion    REG_SZ    4.0.30319
+    EstimatedSize    REG_DWORD    0x9b34
+    UninstallString    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Client\Setup.exe /repair /x86 /x64 /parameterfolder Client
+    VersionMinor    REG_SZ    0
+    VersionMajor    REG_SZ    4
+    Publisher    REG_SZ    Microsoft Corporation
+    InstallLocation    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Client
+    UninstallPath    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Client
+    Readme    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164156
+    URLInfoAbout    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164164
+    URLUpdateInfo    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164165
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft .NET Framework 4 Extended
+    DisplayIcon    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Extended\DisplayIcon.ico
+    DisplayName    REG_SZ    Microsoft .NET Framework 4 Extended
+    DisplayVersion    REG_SZ    4.0.30319
+    EstimatedSize    REG_DWORD    0xcff1
+    UninstallString    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Extended\Setup.exe /repair /x86 /x64 /parameterfolder Extended
+    VersionMinor    REG_SZ    0
+    VersionMajor    REG_SZ    4
+    Publisher    REG_SZ    Microsoft Corporation
+    InstallLocation    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Extended
+    UninstallPath    REG_SZ    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SetupCache\Extended
+    Readme    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164156
+    URLInfoAbout    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164164
+    URLUpdateInfo    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164165
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Security Client
+    DisplayIcon    REG_SZ    C:\Program Files\Microsoft Security Client\EppManifest.dll,-100
+    DisplayName    REG_SZ    Microsoft Security Essentials
+    UninstallString    REG_SZ    C:\Program Files\Microsoft Security Client\Setup.exe /x
+    Publisher    REG_SZ    Microsoft Corporation
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    InstallLocation    REG_SZ    C:\Program Files\Microsoft Security Client
+    URLInfoAbout    REG_SZ    http://go.microsoft.com/fwlink/?LinkID=195291&mkt=en-us
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x2
+    Version    REG_DWORD    0x40200df
+    DisplayVersion    REG_SZ    4.2.223.1
+    InstallDate    REG_SZ    20130409
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\MobileOptionPack
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\MPlayer2
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\SchedulingAgent
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartAudio
+    DisplayVersion    REG_SZ    2.50.20.0
+    VersionMajor    REG_SZ    2
+    VersionMinor    REG_SZ    50
+    Publisher    REG_SZ    Conexant Systems
+    InstallLocation    REG_SZ    C:\Program Files\Conexant\SmartAudio
+    UninstallString    REG_SZ    C:\Program Files\Conexant\SmartAudio\SETUP64.EXE -U -ISmartAudio -SM=SMAUDIO.EXE,1801
+    CorrespondingDevice    REG_SZ    {4d36e96c-e325-11ce-bfc1-08002be10318}\0001
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\WIC
+    NoRemove    REG_DWORD    0x1
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\Zune
+    DisplayIcon    REG_SZ    C:\Program Files\Zune\Zune.exe
+    DisplayName    REG_SZ    Zune
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    InstallLocation    REG_SZ    C:\Program Files\Zune\
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    UninstallPath    REG_SZ    C:\Program Files\Zune\ZuneSetup.exe
+    UninstallString    REG_SZ    C:\Program Files\Zune\ZuneSetup.exe /x
+    URLUpdateInfo    REG_SZ
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{07EEE598-5F21-4B57-B40B-46592625B3D9}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{07EEE598-5F21-4B57-B40B-46592625B3D9}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2e4
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{07EEE598-5F21-4B57-B40B-46592625B3D9}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x416
+    DisplayName    REG_SZ    Zune Language Pack (PTB)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{180C8888-50F1-426B-A9DC-AB83A1989C65}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.3538.0513
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\adeaf9311cc570007\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{180C8888-50F1-426B-A9DC-AB83A1989C65}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x1c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{180C8888-50F1-426B-A9DC-AB83A1989C65}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf040dd2
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Windows Live Language Selector
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{1ACC8FFB-9D84-4C05-A4DE-D28A9BC91698}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    7.250.4232.0
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\ac375d601cc570004\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{1ACC8FFB-9D84-4C05-A4DE-D28A9BC91698}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2a2c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{1ACC8FFB-9D84-4C05-A4DE-D28A9BC91698}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x7
+    VersionMinor    REG_DWORD    0xfa
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x7fa1088
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Windows Live ID Sign-in Assistant
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{1FB31F44-D4D0-4D76-944A-A1A5D79FD321}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.3538.0513
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\556d79d91cc570807\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{1FB31F44-D4D0-4D76-944A-A1A5D79FD321}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x1c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{1FB31F44-D4D0-4D76-944A-A1A5D79FD321}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf040dd2
+    Language    REG_DWORD    0x9
+    DisplayName    REG_SZ    Windows Live Family Safety
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{2C4E2E4E-A7C9-4CCB-BF03-FE6EBD5D4AB7}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{2C4E2E4E-A7C9-4CCB-BF03-FE6EBD5D4AB7}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x3bf
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{2C4E2E4E-A7C9-4CCB-BF03-FE6EBD5D4AB7}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Windows Mobile Device Updater Component
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{2E12FEB9-11CD-5B44-D51B-0837225A6594}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ    http://www.ati.com/support
+    DisplayVersion    REG_SZ    1.0.60524.2309
+    HelpLink    REG_EXPAND_SZ    http://www.ati.com/support
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ    C:\Program Files\Common Files\ATI Technologies\Multimedia\
+    InstallSource    REG_SZ    C:\OEM\Preload\Autorun\DRV\AMD VGA Chip UMA\Packages\Apps\WMVDecoder64\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{2E12FEB9-11CD-5B44-D51B-0837225A6594}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    ATI Technologies Inc.
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x1fb
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{2E12FEB9-11CD-5B44-D51B-0837225A6594}
+    URLInfoAbout    REG_SZ    http://www.ati.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x1
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x100ec6c
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    AMD Media Foundation Decoders
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{3605D89A-BD66-F5C5-779B-BE9110B41077}
+    UninstallString    REG_SZ    msiexec /q/x{3605D89A-BD66-F5C5-779B-BE9110B41077} REBOOT=ReallySuppress
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ    ATI Customer Support
+    DisplayVersion    REG_SZ    3.0.829.0
+    HelpLink    REG_EXPAND_SZ    http://support.ati.com
+    HelpTelephone    REG_SZ    905-882-2600
+    InstallDate    REG_SZ    20110925
+    InstallLocation    REG_SZ    C:\Program Files\ATI\CIM\
+    InstallSource    REG_SZ    C:\OEM\Preload\Autorun\DRV\AMD VGA Chip UMA\Packages\Apps\CIM\Win64\
+    NoRemove    REG_DWORD    0x1
+    Publisher    REG_SZ    ATI Technologies, Inc.
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x59d8
+    URLInfoAbout    REG_SZ    http://www.ati.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x3
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x300033d
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    ATI Catalyst Install Manager
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{4B6C7001-C7D6-3710-913E-5BC23FCE91E6}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    9.0.30729.4148
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20111031
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    c:\eefb72cfbf9d8b3999ce60a0788790\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{4B6C7001-C7D6-3710-913E-5BC23FCE91E6}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x310
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{4B6C7001-C7D6-3710-913E-5BC23FCE91E6}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x9
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x9007809
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.4148
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{503F672D-6C84-448A-8F8F-4BC35AC83441}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ    From online registration through personal assistance, ATI Customer Care is focused on delivering accurate, up-to-date product support for optimum usability and performance.
+    DisplayVersion    REG_SZ    2.4.650.9
+    HelpLink    REG_EXPAND_SZ    http://www.ati.com/support
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ    C:\Program Files (x86)\AMD APP\
+    InstallSource    REG_SZ    C:\OEM\Preload\Autorun\DRV\AMD VGA Chip UMA\Packages\Apps\OpenCL64\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{503F672D-6C84-448A-8F8F-4BC35AC83441}
+    Publisher    REG_SZ    Advanced Micro Devices Inc.
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x7aa0
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{503F672D-6C84-448A-8F8F-4BC35AC83441}
+    URLInfoAbout    REG_SZ    http://developer.amd.com/stream
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x2
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x204028a
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    AMD APP SDK Runtime
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{528E2373-AE49-4802-B4A8-326BBFDAD6A0}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    9.1.54.1
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20111031
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Users\slumming\AppData\Local\Temp\vmware_1320127246\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{528E2373-AE49-4802-B4A8-326BBFDAD6A0}
+    Publisher    REG_SZ    VMware, Inc.
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x184
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{528E2373-AE49-4802-B4A8-326BBFDAD6A0}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x9
+    VersionMinor    REG_DWORD    0x1
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x9010036
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    VmciSockets
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{5C93E291-A1CC-4E51-85C6-E194209FCDB4}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{5C93E291-A1CC-4E51-85C6-E194209FCDB4}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2f0
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{5C93E291-A1CC-4E51-85C6-E194209FCDB4}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x816
+    DisplayName    REG_SZ    Zune Language Pack (PTG)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{5E2CD4FB-4538-4831-8176-05D653C3E6D4}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\af60b13c1cc57000c\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{5E2CD4FB-4538-4831-8176-05D653C3E6D4}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x18
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{5E2CD4FB-4538-4831-8176-05D653C3E6D4}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0xc
+    DisplayName    REG_SZ    Windows Live Remote Service Resources
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FCE6D76-F5DC-37AB-B2B8-22AB8CEDB1D4}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    9.0.30729.6161
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20120704
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    c:\91de032ee8635aff39d6\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{5FCE6D76-F5DC-37AB-B2B8-22AB8CEDB1D4}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x314
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{5FCE6D76-F5DC-37AB-B2B8-22AB8CEDB1D4}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x9
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x9007809
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{656DEEDE-F6AC-47CA-A568-A1B4E34B5760}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\afe13b8b1cc57000e\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{656DEEDE-F6AC-47CA-A568-A1B4E34B5760}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x18
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{656DEEDE-F6AC-47CA-A568-A1B4E34B5760}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0x9
+    DisplayName    REG_SZ    Windows Live Remote Service Resources
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{6740BCB0-5863-47F4-80F4-44F394DE4FE2}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{6740BCB0-5863-47F4-80F4-44F394DE4FE2}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x304
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{6740BCB0-5863-47F4-80F4-44F394DE4FE2}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x413
+    DisplayName    REG_SZ    Zune Language Pack (NLD)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{6B33492E-FBBC-4EC3-8738-09E16E395A10}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{6B33492E-FBBC-4EC3-8738-09E16E395A10}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x304
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{6B33492E-FBBC-4EC3-8738-09E16E395A10}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0xc0a
+    DisplayName    REG_SZ    Zune Language Pack (ESP)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{7006ED29-58F2-40C3-AE87-039287AD20B6}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{7006ED29-58F2-40C3-AE87-039287AD20B6}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x16deb
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{7006ED29-58F2-40C3-AE87-039287AD20B6}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Zune
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{847B0532-55E3-4AAF-8D7B-E3A1A7CD17E5}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\afb401661cc57000d\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{847B0532-55E3-4AAF-8D7B-E3A1A7CD17E5}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x68
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{847B0532-55E3-4AAF-8D7B-E3A1A7CD17E5}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0x9
+    DisplayName    REG_SZ    Windows Live Remote Client Resources
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{85FF8CA9-FF07-9E8D-DC2A-05CE786C5646}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    2011.0524.2352.41027
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ    C:\Program Files (x86)\ATI Technologies\
+    InstallSource    REG_SZ    C:\OEM\Preload\Autorun\DRV\AMD VGA Chip UMA\Packages\Apps\CCC2\Utility64\
+    NoModify    REG_DWORD    0x1
+    NoRemove    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    ATI
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x120
+    SystemComponent    REG_DWORD    0x1
+    URLInfoAbout    REG_SZ    http://www.ati.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x7db
+    VersionMinor    REG_DWORD    0x20c
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xdb0c0930
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    ccc-utility64
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    5.1.20125.0
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=91955
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130409
+    InstallLocation    REG_SZ    c:\Program Files\Microsoft Silverlight\
+    InstallSource    REG_SZ    c:\ecb2daba02f5ce041a9aa57684\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0xcaa6
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{89F4137D-6C26-4A84-BDB8-2E5A4BB71E00}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x5
+    VersionMinor    REG_DWORD    0x1
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x5014e9d
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Microsoft Silverlight
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{8E34682C-8118-31F1-BC4C-98CD9675E1C2}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    4.0.30319
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130409
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\e0feac51bfd9c8d29d\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{8E34682C-8118-31F1-BC4C-98CD9675E1C2}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkId=164156
+    Size    REG_DWORD    0xcff1
+    EstimatedSize    REG_DWORD    0x15757e
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{8E34682C-8118-31F1-BC4C-98CD9675E1C2}
+    URLInfoAbout    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164164
+    URLUpdateInfo    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164165
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x400766f
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Microsoft .NET Framework 4 Extended
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{95120000-00B9-0409-1000-0000000FF1CE}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    12.0.6015.5000
+    HelpLink    REG_EXPAND_SZ    http://support.microsoft.com
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\ad97a9081cc570006\
+    NoModify    REG_DWORD    0x1
+    NoRemove    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x39a4
+    SystemComponent    REG_DWORD    0x1
+    URLInfoAbout    REG_SZ    http://support.microsoft.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xc
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xc00177f
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Microsoft Application Error Reporting
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B750FA38-7AB0-42CB-ACBB-E7DBE9FF603F}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\af4420b91cc57000b\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{B750FA38-7AB0-42CB-ACBB-E7DBE9FF603F}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x68
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{B750FA38-7AB0-42CB-ACBB-E7DBE9FF603F}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0xc
+    DisplayName    REG_SZ    Windows Live Remote Client Resources
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{BE236D9A-52EC-4A17-82DA-84B5EAD31E3E}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{BE236D9A-52EC-4A17-82DA-84B5EAD31E3E}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x32c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{BE236D9A-52EC-4A17-82DA-84B5EAD31E3E}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x407
+    DisplayName    REG_SZ    Zune Language Pack (DEU)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{C5D37FFA-7483-410B-982B-91E93FD3B7DA}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{C5D37FFA-7483-410B-982B-91E93FD3B7DA}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2fc
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{C5D37FFA-7483-410B-982B-91E93FD3B7DA}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x410
+    DisplayName    REG_SZ    Zune Language Pack (ITA)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{C68D33B1-0204-4EBE-BC45-A6E432B1D13A}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    04.07.1404.01
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkID=71730
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\MS Signature\Retail\Apps\Zune 4.7\Zune4.7.1OPK\CDimg\x64\packages\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{C68D33B1-0204-4EBE-BC45-A6E432B1D13A}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x30c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{C68D33B1-0204-4EBE-BC45-A6E432B1D13A}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x7
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x407057c
+    Language    REG_DWORD    0x40c
+    DisplayName    REG_SZ    Zune Language Pack (FRA)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{CEA21F20-DBF4-464C-8B81-28B8508AFDDD}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.3538.0513
+    HelpLink    REG_EXPAND_SZ    http://feedback.live.com/eform.aspx?productkey=wlfamilysafety
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\5292b3651cc570801\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{CEA21F20-DBF4-464C-8B81-28B8508AFDDD}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x1ef4
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{CEA21F20-DBF4-464C-8B81-28B8508AFDDD}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf040dd2
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Windows Live Family Safety
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{D954C6C2-544B-4091-A47F-11E77162883E}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    4.2.0223.1
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130409
+    InstallLocation    REG_SZ    c:\Program Files\Microsoft Security Client\
+    InstallSource    REG_SZ    c:\9f08226cc592bd133d0d4ad42020ee8f\amd64\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{D954C6C2-544B-4091-A47F-11E77162883E}
+    NoModify    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2e3b
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{D954C6C2-544B-4091-A47F-11E77162883E}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x2
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x40200df
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Microsoft Security Client
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{DA54F80E-261C-41A2-A855-549A144F2F59}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.3502.0922
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\ae1cf6171cc570008\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{DA54F80E-261C-41A2-A855-549A144F2F59}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x40
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{DA54F80E-261C-41A2-A855-549A144F2F59}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf040dae
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Windows Live MIME IFilter
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{DA5E371C-6333-3D8A-93A4-6FD5B20BCC6E}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ    Caution. Removing this product might prevent some applications from running.
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    10.0.30319
+    HelpLink    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkId=146008
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\OEM\Preload\Autorun\DRV\AMD VGA Chip UMA\Packages\Apps\VC10RTx64\vcredist_x64\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{DA5E371C-6333-3D8A-93A4-6FD5B20BCC6E}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x36d6
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{DA5E371C-6333-3D8A-93A4-6FD5B20BCC6E}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xa
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xa00766f
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Microsoft Visual C++ 2010  x64 Redistributable - 10.0.30319
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{DF6D988A-EEA0-4277-AAB8-158E086E439B}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\ae8f38241cc570009\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{DF6D988A-EEA0-4277-AAB8-158E086E439B}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x1960
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{DF6D988A-EEA0-4277-AAB8-158E086E439B}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Windows Live Remote Client
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{E01819BD-709F-43A1-9600-6F5E4C584C37}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.3538.0513
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\538a42811cc570802\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{E01819BD-709F-43A1-9600-6F5E4C584C37}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x20
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{E01819BD-709F-43A1-9600-6F5E4C584C37}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf040dd2
+    Language    REG_DWORD    0xc
+    DisplayName    REG_SZ    Windows Live Family Safety
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{E02A6548-6FDE-40E2-8ED9-119D7D7E641F}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    15.4.5722.2
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20110809
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    C:\Program Files (x86)\Common Files\Windows Live\.cache\acff50f71cc570005\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /I{E02A6548-6FDE-40E2-8ED9-119D7D7E641F}
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0xe6c
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /I{E02A6548-6FDE-40E2-8ED9-119D7D7E641F}
+    URLInfoAbout    REG_SZ
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0xf
+    VersionMinor    REG_DWORD    0x4
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0xf04165a
+    Language    REG_DWORD    0x409
+    DisplayName    REG_SZ    Windows Live Remote Service
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{F5B09CFD-F0B2-36AF-8DF4-1DF6B63FC7B4}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    4.0.30319
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130409
+    InstallLocation    REG_SZ
+    InstallSource    REG_SZ    D:\afbe187f47e895b8e229969333a406ab\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{F5B09CFD-F0B2-36AF-8DF4-1DF6B63FC7B4}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Microsoft Corporation
+    Readme    REG_EXPAND_SZ    http://go.microsoft.com/fwlink/?LinkId=164156
+    Size    REG_DWORD    0x9b34
+    EstimatedSize    REG_DWORD    0x8cba4d
+    SystemComponent    REG_DWORD    0x1
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{F5B09CFD-F0B2-36AF-8DF4-1DF6B63FC7B4}
+    URLInfoAbout    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164164
+    URLUpdateInfo    REG_SZ    http://go.microsoft.com/fwlink/?LinkId=164165
+    VersionMajor    REG_DWORD    0x4
+    VersionMinor    REG_DWORD    0x0
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x400766f
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Microsoft .NET Framework 4 Client Profile
