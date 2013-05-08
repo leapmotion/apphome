@@ -6,41 +6,35 @@ var rewire = require('rewire');
 
 var mockExec = {
   win32: function(command, cb) {
-    if (/Wow6432Node/.test(command)) {
-      fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-32bit.txt'), cb);
+    if (/^reg/.test(command)) {
+      if (/Wow6432Node/.test(command)) {
+        fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-32bit.txt'), cb);
+      } else {
+        fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-64bit.txt'), cb);
+      }
     } else {
-      fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-64bit.txt'), cb);
+      throw new Error('unexpected exec command: ' + command);
     }
   },
 
   darwin: function(command, cb) {
-    fs.readFile(path.join(__dirname, 'fs-scanner-data', 'osx-applications-listing.txt'), cb);
-  }
-};
-
-var mockFs = {
-  darwin: {
-    readFileSync: function(filepath, encoding) {
-      if (/Info\.plist/.test(filepath)) {
-        var pathParts = filepath.split('/');
-        var appName = pathParts[pathParts.length - 3].replace(/\.app$/, '');
-        filepath = path.join(__dirname, 'fs-scanner-data', 'osx-Info.plist');
-        var rawPlist = fs.readFileSync(filepath, 'utf-8');
-        return rawPlist.replace(/<string>Microsoft PowerPoint<\/string>/g, '<string>' + appName + '</string>');
-      } else {
-        return fs.readFileSync(filepath, encoding);
-      }
+    if (/^find/.test(command)) {
+      fs.readFile(path.join(__dirname, 'fs-scanner-data', 'osx-applications-listing.txt'), cb);
+    } else if(/^plutil/.test(command)) {
+      var commandParts = command.split('/');
+      var appName = commandParts[commandParts.length - 3].replace(/\\|\.app$/g, '');
+      var rawPlist = fs.readFileSync(path.join(__dirname, 'fs-scanner-data', 'osx-Info.plist'), 'utf-8');
+      cb(null, rawPlist.replace(/<string>Microsoft PowerPoint<\/string>/g, '<string>' + appName + '</string>'));
+    } else {
+      throw new Error('unexpected exec command: ' + command);
     }
   }
-}
+};
 
 function mockFsScannerForPlatform(platform, args) {
   var FsScanner = rewire('../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
     FsScanner.__set__('exec', mockExec[platform]);
-  }
-  if (mockFs[platform]) {
-    FsScanner.__set__('fs', mockFs[platform]);
   }
   FsScanner.__set__('os', { platform: function() { return platform; }});
   return new FsScanner(args);

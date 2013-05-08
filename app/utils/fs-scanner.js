@@ -5,6 +5,7 @@ var exec = require('child_process').exec;
 var crypto = require('crypto');
 var async = require('async');
 var plist = require('plist');
+var shell = require('./shell.js');
 
 var LocalLeapApp = require('../models/local-leap-app.js');
 
@@ -41,25 +42,32 @@ FsScanner.prototype = {
         return cb(err);
       }
       var plistPaths = stdout.toString().split('\n');
-      var leapApps = [];
-      plistPaths.forEach(function(plistPath) {
-        leapApps.push(this._createLeapAppFromPlistPath(plistPath));
-      }.bind(this));
-
-      cb(null, _.compact(leapApps));
+      plistPaths.pop(); // remove empty last path
+      async.mapLimit(plistPaths, 64, this._createLeapAppFromPlistPath.bind(this),
+        function(err, leapApps) {
+          if (err) {
+            return cb(err);
+          }
+          cb(null, _.compact(leapApps));
+        });
     }.bind(this));
   },
 
-  _createLeapAppFromPlistPath: function(plistPath) {
-    var parsedPlist = plist.parseStringSync(fs.readFileSync(plistPath, 'utf-8'));
-    var keyFile = path.dirname(path.dirname(plistPath));
-    var attributes = {
-      name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
-      version: parsedPlist.CFBundleVersion,
-      keyFile: keyFile
-    };
+  _createLeapAppFromPlistPath: function(plistPath, cb) {
+    exec('plutil -convert xml1 -o - ' + shell.escape(plistPath), function(err, stdout) {
+      if (err) {
+        return cb(err);
+      }
+      var parsedPlist = plist.parseStringSync(stdout.toString());
+      var keyFile = path.dirname(path.dirname(plistPath));
+      var attributes = {
+        name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
+        version: parsedPlist.CFBundleVersion,
+        keyFile: keyFile
+      };
 
-    return this._createLocalLeapApp(attributes);
+      cb(null, this._createLocalLeapApp(attributes));
+    }.bind(this));
   },
 
   _scanForWindowsApps: function(cb) {
@@ -76,15 +84,17 @@ FsScanner.prototype = {
       }
       var registryChunks = _.invoke(stdouts, 'toString').join('\n').split('HKEY_LOCAL_MACHINE');
       registryChunks.shift(); // remove empty first chunk
-      var leapApps = [];
-      registryChunks.forEach(function(registryChunk) {
-        leapApps.push(this._createLeapAppFromRegistryChunk(registryChunk));
-      }.bind(this));
-      cb(null, _.compact(leapApps));
+      async.map(registryChunks, this._createLeapAppFromRegistryChunk.bind(this),
+        function(err, leapApps) {
+          if (err) {
+            return cb(err);
+          }
+          cb(null, _.compact(leapApps));
+        });
     }.bind(this));
   },
 
-  _createLeapAppFromRegistryChunk: function(registryChunk) {
+  _createLeapAppFromRegistryChunk: function(registryChunk, cb) {
     function extractValueForKey(key, type) {
       type = type || 'REG_SZ';
       var regex = new RegExp(key + ' +' + type + ' +([^\\n]+)');
@@ -99,7 +109,7 @@ FsScanner.prototype = {
       keyFile: extractValueForKey('InstallLocation')
     }
 
-    return this._createLocalLeapApp(attributes);
+    cb(null, this._createLocalLeapApp(attributes));
   },
 
   _createLocalLeapApp: function(attributes) {
