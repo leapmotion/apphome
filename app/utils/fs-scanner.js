@@ -123,6 +123,6 @@ FsScanner.prototype = {
     }
   }
 
-}
+};
 
 module.exports = FsScanner;
