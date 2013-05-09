@@ -1,5 +1,11 @@
-function escape(string) {
-  return (string || '').replace(/(["\s'$`\\])/g, '\\$1');
+var os = require('os');
+
+function escapeBash(string) {
+  return "'" + String(string).replace(/'/g, "'\"'\"'") + "'";
 }
 
-exports.escape = escape;
+function escapeWindows(string) {
+  return String(string).replace(/([\(\)%!\^"<>&\|])/g, '^$1');
+}
+
+exports.escape = (os.platform() === 'win32' ? escapeWindows : escapeBash);
