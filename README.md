@@ -2,11 +2,11 @@
 
 Mac / Linux:
 
-    bin/airspace.sh
+    bin/airspace
 
 Windows:
 
-double click <code>bin/airspace.cmd</code>
+    node bin/airspace
 
 ## Testing
 

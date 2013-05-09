@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+var os = require('os');
+var path = require('path');
+var spawn = require('child_process').spawn;
+
+var NodeWebkitVersion = '0.5.1';
+var workingDir = path.dirname(__dirname);
+var platformSuffixes = {
+  win32:  'win-ia32/nw.exe',
+  darwin: 'osx-ia32/node-webkit.app/Contents/MacOS/node-webkit',
+  linux:  'linux-ia32/nw'
+};
+
+var executable = 'nw/node-webkit-v' + NodeWebkitVersion + '-' + platformSuffixes[os.platform()];
+var nw = spawn(executable, [ '.' ], { cwd: workingDir, env: process.env });
+nw.stdout.pipe(process.stdout);
+nw.stderr.pipe(process.stderr);
+function killNodeWebkit() {
+  nw.kill();
+}
+process.on('SIGINT', killNodeWebkit);
+process.on('SIGTERM', killNodeWebkit);
