@@ -31,10 +31,19 @@ var mockExec = {
   }
 };
 
+var mockFs = {
+  darwin: {
+    mkdirSync: function() {}
+  }
+};
+
 function mockFsScannerForPlatform(platform, args) {
   var FsScanner = rewire('../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
     FsScanner.__set__('exec', mockExec[platform]);
+  }
+  if (mockFs[platform]) {
+    FsScanner.__set__('fs', mockFs[platform]);
   }
   FsScanner.__set__('os', { platform: function() { return platform; }});
   return new FsScanner(args);
