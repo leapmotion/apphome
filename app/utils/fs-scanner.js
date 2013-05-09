@@ -36,7 +36,7 @@ FsScanner.prototype = {
   },
 
   _scanForMacApps: function(cb) {
-    exec('find ~/Applications /Applications -maxdepth 4 -name Info.plist', function(err, stdout) {
+    exec('mkdir -p ~/Applications; find ~/Applications /Applications -maxdepth 4 -name Info.plist', function(err, stdout) {
       if (err) {
         return cb(err);
       }
