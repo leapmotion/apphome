@@ -57,7 +57,12 @@ FsScanner.prototype = {
       if (err) {
         return cb(err);
       }
-      var parsedPlist = plist.parseStringSync(stdout.toString());
+      try {
+        var parsedPlist = plist.parseStringSync(stdout.toString());
+      } catch (err) {
+        console.warn('Error handling plist: ' + plistPath);
+        return cb(null, null);
+      }
       var keyFile = path.dirname(path.dirname(plistPath));
 
       var attributes = {
