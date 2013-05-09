@@ -36,7 +36,10 @@ FsScanner.prototype = {
   },
 
   _scanForMacApps: function(cb) {
-    fs.mkdirSync('~/Applications');
+    var userAppDir = process.env.HOME + '/Applications';
+    if (!fs.existsSync(userAppDir)) {
+      fs.mkdirSync(userAppDir);
+    }
     exec('find ~/Applications /Applications -maxdepth 4 -name Info.plist', function(err, stdout) {
       if (err) {
         return cb(err);
