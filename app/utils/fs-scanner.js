@@ -63,8 +63,11 @@ FsScanner.prototype = {
       var attributes = {
         name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
         version: parsedPlist.CFBundleVersion || parsedPlist.CFBundleShortVersionString,
+        rawIconFile: parsedPlist.CFBundleIcon || parsedPlist.CFBundleIconFile,
         keyFile: keyFile
       };
+
+      attributes.rawIconFile = attributes.rawIconFile && path.join(keyFile, attributes.rawIconFile);
 
       cb(null, this._createLocalLeapApp(attributes));
     }.bind(this));
