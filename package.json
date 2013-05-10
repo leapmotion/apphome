@@ -14,7 +14,7 @@
     "jade": "0.30.0",
     "stylus": "0.32.1",
     "async": "0.2.8",
-    "plist": "git://github.com/proxv/node-plist.git#0323990bddd438332db5ee62b4d261799a58b210"
+    "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e"
   },
   "devDependencies": {
     "mocha": "1.9.x",

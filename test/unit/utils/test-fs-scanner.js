@@ -103,4 +103,13 @@ describe('FsScanner', function() {
     });
 
   });
+
+  describe('parse wonky plist', function() {
+
+    it('should parse the plist even though it has issues', function() {
+      var plist = require('plist');
+      assert.ok(plist.parseStringSync(fs.readFileSync(path.join(__dirname, 'fs-scanner-data', 'osx-Info-wonky.plist'), 'utf-8')));
+    });
+
+  });
 });
