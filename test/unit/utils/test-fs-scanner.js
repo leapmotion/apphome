@@ -9,8 +9,10 @@ var mockExec = {
     if (/^reg/.test(command)) {
       if (/Wow6432Node/.test(command)) {
         fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-32bit.txt'), cb);
-      } else {
+      } else if(/HKLM/.test(command)) {
         fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-registry-listing-64bit.txt'), cb);
+      } else {
+        fs.readFile(path.join(__dirname, 'fs-scanner-data', 'windows-hkcu-registry-listing.txt'), cb);
       }
     } else {
       throw new Error('unexpected exec command: ' + command);
@@ -54,22 +56,26 @@ describe('FsScanner', function() {
 
     it('should only return the allowed apps', function(done) {
       var fsScanner = mockFsScannerForPlatform('win32', {
-        allowedAppNames: [ 'microsoft silverlight', 'quickbooks' ]
+        allowedAppNames: [ 'microsoft silverlight', 'quickbooks', 'github' ]
       });
+      process.env.ProgramW6432 = true;
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 2, '2 apps matching allowed names');
+        assert.equal(apps.length, 3, '3 apps matching allowed names');
         done();
       });
+      delete process.env.ProgramW6432;
     });
 
     it('should list all apps when no whitelist is specified', function(done) {
+      process.env.ProgramW6432 = true;
       var fsScanner = mockFsScannerForPlatform('win32');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 55, '55 total apps');
+        assert.equal(apps.length, 56, '56 total apps');
         done();
       });
+      delete process.env.ProgramW6432;
     });
 
   });

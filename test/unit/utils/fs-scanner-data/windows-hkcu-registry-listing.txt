@@ -1,0 +1,15 @@
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\5f7eb300e2ea4ebf
+    ShortcutAppId    REG_SZ    http://github-windows.s3.amazonaws.com/GitHub.application#GitHub.application, Culture=neutral, PublicKeyToken=317444273a93ac29, processorArchitecture=x86
+    SupportShortcutFileName    REG_SZ    GitHub online support
+    ShortcutFileName    REG_SZ    GitHub
+    ShortcutFolderName    REG_SZ    GitHub, Inc.
+    UrlUpdateInfo    REG_SZ    http://github-windows.s3.amazonaws.com/GitHub.application
+    HelpLink    REG_SZ    http://windows.github.com/
+    UninstallString    REG_SZ    rundll32.exe dfshim.dll,ShArpMaintain GitHub.application, Culture=neutral, PublicKeyToken=317444273a93ac29, processorArchitecture=x86
+    Publisher    REG_SZ    GitHub, Inc.
+    DisplayVersion    REG_SZ    1.0.44.0
+    DisplayIcon    REG_SZ    C:\Users\dev\AppData\Local\Apps\2.0\33GLVPP8.EBN\JTJOLXWK.673\gith..tion_317444273a93ac29_0001.0000_4fc1e55f973d3f54\Images\App.ico
+    DisplayName    REG_SZ    GitHub
+    InstallLocation    REG_SZ    C:\Users\dev\AppData\Local\Apps\2.0\33GLVPP8.EBN\JTJOLXWK.673\gith..tion_317444273a93ac29_0001.0000_4fc1e55f973d3f54\
+

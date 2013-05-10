@@ -80,18 +80,24 @@ FsScanner.prototype = {
   },
 
   _scanForWindowsApps: function(cb) {
-    async.parallel([
-      function(cb) {
+    var registryQueries = [
+      function(cb) { // system-wide apps for system architecture
         exec('reg query HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
       },
-      function(cb) {
-        exec('reg query HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
+      function(cb) { // user apps (32- and 64-bit)
+        exec('reg query HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
       }
-    ], function(err, stdouts) {
+    ];
+    if (process.env.ProgramW6432) { // running on 64-bit Windows
+      registryQueries.push(function(cb) { // system-wide 32-bit apps on 64-bit Windows
+        exec('reg query HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
+      });
+    }
+    async.parallel(registryQueries, function(err, stdouts) {
       if (err) {
         return cb(err);
       }
-      var registryChunks = _.invoke(stdouts, 'toString').join('\n').split(/^HKEY_LOCAL_MACHINE/m);
+      var registryChunks = _.invoke(stdouts, 'toString').join('\n').split(/^HKEY_LOCAL_MACHINE|^HKEY_CURRENT_USER/m);
       registryChunks.shift(); // remove empty first chunk
       async.map(registryChunks, this._createLeapAppFromRegistryChunk.bind(this),
         function(err, leapApps) {
