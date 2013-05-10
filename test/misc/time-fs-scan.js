@@ -1,5 +1,5 @@
 if (require.main === module) {
-  require('../env.js');
+  require('../unit/env.js');
   var FsScanner = require('../../app/utils/fs-scanner.js');
 
 

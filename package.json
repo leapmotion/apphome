@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "description": "LeapMotion desktop client",
   "main": "index.html",
-  "node-main": "preloaded.js",
+  "node-main": "node-main.js",
   "window": {
     "show": false,
     "toolbar": true
   },
   "dependencies": {
+    "underscore": "1.4.4",
+    "backbone": "1.0.0",
     "jade": "0.30.0",
     "stylus": "0.32.1",
     "async": "0.2.8",
@@ -16,11 +18,12 @@
   },
   "devDependencies": {
     "mocha": "1.9.x",
-    "rewire": "1.1.3",
-    "underscore": "1.4.4"
+    "rewire": "1.1.3"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha --recursive test/"
+    "test": "find ./test -name \"test*.js\" | xargs node_modules/mocha/bin/mocha",
+    "unit-test": "node_modules/mocha/bin/mocha --recursive test/unit",
+    "integration-test": "node_modules/mocha/bin/mocha --recursive test/integration"
   },
   "engine": "node >= 0.10.0"
 }

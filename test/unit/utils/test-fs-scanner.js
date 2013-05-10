@@ -38,7 +38,7 @@ var mockFs = {
 };
 
 function mockFsScannerForPlatform(platform, args) {
-  var FsScanner = rewire('../../app/utils/fs-scanner.js');
+  var FsScanner = rewire('../../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
     FsScanner.__set__('exec', mockExec[platform]);
   }
