@@ -10,4 +10,4 @@ function convertToPng(inputIcns, outputPng, cb) {
   exec('sips -s format png ' + shell.escape(inputIcns) + ' --out ' + shell.escape(outputPng), cb);
 }
 
-exports.convertToPng = convertToPng;
+module.exports.convertToPng = convertToPng;

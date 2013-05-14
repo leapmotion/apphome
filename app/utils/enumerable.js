@@ -29,4 +29,4 @@ function makeEnum(arrayOrMapOfArrays, namespace) {
   return enumerable;
 }
 
-exports.make = makeEnum;
+module.exports.make = makeEnum;

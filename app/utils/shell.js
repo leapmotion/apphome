@@ -8,4 +8,4 @@ function escapeWindows(string) {
   return String(string).replace(/([\(\)%!\^"<>&\|])/g, '^$1');
 }
 
-exports.escape = (os.platform() === 'win32' ? escapeWindows : escapeBash);
+module.exports.escape = (os.platform() === 'win32' ? escapeWindows : escapeBash);

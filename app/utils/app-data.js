@@ -8,7 +8,7 @@ var platformDirs = {
   linux:  '~/.'
 };
 
-var appName = 'nw';
+var appName = 'leap';
 
 function setAppName(newAppName) {
   appName = newAppName;
@@ -37,8 +37,8 @@ function writeFile(filename, data) {
   return fs.writeFileSync(pathForFile(filename), data);
 }
 
-exports.setAppName = setAppName;
-exports.getDir = getDir;
-exports.pathForFile = pathForFile;
-exports.readFile = readFile;
-exports.writeFile = writeFile;
+module.exports.setAppName = setAppName;
+module.exports.getDir = getDir;
+module.exports.pathForFile = pathForFile;
+module.exports.readFile = readFile;
+module.exports.writeFile = writeFile;

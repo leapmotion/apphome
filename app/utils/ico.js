@@ -9,3 +9,5 @@ function convertToPng(inputBinary, outputPng, cb) {
 
   cb('not yet implemented'); // TODO
 }
+
+module.exports.convertToPng = convertToPng;
