@@ -3,26 +3,29 @@ var os = require('os');
 var path = require('path');
 
 var platformDirs = {
-  win32:  process.env.APPDATA + '\\',
-  darwin: '~/Library/Application Support/',
-  linux:  '~/.'
+  win32:  process.env.LOCALAPPDATA || process.env.APPDATA,
+  darwin: path.join(process.env.HOME, 'Library', 'Application Support'),
+  linux: path.join(process.env.HOME, '.config')
 };
 
-var appName = 'leap';
 
-function setAppName(newAppName) {
-  appName = newAppName;
-}
+var appDataDir;
 
 function getDir() {
-  var dir = platformDirs[os.platform()] + appName;
-  if (!dir) {
-    throw new Error('unknown system platform: ' + os.platform());
+  if (!appDataDir) {
+    if (!platformDirs[os.platform()]) {
+      throw new Error('Unknown operating system: ' + os.platform());
+    }
+
+    var appName = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'))).name;
+    appDataDir = path.join(platformDirs[os.platform()], appName, 'AppData');
+
+    if (!fs.existsSync(appDataDir)) {
+      fs.mkdirSync(appDataDir);
+    }
   }
 
-  fs.mkdirSync(dir);
-
-  return dir;
+  return appDataDir;
 }
 
 function pathForFile(filename) {
@@ -37,7 +40,6 @@ function writeFile(filename, data) {
   return fs.writeFileSync(pathForFile(filename), data);
 }
 
-module.exports.setAppName = setAppName;
 module.exports.getDir = getDir;
 module.exports.pathForFile = pathForFile;
 module.exports.readFile = readFile;
