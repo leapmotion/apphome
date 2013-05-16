@@ -1,0 +1,12 @@
+.nightsky-bg {
+  background-color: black;
+}
+
+.preserve3d, .preserve3d * {
+  transform-style: 'preserve-3d';
+  -webkit-transform-style: 'preserve-3d';
+}
+
+.hide {
+  display: none;
+}

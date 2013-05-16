@@ -4,9 +4,12 @@
   "description": "LeapMotion desktop client",
   "main": "index.html",
   "node-main": "node-main.js",
+  "window-todo": "replace width & height with fullscreen: true",
   "window": {
     "show": false,
-    "toolbar": true
+    "toolbar": true,
+    "width": 800,
+    "height": 500
   },
   "dependencies": {
     "underscore": "1.4.4",

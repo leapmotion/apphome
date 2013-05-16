@@ -16,12 +16,13 @@ module.exports = LeapApp.extend({
     return true;
   },
 
-  isStoreApp: function() {
-    return false;
-  },
-
   convertIcon: function(filename) {
 
+  },
+
+  sortScore: function() {
+    return 'x_' + (this.get('name'));
   }
+
 
 });

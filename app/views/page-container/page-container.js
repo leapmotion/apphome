@@ -11,9 +11,10 @@ module.exports = BaseView.extend({
   initialize: function() {
     this.injectCss();
     this.$el.append(this.templateHtml());
-
     this.$el.append((new SplashWelcomeView()).$el);
-    this.$el.append((new MyAppsView()).$el);
+    this.$el.append((new MyAppsView({
+      el: this.$('#my-apps')
+    })).$el);
     this._initGotoStore();
   },
 
