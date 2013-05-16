@@ -42,6 +42,7 @@ module.exports = LeapApp.extend({
     //TODO: download tile or icon or something
 
     download(args.appUrl, function(err, tempFilename) {
+      console.log('App from ' + args.appUrl + ' downloaded to: ' + tempFilename);
       var originalFilename = url.parse(args.appUrl).pathname;
       if (/\.zip/i.test(originalFilename)) {
         extract.unzip(tempFilename, this._appDir(), finishInstallation.bind(this));
@@ -61,7 +62,8 @@ module.exports = LeapApp.extend({
           }
 
           // call _userDataDir once to ensure it's created
-          this.set('isInstalled', !!this._userDataDir());
+          this._userDataDir();
+          this.set('isInstalled', true);
           cb(null);
         }.bind(this));
       }
@@ -86,7 +88,7 @@ module.exports = LeapApp.extend({
       }
       this.set('isInstalled', false);
       cb(null);
-    });
+    }.bind(this));
   },
 
   launchCommand: function() {

@@ -64,6 +64,8 @@ var BaseLeapAppModel = BaseModel.extend({
     var command = this.launchCommand();
     if (!command) {
       throw new Error("Don't know how to launch apps on: " + os.platform());
+    } else {
+      console.log('Launching app with command: ' + command);
     }
     var appProcess = spawn(command);
     this.set('isLaunched', true);

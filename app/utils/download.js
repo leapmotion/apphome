@@ -9,33 +9,35 @@ var PlatformTempDirs = {
   linux:  '/tmp'
 }
 
-function tempFile() {
+function tempFile(extension) {
+  extension = extension || '';
   if (!PlatformTempDirs[os.platform()]) {
     throw new Error('Unknown operating system: ' + os.platform());
   }
   var tempDir = PlatformTempDirs[os.platform()];
-  var filename = [ 'Airspace', (new Date()).getTime(), Math.random() ].join('_');
+  var filename = [ 'Airspace', (new Date()).getTime(), Math.random() ].join('_') + '.' + extension.replace(/^\./, '');
   return path.join(tempDir, filename);
 }
 
 function download(url, cb) {
-  var destFilename = tempFile();
+  var destFilename = tempFile(path.extname(url));
   var destStream = fs.createWriteStream(destFilename);
 
+  destStream.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
   var req = http.get(url, function(res) {
-    res.on('error', function(err) {
-      res.removeAllListeners();
-      cb(err);
-    });
-    res.on('data', function(chunk) {
-      destStream.write(chunk);
-    });
-    res.on('end', function() {
-      destStream.end();
-      cb(null, destFilename);
+    res.pipe(destStream);
+    destStream.on('close', function() {
+      cb && cb(null, destFilename);
+      cb = null;
     });
   });
-  req.on('error', cb);
+  req.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
 }
 
 module.exports = download;
