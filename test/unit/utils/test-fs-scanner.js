@@ -1,8 +1,11 @@
 require('../env.js');
 var assert = require('assert');
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 var rewire = require('rewire');
+
+var allowedApps = JSON.parse(fs.readFileSync(path.join(__dirname, 'fs-scanner-data', 'local-apps.json')));
 
 var mockExec = {
   win32: function(command, cb) {
@@ -56,12 +59,12 @@ describe('FsScanner', function() {
 
     it('should only return the allowed apps', function(done) {
       var fsScanner = mockFsScannerForPlatform('win32', {
-        allowedAppNames: [ 'microsoft silverlight', 'quickbooks', 'github' ]
+        allowedApps: allowedApps.win32
       });
       process.env.ProgramW6432 = true;
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 3, '3 apps matching allowed names');
+        assert.equal(apps.length, 1, '1 app matching allowed apps');
         done();
       });
       delete process.env.ProgramW6432;
@@ -72,7 +75,7 @@ describe('FsScanner', function() {
       var fsScanner = mockFsScannerForPlatform('win32');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 56, '56 total apps');
+        assert.equal(apps.length, 58, '58 total apps');
         done();
       });
       delete process.env.ProgramW6432;
@@ -84,11 +87,11 @@ describe('FsScanner', function() {
 
     it('should only return the allowed apps', function(done) {
       var fsScanner = mockFsScannerForPlatform('darwin', {
-        allowedAppNames: [ 'microsoft powerpoint', 'SketchUp' ]
+        allowedApps: allowedApps.darwin
       });
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 2, '2 apps matching allowed names');
+        assert.equal(apps.length, 1, '1 app matching allowed apps');
         done();
       });
     });
@@ -97,7 +100,7 @@ describe('FsScanner', function() {
       var fsScanner = mockFsScannerForPlatform('darwin');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 103, '103 total apps');
+        assert.equal(apps.length, 104, '104 total apps');
         done();
       });
     });

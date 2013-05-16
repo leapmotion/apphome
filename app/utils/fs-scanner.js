@@ -1,23 +1,23 @@
-var os = require('os');
-var fs = require('fs');
-var path = require('path');
-var exec = require('child_process').exec;
-var crypto = require('crypto');
 var async = require('async');
+var crypto = require('crypto')
+var exec = require('child_process').exec;
+var fs = require('fs');
+var os = require('os');
+var path = require('path');
 var plist = require('plist');
+
+var semver = require('./semver.js');
 var shell = require('./shell.js');
 
 var LocalLeapApp = require('../models/local-leap-app.js');
 
 function FsScanner(args) {
   args = args || {};
-  if (Array.isArray(args.allowedAppNames)) {
-    this._allowedAppNames = {};
-    args.allowedAppNames.forEach(function(appName) {
-      this._allowedAppNames[appName.toLowerCase()] = true;
+  if (Array.isArray(args.allowedApps)) {
+    this._allowedApps = {};
+    args.allowedApps.forEach(function(allowedApp) {
+      this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
     }.bind(this));
-  } else {
-    this._allowedAppNames = args.allowedAppNames;
   }
 }
 
@@ -128,25 +128,26 @@ FsScanner.prototype = {
   },
 
   _createLocalLeapApp: function(attributes) {
-    if (!attributes.keyFile || !attributes.name ||
-        !attributes.version || !this._isAllowedAppName(attributes.name)) {
+    if (!attributes.keyFile || !attributes.name || !attributes.version ||
+        !this._isAllowedApp(attributes.name, attributes.version)) {
       return null;
     }
-
-    var md5hash = crypto.createHash('md5');
-    md5hash.update(attributes.keyFile);
-    attributes.id = md5hash.digest('hex');
 
     return new LocalLeapApp(attributes);
   },
 
-  _isAllowedAppName: function(appName) {
+  _isAllowedApp: function(appName, appVersion) {
     if (!appName) {
       return false;
-    } else if (!this._allowedAppNames) {
+    } else if (!this._allowedApps) {
       return true;
     } else {
-      return !!this._allowedAppNames[appName.toLowerCase()];
+      var allowedApp = this._allowedApps[appName.toLowerCase()];
+      if (allowedApp) {
+        return (allowedApp.minVersion ? semver.meetsMinimumVersion(appVersion, allowedApp.minVersion) : true);
+      } else {
+        return false;
+      }
     }
   }
 

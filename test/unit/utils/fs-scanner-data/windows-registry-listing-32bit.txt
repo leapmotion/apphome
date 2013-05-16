@@ -41,6 +41,60 @@ HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninsta
     Inno Setup CodeFile: SSH Option    REG_SZ    OpenSSH
     Inno Setup CodeFile: CRLF Option    REG_SZ    LFOnly
 
+HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    7.1.1.1580
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130515
+    InstallLocation    REG_SZ    C:\Program Files (x86)\Google\Google Earth\
+    InstallSource    REG_SZ    C:\Users\dev\AppData\Local\Temp\._msige61\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Google
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2d049
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    URLInfoAbout    REG_SZ    http://earth.google.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x7
+    VersionMinor    REG_DWORD    0x1
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x7010001
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Google Earth
+
+HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    AuthorizedCDFPrefix    REG_SZ
+    Comments    REG_SZ
+    Contact    REG_SZ
+    DisplayVersion    REG_SZ    7.0.1.1580
+    HelpLink    REG_SZ
+    HelpTelephone    REG_SZ
+    InstallDate    REG_SZ    20130515
+    InstallLocation    REG_SZ    C:\Program Files (x86)\Google\Google Earth\
+    InstallSource    REG_SZ    C:\Users\dev\AppData\Local\Temp\._msige61\
+    ModifyPath    REG_EXPAND_SZ    MsiExec.exe /X{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    NoModify    REG_DWORD    0x1
+    NoRepair    REG_DWORD    0x1
+    Publisher    REG_SZ    Google
+    Readme    REG_SZ
+    Size    REG_SZ
+    EstimatedSize    REG_DWORD    0x2d049
+    UninstallString    REG_EXPAND_SZ    MsiExec.exe /X{0A844D8F-A965-11E2-9E77-B8AC6F98CCE3}
+    URLInfoAbout    REG_SZ    http://earth.google.com
+    URLUpdateInfo    REG_SZ
+    VersionMajor    REG_DWORD    0x7
+    VersionMinor    REG_DWORD    0x1
+    WindowsInstaller    REG_DWORD    0x1
+    Version    REG_DWORD    0x7010001
+    Language    REG_DWORD    0x0
+    DisplayName    REG_SZ    Google Earth
+
 HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Identity Card
     DisplayName    REG_SZ    Identity Card
     Publisher    REG_SZ    Acer Incorporated

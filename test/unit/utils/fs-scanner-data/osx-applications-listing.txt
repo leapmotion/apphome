@@ -26,6 +26,7 @@
 /Applications/GarageBand.app/Contents/Info.plist
 /Applications/Google Chrome Canary.app/Contents/Info.plist
 /Applications/Google Chrome.app/Contents/Info.plist
+/Applications/Google Earth.app/Contents/Info.plist
 /Applications/Google Drive.app/Contents/Info.plist
 /Applications/Google SketchUp 8/SketchUp.app/Contents/Info.plist
 /Applications/GrabBox.app/Contents/Info.plist

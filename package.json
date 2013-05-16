@@ -9,12 +9,14 @@
     "toolbar": true
   },
   "dependencies": {
-    "underscore": "1.4.4",
-    "backbone": "1.0.0",
-    "jade": "0.30.0",
-    "stylus": "0.32.1",
+    "adm-zip": "0.4.3",
     "async": "0.2.8",
-    "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e"
+    "backbone": "1.0.0",
+    "fs-extra": "0.6.1",
+    "jade": "0.30.0",
+    "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e",
+    "stylus": "0.32.1",
+    "underscore": "1.4.4""
   },
   "devDependencies": {
     "mocha": "1.9.x",

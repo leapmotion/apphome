@@ -1,0 +1,17 @@
+{
+  "win32": [
+    {
+      "name": "Google Earth",
+      "minVersion": "7.1",
+      "relativeExePath": "client\\googleearth.exe"
+
+    }
+  ],
+
+  "darwin": [
+    {
+      "name": "Google Earth",
+      "minVersion": "7.1"
+    }
+  ]
+}

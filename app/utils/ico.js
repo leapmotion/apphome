@@ -7,7 +7,7 @@ function convertToPng(inputBinary, outputPng, cb) {
     throw new Error('ico conversion is only supported on Windows');
   }
 
-  cb('not yet implemented'); // TODO
+  cb(new Error('not yet implemented')); // TODO
 }
 
 module.exports.convertToPng = convertToPng;
