@@ -3,7 +3,6 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var url = require('url');
-var zip = require('zip');
 
 var LeapApp = require('./leap-app.js');
 var appData = require('../utils/app-data.js');
