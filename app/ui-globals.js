@@ -3,7 +3,15 @@ var enumerable = require('./utils/enumerable.js');
 var uiGlobals = _.extend({}, window.Backbone.Events);
 
 uiGlobals.Event = enumerable.make([
-  'SplashWelcomeClosed'
+  'SplashWelcomeClosed',
+  'GotoInstalledAppsCarousel',
+  'GotoUpdateAppsCarousel',
+  'GotoDeletedAppsCarousel',
 ], 'UiGlobalEvent');
+
+
+uiGlobals.Builtin = enumerable.make([
+  'VisitStore'
+], 'Builtins');
 
 module.exports = uiGlobals;

@@ -2,7 +2,8 @@ var LocalLeapApp = require('./local-leap-app.js');
 var StoreLeapApp = require('./store-leap-app.js');
 var BuiltinTileApp = require('./builtin-tile-app.js');
 
-var Collection = window.Backbone.Collection.extend({
+module.exports = window.Backbone.Collection.extend({
+
   model: function(attrs, options) {
     if (attrs.app_id) { // todo: use real attrib
       return new StoreLeapApp(attrs, options);
@@ -22,7 +23,4 @@ var Collection = window.Backbone.Collection.extend({
     return leapApp.sortScore();
   }
 
-
 });
-
-module.exports = Collection;

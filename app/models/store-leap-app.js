@@ -130,6 +130,9 @@ module.exports = LeapApp.extend({
       this.set(attributeName, dir);
     }
     return dir;
-  }
+  },
 
+  sortScore: function() {
+    return 'b_' + (this.get('name'));
+  }
 });

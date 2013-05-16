@@ -14,10 +14,12 @@ module.exports = LeapApp.extend({
 
 
 module.exports.createBuiltinTiles = function() {
-  var tiles = [
-    {
-      id: 'builtin_store'
-    }
+  console.log('tmp - uiGlobals.Builtin.VisitStore ' + uiGlobals.Builtin.VisitStore);
+  var builtins = [
+    { id: uiGlobals.Builtin.VisitStore }
   ];
-  _(tiles).invoke(uiGlobals.leapApps.add);
+  builtins.forEach(function(builtinData) {
+    builtinData.is_builtin = true;
+    uiGlobals.leapApps.add(builtinData);
+  });
 };

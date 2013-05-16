@@ -1,18 +1,13 @@
 var BaseView = require('../base-view.js');
 var childProcess = require('child_process');
 
-module.exports = BaseView.extend({
+var BaseTile = BaseView.extend({
 
-  viewDir: __dirname,
+  _common: function(args) {
 
-  initialize: function(args) {
-    this.injectCss();
-    this.setElement($(this.templateHtml(args)));
-
-    this._initLauncher(args.path);
   },
 
-  _initLauncher: function(path) {
+  initLauncher: function(path) {
     var $el = this.$el;
     $el.click(function() {
       if ($el.hasClass('launching')) {
@@ -24,3 +19,6 @@ module.exports = BaseView.extend({
   }
 
 });
+
+
+module.exports = BaseTile;

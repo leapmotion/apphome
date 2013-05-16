@@ -2,27 +2,17 @@ var fs = require('fs');
 var path = require('path');
 var stylus = require('stylus');
 var jade = require('jade');
+var domInjection = require('../utils/dom-injection.js');
 
-var injectedCssFiles = {};
 
-module.exports = window.Backbone.View.extend({
+var BaseView = window.Backbone.View.extend({
 
   injectCss: function() {
     if (!this.viewDir) {
       throw new Error('this.viewDir not set');
     }
     var cssPath = path.join(this.viewDir, path.basename(this.viewDir) + '.stylus');
-    if (!injectedCssFiles[cssPath]) {
-      injectedCssFiles[cssPath] = true;
-      var src = fs.readFileSync(cssPath, 'utf8');
-      stylus.render(src, { filename: cssPath }, function(err, css){
-        if (err) {
-          throw err;
-        } else {
-          $('head').append('<style>\n' + css + '\n</style>');
-        }
-      });
-    }
+    domInjection.applyStylus(cssPath);
   },
 
   templateHtml: function(data, jadeOpts) {
@@ -38,3 +28,5 @@ module.exports = window.Backbone.View.extend({
   }
 
 });
+
+module.exports = BaseView;
