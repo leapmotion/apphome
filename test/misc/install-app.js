@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require('../unit/env.js');
 var assert = require('assert');
 var connect = require('connect');
@@ -15,17 +16,26 @@ if (os.platform() === 'win32') {
     name: 'DigitDuel',
     version: '1.0.0'
   });
-  app.install({ appUrl: 'http://localhost:9876/no-drm/Digit%20Duel.zip' }, function(err) {
-    console.log(err ? err : 'INSTALLED');
-    console.log(fs.readdirSync(path.join(process.env.APPDATA, 'AirspaceApps', app.get('name'))));
-    console.log(fs.readdirSync(path.join(process.env.LOCALAPPDATA, 'AirspaceApps', app.get('name'))));
-    app.launch().on('exit', function() {
-      app.uninstall(true, function(err) {
-        console.log(err ? err : 'UNINSTALLED');
-        assert.ok(!fs.existsSync(path.join(process.env.APPDATA, 'AirspaceApps', app.get('name'))));
-        assert.ok(!fs.existsSync(path.join(process.env.LOCALAPPDATA, 'AirspaceApps', app.get('name'))));
-        process.exit();
-      });
+  var appUrl = 'http://localhost:9876/no-drm/Digit%20Duel.zip';
+} else if (os.platform() === 'darwin') {
+  var app = new StoreLeapApp({
+    name: 'Boom Ball',
+    version: '1.0.0'
+  });
+  var appUrl = 'http://localhost:9876/no-drm/Boom%20Ball.dmg';
+}
+
+app.install({ appUrl: appUrl }, function(err) {
+  console.log(err ? err : 'INSTALLED');
+  console.log(fs.readdirSync(app._appDir()));
+  console.log(app._userDataDir());
+  console.log(fs.readdirSync(app._userDataDir()));
+  app.launch().on('exit', function() {
+    app.uninstall(true, function(err) {
+      console.log(err ? err : 'UNINSTALLED');
+      assert.ok(!fs.existsSync(app._appDir()));
+      assert.ok(!fs.existsSync(app._userDataDir()));
+      process.exit();
     });
   });
-}
+});

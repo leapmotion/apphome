@@ -42,10 +42,14 @@ var mockFs = {
   }
 };
 
+
 function mockFsScannerForPlatform(platform, args) {
   var FsScanner = rewire('../../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
+    var plist = rewire('../../../app/utils/plist.js');
+    plist.__set__('exec', mockExec[platform]);
     FsScanner.__set__('exec', mockExec[platform]);
+    FsScanner.__set__('plist', plist);
   }
   if (mockFs[platform]) {
     FsScanner.__set__('fs', mockFs[platform]);

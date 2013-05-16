@@ -1,5 +1,5 @@
+var exec = require('child_process').exec;
 var os = require('os');
-var spawn = require('child_process').spawn;
 
 var BaseModel = require('./base-model.js');
 var appData = require('../utils/app-data.js');
@@ -67,7 +67,7 @@ var BaseLeapAppModel = BaseModel.extend({
     } else {
       console.log('Launching app with command: ' + command);
     }
-    var appProcess = spawn(command);
+    var appProcess = exec(command);
     this.set('isLaunched', true);
     appProcess.on('exit', function() {
       this.set('isLaunched', false);

@@ -25,9 +25,21 @@ function extractDmg(src, dest, cb) {
 
     var mountPoint;
     try {
-      mountPoint = plist.parseStringSync(stdout.toString())['system-entities'][2]['mount-point'];
+      var parsedOutput = plist.parseStringSync(stdout.toString());
+      var systemEntities = parsedOutput['system-entities'];
+      for (var i = 0, len = systemEntities.length; i < len; i++) {
+        var systemEntity = systemEntities[i];
+        if (systemEntity['mount-point']) {
+          mountPoint = systemEntity['mount-point'];
+          break;
+        }
+      }
     } catch (err2) {
       return cb(err2);
+    }
+
+    if (!mountPoint) {
+      return cb(new Error('Mounting disk image failed.'));
     }
 
     var dirEntries = fs.readdirSync(mountPoint);
@@ -58,3 +70,4 @@ function extractDmg(src, dest, cb) {
 
 module.exports.unzip = extractZip;
 module.exports.undmg = extractDmg;
+

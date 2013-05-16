@@ -58,12 +58,7 @@ module.exports = LeapApp.extend({
   },
 
   launch: function() {
-    var platform = os.platform();
-    if (platform === 'win32') {
-      return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
-    } else if (platform === 'darwin') {
-      return 'open ' + shell.escape(this.get('keyFile'));
-    }
+    return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   },
 
   tileFilename: function() {
@@ -75,5 +70,5 @@ module.exports = LeapApp.extend({
     return 'x_' + (this.get('name'));
   }
 
-
 });
+

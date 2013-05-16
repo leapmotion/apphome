@@ -4,8 +4,8 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
-var plist = require('plist');
 
+var plist = require('./plist.js');
 var semver = require('./semver.js');
 var shell = require('./shell.js');
 
@@ -54,15 +54,9 @@ FsScanner.prototype = {
   },
 
   _createLeapAppFromPlistPath: function(plistPath, cb) {
-    exec('plutil -convert xml1 -o - ' + shell.escape(plistPath), function(err, stdout) {
+    plist.parseFile(plistPath, function(err, parsedPlist) {
       if (err) {
         return cb(err);
-      }
-      try {
-        var parsedPlist = plist.parseStringSync(stdout.toString());
-      } catch (err) {
-        console.warn('Error handling plist: ' + plistPath);
-        return cb(null, null);
       }
       var keyFile = path.dirname(path.dirname(plistPath));
 
@@ -70,7 +64,8 @@ FsScanner.prototype = {
         name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
         version: parsedPlist.CFBundleVersion || parsedPlist.CFBundleShortVersionString,
         rawIconFile: parsedPlist.CFBundleIcon || parsedPlist.CFBundleIconFile,
-        keyFile: keyFile
+        keyFile: keyFile,
+        relativeExePath: path.join('Contents', 'MacOS', parsedPlist.CFBundleExecutable)
       };
 
       attributes.rawIconFile = attributes.rawIconFile && path.join(keyFile, attributes.rawIconFile);
@@ -124,6 +119,11 @@ FsScanner.prototype = {
       keyFile: extractValueForKey('InstallLocation')
     };
 
+    var allowedApp = this._getAllowedApp(attributes.name);
+    if (allowedApp && allowedApp.relativeExePath) {
+      attributes.relativeExePath = allowedApp.relativeExePath;
+    }
+
     cb(null, this._createLocalLeapApp(attributes));
   },
 
@@ -132,15 +132,10 @@ FsScanner.prototype = {
         !this._isAllowedApp(attributes.name, attributes.version)) {
       return null;
     }
-    
-    var allowedApp = this._getAllowedApp(attributes.name);
-    if (allowedApp && allowedApp.relativeExePath) {
-      attributes.relativeExePath = allowedApp.relativeExePath;  
-    }
 
     return new LocalLeapApp(attributes);
   },
-  
+
   _getAllowedApp: function(appName) {
     return this._allowedApps && this._allowedApps[appName.toLowerCase()];
   },
@@ -163,3 +158,4 @@ FsScanner.prototype = {
 };
 
 module.exports = FsScanner;
+

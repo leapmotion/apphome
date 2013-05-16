@@ -8,6 +8,7 @@ var LeapApp = require('./leap-app.js');
 var appData = require('../utils/app-data.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
+var plist = require('../utils/plist.js');
 var shell = require('../utils/shell.js');
 
 var AppsDir = 'AirspaceApps';
@@ -61,10 +62,17 @@ module.exports = LeapApp.extend({
             return cb(err);
           }
 
-          // call _userDataDir once to ensure it's created
-          this._userDataDir();
-          this.set('isInstalled', true);
-          cb(null);
+          this._findExecutable(function(err) {
+            if (err) {
+              return cb(err);
+            }
+
+            // call _userDataDir once to ensure it's created
+            this._userDataDir();
+
+            this.set('isInstalled', true);
+            cb(null);
+          }.bind(this));
         }.bind(this));
       }
     }.bind(this));
@@ -92,12 +100,7 @@ module.exports = LeapApp.extend({
   },
 
   launchCommand: function() {
-    var platform = os.platform();
-    if (platform === 'win32') {
-      return shell.escape(path.join(this._appDir(), this.get('name') + '_LM.exe'));
-    } else if (platform === 'darwin') {
-      return 'open ' + shell.escape(this._appDir());
-    }
+    return shell.escape(this._executable);
   },
 
   tileFilename: function() {
@@ -105,15 +108,19 @@ module.exports = LeapApp.extend({
   },
 
   _appDir: function() {
-    return this._getDir(PlatformAppDirs, 'appDir');
+    var dir = this._getDir(PlatformAppDirs, '__appDir');
+    if (os.platform() === 'darwin') {
+      dir = dir + '.app';
+    }
+    return dir;
   },
 
   _userDataDir: function() {
-    return this._getDir(PlatformUserDataDirs, 'userDataDir');
+    return this._getDir(PlatformUserDataDirs, '__userDataDir');
   },
 
   _getDir: function(dirsByPlatform, attributeName) {
-    var dir = this.get(attributeName);
+    var dir = this[attributeName];
     if (!dir) {
       if (!dirsByPlatform[os.platform()]) {
         throw new Error('Unknown operating system: ' + os.platform());
@@ -129,12 +136,34 @@ module.exports = LeapApp.extend({
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
-      this.set(attributeName, dir);
+      this[attributeName] = dir;
     }
     return dir;
   },
 
   sortScore: function() {
     return 'b_' + (this.get('name'));
+  },
+
+  _findExecutable: function(cb) {
+    if (!this._executable) {
+      if (os.platform() === 'win32') {
+        this._executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+        cb(null, this._executable);
+      } else if (os.platform() === 'darwin') {
+        var infoPlistPath = path.join(this._appDir(), 'Contents', 'Info.plist');
+        plist.parseFile(infoPlistPath, function(err, parsedPlist) {
+          if (err) {
+            return cb(err);
+          }
+          this._executable = path.join(this._appDir(), 'Contents', 'MacOS', parsedPlist.CFBundleExecutable);
+          cb(null, this._executable);
+        }.bind(this));
+      } else {
+        cb(new Error('Unknown platform: ' + os.platform()));
+      }
+    }
   }
+
 });
+
