@@ -3,9 +3,9 @@ var os = require('os');
 var path = require('path');
 
 var PlatformDirs = {
-  win32:  process.env.LOCALAPPDATA || process.env.APPDATA,
-  darwin: path.join(process.env.HOME, 'Library', 'Application Support'),
-  linux: path.join(process.env.HOME, '.config')
+  win32:  [ process.env.LOCALAPPDATA || process.env.APPDATA ],
+  darwin: [ process.env.HOME, 'Library', 'Application Support' ],
+  linux:  [ process.env.HOME, '.config' ]
 };
 
 
@@ -18,7 +18,7 @@ function getDir() {
     }
 
     var appName = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'))).name;
-    appDataDir = path.join(PlatformDirs[os.platform()], appName, 'AppData');
+    appDataDir = path.join.apply(path, PlatformDirs[os.platform()].concat([ appName, 'AppData' ]));
 
     if (!fs.existsSync(appDataDir)) {
       fs.mkdirSync(appDataDir);

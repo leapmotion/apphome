@@ -12,16 +12,16 @@ var shell = require('../utils/shell.js');
 
 var AppsDir = 'AirspaceApps';
 var PlatformAppDirs = {
-  win32:  path.join(process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir),
-  darwin: path.join(process.env.HOME, 'Applications', AppsDir),
-  linux:  path.join(process.env.HOME, AppsDir)
+  win32:  [ process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir ],
+  darwin: [ process.env.HOME, 'Applications', AppsDir ],
+  linux:  [ process.env.HOME, AppsDir ]
 };
 
 var AppsUserDataDir = 'AirspaceApps';
 var PlatformUserDataDirs = {
-  win32:  path.join(process.env.APPDATA, AppsUserDataDir),
-  darwin: path.join(process.env.HOME, 'Library', 'Application Support', AppsUserDataDir),
-  linux:  path.join(process.env.HOME, '.config', AppsUserDataDir)
+  win32:  [ process.env.APPDATA, AppsUserDataDir ],
+  darwin: [ process.env.HOME, 'Library', 'Application Support', AppsUserDataDir ],
+  linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
 };
 
 module.exports = LeapApp.extend({
@@ -119,7 +119,7 @@ module.exports = LeapApp.extend({
       if (!this.get('name')) {
         throw new Error('No app name specified.');
       }
-      var baseDir = dirsByPlatform[os.platform()];
+      var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
       if (!fs.existsSync(baseDir)) {
         fs.mkdirSync(baseDir);
       }

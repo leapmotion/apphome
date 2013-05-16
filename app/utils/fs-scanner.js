@@ -132,8 +132,17 @@ FsScanner.prototype = {
         !this._isAllowedApp(attributes.name, attributes.version)) {
       return null;
     }
+    
+    var allowedApp = this._getAllowedApp(attributes.name);
+    if (allowedApp && allowedApp.relativeExePath) {
+      attributes.relativeExePath = allowedApp.relativeExePath;  
+    }
 
     return new LocalLeapApp(attributes);
+  },
+  
+  _getAllowedApp: function(appName) {
+    return this._allowedApps && this._allowedApps[appName.toLowerCase()];
   },
 
   _isAllowedApp: function(appName, appVersion) {
@@ -142,7 +151,7 @@ FsScanner.prototype = {
     } else if (!this._allowedApps) {
       return true;
     } else {
-      var allowedApp = this._allowedApps[appName.toLowerCase()];
+      var allowedApp = this._getAllowedApp(appName);
       if (allowedApp) {
         return (allowedApp.minVersion ? semver.meetsMinimumVersion(appVersion, allowedApp.minVersion) : true);
       } else {

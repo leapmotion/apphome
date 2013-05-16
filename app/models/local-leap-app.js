@@ -18,10 +18,6 @@ module.exports = LeapApp.extend({
       }
     }
 
-    if (os.platform() === 'win32' && !args.relativeExePath) {
-      throw new Error('relativeExePath must be set on Windows');
-    }
-
     LeapApp.call(this, args);
   },
 
