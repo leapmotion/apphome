@@ -5,6 +5,7 @@ var path = require('path');
 
 var LeapApp = require('./leap-app.js');
 var icns = require('../utils/icns.js');
+var ico = require('../utils/ico.js');
 var shell = require('../utils/shell.js');
 
 module.exports = LeapApp.extend({
@@ -31,8 +32,8 @@ module.exports = LeapApp.extend({
     return md5hash.digest('hex');
   },
 
-  install: function(args, cb) {
-    var filename = args.rawIconFile;
+  install: function(cb) {
+    var filename = this.get('rawIconFile');
     var conversionModule;
     if (/\.icns$/i.test(filename)) {
       conversionModule = icns;
@@ -44,7 +45,7 @@ module.exports = LeapApp.extend({
     conversionModule.convertToPng(filename, this.iconFilename(), function(err) {
       this.set('hasTile', true);
       this.set('hasIcon', !err);
-      this.set('isInstalled', true);
+      this.set ('isInstalled', true);
       cb(err);
     }.bind(this));
   },
@@ -57,7 +58,7 @@ module.exports = LeapApp.extend({
     cb(null);
   },
 
-  launch: function() {
+  launchCommand: function() {
     return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   },
 

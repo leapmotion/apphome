@@ -122,6 +122,7 @@ FsScanner.prototype = {
     var allowedApp = this._getAllowedApp(attributes.name);
     if (allowedApp && allowedApp.relativeExePath) {
       attributes.relativeExePath = allowedApp.relativeExePath;
+      attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath);
     }
 
     cb(null, this._createLocalLeapApp(attributes));
