@@ -11,11 +11,15 @@ module.exports = BaseView.extend({
   initialize: function() {
     this.injectCss();
     this.$el.append(this.templateHtml());
-    this.$el.append((new SplashWelcomeView()).$el);
+
+// todo: restore   this.$el.append((new SplashWelcomeView()).$el);
+
     this.$el.append((new MyAppsView({
       el: this.$('#my-apps')
     })).$el);
     this._initGotoStore();
+
+    uiGlobals.trigger(uiGlobals.Event.SplashWelcomeClosed); // todo: remove when splash is restored
   },
 
   _initGotoStore: function() {

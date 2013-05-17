@@ -7,6 +7,7 @@ var LeapApp = require('./leap-app.js');
 var icns = require('../utils/icns.js');
 var ico = require('../utils/ico.js');
 var shell = require('../utils/shell.js');
+var appData = require('../utils/app-data.js');
 
 module.exports = LeapApp.extend({
 
@@ -71,6 +72,11 @@ module.exports = LeapApp.extend({
 
   sortScore: function() {
     return 'x_' + (this.get('name'));
+  },
+
+  resolveImages: function() {
+    this.setAppDataFileAttrib('background_image_path', 'background_image_name', 'tile_backgrounds');
+    this.setAppDataFileAttrib('icon_image_path', 'icon_image_name', 'icons');
   }
 
 });
