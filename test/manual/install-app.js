@@ -40,7 +40,7 @@ function testLocalApps(cb) {
   fsScanner.scan(function(err, apps) {
     assert.ok(apps);
     async.eachSeries(apps, function(app, callback) {
-      console.log('testing local app: ' + app.get('name'));
+      console.log('testing local app: ' + JSON.stringify(app.toJSON()));
       app.install(function(err) {
         console.log(err ? err : 'INSTALLED');
         assert.ok(!err);
@@ -66,13 +66,13 @@ if (os.platform() === 'win32') {
     });
   });
 } else if (os.platform() === 'darwin') {
-  /*testStoreApp(new StoreLeapApp({
+  testStoreApp(new StoreLeapApp({
     name: 'Boom Ball',
     version: '1.0.0'
-  }), 'http://localhost:9876/no-drm/Boom%20Ball.dmg', function() {*/
+  }), 'http://localhost:9876/no-drm/Boom%20Ball.dmg', function() {
     testLocalApps(function() {
       process.exit();
     });
-  //});
+  });
 }
 
