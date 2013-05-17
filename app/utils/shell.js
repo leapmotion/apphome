@@ -5,7 +5,8 @@ function escapeBash(string) {
 }
 
 function escapeWindows(string) {
-  return String(string).replace(/([\(\)%!\^"<>&\|])/g, '^$1');
+  // based on http://www.robvanderwoude.com/escapechars.php
+  return '"' + String(string).replace(/([\^<>\|])/g, '^$1').replace(/\%/g, '%%') + '"';
 }
 
 module.exports.escape = (os.platform() === 'win32' ? escapeWindows : escapeBash);
