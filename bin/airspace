@@ -12,7 +12,10 @@ var platformSuffixes = {
 };
 
 var executable = 'nw/node-webkit-v' + NodeWebkitVersion + '-' + platformSuffixes[os.platform()];
-var nw = spawn(executable, [ '.' ], { cwd: workingDir, env: process.env });
+var nw = spawn(executable, [ '.' ].concat(process.argv.slice(2)), {
+  cwd: workingDir,
+  env: process.env
+});
 nw.stdout.pipe(process.stdout);
 nw.stderr.pipe(process.stderr);
 function killNodeWebkit() {
