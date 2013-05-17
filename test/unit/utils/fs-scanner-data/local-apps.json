@@ -4,7 +4,6 @@
       "name": "Google Earth",
       "minVersion": "7.1",
       "relativeExePath": "client\\googleearth.exe"
-
     }
   ],
 
@@ -12,6 +11,10 @@
     {
       "name": "Google Earth",
       "minVersion": "7.1"
+    },
+    {
+      "name": "GarageBand",
+      "minVersion": "6"
     }
   ]
 }

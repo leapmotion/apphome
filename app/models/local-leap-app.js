@@ -40,14 +40,16 @@ module.exports = LeapApp.extend({
     } else if (os.platform() === 'win32') {
       conversionModule = ico;
     } else {
-      return cb(new Error("Don't know how to convert to PNG: " + filename));
+      return finishInstallation.call(this, false);
     }
-    conversionModule.convertToPng(filename, this.iconFilename(), function(err) {
+    conversionModule.convertToPng(filename, this.iconFilename(), finishInstallation.bind(this));
+
+    function finishInstallation(err) {
       this.set('hasTile', true);
-      this.set('hasIcon', !err);
-      this.set ('isInstalled', true);
-      cb(err);
-    }.bind(this));
+      this.set('hasIcon', err === null);
+      this.set('isInstalled', true);
+      cb(err ? err : null);
+    }
   },
 
   uninstall: function(deleteData, cb) {

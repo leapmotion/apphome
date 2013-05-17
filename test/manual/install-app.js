@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 require('../unit/env.js');
 var assert = require('assert');
+var async = require('async');
 var connect = require('connect');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
 var os = require('os');
+
 var StoreLeapApp = require('../../app/models/store-leap-app.js');
 var FsScanner = require('../../app/utils/fs-scanner.js');
 
@@ -36,22 +38,22 @@ function testStoreApp(app, appUrl, cb) {
 function testLocalApps(cb) {
   var fsScanner = new FsScanner({ allowedApps: allowedApps[os.platform()] });
   fsScanner.scan(function(err, apps) {
-    apps.forEach(function(app) {
+    assert.ok(apps);
+    async.eachSeries(apps, function(app, callback) {
       console.log('testing local app: ' + app.get('name'));
       app.install(function(err) {
         console.log(err ? err : 'INSTALLED');
         assert.ok(!err);
-        console.log(app.iconFilename());
         app.launch().on('exit', function() {
           app.uninstall(true, function(err) {
             console.log(err ? err : 'UNINSTALLED');
             assert.ok(!err);
-            cb();
+            callback();
           });
         });
       });
-    });
-  });  
+    }, cb);
+  });
 }
 
 if (os.platform() === 'win32') {
@@ -64,13 +66,13 @@ if (os.platform() === 'win32') {
     });
   });
 } else if (os.platform() === 'darwin') {
-  testStoreApp(new StoreLeapApp({
+  /*testStoreApp(new StoreLeapApp({
     name: 'Boom Ball',
     version: '1.0.0'
-  }), 'http://localhost:9876/no-drm/Boom%20Ball.dmg', function() {
+  }), 'http://localhost:9876/no-drm/Boom%20Ball.dmg', function() {*/
     testLocalApps(function() {
       process.exit();
     });
-  });
+  //});
 }
 
