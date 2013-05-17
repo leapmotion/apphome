@@ -88,7 +88,7 @@ var BaseLeapAppModel = BaseModel.extend({
 module.exports = BaseLeapAppModel;
 
 module.exports.hydrateCachedModels = function() {
-  var cachedApps = db.getItem(LeapAppsDbKey) || [];
+  var cachedApps = JSON.parse(db.getItem(LeapAppsDbKey) || '') || [];
   cachedApps.forEach(function(appData) {
     uiGlobals.leapApps.add(appData);
   });

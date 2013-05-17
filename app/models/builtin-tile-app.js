@@ -14,9 +14,9 @@ module.exports = LeapApp.extend({
 
 
 module.exports.createBuiltinTiles = function() {
-  console.log('tmp - uiGlobals.Builtin.VisitStore ' + uiGlobals.Builtin.VisitStore);
   var builtins = [
     { id: uiGlobals.Builtin.VisitStore }
+//    { id: uiGlobals.Builtin.ErrorTile }
   ];
   builtins.forEach(function(builtinData) {
     builtinData.is_builtin = true;

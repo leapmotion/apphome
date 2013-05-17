@@ -35,7 +35,7 @@ AppController.prototype = {
 
 var appController;
 
-$(window.document).ready(function() {
+$(window).load(function() {
   appController = new AppController();
   appController.runApp();
 });

@@ -5,7 +5,10 @@ var LocalAppTile = BaseTile.extend({
 
   initialize: function(args) {
     this.injectCss();
-    this.setElement($(this.templateHtml()));
+    var leapApp = args.leapApp;
+    var templateData = leapApp.toJSON();
+    templateData.tileBgSrc = '/tbd.png';
+    this.setElement($(this.templateHtml(templateData)));
 
     this.initLauncher(args.path);
   }

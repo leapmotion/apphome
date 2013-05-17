@@ -11,7 +11,8 @@ uiGlobals.Event = enumerable.make([
 
 
 uiGlobals.Builtin = enumerable.make([
-  'VisitStore'
+  'VisitStore',
+  'ErrorTile'
 ], 'Builtins');
 
 module.exports = uiGlobals;
