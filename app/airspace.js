@@ -1,3 +1,4 @@
+var fs = require('fs');
 var PageContainerView = require('./views/page-container/page-container.js');
 var uiGlobals = require('./ui-globals.js');
 var LeapAppCollection = require('./models/leap-app-collection.js');
@@ -17,6 +18,7 @@ AppController.prototype = {
 
   _setupGlobals: function() {
     global.uiGlobals = uiGlobals;
+    global.CONFIG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'config.json'), 'utf-8'));
     uiGlobals.leapApps = new LeapAppCollection();
   },
 
