@@ -5,16 +5,17 @@ var BuiltinTileApp = require('./builtin-tile-app.js');
 module.exports = window.Backbone.Collection.extend({
 
   model: function(attrs, options) {
-    if (attrs.app_id) { // todo: use real attrib
-      return new StoreLeapApp(attrs, options);
-    } else if (attrs.app_name) { // todo: use real attrib
-      return new LocalLeapApp(attrs, options);
-    } else if (attrs.is_builtin) {
+    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs));
+    if (attrs.is_builtin) {
       return new BuiltinTileApp(attrs, options);
+    } else if (attrs.app_id) { // todo: use real attrib
+      return new StoreLeapApp(attrs, options);
+    } else if (attrs.name) { // todo: use real attrib
+      return new LocalLeapApp(attrs, options);
     } else {
       console.error('unknown app type: ' + JSON.stringify(attrs));
-      return new BuiltinTileApp({ // todo: error tile
-
+      return new BuiltinTileApp({
+        id: uiGlobals.Builtin.ErrorTile
       });
     }
   },

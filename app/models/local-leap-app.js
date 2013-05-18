@@ -5,7 +5,9 @@ var path = require('path');
 
 var LeapApp = require('./leap-app.js');
 var icns = require('../utils/icns.js');
+var ico = require('../utils/ico.js');
 var shell = require('../utils/shell.js');
+var appData = require('../utils/app-data.js');
 
 module.exports = LeapApp.extend({
 
@@ -31,22 +33,24 @@ module.exports = LeapApp.extend({
     return md5hash.digest('hex');
   },
 
-  install: function(args, cb) {
-    var filename = args.rawIconFile;
+  install: function(cb) {
+    var filename = this.get('rawIconFile');
     var conversionModule;
     if (/\.icns$/i.test(filename)) {
       conversionModule = icns;
     } else if (os.platform() === 'win32') {
       conversionModule = ico;
     } else {
-      return cb(new Error("Don't know how to convert to PNG: " + filename));
+      return finishInstallation.call(this, false);
     }
-    conversionModule.convertToPng(filename, this.iconFilename(), function(err) {
+    conversionModule.convertToPng(filename, this.iconFilename(), finishInstallation.bind(this));
+
+    function finishInstallation(err) {
       this.set('hasTile', true);
-      this.set('hasIcon', !err);
+      this.set('hasIcon', err === null);
       this.set('isInstalled', true);
-      cb(err);
-    }.bind(this));
+      cb(err ? err : null);
+    }
   },
 
   uninstall: function(deleteData, cb) {
@@ -57,7 +61,7 @@ module.exports = LeapApp.extend({
     cb(null);
   },
 
-  launch: function() {
+  launchCommand: function() {
     return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   },
 
@@ -68,6 +72,11 @@ module.exports = LeapApp.extend({
 
   sortScore: function() {
     return 'x_' + (this.get('name'));
+  },
+
+  resolveImages: function() {
+    this.setAppDataFileAttrib('background_image_path', 'background_image_name', 'tile_backgrounds');
+    this.setAppDataFileAttrib('icon_image_path', 'icon_image_name', 'icons');
   }
 
 });

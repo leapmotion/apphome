@@ -13,6 +13,9 @@ global.LeapHomeDir = global.LeapHomeDir || path.resolve(__dirname, '../..');
 
 var MaxTestTime = 1000 * 15;
 
+global.isRunningTest = function() {
+  return !!process.env.LEAPHOME_INTEGRATION_TEST_PATH;
+};
 
 function runInApp(fileName, testFn) {
   var testPath = process.env.LEAPHOME_INTEGRATION_TEST_PATH;

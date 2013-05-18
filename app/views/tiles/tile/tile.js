@@ -9,13 +9,27 @@ var TileHolder = BaseView.extend({
 
   initialize: function(args) {
     this.injectCss();
-    this.setElement($(this.templateHtml()));
     var tileModel = args.tileModel || args.leapApp;
+    var contentView = factory(tileModel, args);
+    var templateData = _.extend({
+      name: tileModel.get('name') || '',
+      background_image_src: tileModel.get('background_image_src') || '',
+      icon_image_src: tileModel.get('icon_image_src') || ''
+    }, _.isFunction(contentView.templateData) ? contentView.templateData() : tileModel.toJSON());
+
+    this.setElement($(this.templateHtml(templateData)));
+    this.$('.tile-content').append(contentView.$el);
+
+    this.listenTo(tileModel, 'change:background_image_src', function() {
+      this.$('.tile-bg').attr('src', tileModel.get('background_image_src'));
+    }, this);
+
+    this.listenTo(tileModel, 'change:icon_image_src', function() {
+      this.$('.icon').attr('src', tileModel.get('icon_image_src'));
+    }, this);
+
     this.$el.attr('tile_id', tileModel.id);
     this.tileId = tileModel.id;
-
-    var contentView = factory(tileModel, args);
-    this.$('.tile-content').append(contentView.$el);
   }
 });
 

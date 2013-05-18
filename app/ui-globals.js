@@ -6,12 +6,13 @@ uiGlobals.Event = enumerable.make([
   'SplashWelcomeClosed',
   'GotoInstalledAppsCarousel',
   'GotoUpdateAppsCarousel',
-  'GotoDeletedAppsCarousel',
+  'GotoDeletedAppsCarousel'
 ], 'UiGlobalEvent');
 
 
 uiGlobals.Builtin = enumerable.make([
-  'VisitStore'
+  'VisitStore',
+  'ErrorTile'
 ], 'Builtins');
 
 module.exports = uiGlobals;

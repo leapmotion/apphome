@@ -36,7 +36,10 @@ FsScanner.prototype = {
   },
 
   _scanForMacApps: function(cb) {
-    fs.mkdirSync('~/Applications');
+    var userAppsDir = path.join(process.env.HOME, 'Applications');
+    if (!fs.existsSync(userAppsDir)) {
+      fs.mkdirSync(userAppsDir);
+    }
     exec('find ~/Applications /Applications -maxdepth 4 -name Info.plist', function(err, stdout) {
       if (err) {
         return cb(err);
@@ -62,13 +65,18 @@ FsScanner.prototype = {
 
       var attributes = {
         name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
-        version: parsedPlist.CFBundleVersion || parsedPlist.CFBundleShortVersionString,
-        rawIconFile: parsedPlist.CFBundleIcon || parsedPlist.CFBundleIconFile,
+        version: parsedPlist.CFBundleShortVersionString || parsedPlist.CFBundleVersion,
         keyFile: keyFile,
         relativeExePath: path.join('Contents', 'MacOS', parsedPlist.CFBundleExecutable)
       };
 
-      attributes.rawIconFile = attributes.rawIconFile && path.join(keyFile, attributes.rawIconFile);
+      var icon = parsedPlist.CFBundleIcon || parsedPlist.CFBundleIconFile;
+      if (icon) {
+        if (!path.extname(icon)) {
+          icon = icon + '.icns';
+        }
+        attributes.rawIconFile = path.join(keyFile, 'Contents', 'Resources', icon);
+      }
 
       cb(null, this._createLocalLeapApp(attributes));
     }.bind(this));
@@ -122,6 +130,7 @@ FsScanner.prototype = {
     var allowedApp = this._getAllowedApp(attributes.name);
     if (allowedApp && allowedApp.relativeExePath) {
       attributes.relativeExePath = allowedApp.relativeExePath;
+      attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath);
     }
 
     cb(null, this._createLocalLeapApp(attributes));

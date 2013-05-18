@@ -38,7 +38,8 @@ var mockExec = {
 
 var mockFs = {
   darwin: {
-    mkdirSync: function() {}
+    mkdirSync: function() {},
+    existsSync: fs.existsSync
   }
 };
 

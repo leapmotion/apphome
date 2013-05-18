@@ -163,6 +163,11 @@ module.exports = LeapApp.extend({
         cb(new Error('Unknown platform: ' + os.platform()));
       }
     }
+  },
+    
+  resolveImages: function() {
+    this.setAppDataFileAttrib('background_image_path', 'background_image_name', 'tile_backgrounds');
+    this.setAppDataFileAttrib('icon_image_path', 'icon_image_name', 'icons');
   }
 
 });

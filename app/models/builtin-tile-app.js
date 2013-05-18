@@ -8,15 +8,20 @@ module.exports = LeapApp.extend({
 
   sortScore: function() {
     return '0_' + (this.get('ndx') || '0');
+  },
+
+  resolveImages: function() {
+    // ignored, handled in builtin-specific view
   }
 
 });
 
 
 module.exports.createBuiltinTiles = function() {
-  console.log('tmp - uiGlobals.Builtin.VisitStore ' + uiGlobals.Builtin.VisitStore);
+  console.log("Creating builtin tiles");
   var builtins = [
-    { id: uiGlobals.Builtin.VisitStore }
+    { id: uiGlobals.Builtin.VisitStore, name: 'Visit App Store' }
+//    { id: uiGlobals.Builtin.ErrorTile }
   ];
   builtins.forEach(function(builtinData) {
     builtinData.is_builtin = true;

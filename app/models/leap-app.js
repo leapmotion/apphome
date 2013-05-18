@@ -4,6 +4,8 @@ var os = require('os');
 var BaseModel = require('./base-model.js');
 var appData = require('../utils/app-data.js');
 var db = require('../utils/db.js');
+var appData = require('../utils/app-data.js');
+var fs = require('fs');
 
 var LeapAppsDbKey = 'leap_apps';
 
@@ -15,13 +17,17 @@ var BaseLeapAppModel = BaseModel.extend({
       return !app.isBuiltinTile();
     });
     var payload = _(appsToPersist).map(function(app) {
-      return app.toJSON(options);
+      return app.toJSON();
     });
-    db.setItem(LeapAppsDbKey, payload);
+    db.setItem(LeapAppsDbKey, JSON.stringify(payload));
   },
 
   sortScore: function() {
     throw new Error('sortScore is an abstract method');
+  },
+
+  resolveImages: function() {
+    throw new Error('resolveImages is an abstract method');
   },
 
   isLocalApp: function() {
@@ -81,15 +87,38 @@ var BaseLeapAppModel = BaseModel.extend({
 
   isInstalled: function() {
     return !!this.get('isInstalled');
-  }
+  },
 
+  // converts a file name in an appData image subdir into an absolute path and sets that value on the model,
+  // triggering change events for the view to bind and display
+  setAppDataFileAttrib: function(targetAttribName, srcAttribName, appDataSubdir) {
+    if (!this.get(targetAttribName)) {
+      var srcName = this.get(srcAttribName);
+      if (srcName) {
+        var absPath = appData.pathForFile('/' + appDataSubdir + '/' + srcName);
+        fs.exists(absPath, function(exists) {
+          if (exists) {
+            this.set(targetAttribName, absPath);
+          }
+        }.bind(this));
+      }
+    }
+  }
 });
 
 module.exports = BaseLeapAppModel;
 
 module.exports.hydrateCachedModels = function() {
-  var cachedApps = db.getItem(LeapAppsDbKey) || [];
+  var cachedApps = JSON.parse(db.getItem(LeapAppsDbKey) || '[]');
+  console.log('Cached apps to restore: ' + cachedApps.length);
   cachedApps.forEach(function(appData) {
-    uiGlobals.leapApps.add(appData);
+    try {
+      console.log('Restoring cached model ' + appData.id + ': ' + JSON.stringify(appData));
+      uiGlobals.leapApps.add(appData);
+    } catch (err) {
+      console.error('Error restoring leapApp model: ' + err.message);
+      console.error('Corrupted leapApp model: ' + JSON.stringify(appData));
+      console.dir(err);
+    }
   });
 };

@@ -8,8 +8,8 @@
   "window": {
     "show": false,
     "toolbar": true,
-    "width": 800,
-    "height": 500
+    "width": 1300,
+    "height": 600
   },
   "dependencies": {
     "adm-zip": "0.4.3",
