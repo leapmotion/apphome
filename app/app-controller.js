@@ -12,6 +12,9 @@ function AppController() {
 AppController.prototype = {
 
   runApp: function() {
+    BuiltinTileApp.createBuiltinTiles();
+    LeapApp.hydrateCachedModels();
+
     this._authorize(function(err, accessToken) {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
       this._paintPage();
@@ -20,8 +23,6 @@ AppController.prototype = {
 
   _paintPage: function() {
     $('body').append((new PageContainerView()).$el);
-    BuiltinTileApp.createBuiltinTiles();
-    LeapApp.hydrateCachedModels();
   },
 
   _authorize: function(cb) {
