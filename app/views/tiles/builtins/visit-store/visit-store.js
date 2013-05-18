@@ -6,7 +6,7 @@ var BuiltinStoreTile = BaseTile.extend({
 
   initialize: function(args) {
     this.injectCss();
-    var leapApp = this.leapApp = args.leapApp;
+    this.leapApp = args.leapApp;
     this.setElement($(this.templateHtml()));
   },
 
@@ -16,6 +16,14 @@ var BuiltinStoreTile = BaseTile.extend({
       background_image_src: dirSrc + '/store-background.png',
       icon_image_src: dirSrc + '/store-icon.png'
     }, this.leapApp.toJSON());
+  },
+
+  setTileView: function(tileView) {
+    this.tileView = tileView;
+    tileView.$el.click(function() {
+      nwGui.Shell.openExternal(CONFIG.VisitStoreUrl);
+    });
+
   }
 
 });

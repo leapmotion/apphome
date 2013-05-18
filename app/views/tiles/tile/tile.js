@@ -18,6 +18,10 @@ var TileHolder = BaseView.extend({
     }, _.isFunction(contentView.templateData) ? contentView.templateData() : tileModel.toJSON());
 
     this.setElement($(this.templateHtml(templateData)));
+    if (_.isFunction(contentView.setTileView)) {
+      contentView.setTileView(this);
+    }
+
     this.$('.tile-content').append(contentView.$el);
 
     this.listenTo(tileModel, 'change:background_image_src', function() {
