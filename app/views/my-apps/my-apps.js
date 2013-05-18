@@ -21,16 +21,19 @@ module.exports = BaseView.extend({
     });
     this.$active.append(installedAppsCarousel.$el);
 
-    uiGlobals.leapApps.on('add', function(leapApp) {
-      var tileView = new Tile({ leapApp: leapApp });
-      installedAppsCarousel.addTile(tileView);
-    }, this);
-
-    uiGlobals.leapApps.on('remove', function(leapApp) {
+    var leapApps = uiGlobals.leapApp;
+    leapApps.forEach(this._addLeapApp.bind(this));
+    leapApps.on('add', this._addLeapApp, this);
+    leapApps.on('remove', function(leapApp) {
       installedAppsCarousel.removeTileById(leapApp.id);
     }, this);
 
     this._initNavigationBindings();
+  },
+
+  _addLeapApp: function(leapApp) {
+    var tileView = new Tile({ leapApp: leapApp });
+    this.installedAppsCarousel.addTile(tileView);
   },
 
   _initNavigationBindings: function() {
