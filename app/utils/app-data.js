@@ -10,8 +10,9 @@ var PlatformDirs = {
 
 
 var appDataDir;
+var appDataSubDirs = {};
 
-function getDir() {
+function getDir(subdir) {
   if (!appDataDir) {
     if (!PlatformDirs[os.platform()]) {
       throw new Error('Unknown operating system: ' + os.platform());
@@ -25,19 +26,26 @@ function getDir() {
     }
   }
 
-  return appDataDir;
+  if (subdir && !appDataSubDirs[subdir]) {
+    appDataSubDirs[subdir] = path.join(appDataDir, subdir);
+    if (!fs.existsSync(appDataSubDirs[subdir])) {
+      fs.mkdirSync(appDataSubDirs[subdir]);
+    }
+  }
+
+  return subdir ? appDataSubDirs[subdir] : appDataDir;
 }
 
-function pathForFile(filename) {
-  return path.join(getDir(), filename);
+function pathForFile(subdir, filename) {
+  return path.join(getDir(subdir), filename);
 }
 
-function readFile(filename) {
-  return fs.readFileSync(pathForFile(filename));
+function readFile(subdir, filename) {
+  return fs.readFileSync(pathForFile(subdir, filename));
 }
 
-function writeFile(filename, data) {
-  return fs.writeFileSync(pathForFile(filename), data);
+function writeFile(subdir, filename, data) {
+  return fs.writeFileSync(pathForFile(subdir, filename), data);
 }
 
 module.exports.getDir = getDir;

@@ -18,9 +18,7 @@ function AppController() {
 AppController.prototype = {
 
   runApp: function() {
-
     this._setupGlobals();
-    this._assureAppDataSubdirs();
     this._authorize(function(err, accessToken) {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
       this._paintPage();
@@ -53,18 +51,7 @@ AppController.prototype = {
         cb(null, accessToken)
       }
     }.bind(this));
-  },
-  
-  _assureAppDataSubdirs: function() {
-    try {
-      _(CONFIG.AppSubdir).each(function(subdirName) {
-        fs.mkdirsSync(appData.pathForFile(subdirName));
-      });
-    } catch (err) {
-      console.error('Trouble creating subdirs: ' + err);
-      uiGlobals.trigger(uiGlobals.Event.DiskWriteError);
-    }
-  }  
+  }
 
 };
 

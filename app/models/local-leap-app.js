@@ -65,14 +65,9 @@ module.exports = LeapApp.extend({
     return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   },
 
-  iconFilename: function() {
-    return path.join(appData.getDir(), CONFIG.AppSubdir.AppIcons, 'icon_' + this.id + '.png');
-  },
-
   sortScore: function() {
     return 'x_' + (this.get('name'));
   }
-
 
 });
 

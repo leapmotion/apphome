@@ -1,13 +1,14 @@
 var exec = require('child_process').exec;
+var fs = require('fs');
 var os = require('os');
 
-var BaseModel = require('./base-model.js');
+var appData = require('../utils/app-data.js');
 var db = require('../utils/db.js');
-var fs = require('fs');
 
+var BaseModel = require('./base-model.js');
 var LeapAppsDbKey = 'leap_apps';
 
-var BaseLeapAppModel = BaseModel.extend({
+module.exports = BaseModel.extend({
 
   save: function() {
     // note: persisting entire collection for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
@@ -75,21 +76,18 @@ var BaseLeapAppModel = BaseModel.extend({
     return !!this.get('isInstalled');
   }
 
-
 });
-
-module.exports = BaseLeapAppModel;
 
 module.exports.hydrateCachedModels = function() {
   var cachedApps = JSON.parse(db.getItem(LeapAppsDbKey) || '[]');
   console.log('Cached apps to restore: ' + cachedApps.length);
-  cachedApps.forEach(function(appData) {
+  cachedApps.forEach(function(appArgs) {
     try {
-      console.log('Restoring cached model ' + appData.id + ': ' + JSON.stringify(appData));
-      uiGlobals.leapApps.add(appData);
+      console.log('Restoring cached model ' + appArgs.id + ': ' + JSON.stringify(appArgs));
+      uiGlobals.leapApps.add(appArgs);
     } catch (err) {
       console.error('Error restoring leapApp model: ' + err.message);
-      console.error('Corrupted leapApp model: ' + JSON.stringify(appData));
+      console.error('Corrupted leapApp model: ' + JSON.stringify(appArgs));
       console.dir(err);
     }
   });
