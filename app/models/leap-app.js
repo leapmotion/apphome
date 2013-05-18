@@ -2,9 +2,7 @@ var exec = require('child_process').exec;
 var os = require('os');
 
 var BaseModel = require('./base-model.js');
-var appData = require('../utils/app-data.js');
 var db = require('../utils/db.js');
-var appData = require('../utils/app-data.js');
 var fs = require('fs');
 
 var LeapAppsDbKey = 'leap_apps';
