@@ -49,6 +49,7 @@ function mockFsScannerForPlatform(platform, args) {
   if (mockExec[platform]) {
     var plist = rewire('../../../app/utils/plist.js');
     plist.__set__('exec', mockExec[platform]);
+    plist.__set__('os', { platform: function() { return platform; }});
     FsScanner.__set__('exec', mockExec[platform]);
     FsScanner.__set__('plist', plist);
   }
@@ -69,7 +70,7 @@ describe('FsScanner', function() {
       process.env.ProgramW6432 = true;
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 1, '1 app matching allowed apps');
+        assert.equal(apps.length, 1);
         done();
       });
       delete process.env.ProgramW6432;
@@ -80,7 +81,7 @@ describe('FsScanner', function() {
       var fsScanner = mockFsScannerForPlatform('win32');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 58, '58 total apps');
+        assert.equal(apps.length, 58);
         done();
       });
       delete process.env.ProgramW6432;
@@ -96,7 +97,7 @@ describe('FsScanner', function() {
       });
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 1, '1 app matching allowed apps');
+        assert.equal(apps.length, 2);
         done();
       });
     });
@@ -105,7 +106,7 @@ describe('FsScanner', function() {
       var fsScanner = mockFsScannerForPlatform('darwin');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 104, '104 total apps');
+        assert.equal(apps.length, 104);
         done();
       });
     });
