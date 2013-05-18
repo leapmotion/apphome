@@ -39,6 +39,9 @@ var TileHolder = BaseView.extend({
 
 
 function factory(leapApp, opts) {
+  if (!leapApp) {
+    throw new Error('leapApp required');
+  }
   opts = _.extend(opts || {}, { leapApp: leapApp });
   var view;
   if (leapApp.isStoreApp()) {

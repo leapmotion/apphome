@@ -14,104 +14,123 @@ var CarouselView = BaseView.extend({
 
   initialize: function() {
     var opts = this.options;
+    this.collection = opts.collection;
+
     this.injectCss();
     this.$el.append(this.templateHtml());
+    this._initNavigationControls();
 
-
-    this._slides = [];
-    this._slidesByTileId = {};
-    this._tilesById = {};
-    this._slideCount = 0;
-    this._tileCount = 0;
-    this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
-
-    this._currentSlideNdx = 0;
     this.$currentScreenHolder = this.$('.current-screen-holder');
-    this.$previousScreenHolder = this.$('.previous-screen-holder');
-    this.$nextScreenHolder = this.$('.next-screen-holder');
+    // todo: are we displaying previews of next/previous slides? Mockups are unclear about it
+    //    this.$previousScreenHolder = this.$('.previous-screen-holder');
+    //    this.$nextScreenHolder = this.$('.next-screen-holder');
 
-    this.$currentScreenHolder.append(this._slideViewByTileNdx(0).$el.show());
+    this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
+    this._currentSlideNdx = 0;
+    this._slideCount = 0;
+    this.showSlide(0);
 
+    this._initAddRemoveRepainting();
 
-//    this._tmp3dPlay();
-
-    // todo: resorting for add/remove
   },
 
-  _tmp3dPlay: function() {
-    var camera = this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
-    var scene = this.scene = new THREE.Scene();
-    var renderer = this.renderer = new THREE.CSS3DRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-//    renderer.domElement.style.position = 'absolute'; // ?
+  _initAddRemoveRepainting: function() {
+    var collection = this.collection;
+    var repaint = _.debounce(function(slideNumber) {
+      this._slideCount = collection.pageCount(this._tilesPerSlide);
+      this.showSlide(slideNumber);
+    }.bind(this), 300);
 
-    var slideView = this._slideViewByTileNdx(0);
-    var threeObj = slideView.three();
-    this.scene.add(threeObj);
-    slideView.$el.click(function() {
-      threeObj.position.z = threeObj.position.z - 400;
+    collection.on('add', function(tileModel) {
+      var slideNumber = collection.whichPage(tileModel, this._tilesPerSlide);
+      if (slideNumber === this._currentSlideNdx) {
+        repaint(slideNumber);
+      }
+    }, this);
+
+    collection.on('remove', function(tileModel) {
+      var changedSlideNumber = collection.whichPage(collection.indexOf(tileModel) - 1, this._tilesPerSlide);
+      if (this._currentSlideNdx >= changedSlideNumber) {
+        this.showSlide(this._currentSlideNdx);
+      }
+    }, this);
+  },
+
+  _initNavigationControls: function() {
+    var $navButtons = this.$('.nav-btn');
+    var $previous = this.$previousButton = this.$('.go-previous');
+    var $next = this.$nextButton = this.$('.go-next');
+
+    $navButtons.click(function(evt) {
+      var $clicked = $(evt.target);
+      if ($clicked.hasClass('disabled')) {
+        return;
+      }
+      var advance = $clicked.attr('advance');
+      var gotoSlide = $clicked.attr('slide');
+      var slideNumber;
+      if (advance) {
+        slideNumber = this._currentSlideNdx + (advance === 'next' ? 1 : -1);
+      } else if (gotoSlide) {
+        var slideNumber = parseInt(gotoSlide);
+      }
+      if (_.isNumber(slideNumber)) {
+        this.showSlide(slideNumber);
+        return false;
+      }
+    }.bind(this));
+  },
+
+  _buildSlideView: function(slideNumber) {
+    var slideView = new Slide();
+    var tileModels = this.collection.getPageModels(slideNumber, this._tilesPerSlide);
+    tileModels.forEach(function(tileModel) {
+      slideView.addTile({ tileModel: tileModel });
     });
-
-    var animate = function() {
-      window.requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-      window.TWEEN.update();
-    }
-    animate();
-  },
-
-  addTile: function(tileView) {
-    var tileId = tileView.tileId;
-    if (this._tilesById[tileId]) {
-      // redraw?
-    } else {
-      var tileNdx = this._tileCount;
-      ++this._tileCount;
-      tileView.tileNdx = tileNdx;
-      this._tilesById[tileId] = tileView;
-      var slideView = this._slideViewByTileNdx(tileNdx);
-      this._slidesByTileId[tileId] = slideView;
-      slideView.addTile(tileView);
-    }
-  },
-
-  removeTileById: function(tileId) {
-    var $existing = this._existingTileById(tileId);
-    if ($existing.length) {
-      --this._tileCount;
-      $existing.remove();
-      // todo: check if slide is empty
-    }
-  },
-
-  _existingTileById: function(tileId) {
-    return this.$('.tile[tile_id=' + tileId + ']');
-  },
-
-  _slideViewByTileNdx: function(tileNdx) {
-    var slideNdx = Math.floor(tileNdx / this._tilesPerSlide);
-    return this._slides[slideNdx] || this._createSlideView(slideNdx) ;
-  },
-
-  _createSlideView: function(slideNdx) {
-    var slideView = new Slide({
-      slideNdx: slideNdx
-    });
-    ++this._slideCount;
-    if (slideNdx !== this._currentSlideNdx) {
-      slideView.$el.hide();
-    }
-
-    this._slides[slideNdx] = slideView;
-    this._updateSlideNavigation();
     return slideView;
   },
 
-  _updateSlideNavigation: function() {
+  showSlide: function(slideNumber) {
+    if (!slideNumber || slideNumber < 0) {
+      slideNumber = 0;
+    } else if (slideNumber >= this._slideCount) {
+      slideNumber = this._slideCount - 1;
+    }
+    var slideView = this._buildSlideView(slideNumber);
+    this.$currentScreenHolder.empty();
+    this.$currentScreenHolder.append(slideView.$el);
+    this._currentSlideNdx = slideNumber;
+    this._updateSlideNavigation();
+  },
 
-    // todo: update next/prev holders
-    // todo: show/hide left/right
+  _updateSlideNavigation: function() {
+    this.$previousButton.toggleClass('disabled', this._currentSlideNdx <= 0);
+    this.$nextButton.toggleClass('disabled', this._currentSlideNdx + 1 >= this._slideCount);
+    // todo: footer button thingies
   }
+
+
+//  _tmp3dPlay: function() {
+//    var camera = this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
+//    var scene = this.scene = new THREE.Scene();
+//    var renderer = this.renderer = new THREE.CSS3DRenderer();
+//    renderer.setSize( window.innerWidth, window.innerHeight );
+////    renderer.domElement.style.position = 'absolute'; // ?
+//
+//    var slideView = this._slideViewByTileNdx(0);
+//    var threeObj = slideView.three();
+//    this.scene.add(threeObj);
+//    slideView.$el.click(function() {
+//      threeObj.position.z = threeObj.position.z - 400;
+//    });
+//
+//    var animate = function() {
+//      window.requestAnimationFrame(animate);
+//      renderer.render(scene, camera);
+//      window.TWEEN.update();
+//    }
+//    animate();
+//  },
 
 });
 

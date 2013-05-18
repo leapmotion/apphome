@@ -1,5 +1,5 @@
 var BaseView = require('../base-view.js');
-
+var Tile = require('../tiles/tile/tile.js');
 
 var SlideView = BaseView.extend({
   viewDir: __dirname,
@@ -10,12 +10,12 @@ var SlideView = BaseView.extend({
     this.injectCss();
     this.$el.append(this.templateHtml());
     this.$tiles = this.$('.tile-holder');
-    this._slideNdx = args.slideNdx;
   },
 
-  addTile: function(tileView) {
-    this.removeTileById(tileView.tileId);
-    this.$tiles.append(tileView.$el);
+  addTile: function(tileModel) {
+    var view = new Tile(tileModel);
+//    console.log('tmp -- addTile. holder ' + this.$tiles.length + ', el ' + tileView.$el.length);
+    this.$tiles.append(view.$el);
   },
 
   three: function() {
@@ -23,10 +23,6 @@ var SlideView = BaseView.extend({
       this._3d = new window.THREE.CSS3DObject(this.el);
     }
     return this._3d;
-  },
-
-  ndx: function() {
-    return this._slideNdx;
   },
 
   removeTileById: function(tileId) {

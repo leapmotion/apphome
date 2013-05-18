@@ -8,10 +8,6 @@ module.exports = LeapApp.extend({
 
   sortScore: function() {
     return '0_' + (this.get('ndx') || '0');
-  },
-
-  resolveImages: function() {
-    // ignored, handled in builtin-specific view
   }
 
 });
