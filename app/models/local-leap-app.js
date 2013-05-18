@@ -65,19 +65,14 @@ module.exports = LeapApp.extend({
     return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   },
 
-  tileFilename: function() {
-    // TODO: determine correct tile based on icon colors
-    return path.join(__dirname, '..', '..', 'static', 'images', 'default-tile.png');
+  iconFilename: function() {
+    return path.join(appData.getDir(), CONFIG.AppSubdir.AppIcons, 'icon_' + this.id + '.png');
   },
 
   sortScore: function() {
     return 'x_' + (this.get('name'));
-  },
-
-  resolveImages: function() {
-    this.setAppDataFileAttrib('background_image_path', 'background_image_name', 'tile_backgrounds');
-    this.setAppDataFileAttrib('icon_image_path', 'icon_image_name', 'icons');
   }
+
 
 });
 

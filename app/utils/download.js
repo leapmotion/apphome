@@ -7,7 +7,7 @@ var PlatformTempDirs = {
   win32:  process.env.TEMP,
   darwin: process.env.TMPDIR,
   linux:  '/tmp'
-}
+};
 
 function tempFile(extension) {
   extension = extension || '';
@@ -19,8 +19,7 @@ function tempFile(extension) {
   return path.join(tempDir, filename);
 }
 
-function download(url, cb) {
-  var destFilename = tempFile(path.extname(url));
+function download(url, destFilename, cb) {
   var destStream = fs.createWriteStream(destFilename);
 
   destStream.on('error', function(err) {
@@ -41,3 +40,4 @@ function download(url, cb) {
 }
 
 module.exports = download;
+module.exports.tempFile = tempFile;

@@ -103,10 +103,6 @@ module.exports = LeapApp.extend({
     return shell.escape(this._executable);
   },
 
-  tileFilename: function() {
-    return appData.pathForFile('tile_' + this.get('id') + '.png');
-  },
-
   _appDir: function() {
     var dir = this._getDir(PlatformAppDirs, '__appDir');
     if (os.platform() === 'darwin') {
@@ -163,11 +159,6 @@ module.exports = LeapApp.extend({
         cb(new Error('Unknown platform: ' + os.platform()));
       }
     }
-  },
-    
-  resolveImages: function() {
-    this.setAppDataFileAttrib('background_image_path', 'background_image_name', 'tile_backgrounds');
-    this.setAppDataFileAttrib('icon_image_path', 'icon_image_name', 'icons');
   }
 
 });

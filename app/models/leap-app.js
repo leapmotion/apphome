@@ -26,10 +26,6 @@ var BaseLeapAppModel = BaseModel.extend({
     throw new Error('sortScore is an abstract method');
   },
 
-  resolveImages: function() {
-    throw new Error('resolveImages is an abstract method');
-  },
-
   isLocalApp: function() {
     return false;
   },
@@ -48,14 +44,6 @@ var BaseLeapAppModel = BaseModel.extend({
 
   hasTile: function() {
     return !!this.get('hasTile');
-  },
-
-  tileFilename: function() {
-    throw new Error('tileFilename is an abstract method');
-  },
-
-  iconFilename: function() {
-    return appData.pathForFile('icon_' + this.get('id') + '.png');
   },
 
   install: function(cb) {
