@@ -22,6 +22,16 @@ var LeapAppStates = enumerable.make([
 
 var LeapApp = BaseModel.extend({
 
+  initialize: function() {
+    this.on('change:state', function() {
+      if (this.previous('state') === LeapApp.States.Installing &&
+          this.get('state') === LeapApp.States.Ready) {
+        this.set('installedAt', (new Date()).getTime());
+      }
+      this.save();
+    }.bind(this));
+  },
+
   save: function() {
     // note: persisting entire collection for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
     var appsToPersist = uiGlobals.leapApps.filter(function(app) {

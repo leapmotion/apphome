@@ -66,6 +66,7 @@ module.exports = LeapApp.extend({
         fs.unlinkSync(this.get('iconPath'));
       } catch(err) {
         this.set('state', LeapApp.States.UninstallFailed);
+        return cb(err);
       }
     }
     this.set('state', LeapApp.States.Uninstalled);
