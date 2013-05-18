@@ -1,7 +1,6 @@
 var fs = require('fs-extra');
 var path = require('path');
 
-var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapAppCollection = require('./models/leap-app-collection.js');
 var LeapApp = require('./models/leap-app.js');
 var AuthorizationView = require('./views/authorization/authorization.js');
@@ -19,10 +18,9 @@ function AppController() {
 AppController.prototype = {
 
   runApp: function() {
+
     this._setupGlobals();
     this._assureAppDataSubdirs();
-    this._paintPage();
-    this._initializeState();
     this._authorize(function(err, accessToken) {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
       this._paintPage();
@@ -36,9 +34,6 @@ AppController.prototype = {
 
   _paintPage: function() {
     $('body').append((new PageContainerView()).$el);
-  },
-
-  _initializeState: function() {
     BuiltinTileApp.createBuiltinTiles();
     LeapApp.hydrateCachedModels();
   },
