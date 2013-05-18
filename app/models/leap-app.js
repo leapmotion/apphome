@@ -75,23 +75,9 @@ var BaseLeapAppModel = BaseModel.extend({
 
   isInstalled: function() {
     return !!this.get('isInstalled');
-  },
-
-  // converts a file name in an appData image subdir into an absolute path and sets that value on the model,
-  // triggering change events for the view to bind and display
-  setAppDataFileAttrib: function(targetAttribName, srcAttribName, appDataSubdir) {
-    if (!this.get(targetAttribName)) {
-      var srcName = this.get(srcAttribName);
-      if (srcName) {
-        var absPath = appData.pathForFile('/' + appDataSubdir + '/' + srcName);
-        fs.exists(absPath, function(exists) {
-          if (exists) {
-            this.set(targetAttribName, absPath);
-          }
-        }.bind(this));
-      }
-    }
   }
+
+
 });
 
 module.exports = BaseLeapAppModel;
