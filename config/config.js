@@ -11,7 +11,12 @@ var config = {
 
   AppSubdir: {
     AppIcons: 'app_icons',
-    TileBackgrounds: 'tile_backgrounds'
+    AppTiles: 'app_tiles'
+  },
+
+  Defaults: {
+    IconPath: 'TODO.png',
+    TilePath: 'TODO.png'
   }
 };
 

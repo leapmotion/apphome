@@ -4,11 +4,23 @@ var os = require('os');
 
 var appData = require('../utils/app-data.js');
 var db = require('../utils/db.js');
+var enumerable = require('../utils/enumerable.js');
 
 var BaseModel = require('./base-model.js');
 var LeapAppsDbKey = 'leap_apps';
 
-module.exports = BaseModel.extend({
+var LeapAppStates = enumerable.make([
+  'Installing',
+  'InstallFailed',
+  'Ready',
+  'Launching',
+  'Running',
+  'Uninstalling',
+  'UninstallFailed',
+  'Uninstalled'
+], 'LeapAppStates');
+
+var LeapApp = BaseModel.extend({
 
   save: function() {
     // note: persisting entire collection for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
@@ -46,25 +58,46 @@ module.exports = BaseModel.extend({
   },
 
   launch: function() {
+    this.set('state', LeapApp.States.Launching);
     var command = this.launchCommand();
     if (!command) {
       throw new Error("Don't know how to launch apps on: " + os.platform());
     } else {
       console.log('Launching app with command: ' + command);
     }
+
     var appProcess = exec(command);
-    this.set('isLaunched', true);
     appProcess.on('exit', function() {
-      this.set('isLaunched', false);
+      this.set('state', LeapApp.States.Ready);
     }.bind(this));
+
+    var win = nwGui.Window.get();
+    var markAsRunning = function() {
+      this.set('state', LeapApp.States.Running);
+      win.removeListener('blur', markAsRunning);
+    }.bind(this);
+    win.on('blur', markAsRunning);
+
     return appProcess;
   },
 
   launchCommand: function() {
     throw new Error('launchCommand is an abstract method');
+  },
+
+  standardIconPath: function() {
+    return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
+  },
+
+  standardTilePath: function() {
+    return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
   }
 
 });
+
+LeapApp.States = LeapAppStates;
+
+module.exports = LeapApp;
 
 module.exports.hydrateCachedModels = function() {
   var cachedApps = JSON.parse(db.getItem(LeapAppsDbKey) || '[]');

@@ -2,14 +2,14 @@ var async = require('async');
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
-var url = require('url');
 
-var LeapApp = require('./leap-app.js');
-var appData = require('../utils/app-data.js');
+var config = require('../../config/config.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
 var plist = require('../utils/plist.js');
 var shell = require('../utils/shell.js');
+
+var LeapApp = require('./leap-app.js');
 
 var AppsDir = 'AirspaceApps';
 var PlatformAppDirs = {
@@ -35,67 +35,97 @@ module.exports = LeapApp.extend({
     return 'b_' + (this.get('name'));
   },
 
-  install: function(args, cb) {
-    if (!args.appUrl) {
-      return cb(new Error('Required arg: appUrl'));
+  // Listen on the 'progress' event on the return value of this function
+  // to get download progress.
+  install: function(cb) {
+    this.set('state', LeapApp.States.Installing);
+
+    // Can't use async.parallel here, because we want to
+    // pass on the progress stream return value of this._downloadBinary()
+    var numDownloads = 3;
+    function callbackWhenAllDownloadsComplete(err) {
+      numDownloads--;
+      if (err) {
+        this.set('state', LeapApp.States.InstallFailed);
+        cb(err);
+      } else if(numDownloads <= 0) {
+        this.set('state', LeapApp.States.Ready);
+        cb(null);
+      }
     }
 
-    //TODO: download tile or icon or something
+    this._downloadIcon(callbackWhenAllDownloadsComplete.bind(this));
+    this._downloadTile(callbackWhenAllDownloadsComplete.bind(this));
+    return this._downloadBinary(callbackWhenAllDownloadsComplete.bind(this))
+  },
 
-    download(args.appUrl, function(err, tempFilename) {
-      console.log('App from ' + args.appUrl + ' downloaded to: ' + tempFilename);
-      var originalFilename = url.parse(args.appUrl).pathname;
-      if (/\.zip/i.test(originalFilename)) {
-        extract.unzip(tempFilename, this._appDir(), finishInstallation.bind(this));
-      } else if (/\.dmg/i.test(originalFilename)) {
-        extract.undmg(tempFilename, this._appDir(), finishInstallation.bind(this));
+  _downloadBinary: function(cb) {
+    var binaryUrl = this.get('binaryUrl');
+    return download.get(binaryUrl, function(err, tempFilename) {
+      console.log('Downloading app from ' + binaryUrl + ' to: ' + tempFilename);
+      var extension = path.extname(binaryUrl).toLowerCase();
+      if (extension === 'zip') {
+        extract.unzip(tempFilename, this._appDir(), cb);
+      } else if (extension === 'dmg') {
+        extract.undmg(tempFilename, this._appDir(), cb);
       } else {
-        return cb(new Error('Unknown file extension: ' + path.extname(originalFilename)));
+        return cb(new Error('Unknown file extension: ' + extension));
       }
+    });
+  },
 
-      function finishInstallation(err) {
-        if (err) {
-          return cb(err);
-        }
-        fs.remove(tempFilename, function(err) {
-          if (err) {
-            return cb(err);
-          }
+  _downloadIcon: function(cb) {
+    var iconUrl = this.get('iconUrl');
+    download.getWithFallback(iconUrl, this.standardIconPath(), config.Defaults.IconPath, function(err, iconPathOrFallback) {
+      this.set('iconPath', iconPathOrFallback);
+      cb(null);
+    }.bind(this));
+  },
 
-          this._findExecutable(function(err) {
-            if (err) {
-              return cb(err);
-            }
 
-            // call _userDataDir once to ensure it's created
-            this._userDataDir();
-
-            this.set('isInstalled', true);
-            cb(null);
-          }.bind(this));
-        }.bind(this));
-      }
+  _downloadTile: function(cb) {
+    var tileUrl = this.get('tileUrl');
+    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
+      this.set('tilePath', tilePathOrFallback);
+      cb(null);
     }.bind(this));
   },
 
   uninstall: function(deleteData, cb) {
+    this.set('state', LeapApp.States.Uninstalling);
+
     var deletionFunctions = [
       function(callback) {
         fs.remove(this._appDir(), callback);
       }.bind(this)
     ];
+
+    if (fs.existsSync(this.standardIconPath())) {
+      deletionFunctions.push(function(callback) {
+        fs.unlink(this.standardIconPath(), callback);
+      }.bind(this));
+    }
+
+    if (fs.existsSync(this.standardTilePath())) {
+      deletionFunctions.push(function(callback) {
+        fs.unlink(this.standardTilePath(), callback);
+      }.bind(this));
+    }
+
     if (deleteData) {
       deletionFunctions.push(function(callback) {
         fs.remove(this._userDataDir(), callback);
       }.bind(this));
     }
-    // TODO: delete icon or tile or whatever
+
     async.parallel(deletionFunctions, function(err) {
       if (err) {
+        this.set('state', LeapApp.States.UninstallFailed);
         return cb(err);
+      } else {
+        this.set('state', LeapApp.States.Uninstalled);
+        return cb(null);
       }
-      this.set('isInstalled', false);
-      cb(null);
     }.bind(this));
   },
 
@@ -162,4 +192,3 @@ module.exports = LeapApp.extend({
   }
 
 });
-

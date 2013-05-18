@@ -3,11 +3,13 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
-var LeapApp = require('./leap-app.js');
+var appData = require('../utils/app-data.js');
+var config = require('../../config/config.js');
 var icns = require('../utils/icns.js');
 var ico = require('../utils/ico.js');
 var shell = require('../utils/shell.js');
-var appData = require('../utils/app-data.js');
+
+var LeapApp = require('./leap-app.js');
 
 module.exports = LeapApp.extend({
 
@@ -20,11 +22,7 @@ module.exports = LeapApp.extend({
       }
     }
 
-    LeapApp.call(this, args);
-  },
-
-  isLocalApp: function() {
-    return true;
+    LeapApp.prototype.constructor.call(this, args);
   },
 
   _makeIdFromKeyFile: function(keyFile) {
@@ -33,31 +31,44 @@ module.exports = LeapApp.extend({
     return md5hash.digest('hex');
   },
 
+  isLocalApp: function() {
+    return true;
+  },
+
   install: function(cb) {
-    var filename = this.get('rawIconFile');
+    this.set('state', LeapApp.States.Installing);
+    var rawIconFile = this.get('rawIconFile');
     var conversionModule;
-    if (/\.icns$/i.test(filename)) {
+    if (/\.icns$/i.test(rawIconFile)) {
       conversionModule = icns;
     } else if (os.platform() === 'win32') {
       conversionModule = ico;
-    } else {
-      return finishInstallation.call(this, false);
     }
-    conversionModule.convertToPng(filename, this.iconFilename(), finishInstallation.bind(this));
+
+    if (conversionModule) {
+      conversionModule.convertToPng(rawIconFile, this.standardIconPath(), finishInstallation.bind(this));
+    } else {
+      finishInstallation.call(this, true);
+    }
 
     function finishInstallation(err) {
-      this.set('hasTile', true);
-      this.set('hasIcon', err === null);
-      this.set('isInstalled', true);
-      cb(err ? err : null);
+      this.set('iconPath', err ? config.Defaults.IconPath : this.standardIconPath());
+      this.set('tilePath', config.Defaults.TilePath);
+      this.set('state', LeapApp.States.Ready);
+      cb(null);
     }
   },
 
   uninstall: function(deleteData, cb) {
-    if (this.hasIcon()) {
-      fs.unlinkSync(this.iconFilename());
+    this.set('state', LeapApp.States.Uninstalling);
+    if (this.get('iconPath')) {
+      try {
+        fs.unlinkSync(this.get('iconPath'));
+      } catch(err) {
+        this.set('state', LeapApp.States.UninstallFailed);
+      }
     }
-    this.set('isInstalled', false);
+    this.set('state', LeapApp.States.Uninstalled);
     cb(null);
   },
 
@@ -70,4 +81,3 @@ module.exports = LeapApp.extend({
   }
 
 });
-
