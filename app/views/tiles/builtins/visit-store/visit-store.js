@@ -1,5 +1,6 @@
-var BaseTile = require('../../base-tile-content.js');
+var config = require('../../../../../config/config.js');
 
+var BaseTile = require('../../base-tile-content.js');
 
 var BuiltinStoreTile = BaseTile.extend({
   viewDir: __dirname,
@@ -21,7 +22,7 @@ var BuiltinStoreTile = BaseTile.extend({
   setTileView: function(tileView) {
     this.tileView = tileView;
     tileView.$el.click(function() {
-      nwGui.Shell.openExternal(CONFIG.VisitStoreUrl);
+      nwGui.Shell.openExternal(config.VisitStoreUrl);
     });
 
   }

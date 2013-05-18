@@ -3,6 +3,7 @@ var https = require('https');
 var qs = require('querystring');
 var url = require('url');
 
+var config = require('../../config/config.js');
 var db = require('./db.js');
 
 var OauthRefreshTokenDbKey = 'OauthRefreshToken';
@@ -18,19 +19,19 @@ function getRefreshToken() {
 function getAuthorizationUrl() {
   var params = {
     response_type: 'code',
-    client_id: CONFIG.oauth.client_id,
-    redirect_uri: CONFIG.oauth.redirect_uri
+    client_id: config.oauth.client_id,
+    redirect_uri: config.oauth.redirect_uri
   };
-  return CONFIG.oauth.endpoint + 'authorize/?' + qs.stringify(params);
+  return config.oauth.endpoint + 'authorize/?' + qs.stringify(params);
 }
 
 function oauthRequest(params, cb) {
   params = _.extend({}, params, {
-    client_id: CONFIG.oauth.client_id,
-    client_secret: CONFIG.oauth.client_key,
-    redirect_uri: CONFIG.oauth.redirect_uri
+    client_id: config.oauth.client_id,
+    client_secret: config.oauth.client_key,
+    redirect_uri: config.oauth.redirect_uri
   });
-  var urlParts = url.parse(CONFIG.oauth.endpoint);
+  var urlParts = url.parse(config.oauth.endpoint);
   var options = {
     hostname: urlParts.hostname,
     path: urlParts.pathname + 'token',

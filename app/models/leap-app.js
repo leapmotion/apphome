@@ -37,14 +37,6 @@ module.exports = BaseModel.extend({
     return false;
   },
 
-  hasIcon: function() {
-    return !!this.get('hasIcon');
-  },
-
-  hasTile: function() {
-    return !!this.get('hasTile');
-  },
-
   install: function(cb) {
     throw new Error('install is an abstract method');
   },
@@ -70,10 +62,6 @@ module.exports = BaseModel.extend({
 
   launchCommand: function() {
     throw new Error('launchCommand is an abstract method');
-  },
-
-  isInstalled: function() {
-    return !!this.get('isInstalled');
   }
 
 });
