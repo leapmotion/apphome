@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
 
 .preserve3d, .preserve3d * {
   transform-style: 'preserve-3d';
