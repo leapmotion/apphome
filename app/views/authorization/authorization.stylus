@@ -1,0 +1,16 @@
+.authorization
+  iframe.oauth
+    position absolute
+    width 500px
+    height 500px
+    top: -1000px
+    left: -1000px
+    margin 0
+    border none
+    background white
+
+    &.needs-interaction
+      width 100%
+      height 100%
+      top 0
+      left 0

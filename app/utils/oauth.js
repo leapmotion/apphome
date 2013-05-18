@@ -3,14 +3,16 @@ var https = require('https');
 var qs = require('querystring');
 var url = require('url');
 
+var db = require('./db.js');
+
+var OauthRefreshTokenDbKey = 'OauthRefreshToken';
+
 function saveRefreshToken(refreshToken) {
-  //TODO: use localstorage
-  global.REFRESH_TOKEN = refreshToken;
+  db.setItem(OauthRefreshTokenDbKey, refreshToken);
 }
 
-function getRefreshToken(refreshToken) {
-  //TODO: use localstorage
-  return global.REFRESH_TOKEN;
+function getRefreshToken() {
+  return db.getItem(OauthRefreshTokenDbKey);
 }
 
 function getAuthorizationUrl() {
@@ -87,14 +89,6 @@ function getAccessToken(cb) {
   });
 }
 
-
-authorizeWithCode(process.argv[2], function(err) {
-  if (err) {
-    return console.log(err);
-  }
-  getAccessToken(function(err, accessToken) {
-    console.log(err ? err : accessToken);
-  });
-});
-
-
+module.exports.getAuthorizationUrl = getAuthorizationUrl;
+module.exports.authorizeWithCode = authorizeWithCode;
+module.exports.getAccessToken = getAccessToken;
