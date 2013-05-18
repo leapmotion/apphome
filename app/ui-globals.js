@@ -6,7 +6,8 @@ uiGlobals.Event = enumerable.make([
   'SplashWelcomeClosed',
   'GotoInstalledAppsCarousel',
   'GotoUpdateAppsCarousel',
-  'GotoDeletedAppsCarousel'
+  'GotoDeletedAppsCarousel',
+  'DiskWriteError'
 ], 'UiGlobalEvent');
 
 
