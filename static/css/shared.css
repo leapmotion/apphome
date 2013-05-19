@@ -3,6 +3,11 @@ body {
   overflow: hidden;
 }
 
+body * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .preserve3d, .preserve3d * {
   transform-style: 'preserve-3d';
   -webkit-transform-style: 'preserve-3d';
