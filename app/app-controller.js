@@ -1,7 +1,11 @@
+var FsScanner = require('./utils/fs-scanner.js');
 var oauth = require('./utils/oauth.js');
+var storeApi = require('./utils/store-api.js');
 
 var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
+var LocalLeapApp = require('./models/local-leap-app.js');
+var StoreLeapApp = require('./models/store-leap-app.js');
 
 var AuthorizationView = require('./views/authorization/authorization.js');
 var PageContainerView = require('./views/page-container/page-container.js');
@@ -40,6 +44,14 @@ AppController.prototype = {
         cb(null, accessToken)
       }
     }.bind(this));
+  },
+
+  _scanFilesystem: function() {
+
+  },
+
+  _pollServerForUpdates: function() {
+
   }
 
 };
