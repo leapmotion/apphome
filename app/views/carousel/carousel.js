@@ -26,8 +26,8 @@ var CarouselView = BaseView.extend({
     //    this.$nextScreenHolder = this.$('.next-screen-holder');
 
     this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
+    this._slideCount = this.collection.pageCount(this._tilesPerSlide);
     this._currentSlideNdx = 0;
-    this._slideCount = 0;
     this.showSlide(0);
 
     this._initAddRemoveRepainting();

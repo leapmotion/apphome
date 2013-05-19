@@ -35,8 +35,8 @@ module.exports = window.Backbone.Collection.extend({
   },
 
   pageCount: function(modelsPerPage) {
-    if (!modelsPerPage) {
-      throw new Error('modelsPerPage required');
+    if (!modelsPerPage || typeof modelsPerPage !== 'number') {
+      return 0;  // or throw an error?
     }
     return modelsPerPage && typeof modelsPerPage === 'number' ?
       Math.ceil(this.length / modelsPerPage) : 0;
