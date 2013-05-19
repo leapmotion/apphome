@@ -36,24 +36,29 @@ var CarouselView = BaseView.extend({
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
-    var repaint = _.debounce(function(slideNumber) {
+
+    this._repaint = _.debounce(function(slideNumber) {
       this._slideCount = collection.pageCount(this._tilesPerSlide);
       this.showSlide(slideNumber);
     }.bind(this), 300);
 
-    collection.on('add', function(tileModel) {
-      var slideNumber = collection.whichPage(tileModel, this._tilesPerSlide);
-      if (slideNumber === this._currentSlideNdx) {
-        repaint(slideNumber);
-      }
-    }, this);
+    collection.forEach(this._addTile.bind(this));
+    collection.on('add', this._addTile, this);
+    collection.on('remove', this._removeTile, this);
+  },
 
-    collection.on('remove', function(tileModel) {
-      var changedSlideNumber = collection.whichPage(collection.indexOf(tileModel) - 1, this._tilesPerSlide);
-      if (this._currentSlideNdx >= changedSlideNumber) {
-        this.showSlide(this._currentSlideNdx);
-      }
-    }, this);
+  _addTile: function(tileModel) {
+    var slideNumber = this.collection.whichPage(tileModel, this._tilesPerSlide);
+    if (slideNumber === this._currentSlideNdx) {
+      this._repaint(slideNumber);
+    }
+  },
+
+  _removeTile: function(tileModel) {
+    var changedSlideNumber = this.collection.whichPage(collection.indexOf(tileModel) - 1, this._tilesPerSlide);
+    if (this._currentSlideNdx >= changedSlideNumber) {
+      this.showSlide(this._currentSlideNdx);
+    }
   },
 
   _initNavigationControls: function() {
