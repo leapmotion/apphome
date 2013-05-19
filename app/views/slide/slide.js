@@ -14,7 +14,6 @@ var SlideView = BaseView.extend({
 
   addTile: function(tileModel) {
     var view = new Tile(tileModel);
-//    console.log('tmp -- addTile. holder ' + this.$tiles.length + ', el ' + tileView.$el.length);
     this.$tiles.append(view.$el);
   },
 

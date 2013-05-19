@@ -24,12 +24,10 @@ AppController.prototype = {
     this._setupGlobals();
     this._assureAppDataSubdirs();
 
-    this._paintPage(); // tmp - del!
-    // todo: restore! tmp -
-//    this._authorize(function(err, accessToken) {
-//      console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
-//      this._paintPage();
-//    }.bind(this));
+    this._authorize(function(err, accessToken) {
+      console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
+      this._paintPage();
+    }.bind(this));
   },
 
   _setupGlobals: function() {
