@@ -46,6 +46,7 @@ var CarouselView = BaseView.extend({
       if (slideNumber === this._currentSlideNdx) {
         repaint(slideNumber);
       }
+      this._initSlideIndicator();
     }, this);
 
     collection.on('remove', function(tileModel) {
@@ -53,6 +54,7 @@ var CarouselView = BaseView.extend({
       if (this._currentSlideNdx >= changedSlideNumber) {
         this.showSlide(this._currentSlideNdx);
       }
+      this._initSlideIndicator();
     }, this);
 
     collection.on('sort', function() {
@@ -85,6 +87,7 @@ var CarouselView = BaseView.extend({
   },
 
   _initSlideIndicator: function() {
+    this.$('.slide-indicator').empty();
     for (var i = 0; i < this._slideCount; i++) {
       (function() {
         var $dot = $('<div/>');
