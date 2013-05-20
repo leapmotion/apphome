@@ -40,7 +40,7 @@ FsScanner.prototype = {
     } else if (platform === 'darwin') {
       this._scanForMacApps(cleanData);
     } else {
-      throw new Error('Unknown system platform: ' + platform);
+      cb(new Error('Unknown system platform: ' + platform));
     }
   },
 

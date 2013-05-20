@@ -44,7 +44,7 @@ var mockFs = {
 };
 
 
-function mockFsScannerForPlatform(platform, args) {
+function mockFsScannerForPlatform(platform, filter) {
   var FsScanner = rewire('../../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
     var plist = rewire('../../../app/utils/plist.js');
@@ -57,14 +57,14 @@ function mockFsScannerForPlatform(platform, args) {
     FsScanner.__set__('fs', mockFs[platform]);
   }
   FsScanner.__set__('os', { platform: function() { return platform; }});
-  return new FsScanner(args);
+  return new FsScanner(filter ? allowedApps[platform] : null);
 }
 
 describe('FsScanner', function() {
   describe('scan on Windows', function() {
 
     it('should only return the allowed apps', function(done) {
-      var fsScanner = mockFsScannerForPlatform('win32', allowedApps.win32);
+      var fsScanner = mockFsScannerForPlatform('win32', true);
       process.env.ProgramW6432 = true;
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
@@ -79,7 +79,7 @@ describe('FsScanner', function() {
       var fsScanner = mockFsScannerForPlatform('win32');
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
-        assert.equal(apps.length, 58);
+        assert.equal(apps.length, 27);
         done();
       });
       delete process.env.ProgramW6432;
@@ -90,7 +90,7 @@ describe('FsScanner', function() {
   describe('scan on Mac', function() {
 
     it('should only return the allowed apps', function(done) {
-      var fsScanner = mockFsScannerForPlatform('darwin', allowedApps.darwin);
+      var fsScanner = mockFsScannerForPlatform('darwin', true);
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
         assert.equal(apps.length, 2);
