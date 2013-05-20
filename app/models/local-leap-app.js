@@ -62,14 +62,14 @@ module.exports = LeapApp.extend({
 
   uninstall: function(deleteData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
-    if (this.get('iconPath')) {
+/*    if (this.get('iconPath')) {
       try {
         fs.unlinkSync(this.get('iconPath'));
       } catch(err) {
         this.set('state', LeapApp.States.UninstallFailed);
         return cb && cb(err);
       }
-    }
+    }*/
     this.set('state', LeapApp.States.Uninstalled);
     cb && cb(null);
   }

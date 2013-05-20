@@ -7,11 +7,13 @@ var uiGlobals = _.extend({}, window.Backbone.Events);
 uiGlobals.Event = enumerable.make([
   'SplashWelcomeClosed',
   'GotoInstalledAppsCarousel',
-  'GotoUpdateAppsCarousel',
-  'GotoDeletedAppsCarousel',
+  'GotoUpgradeCarousel',
+  'GotoTrashCarousel',
   'DiskWriteError'
 ], 'UiGlobalEvent');
 
-uiGlobals.leapApps = new LeapAppCollection();
+uiGlobals.installedApps = new LeapAppCollection();
+uiGlobals.uninstalledApps = new LeapAppCollection();
+uiGlobals.availableUpgrades = new LeapAppCollection();
 
 module.exports = uiGlobals;

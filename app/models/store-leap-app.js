@@ -107,7 +107,7 @@ module.exports = LeapApp.extend({
       }.bind(this)
     ];
 
-    if (fs.existsSync(this.standardIconPath())) {
+/*    if (fs.existsSync(this.standardIconPath())) {
       deletionFunctions.push(function(callback) {
         fs.unlink(this.standardIconPath(), callback);
       }.bind(this));
@@ -117,7 +117,7 @@ module.exports = LeapApp.extend({
       deletionFunctions.push(function(callback) {
         fs.unlink(this.standardTilePath(), callback);
       }.bind(this));
-    }
+    }*/
 
     if (deleteData) {
       deletionFunctions.push(function(callback) {

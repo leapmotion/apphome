@@ -208,5 +208,36 @@ module.exports = [
       "s3_key": "unybheSwThKo5GFFEefG_Test-binary-no-exe.dmg",
       "url": "https://www.filepicker.io/api/file/QLiYW1DKT0Kvko0e4wsn"
     }
-  }
+  },
+  {
+    "name": "YBand Together",
+    "version_number": "1.1.0",
+    "id": 1000,
+    "app_id": 71,
+    "tile_url": "https://www.filepicker.io/api/file/QhUlbhYlSPK0O9HLsaIc",
+    "icon_url": "https://www.filepicker.io/api/file/q1s6nblcT3qz88yT4yc2",
+    "binary": {
+      "filename": "Test-binary-no-exe.zip",
+      "filesize": "127162",
+      "platform": "windows",
+      "s3_key": "ae6GDK7HS9uBpqsVxA7s_Test-binary-no-exe.zip",
+      "url": "https://www.filepicker.io/api/file/vBnuvOfGSxKpXw9UdwLK"
+    }
+  },
+  {
+    "name": "YDischord",
+    "version_number": "1.1.0",
+    "id": 1001,
+    "app_id": 74,
+    "tile_url": "https://www.filepicker.io/api/file/w7hQWVhVRI2G6NHbTT6S",
+    "icon_url": "https://www.filepicker.io/api/file/TlvDEyBkS0qCffg7HX9A",
+    "binary": {
+      "filename": "TEST_LM_1.0_OSX.dmg",
+      "filesize": "143116",
+      "platform": "osx",
+      "s3_key": "CXdacjdCQ0q9SBXoHRAu_TEST_LM_1.0_OSX.dmg",
+      "url": "https://www.filepicker.io/api/file/00KzbfwYQzSSiXkOgiCz"
+    }
+  },
+
 ]

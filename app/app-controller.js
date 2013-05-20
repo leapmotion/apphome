@@ -4,11 +4,9 @@ var api = require('./utils/api.js');
 
 var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
-var LocalLeapApp = require('./models/local-leap-app.js');
-var StoreLeapApp = require('./models/store-leap-app.js');
 
 var AuthorizationView = require('./views/authorization/authorization.js');
-var PageContainerView = require('./views/page-container/page-container.js');
+var MainPage = require('./views/main-page/main-page.js');
 
 function AppController() {
 }
@@ -28,7 +26,7 @@ AppController.prototype = {
   },
 
   _paintPage: function() {
-    $('body').append((new PageContainerView()).$el);
+    $('body').append((new MainPage()).$el);
   },
 
   _authorize: function(cb) {
@@ -53,11 +51,12 @@ AppController.prototype = {
     fsScanner.scan(function(err, apps) {
       if (!err) {
         apps.forEach(function(app) {
-          if (uiGlobals.leapApps.get(app.get('id'))) {
+          if (uiGlobals.installedApps.get(app.get('id')) ||
+              uiGlobals.uninstalledApps.get(app.get('id'))) {
             return;
           }
           console.log('installing app: ' + app.get('name'));
-          uiGlobals.leapApps.add(app);
+          uiGlobals.installedApps.add(app);
           app.install(function(err) {
             err && console.log('Failed to install app', app.get('name'), err.message);
           });
@@ -70,16 +69,15 @@ AppController.prototype = {
     api.storeApps(function(err, apps) {
       if (!err) {
         apps.forEach(function(app) {
-          var leapApps = uiGlobals.leapApps;
-          if (leapApps.get(app.get('id'))) {
-            // already installed
+          if (uiGlobals.installedApps.get(app.get('id')) ||
+              uiGlobals.uninstalledApps.get(app.get('id'))) {
             return;
-          } else if (leapApps.findWhere({ appId: app.get('appId') })) {
-            // it's an upgrade
-            // TODO
+          } else if (uiGlobals.installedApps.findWhere({ appId: app.get('appId') })) {
+            app.set('isUpgrade', true);
+            uiGlobals.availableUpgrades.add(app);
           } else {
             console.log('installing app: ' + app.get('name'));
-            uiGlobals.leapApps.add(app);
+            uiGlobals.installedApps.add(app);
             app.install(function(err) {
               err && console.log('Failed to install app', app.get('name'), err.message);
             });

@@ -6,6 +6,7 @@ var BuiltinTileApp = LeapApp.extend({
 
   initialize: function() {
     this.set('isBuiltin', true);
+    this.set('state', LeapApp.States.Ready);
 
     LeapApp.prototype.initialize.apply(this, arguments);
   },
@@ -27,7 +28,7 @@ var BuiltinTileApp = LeapApp.extend({
 BuiltinTileApp.createBuiltinTiles = function() {
   console.log("Creating builtin tiles");
   config.BuiltinTiles.forEach(function(args) {
-    uiGlobals.leapApps.add(new BuiltinTileApp(args));
+    uiGlobals.installedApps.add(new BuiltinTileApp(args));
   });
 };
 

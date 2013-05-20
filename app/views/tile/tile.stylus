@@ -10,9 +10,9 @@ $progressBarColor = #ddd
   float left
   margin 30px 15px
   border-radius $borderRadius
-  cursor pointer
   border $borderWidth solid transparent
   list-style none
+  -webkit-user-drag element
 
   &:hover
     border $borderWidth solid $borderColor
@@ -28,6 +28,7 @@ $progressBarColor = #ddd
     bottom -55px
     font-size 20px
     color rgba(255,255,255,.6)
+    -webkit-user-drag none
 
   .icon
     position: absolute;
@@ -37,6 +38,7 @@ $progressBarColor = #ddd
     top 39px
     display block
     border-radius 10px
+    -webkit-user-drag none
 
   img.tile-bg
     border-radius $borderRadius
@@ -46,6 +48,7 @@ $progressBarColor = #ddd
     width 100%
     height 100%
     overflow hidden
+    -webkit-user-drag none
 
   .message
     display none
@@ -70,7 +73,8 @@ $progressBarColor = #ddd
       background-color $progressBarColor
       border-radius 16px
 
-
+  &.ready
+    cursor pointer
 
   &.launching
     border-color transparent
@@ -91,6 +95,14 @@ $progressBarColor = #ddd
       display block
     .name
       display none
+
+  &.uninstalled
+    opacity 0.75
+    &:hover
+      border $borderWidth solid transparent
+      background-color transparent
+      box-shadow none
+      background-image none
 
 
 vendors = webkit

@@ -6,7 +6,7 @@ integrationTest.runInApp(__filename, function() {
   var leapApps;
   describe('pagination', function() {
     before(function(){
-      leapApps = uiGlobals.leapApps;
+      leapApps = uiGlobals.installedApps;
       var tileCount = leapApps.length;
       var desired = 20;
       if (tileCount < desired) {
