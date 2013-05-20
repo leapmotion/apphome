@@ -16,3 +16,22 @@
 
   .go-previous
     left 0
+
+  .slide-indicator
+    position absolute
+    height 50px
+    bottom 10px
+    left 10px
+
+    .dot
+      float left
+      margin 5px
+      height 16px
+      width 16px
+      background-color #aaa
+      border-radius 8px
+      cursor pointer
+
+      &.current
+        background-color #ddd
+        cursor default

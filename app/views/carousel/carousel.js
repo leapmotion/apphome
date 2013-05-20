@@ -27,6 +27,7 @@ var CarouselView = BaseView.extend({
     this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
     this._slideCount = this.collection.pageCount(this._tilesPerSlide);
     this._currentSlideNdx = 0;
+    this._initSlideIndicator();
     this.showSlide(0);
 
     this._initAddRemoveRepainting();
@@ -62,8 +63,6 @@ var CarouselView = BaseView.extend({
 
   _initNavigationControls: function() {
     var $navButtons = this.$('.nav-btn');
-    var $previous = this.$previousButton = this.$('.go-previous');
-    var $next = this.$nextButton = this.$('.go-next');
 
     $navButtons.click(function(evt) {
       var $clicked = $(evt.target);
@@ -83,6 +82,25 @@ var CarouselView = BaseView.extend({
         return false;
       }
     }.bind(this));
+  },
+
+  _initSlideIndicator: function() {
+    for (var i = 0; i < this._slideCount; i++) {
+      (function() {
+        var $dot = $('<div/>');
+        $dot.addClass('dot');
+        $dot.attr('slide_index', i);
+        if (i === this._currentSlideNdx) {
+          $dot.addClass('current');
+        }
+        $dot.click(function() {
+          if (!$dot.hasClass('current')) {
+            this.showSlide(Number($dot.attr('slide_index')));
+          }
+        }.bind(this));
+        this.$('.slide-indicator').append($dot);
+      }.bind(this)());
+    }
   },
 
   _buildSlideView: function(slideNumber) {
@@ -108,9 +126,11 @@ var CarouselView = BaseView.extend({
   },
 
   _updateSlideNavigation: function() {
-    this.$previousButton.toggleClass('disabled', this._currentSlideNdx <= 0);
-    this.$nextButton.toggleClass('disabled', this._currentSlideNdx + 1 >= this._slideCount);
-    // todo: footer button thingies
+    this.$('.go-previous').toggleClass('disabled', this._currentSlideNdx <= 0);
+    this.$('.go-next').toggleClass('disabled', this._currentSlideNdx + 1 >= this._slideCount);
+    var $dots = this.$('.slide-indicator .dot');
+    $dots.removeClass('current');
+    $($dots[this._currentSlideNdx]).addClass('current');
   }
 
 

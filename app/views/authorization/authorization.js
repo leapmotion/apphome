@@ -99,6 +99,7 @@ module.exports = BaseView.extend({
 
   remove: function() {
     this._stopPollingForIframeUrlChanges();
+    this.$el.remove();
   }
 
 });
