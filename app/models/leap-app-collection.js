@@ -6,11 +6,11 @@ module.exports = window.Backbone.Collection.extend({
 
   model: function(attrs, options) {
     console.info('Building leapApp model from attribs ' + JSON.stringify(attrs));
-    if (attrs.is_builtin) {
+    if (attrs.isBuiltin) {
       return new BuiltinTileApp(attrs, options);
-    } else if (attrs.app_id) { // todo: use real attrib
+    } else if (attrs.appId) {
       return new StoreLeapApp(attrs, options);
-    } else if (attrs.name) { // todo: use real attrib
+    } else if (attrs.name) {
       return new LocalLeapApp(attrs, options);
     } else {
       console.error('unknown app type: ' + JSON.stringify(attrs));

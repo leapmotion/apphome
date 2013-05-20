@@ -53,6 +53,11 @@ var CarouselView = BaseView.extend({
         this.showSlide(this._currentSlideNdx);
       }
     }, this);
+
+    collection.on('sort', function() {
+      this.showSlide(this._currentSlideNdx);
+    }, this);
+
   },
 
   _initNavigationControls: function() {

@@ -32,9 +32,10 @@ var LeapApp = BaseModel.extend({
     }
 
     this.on('change:state', function() {
-      if (this.previous('state') === LeapApp.States.Installing &&
-          this.get('state') === LeapApp.States.Ready) {
+      if (!this.get('installedAt') &&
+          this.get('state') === LeapApp.States.Installing) {
         this.set('installedAt', (new Date()).getTime());
+        uiGlobals.leapApps.sort();
       }
       this.save();
     }.bind(this));
@@ -52,7 +53,7 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    return 'b_' + this.get('installedAt');
+    return 'b_' + (9999999999999 - (this.get('installedAt') || 9999999999999));
   },
 
   isLocalApp: function() {

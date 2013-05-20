@@ -28,6 +28,10 @@ module.exports = BaseView.extend({
       this.$('.icon').attr('src', leapApp.get('iconPath'));
     }, this);
 
+    this.listenTo(leapApp, 'progress', function(progress) {
+      this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
+    }, this);
+
     this.$el.click(function() {
       this.$el.addClass('launching');
       leapApp.launch();

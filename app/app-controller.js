@@ -58,7 +58,9 @@ AppController.prototype = {
           }
           console.log('installing app: ' + app.get('name'));
           uiGlobals.leapApps.add(app);
-          app.install();
+          app.install(function(err) {
+            err && console.log('Failed to install app', app.get('name'), err.message);
+          });
         });
       }
     });
@@ -68,18 +70,21 @@ AppController.prototype = {
     api.storeApps(function(err, apps) {
       if (!err) {
         apps.forEach(function(app) {
-          // TODO: detect upgrades
-          if (uiGlobals.leapApps.get(app.get('id'))) {
+          var leapApps = uiGlobals.leapApps;
+          if (leapApps.get(app.get('id'))) {
+            // already installed
             return;
+          } else if (leapApps.findWhere({ appId: app.get('appId') })) {
+            // it's an upgrade
+            // TODO
+          } else {
+            console.log('installing app: ' + app.get('name'));
+            uiGlobals.leapApps.add(app);
+            app.install(function(err) {
+              err && console.log('Failed to install app', app.get('name'), err.message);
+            });
           }
-          console.log('installing app: ' + app.get('name'));
-          uiGlobals.leapApps.add(app);
-          app.install(function(err) {
-            if (err) {
-              console.log('Failed to install app', app.get('name'), err, err.stack);
-            }
-          });
-        })
+        });
       }
     });
   }

@@ -4,6 +4,12 @@ var LeapApp = require('./leap-app.js');
 
 var BuiltinTileApp = LeapApp.extend({
 
+  initialize: function() {
+    this.set('isBuiltin', true);
+
+    LeapApp.prototype.initialize.apply(this, arguments);
+  },
+
   isBuiltinTile: function() {
     return true;
   },

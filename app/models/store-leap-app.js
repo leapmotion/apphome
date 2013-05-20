@@ -60,7 +60,11 @@ module.exports = LeapApp.extend({
 
     this._downloadIcon(callbackWhenAllDownloadsComplete.bind(this));
     this._downloadTile(callbackWhenAllDownloadsComplete.bind(this));
-    return this._downloadBinary(callbackWhenAllDownloadsComplete.bind(this))
+    var downloadProgress = this._downloadBinary(callbackWhenAllDownloadsComplete.bind(this));
+    downloadProgress.on('progress', function(progress) {
+      this.trigger('progress', progress);
+    }.bind(this));
+    return downloadProgress;
   },
 
   _downloadBinary: function(cb) {
