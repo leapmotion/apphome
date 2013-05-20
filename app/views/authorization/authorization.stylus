@@ -1,6 +1,7 @@
 .authorization
   iframe.oauth
     position absolute
+    z-index 2000
     width 500px
     height 500px
     top: -1000px
