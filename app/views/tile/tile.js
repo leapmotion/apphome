@@ -29,8 +29,12 @@ module.exports = BaseView.extend({
     }, this);
 
     this.$el.click(function() {
+      this.$el.addClass('launching');
       leapApp.launch();
-    });
+      setTimeout(function() {
+        this.$el.removeClass('launching');
+      }.bind(this), 2000);
+    }.bind(this));
 
     this.$el.attr('tile_id', leapApp.id);
   },
