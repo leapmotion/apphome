@@ -1,6 +1,6 @@
 var FsScanner = require('./utils/fs-scanner.js');
 var oauth = require('./utils/oauth.js');
-var storeApi = require('./utils/store-api.js');
+var api = require('./utils/api.js');
 
 var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
@@ -18,6 +18,7 @@ AppController.prototype = {
   runApp: function() {
     BuiltinTileApp.createBuiltinTiles();
     LeapApp.hydrateCachedModels();
+    this._scanFilesystem();
 
     this._authorize(function(err, accessToken) {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
@@ -47,11 +48,22 @@ AppController.prototype = {
   },
 
   _scanFilesystem: function() {
-
+    var fsScanner = new FsScanner(api.localApps());
+    fsScanner.scan(function(err, apps) {
+      if (!err) {
+        apps.forEach(function(app) {
+          if (uiGlobals.leapApps.get(app.get('id'))) {
+            return;
+          }
+          console.log('installing app: ' + app.get('name'));
+          uiGlobals.leapApps.add(app);
+          app.install();
+        });
+      }
+    });
   },
 
   _pollServerForUpdates: function() {
-
   }
 
 };

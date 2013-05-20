@@ -12,12 +12,6 @@ uiGlobals.Event = enumerable.make([
   'DiskWriteError'
 ], 'UiGlobalEvent');
 
-
-uiGlobals.Builtin = enumerable.make([
-  'VisitStore',
-  'ErrorTile'
-], 'Builtins');
-
 uiGlobals.leapApps = new LeapAppCollection();
 
 module.exports = uiGlobals;

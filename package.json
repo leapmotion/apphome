@@ -6,10 +6,11 @@
   "node-main": "node-main.js",
   "window-todo": "replace width & height with fullscreen: true",
   "window": {
+    "title": "Airspace",
     "show": false,
     "toolbar": true,
-    "width": 1300,
-    "height": 600
+    "min_width": 932,
+    "min_height": 699
   },
   "dependencies": {
     "adm-zip": "0.4.3",

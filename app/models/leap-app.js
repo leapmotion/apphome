@@ -3,6 +3,7 @@ var fs = require('fs');
 var os = require('os');
 
 var appData = require('../utils/app-data.js');
+var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var enumerable = require('../utils/enumerable.js');
 
@@ -13,8 +14,6 @@ var LeapAppStates = enumerable.make([
   'Installing',
   'InstallFailed',
   'Ready',
-  'Launching',
-  'Running',
   'Uninstalling',
   'UninstallFailed',
   'Uninstalled'
@@ -23,6 +22,14 @@ var LeapAppStates = enumerable.make([
 var LeapApp = BaseModel.extend({
 
   initialize: function() {
+    if (this.get('state') === LeapApp.States.Installing) {
+      this.set('state', LeapApp.States.InstallFailed);
+    }
+
+    if (this.get('state') === LeapApp.States.Uninstalling) {
+      this.set('state', LeapApp.States.UninstallFailed);
+    }
+
     this.on('change:state', function() {
       if (this.previous('state') === LeapApp.States.Installing &&
           this.get('state') === LeapApp.States.Ready) {
@@ -44,7 +51,7 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    throw new Error('sortScore is an abstract method');
+    return 'b_' + this.get('installedAt');
   },
 
   isLocalApp: function() {
@@ -68,7 +75,6 @@ var LeapApp = BaseModel.extend({
   },
 
   launch: function() {
-    this.set('state', LeapApp.States.Launching);
     var command = this.launchCommand();
     if (!command) {
       throw new Error("Don't know how to launch apps on: " + os.platform());
@@ -76,19 +82,7 @@ var LeapApp = BaseModel.extend({
       console.log('Launching app with command: ' + command);
     }
 
-    var appProcess = exec(command);
-    appProcess.on('exit', function() {
-      this.set('state', LeapApp.States.Ready);
-    }.bind(this));
-
-    var win = nwGui.Window.get();
-    var markAsRunning = function() {
-      this.set('state', LeapApp.States.Running);
-      win.removeListener('blur', markAsRunning);
-    }.bind(this);
-    win.on('blur', markAsRunning);
-
-    return appProcess;
+    return exec(command);
   },
 
   launchCommand: function() {

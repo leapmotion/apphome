@@ -1,26 +1,28 @@
+var config = require('../../config/config.js');
+
 var LeapApp = require('./leap-app.js');
 
-module.exports = LeapApp.extend({
+var BuiltinTileApp = LeapApp.extend({
 
   isBuiltinTile: function() {
     return true;
   },
 
   sortScore: function() {
-    return '0_' + (this.get('ndx') || '0');
+    return 'a_' + (this.get('ndx') || '0');
+  },
+
+  launch: function() {
+    this.get('launchCallback')();
   }
 
 });
 
-
-module.exports.createBuiltinTiles = function() {
+BuiltinTileApp.createBuiltinTiles = function() {
   console.log("Creating builtin tiles");
-  var builtins = [
-    { id: uiGlobals.Builtin.VisitStore, name: 'Visit App Store' }
-//    { id: uiGlobals.Builtin.ErrorTile }
-  ];
-  builtins.forEach(function(builtinData) {
-    builtinData.is_builtin = true;
-    uiGlobals.leapApps.add(builtinData);
+  config.BuiltinTiles.forEach(function(args) {
+    uiGlobals.leapApps.add(new BuiltinTileApp(args));
   });
 };
+
+module.exports = BuiltinTileApp;

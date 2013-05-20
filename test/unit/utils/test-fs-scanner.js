@@ -5,7 +5,7 @@ var os = require('os');
 var path = require('path');
 var rewire = require('rewire');
 
-var allowedApps = JSON.parse(fs.readFileSync(path.join(__dirname, 'fs-scanner-data', 'local-apps.json')));
+var allowedApps = require('../../support/fake-data/local-apps.js');
 
 var mockExec = {
   win32: function(command, cb) {
@@ -64,9 +64,7 @@ describe('FsScanner', function() {
   describe('scan on Windows', function() {
 
     it('should only return the allowed apps', function(done) {
-      var fsScanner = mockFsScannerForPlatform('win32', {
-        allowedApps: allowedApps.win32
-      });
+      var fsScanner = mockFsScannerForPlatform('win32', allowedApps.win32);
       process.env.ProgramW6432 = true;
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
@@ -92,9 +90,7 @@ describe('FsScanner', function() {
   describe('scan on Mac', function() {
 
     it('should only return the allowed apps', function(done) {
-      var fsScanner = mockFsScannerForPlatform('darwin', {
-        allowedApps: allowedApps.darwin
-      });
+      var fsScanner = mockFsScannerForPlatform('darwin', allowedApps.darwin);
       fsScanner.scan(function(err, apps) {
         assert.ok(!err, err && err.stack);
         assert.equal(apps.length, 2);

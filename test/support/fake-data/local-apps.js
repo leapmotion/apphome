@@ -1,4 +1,4 @@
-{
+module.exports = {
   "win32": [
     {
       "name": "Google Earth",

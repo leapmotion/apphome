@@ -1,3 +1,5 @@
+var config = require('../../../config/config.js');
+
 var BaseView = require('../base-view.js');
 var Slide = require('../slide/slide.js');
 var THREE = window.THREE;
@@ -7,10 +9,7 @@ var CarouselView = BaseView.extend({
 
   className: 'carousel',
 
-  options: {
-    columnsPerSlide: 3, // todo: 4
-    rowsPerSlide: 2 // todo: 3
-  },
+  options: config.Layout,
 
   initialize: function() {
     var opts = this.options;
@@ -83,9 +82,9 @@ var CarouselView = BaseView.extend({
 
   _buildSlideView: function(slideNumber) {
     var slideView = new Slide();
-    var tileModels = this.collection.getPageModels(slideNumber, this._tilesPerSlide);
-    tileModels.forEach(function(tileModel) {
-      slideView.addTile({ tileModel: tileModel });
+    var leapApps = this.collection.getPageModels(slideNumber, this._tilesPerSlide);
+    leapApps.forEach(function(leapApp) {
+      slideView.addTile({ leapApp: leapApp });
     });
     return slideView;
   },

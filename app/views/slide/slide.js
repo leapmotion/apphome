@@ -1,5 +1,5 @@
 var BaseView = require('../base-view.js');
-var Tile = require('../tiles/tile/tile.js');
+var Tile = require('../tile/tile.js');
 
 var SlideView = BaseView.extend({
   viewDir: __dirname,
@@ -8,13 +8,11 @@ var SlideView = BaseView.extend({
 
   initialize: function(args) {
     this.injectCss();
-    this.$el.append(this.templateHtml());
-    this.$tiles = this.$('.tile-holder');
   },
 
-  addTile: function(tileModel) {
-    var view = new Tile(tileModel);
-    this.$tiles.append(view.$el);
+  addTile: function(args) {
+    var view = new Tile(args);
+    this.$el.append(view.$el);
   },
 
   three: function() {

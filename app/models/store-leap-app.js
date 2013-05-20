@@ -31,10 +31,6 @@ module.exports = LeapApp.extend({
     return true;
   },
 
-  sortScore: function() {
-    return 'b_' + (this.get('name'));
-  },
-
   // Listen on the 'progress' event on the return value of this function
   // to get download progress.
   install: function(cb) {
@@ -47,10 +43,10 @@ module.exports = LeapApp.extend({
       numDownloads--;
       if (err) {
         this.set('state', LeapApp.States.InstallFailed);
-        cb(err);
+        cb && cb(err);
       } else if(numDownloads <= 0) {
         this.set('state', LeapApp.States.Ready);
-        cb(null);
+        cb && cb(null);
       }
     }
 
@@ -121,10 +117,10 @@ module.exports = LeapApp.extend({
     async.parallel(deletionFunctions, function(err) {
       if (err) {
         this.set('state', LeapApp.States.UninstallFailed);
-        return cb(err);
+        return cb && cb(err);
       } else {
         this.set('state', LeapApp.States.Uninstalled);
-        return cb(null);
+        return cb && cb(null);
       }
     }.bind(this));
   },

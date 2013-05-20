@@ -22,7 +22,7 @@ function applyStylus(path) {
       if (err) {
         throw err;
       } else {
-        $('head').append('<style>\n' + css + '\n</style>');
+        $('<style/>').text(css).appendTo($('head'));
       }
     });
   }

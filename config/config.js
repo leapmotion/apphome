@@ -1,6 +1,12 @@
+var path = require('path');
+
 var enumerable = require('../app/utils/enumerable.js');
+
+function staticImage(subdir, name) {
+  return path.join(__dirname, '..', 'static', 'images', subdir, name);
+}
+
 var config = {
-  VisitStoreUrl: 'https://www.leapmotion.com/apps',
 
   oauth: {
     endpoint: 'http://leapweb-stage7.herokuapp.com/oauth/',
@@ -14,10 +20,27 @@ var config = {
     AppTiles: 'app_tiles'
   },
 
+  BuiltinTiles: [
+    {
+      name: 'Visit App Store',
+      tilePath:  staticImage('tiles', 'store-tile.png'),
+      iconPath:  staticImage('icons', 'store-icon.png'),
+      launchCallback: function() {
+        nwGui.Shell.openExternal('https://www.leapmotion.com/apps');
+      }
+    }
+  ],
+
   Defaults: {
-    IconPath: 'TODO.png',
-    TilePath: 'TODO.png'
+    IconPath: staticImage('icons', 'default-icon.png'),
+    TilePath: staticImage('tiles', 'default-tile.png')
+  },
+
+  Layout: {
+    columnsPerSlide: 4,
+    rowsPerSlide: 3
   }
+
 };
 
 module.exports = config;

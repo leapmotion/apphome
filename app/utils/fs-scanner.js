@@ -11,11 +11,10 @@ var shell = require('./shell.js');
 
 var LocalLeapApp = require('../models/local-leap-app.js');
 
-function FsScanner(args) {
-  args = args || {};
-  if (Array.isArray(args.allowedApps)) {
+function FsScanner(allowedApps) {
+  if (Array.isArray(allowedApps)) {
     this._allowedApps = {};
-    args.allowedApps.forEach(function(allowedApp) {
+    allowedApps.forEach(function(allowedApp) {
       this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
     }.bind(this));
   }
@@ -26,10 +25,20 @@ FsScanner.prototype = {
   scan: function(cb) {
     var platform = os.platform();
 
+    function cleanData(err, apps) {
+      if (err) {
+        cb(err);
+      }
+      apps = _.uniq(_(apps).compact(), function(app) {
+        return app.get('id');
+      });
+      cb(null, apps);
+    }
+
     if (platform === 'win32') {
-      this._scanForWindowsApps(cb);
+      this._scanForWindowsApps(cleanData);
     } else if (platform === 'darwin') {
-      this._scanForMacApps(cb);
+      this._scanForMacApps(cleanData);
     } else {
       throw new Error('Unknown system platform: ' + platform);
     }
@@ -51,7 +60,7 @@ FsScanner.prototype = {
           if (err) {
             return cb(err);
           }
-          cb(null, _.compact(leapApps));
+          cb(null, leapApps);
         });
     }.bind(this));
   },
@@ -107,7 +116,7 @@ FsScanner.prototype = {
           if (err) {
             return cb(err);
           }
-          cb(null, _.compact(leapApps));
+          cb(null, leapApps);
         });
     }.bind(this));
   },

@@ -55,7 +55,7 @@ module.exports = LeapApp.extend({
       this.set('iconPath', err ? config.Defaults.IconPath : this.standardIconPath());
       this.set('tilePath', config.Defaults.TilePath);
       this.set('state', LeapApp.States.Ready);
-      cb(null);
+      cb && cb(null);
     }
   },
 
@@ -66,19 +66,15 @@ module.exports = LeapApp.extend({
         fs.unlinkSync(this.get('iconPath'));
       } catch(err) {
         this.set('state', LeapApp.States.UninstallFailed);
-        return cb(err);
+        return cb && cb(err);
       }
     }
     this.set('state', LeapApp.States.Uninstalled);
-    cb(null);
+    cb && cb(null);
   },
 
   launchCommand: function() {
     return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
-  },
-
-  sortScore: function() {
-    return 'x_' + (this.get('name'));
   }
 
 });

@@ -1,2 +1,3 @@
 .slide
-  background-color #666
+  width 1392px
+  margin 0 auto
