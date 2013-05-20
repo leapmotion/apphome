@@ -1,8 +1,10 @@
 var events = require('events');
 var fs = require('fs');
 var http = require('http');
+var https = require('https');
 var os = require('os');
 var path = require('path');
+var url = require('url');
 var util = require('util');
 
 var PlatformTempDirs = {
@@ -54,7 +56,15 @@ function getFile(sourceUrl, destPath, cb) {
     cb && cb(err);
     cb = null;
   });
-  var req = http.get(sourceUrl, function(res) {
+
+  var protocolModule;
+  if (url.parse(sourceUrl).protocol === 'https:') {
+    protocolModule = https;
+  } else {
+    protocolModule = http;
+  }
+
+  var req = protocolModule.get(sourceUrl, function(res) {
     progressStream.setTotalBytes(res.headers['content-length']);
     progressStream.listenTo(res);
 

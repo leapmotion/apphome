@@ -6,6 +6,7 @@ var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var enumerable = require('../utils/enumerable.js');
+var shell = require('../utils/shell.js');
 
 var BaseModel = require('./base-model.js');
 var LeapAppsDbKey = 'leap_apps';
@@ -75,18 +76,14 @@ var LeapApp = BaseModel.extend({
   },
 
   launch: function() {
-    var command = this.launchCommand();
+    var command = this.get('executable');
     if (!command) {
-      throw new Error("Don't know how to launch apps on: " + os.platform());
+      throw new Error("Don't know how to launch app: " + this.get('name'));
     } else {
       console.log('Launching app with command: ' + command);
     }
 
-    return exec(command);
-  },
-
-  launchCommand: function() {
-    throw new Error('launchCommand is an abstract method');
+    return exec(shell.escape(command));
   },
 
   standardIconPath: function() {

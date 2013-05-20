@@ -2,6 +2,8 @@ var os = require('os');
 
 var oauth = require('./oauth.js');
 
+var StoreLeapApp = require('../models/store-leap-app.js');
+
 // TODO: real data
 var FakeServerData = require('../../test/support/fake-data/store-apps.js');
 var FakeLocalAppData = require('../../test/support/fake-data/local-apps.js');
@@ -11,15 +13,25 @@ function storeApps(cb) {
     if (err) {
       return cb(err);
     } else {
-      return cb(null, _.filter(FakeServerData, function(appJson) {
-        if (appJson.binary.platform === 'windows' && os.platform() === 'win32') {
-          return true;
-        } else if (appJson.binary.platform === 'osx' && os.platform() === 'darwin') {
-          return true;
-        } else {
-          return false;
+      var apps = FakeServerData.map(function(app) {
+        var appJson = {
+          id: app.id,
+          appId: app.app_id,
+          name: app.name,
+          version: app.version_number,
+          tileUrl: app.tile_url,
+          iconUrl: app.icon_url,
+          binaryUrl: app.binary.url,
+          platform: (app.binary.platform === 'osx' ? 'darwin' : (app.binary.platform === 'windows' ? 'win32' : app.binary.platform))
         }
-      }));
+        if (appJson.platform === os.platform()) {
+          return new StoreLeapApp(appJson);
+        } else {
+          return null;
+        }
+      });
+
+      cb(null, _(apps).compact());
     }
   });
 }

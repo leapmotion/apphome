@@ -52,6 +52,7 @@ module.exports = LeapApp.extend({
     }
 
     function finishInstallation(err) {
+      this.set('executable', path.join(this.get('keyFile'), this.get('relativeExePath')));
       this.set('iconPath', err ? config.Defaults.IconPath : this.standardIconPath());
       this.set('tilePath', config.Defaults.TilePath);
       this.set('state', LeapApp.States.Ready);
@@ -71,10 +72,6 @@ module.exports = LeapApp.extend({
     }
     this.set('state', LeapApp.States.Uninstalled);
     cb && cb(null);
-  },
-
-  launchCommand: function() {
-    return shell.escape(path.join(this.get('keyFile'), this.get('relativeExePath')));
   }
 
 });

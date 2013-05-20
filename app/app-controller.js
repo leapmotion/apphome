@@ -18,11 +18,12 @@ AppController.prototype = {
   runApp: function() {
     BuiltinTileApp.createBuiltinTiles();
     LeapApp.hydrateCachedModels();
-    this._scanFilesystem();
 
     this._authorize(function(err, accessToken) {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
       this._paintPage();
+      this._scanFilesystem();
+      this._pollServerForUpdates();
     }.bind(this));
   },
 
@@ -64,6 +65,23 @@ AppController.prototype = {
   },
 
   _pollServerForUpdates: function() {
+    api.storeApps(function(err, apps) {
+      if (!err) {
+        apps.forEach(function(app) {
+          // TODO: detect upgrades
+          if (uiGlobals.leapApps.get(app.get('id'))) {
+            return;
+          }
+          console.log('installing app: ' + app.get('name'));
+          uiGlobals.leapApps.add(app);
+          app.install(function(err) {
+            if (err) {
+              console.log('Failed to install app', app.get('name'), err, err.stack);
+            }
+          });
+        })
+      }
+    });
   }
 
 };

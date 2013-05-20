@@ -45,8 +45,16 @@ module.exports = LeapApp.extend({
         this.set('state', LeapApp.States.InstallFailed);
         cb && cb(err);
       } else if(numDownloads <= 0) {
-        this.set('state', LeapApp.States.Ready);
-        cb && cb(null);
+        this._findExecutable(function(err, executable) {
+          if (err) {
+            this.set('state', LeapApp.States.InstallFailed);
+            cb && cb(err);
+          } else {
+            this.set('executable', executable);
+            this.set('state', LeapApp.States.Ready);
+            cb && cb(null);
+          }
+        }.bind(this));
       }
     }
 
@@ -59,15 +67,14 @@ module.exports = LeapApp.extend({
     var binaryUrl = this.get('binaryUrl');
     return download.get(binaryUrl, function(err, tempFilename) {
       console.log('Downloading app from ' + binaryUrl + ' to: ' + tempFilename);
-      var extension = path.extname(binaryUrl).toLowerCase();
-      if (extension === 'zip') {
+      if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cb);
-      } else if (extension === 'dmg') {
+      } else if (os.platform() === 'darwin') {
         extract.undmg(tempFilename, this._appDir(), cb);
       } else {
-        return cb(new Error('Unknown file extension: ' + extension));
+        return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
-    });
+    }.bind(this));
   },
 
   _downloadIcon: function(cb) {
@@ -125,10 +132,6 @@ module.exports = LeapApp.extend({
     }.bind(this));
   },
 
-  launchCommand: function() {
-    return shell.escape(this._executable);
-  },
-
   _appDir: function() {
     var dir = this._getDir(PlatformAppDirs, '__appDir');
     if (os.platform() === 'darwin') {
@@ -163,27 +166,22 @@ module.exports = LeapApp.extend({
     return dir;
   },
 
-  sortScore: function() {
-    return 'b_' + (this.get('name'));
-  },
-
   _findExecutable: function(cb) {
-    if (!this._executable) {
-      if (os.platform() === 'win32') {
-        this._executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
-        cb(null, this._executable);
-      } else if (os.platform() === 'darwin') {
-        var infoPlistPath = path.join(this._appDir(), 'Contents', 'Info.plist');
-        plist.parseFile(infoPlistPath, function(err, parsedPlist) {
-          if (err) {
-            return cb(err);
-          }
-          this._executable = path.join(this._appDir(), 'Contents', 'MacOS', parsedPlist.CFBundleExecutable);
-          cb(null, this._executable);
-        }.bind(this));
-      } else {
-        cb(new Error('Unknown platform: ' + os.platform()));
-      }
+    var executable;
+    if (os.platform() === 'win32') {
+      executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+      cb(null, executable);
+    } else if (os.platform() === 'darwin') {
+      var infoPlistPath = path.join(this._appDir(), 'Contents', 'Info.plist');
+      plist.parseFile(infoPlistPath, function(err, parsedPlist) {
+        if (err) {
+          return cb(err);
+        }
+        executable = path.join(this._appDir(), 'Contents', 'MacOS', parsedPlist.CFBundleExecutable);
+        cb(null, executable);
+      }.bind(this));
+    } else {
+      cb(new Error('Unknown platform: ' + os.platform()));
     }
   }
 
