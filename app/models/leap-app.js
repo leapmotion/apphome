@@ -6,6 +6,7 @@ var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var enumerable = require('../utils/enumerable.js');
+var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
 
 var BaseModel = require('./base-model.js');
@@ -13,6 +14,7 @@ var InstalledAppsDbKey = 'installed_apps';
 var UninstalledAppsDbKey = 'uninstalled_apps';
 
 var LeapAppStates = enumerable.make([
+  'NotYetInstalled',
   'Installing',
   'InstallFailed',
   'Ready',
@@ -24,11 +26,11 @@ var LeapAppStates = enumerable.make([
 var LeapApp = BaseModel.extend({
 
   initialize: function() {
-    if (this.get('state') === LeapApp.States.Installing) {
+    if (!this.get('state')) {
+      this.set('state', LeapApp.States.NotYetInstalled);
+    } else if (this.get('state') === LeapApp.States.Installing) {
       this.set('state', LeapApp.States.InstallFailed);
-    }
-
-    if (this.get('state') === LeapApp.States.Uninstalling) {
+    } else if (this.get('state') === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.UninstallFailed);
     }
 
@@ -41,9 +43,9 @@ var LeapApp = BaseModel.extend({
       if (this.get('state') === LeapApp.States.Uninstalled) {
         var appId = this.get('appId');
         if (appId) {
-          var availableUpgrade = uiGlobals.availableUpgrades.findWhere({ appId: appId });
+          var availableUpgrade = uiGlobals.availableDownloads.findWhere({ appId: appId });
           if (availableUpgrade) {
-            uiGlobals.availableUpgrades.remove(availableUpgrade);
+            uiGlobals.availableDownloads.remove(availableUpgrade);
           }
         }
         uiGlobals.installedApps.remove(this);
@@ -78,12 +80,33 @@ var LeapApp = BaseModel.extend({
     return false;
   },
 
-  isUpgrade: function() {
-    return this.get('isUpgrade');
-  },
-
   isUninstalled: function() {
     return this.get('state') === LeapApp.States.Uninstalled;
+  },
+
+  isUninstallable: function() {
+    return !this.isUninstalled() && !this.isBuiltinTile() && !this.isUpgrade();
+  },
+
+  isInstallable: function() {
+    return this.get('state') === LeapApp.States.NotYetInstalled || this.isUninstalled();
+  },
+
+  isRunnable: function() {
+    return this.get('state') === LeapApp.States.Ready;
+  },
+
+  isUpgrade: function() {
+    return this.isStoreApp() && !!this.findAppToUpgrade();
+  },
+
+  findAppToUpgrade: function() {
+    var appToUpgrade = uiGlobals.installedApps.findWhere({ appId: this.get('appId') });
+    if (appToUpgrade && semver.isFirstGreaterThanSecond(this.get('version'), appToUpgrade.get('version'))) {
+      return appToUpgrade;
+    } else {
+      return null;
+    }
   },
 
   install: function(cb) {

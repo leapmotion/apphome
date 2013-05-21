@@ -36,6 +36,8 @@ module.exports = LeapApp.extend({
   },
 
   install: function(cb) {
+    uiGlobals.uninstalledApps.remove(this);
+    uiGlobals.installedApps.add(this);
     this.set('state', LeapApp.States.Installing);
     var rawIconFile = this.get('rawIconFile');
     var conversionModule;
@@ -61,15 +63,9 @@ module.exports = LeapApp.extend({
   },
 
   uninstall: function(deleteData, cb) {
-    this.set('state', LeapApp.States.Uninstalling);
-/*    if (this.get('iconPath')) {
-      try {
-        fs.unlinkSync(this.get('iconPath'));
-      } catch(err) {
-        this.set('state', LeapApp.States.UninstallFailed);
-        return cb && cb(err);
-      }
-    }*/
+    uiGlobals.installedApps.remove(this);
+    uiGlobals.uninstalledApps.add(this);
+    this.set('installedAt', null);
     this.set('state', LeapApp.States.Uninstalled);
     cb && cb(null);
   }

@@ -14,7 +14,7 @@ uiGlobals.Event = enumerable.make([
 
 uiGlobals.installedApps = new LeapAppCollection();
 uiGlobals.uninstalledApps = new LeapAppCollection();
-uiGlobals.availableUpgrades = new LeapAppCollection();
+uiGlobals.availableDownloads = new LeapAppCollection();
 
 uiGlobals.scaling = 1;
 

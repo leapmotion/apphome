@@ -79,7 +79,7 @@ $progressBarColor = #ddd
       background-color $progressBarColor
       border-radius 16px
 
-  &.ready
+  &.ready, &.notyetinstalled, &.uninstalled
     cursor pointer
 
   &.launching

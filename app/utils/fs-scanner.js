@@ -166,7 +166,10 @@ FsScanner.prototype = {
     } else {
       var allowedApp = this._getAllowedApp(appName);
       if (allowedApp) {
-        return (allowedApp.minVersion ? semver.meetsMinimumVersion(appVersion, allowedApp.minVersion) : true);
+        return (allowedApp.minVersion ?
+                (semver.isFirstGreaterThanSecond(appVersion, allowedApp.minVersion) ||
+                 semver.areEqual(appVersion, allowedApp.minVersion)) :
+                true);
       } else {
         return false;
       }

@@ -1,26 +1,49 @@
+var NumVersionParts = 4;
+
 function parseVersionString(versionString) {
-  return (versionString || '').split('.').slice(0, 3).map(function(versionPart) {
-    return Number(versionPart) || 0
-  });
+  if (Array.isArray(versionString)) {
+    return versionString;
+  } else {
+    var versionParts = (versionString || '').split('.').slice(0, NumVersionParts);
+    for (var i = 0; i < NumVersionParts; i++) {
+      versionParts[i] = Number(versionParts[i]) || 0;
+    }
+    return versionParts;
+  }
 }
 
-function meetsMinimumVersion(versionToCheck, minVersion) {
-  if (typeof versionToCheck === 'string') {
-    versionToCheck = parseVersionString(versionToCheck);
-  }
-  if (typeof minVersion === 'string') {
-    minVersion = parseVersionString(minVersion);
-  }
+function isFirstGreaterThanSecond(firstVersion, secondVersion) {
+  firstVersion = parseVersionString(firstVersion);
+  secondVersion = parseVersionString(secondVersion);
 
-  for (var i = 0, len = versionToCheck.length; i < len; i++) {
-    if (versionToCheck[i] > minVersion[i]) {
+  for (var i = 0; i < NumVersionParts; i++) {
+    if (firstVersion[i] > secondVersion[i]) {
       return true;
-    } else if (versionToCheck[i] < minVersion[i]) {
+    } else if (firstVersion[i] < secondVersion[i]) {
       return false;
     }
   }
 
+  // equal, so return false
+  return false;
+}
+
+function areEqual(firstVersion, secondVersion) {
+  firstVersion = parseVersionString(firstVersion);
+  secondVersion = parseVersionString(secondVersion);
+
+  for (var i = 0; i < NumVersionParts; i++) {
+    if (firstVersion[i] !== secondVersion[i]) {
+      return false;
+    }
+  }
   return true;
 }
 
-module.exports.meetsMinimumVersion = meetsMinimumVersion;
+function isFirstLessThanSecond(firstVersion, secondVersion) {
+  return !isFirstGreaterThanSecond(firstVersion, secondVersion) && !areEqual(firstVersion, secondVersion);
+}
+
+module.exports.isFirstGreaterThanSecond = isFirstGreaterThanSecond;
+module.exports.areEqual = areEqual;
+module.exports.isFirstLessThanSecond = isFirstGreaterThanSecond;
