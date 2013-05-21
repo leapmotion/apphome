@@ -126,6 +126,7 @@ var CarouselView = BaseView.extend({
     this.$currentScreenHolder.append(slideView.$el);
     this._currentSlideNdx = slideNumber;
     this._updateSlideNavigation();
+    this.rescale();
   },
 
   _updateSlideNavigation: function() {
@@ -134,6 +135,14 @@ var CarouselView = BaseView.extend({
     var $dots = this.$('.slide-indicator .dot');
     $dots.removeClass('current');
     $($dots[this._currentSlideNdx]).addClass('current');
+  },
+
+  rescale: function() {
+    this.$currentScreenHolder.css('-webkit-transform', 'scale(' + uiGlobals.scaling + ')');
+    this.$('.slide').css({
+      left: ($(window).width() - config.Layout.slideWidth * uiGlobals.scaling) / uiGlobals.scaling / 2,
+      top: ($(window).height() - config.Layout.slideHeight * uiGlobals.scaling) / uiGlobals.scaling / 2,
+    });
   }
 
 

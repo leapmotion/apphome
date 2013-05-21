@@ -1,3 +1,5 @@
+var config = require('../../../config/config.js');
+
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
 
@@ -12,6 +14,8 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml());
     this._linkMapping = {};
     this._initCarousels();
+    this._setupResizeBehavior();
+    $(window).resize();
   },
 
   _initCarousels: function() {
@@ -76,6 +80,16 @@ module.exports = BaseView.extend({
       if (leapApp) {
         leapApp.uninstall(true);
       }
+    }.bind(this));
+  },
+
+  _setupResizeBehavior: function() {
+    var $win = $(window);
+    $win.resize(function() {
+      var widthRatio = ($win.width() - config.Layout.minSlidePadding) / config.Layout.slideWidth;
+      var heightRatio = ($win.height() - config.Layout.minSlidePadding) / config.Layout.slideHeight;
+      uiGlobals.scaling = Math.min(1, widthRatio, heightRatio);
+      this._currentCarousel.rescale();
     }.bind(this));
   }
 

@@ -21,6 +21,9 @@ $progressBarColor = #ddd
     box-shadow 0 0 24px 4px rgba(255,255,255,.6); // outer glow
     background-image linear-gradient(bottom, #99c947 0%, #fff 100%); // gradient overlay
 
+    .name
+      visibility visible
+
   h3
     position absolute
     width 100%
@@ -29,6 +32,9 @@ $progressBarColor = #ddd
     font-size 20px
     color rgba(255,255,255,.6)
     -webkit-user-drag none
+
+  .name
+    visibility hidden
 
   .icon
     position: absolute;
@@ -81,14 +87,12 @@ $progressBarColor = #ddd
     background transparent
     box-shadow none
 
-    .tile-bg, .icon
+    /*.tile-bg, .icon
       -webkit-animation-duration 2s
       -webkit-animation-iteration-count 1
       -webkit-animation-name pulse
-      z-index: 1000
+      z-index: 1000*/
 
-    .name
-      visibility hidden
 
   &.installing
     .progress, .message

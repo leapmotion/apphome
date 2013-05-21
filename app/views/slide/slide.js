@@ -1,3 +1,5 @@
+var config = require('../../../config/config.js');
+
 var BaseView = require('../base-view.js');
 var Tile = require('../tile/tile.js');
 
@@ -8,6 +10,8 @@ var SlideView = BaseView.extend({
 
   initialize: function(args) {
     this.injectCss();
+    this.$el.width(config.Layout.slideWidth);
+    this.$el.height(config.Layout.slideHeight);
   },
 
   addTile: function(args) {
@@ -33,3 +37,4 @@ var SlideView = BaseView.extend({
 });
 
 module.exports = SlideView;
+

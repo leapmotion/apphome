@@ -38,7 +38,10 @@ var config = {
 
   Layout: {
     columnsPerSlide: 4,
-    rowsPerSlide: 3
+    rowsPerSlide: 3,
+    slideWidth: 1392,
+    slideHeight: 702,
+    minSlidePadding: 200
   }
 
 };

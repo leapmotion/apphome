@@ -16,4 +16,6 @@ uiGlobals.installedApps = new LeapAppCollection();
 uiGlobals.uninstalledApps = new LeapAppCollection();
 uiGlobals.availableUpgrades = new LeapAppCollection();
 
+uiGlobals.scaling = 1;
+
 module.exports = uiGlobals;

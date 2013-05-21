@@ -38,6 +38,7 @@ module.exports = BaseView.extend({
         this.$el.addClass('launching');
         leapApp.launch();
         setTimeout(function() {
+          console.log('done launching');
           this.$el.removeClass('launching');
         }.bind(this), 2000);
       }

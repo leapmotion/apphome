@@ -1,4 +1,7 @@
 .carousel
+  .current-screen-holder
+    -webkit-transform-origin 0 0
+
   .go-next, .go-previous
     cursor pointer
     width 30px
