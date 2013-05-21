@@ -38,6 +38,7 @@ var CarouselView = BaseView.extend({
     var collection = this.collection;
     var repaint = _.debounce(function(slideNumber) {
       this._slideCount = collection.pageCount(this._tilesPerSlide);
+      this._initSlideIndicator();
       this.showSlide(slideNumber);
     }.bind(this), 300);
 
@@ -46,12 +47,15 @@ var CarouselView = BaseView.extend({
       if (slideNumber === this._currentSlideNdx) {
         repaint(slideNumber);
       }
-      this._initSlideIndicator();
     }, this);
 
     collection.on('remove', function(tileModel) {
       var changedSlideNumber = collection.whichPage(collection.indexOf(tileModel) - 1, this._tilesPerSlide);
-      if (this._currentSlideNdx >= changedSlideNumber) {
+      this._slideCount = collection.pageCount(this._tilesPerSlide);
+      if (this._currentSlideNdx >= this._slideCount) {
+        this._currentSlideNdx--;
+        this.showSlide(this._currentSlideNdx);
+      } else if (this._currentSlideNdx >= changedSlideNumber) {
         this.showSlide(this._currentSlideNdx);
       }
       this._initSlideIndicator();
@@ -60,7 +64,6 @@ var CarouselView = BaseView.extend({
     collection.on('sort', function() {
       this.showSlide(this._currentSlideNdx);
     }, this);
-
   },
 
   _initNavigationControls: function() {
@@ -88,6 +91,9 @@ var CarouselView = BaseView.extend({
 
   _initSlideIndicator: function() {
     this.$('.slide-indicator').empty();
+    if (this._slideCount <= 1) {
+      return;
+    }
     for (var i = 0; i < this._slideCount; i++) {
       (function() {
         var $dot = $('<div/>');
