@@ -169,7 +169,7 @@ var CarouselView = BaseView.extend({
             this._slides[slideNum].enable();
             this._currentPosition += distanceToSlide;
             this._positionSlides();
-            this._initSlideIndicator();
+            this._updateSlideIndicator();
           }.bind(this)).start();
 
       function animate() {
