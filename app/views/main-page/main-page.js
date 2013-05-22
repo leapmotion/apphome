@@ -37,6 +37,10 @@ module.exports = BaseView.extend({
     this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el.hide());
     this._linkMapping['#uninstalled-link'] = this.uninstalledAppsCarousel;
 
+    this.listenTo(uiGlobals.availableDownloads, 'add remove', function() {
+      this._updateDownloadsJewel();
+    }, this);
+
     this._initCarouselLinks();
     this._initDraggingToTrash();
 
@@ -62,6 +66,7 @@ module.exports = BaseView.extend({
         }
       }.bind(this));
      }.bind(this));
+    this._updateDownloadsJewel();
    },
 
   _initDraggingToTrash: function() {
@@ -81,6 +86,16 @@ module.exports = BaseView.extend({
         leapApp.uninstall(true, false);
       }
     }.bind(this));
+  },
+
+  _updateDownloadsJewel: function() {
+    var numDownloads = uiGlobals.availableDownloads.length;
+    var $jewel = this.$('#downloads-link .jewel');
+    if (numDownloads > 0) {
+      $jewel.show().text(numDownloads);
+    } else {
+      $jewel.hide();
+    }
   },
 
   _setupResizeBehavior: function() {
