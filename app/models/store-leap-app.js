@@ -104,6 +104,10 @@ module.exports = LeapApp.extend({
           this.set('state', LeapApp.States.InstallFailed);
           return cb && cb(err);
         }
+        var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
+        if (fs.existsSync(dependenciesReadmePath)) {
+          nwGui.Shell.openExternal(dependenciesReadmePath);
+        }
         this.set('executable', executable);
         this.set('state', LeapApp.States.Ready);
         cb && cb(null);
