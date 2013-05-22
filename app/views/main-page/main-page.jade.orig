@@ -1,15 +1,21 @@
+<<<<<<< HEAD
+#top-bar
+	#my-apps-link.carousel-link.current My Apps
+	#upgrades-link.carousel-link Downloads
+=======
 #header
   #my-apps-link.carousel-link.current
     .label My Apps
     .divot
 
-  #downloads-link.carousel-link
+  #upgrades-link.carousel-link
     .label Downloads
     .icon
-    .jewel 3
+    .jewel
     .divot
+>>>>>>> master
 
-#downloads
+#upgrades
 #my-apps
 #uninstalled
 

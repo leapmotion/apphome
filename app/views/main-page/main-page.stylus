@@ -6,21 +6,84 @@ body
   height 100%
   background-image linear-gradient(to bottom, #444, #040404)
 
-.carousel-link
-  font-size 20px
+#header
+  background #222225
+  border-bottom 1px solid #353639
+  height 60px
+  position absolute
+  width 100%
+  
+  .carousel-link
+    left 0
+    padding-left 22px
+    padding-right 22px
+    text-shadow 0 -1px 0 rgba(0,0,0,.75) /* drop shadow */
+    top 14px
 
-#my-apps-link
-  top 10px
-  left 10px
+    &.current
+      text-shadow 0 1px 0 rgba(0,0,0,.8) /* drop shadow */
+      text-shadow 0 0 30px rgba(161,171,200,.8) /* outer glow */
 
-#downloads-link
-  top 10px
-  right 10px
+      &:after
+        bottom 0
+        content ""
+        height 1px
+        left 0
+        position absolute
+        width 100%
+    
+  #my-apps-link
+
+    &.current:after
+      background -webkit-linear-gradient(left,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
+      background linear-gradient(to right,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
+
+  #downloads-link
+    left auto
+    right 0
+    width 147px
+
+    &.current
+
+      &:after
+        background -webkit-linear-gradient(left, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+        background linear-gradient(to right, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+      .icon
+        background url(static/images/downloads-icon-current.png)
+
+    .label
+      float left
+    .jewel
+      -webkit-background-clip padding-box
+      background-clip padding-box /* prevents bg color from leaking outside the border */
+      background-color #d12e2e /* layer fill content */
+      background-image -webkit-linear-gradient(bottom, rgba(208,56,56,0) 0%, #cf3737 100%) /* gradient overlay */
+      background-image linear-gradient(bottom, rgba(208,56,56,0) 0%, #cf3737 100%) /* gradient overlay */
+      -webkit-border-radius 3px
+      border-radius 3px /* border radius */
+      -webkit-box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
+      box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
+      color white
+      font-size 13px
+      font-weight bold
+      padding-bottom 4px
+      position absolute
+      right 4px
+      text-align center
+      text-shadow 0 1px 0 rgba(0,0,0,.6) /* drop shadow */
+      top -5px
+      width 18px
+
+    .icon
+      background url(static/images/downloads-icon.png)
+      float right
+      height 33px
+      width 25px
 
 .page-container
   width 100%
   height 100%
-  font-family Arial
+  //font-family Arial
   .airspace-logo
     background url(static/images/airspace-logo.png)
     width 275px
@@ -32,15 +95,16 @@ body
   right 10px
 
 .carousel-link
-  width 100px
-  height 50px
+  color #4a4f59
+  height 46px
+  font-size 24px
   position absolute
+  width 100px
   cursor pointer
-  color #ccc
 
   &.current
+    color #a1abc9
     cursor default
-    color white
 
 .app-list
   list-style none

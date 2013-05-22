@@ -1,12 +1,7 @@
-@font-face {
-  font-family: "Freight Sans Pro";
-  src: url('../fonts/freigsanpromed-webfont.ttf');
-}
-
 body {
   margin: 0;
   overflow: hidden;
-  font-family: "Freight Sans Pro";
+  font-family: "freightsans_probook";
 }
 
 body * {
