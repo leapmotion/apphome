@@ -40,6 +40,9 @@ function oauthRequest(params, cb) {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
+  if (urlParts.port) {
+    options.port = urlParts.port;
+  };
   var protocolModule = (urlParts.protocol === 'https:' ? https : http);
   var responseChunks = [];
   var req = protocolModule.request(options, function(res) {
@@ -76,6 +79,9 @@ function authorizeWithCode(code, cb) {
 }
 
 function getAccessToken(cb) {
+  if (! getRefreshToken()) {
+    return cb('missing refresh token')
+  }
   return oauthRequest({
     grant_type: 'refresh_token',
     refresh_token: getRefreshToken()
