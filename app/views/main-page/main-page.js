@@ -21,6 +21,7 @@ module.exports = BaseView.extend({
   _initCarousels: function() {
     this.downloadsCarousel = new Carousel({
       collection: uiGlobals.availableDownloads,
+      emptyMessage: 'New downloads and upgrades will appear here.',
       position: 0
     });
     this.$('#downloads').append(this.downloadsCarousel.$el.hide());
@@ -35,6 +36,7 @@ module.exports = BaseView.extend({
 
     this.uninstalledAppsCarousel = new Carousel({
       collection: uiGlobals.uninstalledApps,
+      emptyMessage: 'Uninstalled apps will appear here.',
       position: 2
     });
     this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el.hide());
@@ -59,7 +61,12 @@ module.exports = BaseView.extend({
       var animating = true;
 
       newCarousel.setTop(coefficient * windowHeight);
-      newCarousel.$el.show();
+      if (!newCarousel.isEmpty()) {
+        newCarousel.$el.show();
+      }
+      if (currentCarousel.isEmpty()) {
+        currentCarousel.$el.hide();
+      }
       new window.TWEEN.Tween({ x: 0, y: 0 })
           .to({ x: windowHeight }, 500)
           .easing(window.TWEEN.Easing.Linear.None)
@@ -69,6 +76,7 @@ module.exports = BaseView.extend({
           }).onComplete(function() {
             animating = false;
             currentCarousel.setTop(0);
+            newCarousel.$el.show();
             currentCarousel.$el.hide();
             this._currentCarousel = newCarousel;
           }.bind(this)).start();
@@ -81,6 +89,9 @@ module.exports = BaseView.extend({
       }
       animate();
     } else {
+      if (this._currentCarousel) {
+        this._currentCarousel.$el.hide();
+      }
       this._currentCarousel = newCarousel;
       this._currentCarousel.$el.show();
     }

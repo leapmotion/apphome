@@ -42,7 +42,8 @@ var config = {
     slideWidth: 1392,
     slideHeight: 702,
     slidePeekDistance: 50,
-    minSlidePadding: 200
+    minSlidePadding: 200,
+    emptyMessageHeight: 32
   }
 
 };

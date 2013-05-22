@@ -22,36 +22,44 @@ var CarouselView = BaseView.extend({
     this._currentSlideIndex = 0;
     this._currentPosition = 0;
     this._animating = false;
+    this._slides = [];
 
-    this._initSlides();
-    this._initSlideIndicator();
+    var $emptyMessage = this.$('.empty-message');
+    $emptyMessage.text(opts.emptyMessage || 'No apps to display.');
+    $emptyMessage.height(config.Layout.emptyMessageHeight);
+
+    this._updateSlides();
+    this._updateEmptyState();
+    this._updateSlideIndicator();
     this._initAddRemoveRepainting();
   },
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
 
-    collection.on('add', function(tileModel) {
-      this._initSlides();
-      this._initSlideIndicator();
+    this.listenTo(collection, 'add', function(tileModel) {
+      this._updateSlides();
+      this._updateEmptyState();
+      this._updateSlideIndicator();
     }, this);
 
-    collection.on('remove', function(tileModel) {
+    this.listenTo(collection, 'remove', function(tileModel) {
       var slideCount = collection.pageCount(this._tilesPerSlide);
-      this._initSlides();
-      this._initSlideIndicator();
+      this._updateSlides();
+      this._updateEmptyState();
+      this._updateSlideIndicator();
       if (this._currentSlideIndex >= slideCount) {
         this._currentSlideIndex--;
         this._switchToSlide(this._currentSlideIndex);
       }
     }, this);
 
-    collection.on('sort', function() {
-      this._initSlides();
+    this.listenTo(collection, 'sort', function() {
+      this._updateSlides();
     }, this);
   },
 
-  _initSlideIndicator: function() {
+  _updateSlideIndicator: function() {
     this.$('.slide-indicator').empty();
     var numSlides = this._slides.length;
     if (numSlides <= 1) {
@@ -75,8 +83,17 @@ var CarouselView = BaseView.extend({
     }
   },
 
-  _initSlides: function() {
+  _updateEmptyState: function() {
+    this.$el.toggleClass('empty', this.isEmpty());
+  },
+
+  _updateSlides: function() {
     var slideCount = this.collection.pageCount(this._tilesPerSlide);
+
+    this._slides.forEach(function(slide) {
+      slide.remove();
+    });
+
     this._slides = [];
 
     this.$('.slides-holder').empty();
@@ -167,6 +184,8 @@ var CarouselView = BaseView.extend({
 
   rescale: function() {
     this._positionSlides();
+    var $emptyMessage = this.$('.empty-message');
+    $emptyMessage.css('top', ($(window).height() - config.Layout.emptyMessageHeight) / 2)
   },
 
   position: function() {
@@ -175,6 +194,10 @@ var CarouselView = BaseView.extend({
 
   setTop: function(top) {
     this.$('.slides-holder').css('top', top);
+  },
+
+  isEmpty: function() {
+    return this.collection.length === 0;
   }
 
 });
