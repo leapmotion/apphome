@@ -4,7 +4,9 @@ html
 body
   width 100%
   height 100%
-  background-image linear-gradient(to bottom, #444, #040404)
+  background -webkit-linear-gradient(top,  #222426 0%,#151718 50%,#08080b 100%) /* Chrome10+,Safari5.1+ */
+  background linear-gradient(to bottom,  #222426 0%,#151718 50%,#08080b 100%) /* W3C */
+
 
 #header
   background #222225
@@ -12,54 +14,6 @@ body
   height 60px
   position absolute
   width 100%
-  
-  .carousel-link
-    left 0
-    padding-left 22px
-    padding-right 22px
-    text-shadow 0 -1px 0 rgba(0,0,0,.75) /* drop shadow */
-    top 14px
-
-    &.current
-      text-shadow 0 1px 0 rgba(0,0,0,.8) /* drop shadow */
-      text-shadow 0 0 30px rgba(161,171,200,.8) /* outer glow */
-
-      &:after
-        bottom 0
-        content ""
-        height 1px
-        left 0
-        position absolute
-        width 100%
-      .divot
-        position relative
-        bottom -21px
-
-        &:before
-          border-top 8px solid #222225
-          border-left 8px solid transparent
-          border-right 8px solid transparent
-          bottom 0
-          content ""
-          height 0
-          left 50%
-          margin-left -7px
-          position absolute
-          width 0
-          z-index 2
-
-        &:after
-          border-top 7px solid #5d5f69
-          border-left 7px solid transparent
-          border-right 7px solid transparent
-          bottom -1px
-          content ""
-          height 0
-          left 50%
-          margin-left -6px
-          position absolute
-          width 0
-          z-index 1
     
   #my-apps-link
 
@@ -113,6 +67,68 @@ body
       height 33px
       width 25px
 
+.carousel-link
+    left 0
+    padding-left 22px
+    padding-right 22px
+    text-shadow 0 -1px 0 rgba(0,0,0,.75) /* drop shadow */
+    top 14px
+
+    &.current
+      text-shadow 0 1px 0 rgba(0,0,0,.8) /* drop shadow */
+      text-shadow 0 0 30px rgba(161,171,200,.8) /* outer glow */
+
+      &:after
+        bottom -1px
+        content ""
+        height 1px
+        left 0
+        position absolute
+        width 100%
+      .divot
+        position relative
+        bottom -21px
+
+        &:before
+          border-top 8px solid #222225
+          border-left 8px solid transparent
+          border-right 8px solid transparent
+          bottom 0
+          content ""
+          height 0
+          left 50%
+          margin-left -7px
+          position absolute
+          width 0
+          z-index 2
+
+        &:after
+          border-top 7px solid #5d5f69
+          border-left 7px solid transparent
+          border-right 7px solid transparent
+          bottom -1px
+          content ""
+          height 0
+          left 50%
+          margin-left -6px
+          position absolute
+          width 0
+          z-index 1
+
+        &.up
+          bottom 13px
+
+          &:before
+            border-bottom 8px solid #070709
+            border-left 8px solid transparent
+            border-right 8px solid transparent
+            border-top none
+          &:after
+            border-bottom 7px solid #5d5f69
+            border-left 7px solid transparent
+            border-right 7px solid transparent
+            border-top none
+            bottom 2px
 
 .page-container
   width 100%
@@ -125,8 +141,27 @@ body
     margin 30px auto
 
 #uninstalled-link
-  bottom 10px
-  right 10px
+  bottom 0
+  left auto
+  right 0
+
+  &.current
+    &:after
+      background -webkit-linear-gradient(left, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+      background linear-gradient(to right, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+      bottom auto
+      top -15px
+      left 0
+    .icon
+      background url(static/images/trash-icon-current.png)
+
+  .label
+    float left
+  .icon
+    background url(static/images/trash-icon.png)
+    float right
+    height 33px
+    width 27px
 
 .carousel-link
   color #4a4f59
@@ -145,3 +180,11 @@ body
 
   li
     float left
+
+.footer
+  background #070709
+  border-top 1px solid #353639
+  height 60px
+  position absolute
+  bottom 0
+  width 100%
