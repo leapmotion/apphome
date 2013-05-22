@@ -53,10 +53,11 @@ var CarouselView = BaseView.extend({
 
   _initSlideIndicator: function() {
     this.$('.slide-indicator').empty();
-    if (this._slideCount <= 1) {
+    var numSlides = this._slides.length;
+    if (numSlides <= 1) {
       return;
     }
-    for (var i = 0, len = this._slides.length; i < len; i++) {
+    for (var i = 0, len = numSlides; i < len; i++) {
       (function() {
         var $dot = $('<div/>');
         $dot.addClass('dot');
