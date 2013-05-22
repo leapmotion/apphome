@@ -1,4 +1,5 @@
 var config = require('../../config/config.js');
+var LeapApp = require('../../app/models/leap-app.js');
 
 var randomValue = require('./random-value.js');
 
@@ -17,7 +18,8 @@ function storeAppData(args) {
     binaryUrl: args.appurl || ('https://dev.leapmotion.com/apps/' + verId),
     iconPath: config.Defaults.IconPath,
     tilePath: config.Defaults.TilePath,
-    installedAt: (new Date()).getTime()
+    installedAt: (new Date()).getTime(),
+    state: LeapApp.States.Ready
   };
 }
 
@@ -30,7 +32,8 @@ function localAppData(args) {
     name: args.name || randomString(14),
     iconPath: config.Defaults.IconPath,
     tilePath: config.Defaults.TilePath,
-    installedAt: (new Date()).getTime()
+    installedAt: (new Date()).getTime(),
+    state: LeapApp.States.Ready
   }
 }
 

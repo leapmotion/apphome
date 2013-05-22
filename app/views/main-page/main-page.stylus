@@ -6,6 +6,9 @@ body
   height 100%
   background-image linear-gradient(to bottom, #444, #040404)
 
+.carousel-link
+  font-size 20px
+
 #my-apps-link
   top 10px
   left 10px
@@ -32,11 +35,12 @@ body
   width 100px
   height 50px
   position absolute
-  background-color black
-  color white
+  cursor pointer
+  color #ccc
 
   &.current
-    background-color #333
+    cursor default
+    color white
 
 .app-list
   list-style none
