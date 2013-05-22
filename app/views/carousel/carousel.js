@@ -88,7 +88,7 @@ var CarouselView = BaseView.extend({
   },
 
   _updateSlides: function() {
-    var slideCount = this.collection.pageCount(this._tilesPerSlide);
+    var slideCount = Math.max(this.collection.pageCount(this._tilesPerSlide), 1);
 
     this._slides.forEach(function(slide) {
       slide.remove();
