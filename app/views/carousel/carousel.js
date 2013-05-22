@@ -157,7 +157,7 @@ var CarouselView = BaseView.extend({
     });
 
     this.$nextSlideHolder.find('.slide').css({
-      left: $(window).width() - 50,
+      left: $(window).width() / uiGlobals.scaling - 50,
       top: topOffset
     });
   }
