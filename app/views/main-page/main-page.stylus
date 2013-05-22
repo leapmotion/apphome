@@ -70,7 +70,7 @@ body
         background -webkit-linear-gradient(left,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
         background linear-gradient(to right,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
 
-  #upgrades-link
+  #downloads-link
     left auto
     right 0
     width 147px
@@ -134,15 +134,11 @@ body
   font-size 24px
   position absolute
   width 100px
-
-  &hover
-    cursor pointer
+  cursor pointer
 
   &.current
     color #a1abc9
-
-    &hover
-      cursor default
+    cursor default
 
 .app-list
   list-style none

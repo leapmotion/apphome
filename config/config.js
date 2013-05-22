@@ -41,6 +41,7 @@ var config = {
     rowsPerSlide: 3,
     slideWidth: 1392,
     slideHeight: 702,
+    slidePeekDistance: 50,
     minSlidePadding: 200
   }
 

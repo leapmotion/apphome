@@ -18,16 +18,13 @@ var CarouselView = BaseView.extend({
     this.injectCss();
     this.$el.append(this.templateHtml());
 
-    this.$previousSlideHolder = this.$('.slide-holder.previous');
-    this.$currentSlideHolder = this.$('.slide-holder.current');
-    this.$nextSlideHolder = this.$('.slide-holder.next');
-
     this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
-    this._slideCount = this.collection.pageCount(this._tilesPerSlide);
-    this._currentSlideNdx = 0;
-    this._initSlideIndicator();
-    this.showSlide(0);
+    this._currentSlideIndex = 0;
+    this._currentPosition = 0;
+    this._animating = false;
 
+    this._initSlides();
+    this._initSlideIndicator();
     this._initAddRemoveRepainting();
   },
 
@@ -35,28 +32,22 @@ var CarouselView = BaseView.extend({
     var collection = this.collection;
 
     collection.on('add', function(tileModel) {
-      var slideNumber = collection.whichPage(tileModel, this._tilesPerSlide);
-      this._slideCount = collection.pageCount(this._tilesPerSlide);
+      this._initSlides();
       this._initSlideIndicator();
-      if (slideNumber <= this._currentSlideNdx) {
-        this.showSlide(slideNumber);
-      }
     }, this);
 
     collection.on('remove', function(tileModel) {
-      var changedSlideNumber = collection.whichPage(collection.indexOf(tileModel) - 1, this._tilesPerSlide);
-      this._slideCount = collection.pageCount(this._tilesPerSlide);
-      if (this._currentSlideNdx >= this._slideCount) {
-        this._currentSlideNdx--;
-        this.showSlide(this._currentSlideNdx);
-      } else if (this._currentSlideNdx >= changedSlideNumber) {
-        this.showSlide(this._currentSlideNdx);
-      }
+      var slideCount = collection.pageCount(this._tilesPerSlide);
+      this._initSlides();
       this._initSlideIndicator();
+      if (this._currentSlideIndex >= slideCount) {
+        this._currentSlideIndex--;
+        this._switchToSlide(this._currentSlideIndex);
+      }
     }, this);
 
     collection.on('sort', function() {
-      this.showSlide(this._currentSlideNdx);
+      this._initSlides();
     }, this);
   },
 
@@ -65,17 +56,17 @@ var CarouselView = BaseView.extend({
     if (this._slideCount <= 1) {
       return;
     }
-    for (var i = 0; i < this._slideCount; i++) {
+    for (var i = 0, len = this._slides.length; i < len; i++) {
       (function() {
         var $dot = $('<div/>');
         $dot.addClass('dot');
         $dot.attr('slide_index', i);
-        if (i === this._currentSlideNdx) {
+        if (i === this._currentSlideIndex) {
           $dot.addClass('current');
         }
         $dot.click(function() {
           if (!$dot.hasClass('current')) {
-            this.showSlide(Number($dot.attr('slide_index')));
+            this._switchToSlide(Number($dot.attr('slide_index')));
           }
         }.bind(this));
         this.$('.slide-indicator').append($dot);
@@ -83,107 +74,99 @@ var CarouselView = BaseView.extend({
     }
   },
 
-  _buildSlideView: function(slideNumber, disabled) {
-    var slideView;
-    if (disabled) {
-      slideView = new Slide({
-        disabled: true,
-        onClick: function() {
-          this.showSlide(slideNumber);
+  _initSlides: function() {
+    var slideCount = this.collection.pageCount(this._tilesPerSlide);
+    this._slides = [];
+
+    this.$('.slides-holder').empty();
+
+    for (var i = 0; i < slideCount; i++) {
+      var slideView = new Slide({
+        slideNum: i,
+        onDisabledClick: function(slideNum) {
+          this._switchToSlide(slideNum);
         }.bind(this)
       });
-    } else {
-      slideView = new Slide();
+      this.$('.slides-holder').append(slideView.$el);
+      this._slides[i] = slideView;
+      if (i !== this._currentSlideIndex) {
+        slideView.disable();
+      }
+
+      var leapApps = this.collection.getPageModels(i, this._tilesPerSlide);
+      leapApps.forEach(function(leapApp) {
+        slideView.addTile({ leapApp: leapApp });
+      });
     }
 
-    var leapApps = this.collection.getPageModels(slideNumber, this._tilesPerSlide);
-    leapApps.forEach(function(leapApp) {
-      slideView.addTile({ leapApp: leapApp });
+    this._positionSlides();
+  },
+
+  _positionSlides: function() {
+    if (this._animating) {
+      return;
+    }
+
+    // in unscaled coordinates
+    var firstSlideLeft = ($(window).width() - config.Layout.slideWidth * uiGlobals.scaling) / uiGlobals.scaling / 2;
+    var slideTop = ($(window).height() - config.Layout.slideHeight * uiGlobals.scaling) / uiGlobals.scaling / 2;
+    this._slideSpacing = $(window).width() / uiGlobals.scaling - firstSlideLeft - config.Layout.slidePeekDistance;
+
+    var $slidesHolder = this.$('.slides-holder');
+    $slidesHolder.css('-webkit-transform', 'scale(' + uiGlobals.scaling + ')');
+
+    for (var i = 0, len = this._slides.length; i < len; i++) {
+      this._slides[i].position(firstSlideLeft + this._slideSpacing * i, slideTop);
+    }
+
+    this._currentPosition = this._slideSpacing * (-1 * this._currentSlideIndex);
+    $slidesHolder.css('left', this._currentPosition * uiGlobals.scaling);
+  },
+
+  _switchToSlide: function(slideNum) {
+    if (!slideNum || slideNum < 0) {
+      slideNum = 0;
+    } else if (slideNum >= this._slides.length) {
+      slideNum = this._slides.length - 1;
+    }
+
+    console.log('switching to slide #' + slideNum + ' from #' + this._currentSlideIndex);
+
+    this._slides.forEach(function(slideView) {
+      slideView.disable();
     });
-    return slideView;
-  },
+    var $slidesHolder = this.$('.slides-holder');
+    var currentPosition = this._currentPosition * uiGlobals.scaling; // scaled coordinates
+    var distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled (scaled below)
+    var animating = this._animating = true;
+    if (this._currentSlideIndex !== slideNum) {
+      new window.TWEEN.Tween({ x: 0, y: 0 })
+          .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
+          .easing(window.TWEEN.Easing.Linear.None)
+          .onUpdate(function() {
+            $slidesHolder.css('left', currentPosition + this.x);
+          }).onComplete(function() {
+            animating = this._animating = false;
+            this._currentSlideIndex = slideNum;
+            this._slides[slideNum].enable();
+            this._currentPosition += distanceToSlide;
+            this._positionSlides();
+            this._initSlideIndicator();
+          }.bind(this)).start();
 
-  _paintSlide: function($holder, slideNumber, disabled) {
-    var slideView = this._buildSlideView(slideNumber, disabled);
-    $holder.append(slideView.$el);
-    return slideView;
-  },
-
-  showSlide: function(slideNumber) {
-    if (!slideNumber || slideNumber < 0) {
-      slideNumber = 0;
-    } else if (slideNumber >= this._slideCount) {
-      slideNumber = this._slideCount - 1;
+      function animate() {
+        if (animating) {
+          window.requestAnimationFrame(animate);
+          window.TWEEN.update();
+        }
+      }
+      animate();
     }
-
-    this._currentSlideNdx = slideNumber;
-    this.$currentSlideHolder.empty();
-    this._paintSlide(this.$currentSlideHolder, slideNumber);
-
-    this.$previousSlideHolder.empty();
-    if (slideNumber > 0) {
-      this._paintSlide(this.$previousSlideHolder, slideNumber - 1, true);
-    }
-
-    this.$nextSlideHolder.empty();
-    if (slideNumber < this._slideCount - 1) {
-      this._paintSlide(this.$nextSlideHolder, slideNumber + 1, true);
-    }
-
-    this._updateSlideNavigation();
-    this.rescale();
-  },
-
-  _updateSlideNavigation: function() {
-    var $dots = this.$('.slide-indicator .dot');
-    $dots.removeClass('current');
-    $($dots[this._currentSlideNdx]).addClass('current');
   },
 
   rescale: function() {
-    var currentLeftOffset = ($(window).width() - config.Layout.slideWidth * uiGlobals.scaling) / uiGlobals.scaling / 2;
-    var topOffset = ($(window).height() - config.Layout.slideHeight * uiGlobals.scaling) / uiGlobals.scaling / 2;
-
-    this.$('.slide-holder').css('-webkit-transform', 'scale(' + uiGlobals.scaling + ')');
-
-    this.$previousSlideHolder.find('.slide').css({
-      left: 50 - config.Layout.slideWidth,
-      top: topOffset
-    });
-
-    this.$currentSlideHolder.find('.slide').css({
-      left: currentLeftOffset,
-      top: topOffset
-    });
-
-    this.$nextSlideHolder.find('.slide').css({
-      left: $(window).width() / uiGlobals.scaling - 50,
-      top: topOffset
-    });
+    this._positionSlides();
   }
-
-
-//  _tmp3dPlay: function() {
-//    var camera = this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
-//    var scene = this.scene = new THREE.Scene();
-//    var renderer = this.renderer = new THREE.CSS3DRenderer();
-//    renderer.setSize( window.innerWidth, window.innerHeight );
-////    renderer.domElement.style.position = 'absolute'; // ?
-//
-//    var slideView = this._slideViewByTileNdx(0);
-//    var threeObj = slideView.three();
-//    this.scene.add(threeObj);
-//    slideView.$el.click(function() {
-//      threeObj.position.z = threeObj.position.z - 400;
-//    });
-//
-//    var animate = function() {
-//      window.requestAnimationFrame(animate);
-//      renderer.render(scene, camera);
-//      window.TWEEN.update();
-//    }
-//    animate();
-//  },
 
 });
 

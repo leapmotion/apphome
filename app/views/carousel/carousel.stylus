@@ -1,6 +1,8 @@
 .carousel
-  .slide-holder
+
+  .slides-holder
     -webkit-transform-origin 0 0
+    position absolute
 
   .slide-indicator
     position absolute

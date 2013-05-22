@@ -19,11 +19,11 @@ module.exports = BaseView.extend({
   },
 
   _initCarousels: function() {
-    this.upgradeCarousel = new Carousel({
+    this.downloadsCarousel = new Carousel({
       collection: uiGlobals.availableDownloads
     });
-    this.$('#upgrades').append(this.upgradeCarousel.$el.hide());
-    this._linkMapping['#upgrades-link'] = this.upgradeCarousel;
+    this.$('#downloads').append(this.downloadsCarousel.$el.hide());
+    this._linkMapping['#downloads-link'] = this.downloadsCarousel;
 
     this.installedAppsCarousel = new Carousel({
       collection: uiGlobals.installedApps
@@ -89,7 +89,9 @@ module.exports = BaseView.extend({
       var widthRatio = ($win.width() - config.Layout.minSlidePadding) / config.Layout.slideWidth;
       var heightRatio = ($win.height() - config.Layout.minSlidePadding) / config.Layout.slideHeight;
       uiGlobals.scaling = Math.min(1, widthRatio, heightRatio);
-      this._currentCarousel.rescale();
+      this.downloadsCarousel.rescale();
+      this.installedAppsCarousel.rescale();
+      this.uninstalledAppsCarousel.rescale();
     }.bind(this));
   }
 

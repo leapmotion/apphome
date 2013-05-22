@@ -12,13 +12,17 @@ var SlideView = BaseView.extend({
     args = args || {};
     this.injectCss();
     this.$el.append(this.templateHtml());
+
     this.$el.width(config.Layout.slideWidth);
     this.$el.height(config.Layout.slideHeight);
-    if (args.disabled) {
-      this.$el.addClass('disabled');
-    }
-    if (args.onClick) {
-      this.$el.click(args.onClick);
+
+    this._slideNum = args.slideNum;
+    if (args.onDisabledClick) {
+      this.$el.click(function() {
+        if (this.$el.hasClass('disabled')) {
+          args.onDisabledClick(this._slideNum);
+        }
+      }.bind(this));
     }
   },
 
@@ -27,19 +31,27 @@ var SlideView = BaseView.extend({
     this.$el.append(view.$el);
   },
 
-  three: function() {
-    if (!this._3d) {
-      this._3d = new window.THREE.CSS3DObject(this.el);
-    }
-    return this._3d;
-  },
-
   removeTileById: function(tileId) {
     this._existingTileById(tileId).remove();
   },
 
   _existingTileById: function(tileId) {
     return this.$('.tile[tile_id=' + tileId + ']');
+  },
+
+  position: function(left, top) {
+    this.$el.css({
+      left: left,
+      top: top
+    });
+  },
+
+  enable: function() {
+    this.$el.removeClass('disabled');
+  },
+
+  disable: function() {
+    this.$el.addClass('disabled');
   }
 
 });
