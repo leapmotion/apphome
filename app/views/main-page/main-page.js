@@ -20,19 +20,22 @@ module.exports = BaseView.extend({
 
   _initCarousels: function() {
     this.downloadsCarousel = new Carousel({
-      collection: uiGlobals.availableDownloads
+      collection: uiGlobals.availableDownloads,
+      position: 0
     });
     this.$('#downloads').append(this.downloadsCarousel.$el.hide());
     this._linkMapping['#downloads-link'] = this.downloadsCarousel;
 
     this.installedAppsCarousel = new Carousel({
-      collection: uiGlobals.installedApps
+      collection: uiGlobals.installedApps,
+      position: 1
     });
     this.$('#my-apps').append(this.installedAppsCarousel.$el.hide());
     this._linkMapping['#my-apps-link'] = this.installedAppsCarousel;
 
     this.uninstalledAppsCarousel = new Carousel({
-      collection: uiGlobals.uninstalledApps
+      collection: uiGlobals.uninstalledApps,
+      position: 2
     });
     this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el.hide());
     this._linkMapping['#uninstalled-link'] = this.uninstalledAppsCarousel;
@@ -47,13 +50,40 @@ module.exports = BaseView.extend({
     this._switchToCarousel(this.installedAppsCarousel);
   },
 
-  _switchToCarousel: function(carousel) {
-    // TODO: animate
-    if (this._currentCarousel) {
-      this._currentCarousel.$el.hide();
+  _switchToCarousel: function(newCarousel) {
+    if (this._currentCarousel && this._currentCarousel !== newCarousel) {
+      var currentCarousel = this._currentCarousel;
+      // coefficient = -1 means slide down from top, coefficient = 1 means slide up from bottom
+      var coefficient = (currentCarousel.position() > newCarousel.position() ? -1 : 1);
+      var windowHeight = $(window).height();
+      var animating = true;
+
+      newCarousel.setTop(coefficient * windowHeight);
+      newCarousel.$el.show();
+      new window.TWEEN.Tween({ x: 0, y: 0 })
+          .to({ x: windowHeight }, 500)
+          .easing(window.TWEEN.Easing.Linear.None)
+          .onUpdate(function() {
+            newCarousel.setTop(coefficient * (windowHeight - this.x));
+            currentCarousel.setTop(-coefficient * this.x);
+          }).onComplete(function() {
+            animating = false;
+            currentCarousel.setTop(0);
+            currentCarousel.$el.hide();
+            this._currentCarousel = newCarousel;
+          }.bind(this)).start();
+
+      function animate() {
+        if (animating) {
+          window.requestAnimationFrame(animate);
+          window.TWEEN.update();
+        }
+      }
+      animate();
+    } else {
+      this._currentCarousel = newCarousel;
+      this._currentCarousel.$el.show();
     }
-    this._currentCarousel = carousel;
-    this._currentCarousel.$el.show();
   },
 
   _initCarouselLinks: function() {

@@ -120,7 +120,7 @@ var CarouselView = BaseView.extend({
       this._slides[i].position(firstSlideLeft + this._slideSpacing * i, slideTop);
     }
 
-    this._currentPosition = this._slideSpacing * (-1 * this._currentSlideIndex);
+    this._currentPosition = this._slideSpacing * (-this._currentSlideIndex);
     $slidesHolder.css('left', this._currentPosition * uiGlobals.scaling);
   },
 
@@ -167,6 +167,14 @@ var CarouselView = BaseView.extend({
 
   rescale: function() {
     this._positionSlides();
+  },
+
+  position: function() {
+    return this.options.position;
+  },
+
+  setTop: function(top) {
+    this.$('.slides-holder').css('top', top);
   }
 
 });
