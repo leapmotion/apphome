@@ -33,26 +33,26 @@ module.exports = BaseView.extend({
     }, this);
 
     this.$el.click(function() {
-      if (this.$el.hasClass('uninstalled')) {
-      } else if (this.$el.hasClass('ready')) {
+      if (leapApp.isInstallable()) {
+        leapApp.install();
+      } else if (leapApp.isRunnable()) {
         this.$el.addClass('launching');
         leapApp.launch();
         setTimeout(function() {
-          console.log('done launching');
           this.$el.removeClass('launching');
         }.bind(this), 2000);
       }
     }.bind(this));
 
-    if (leapApp.isBuiltinTile() || leapApp.isUpgrade() || leapApp.isUninstalled()) {
-      this.$el.removeAttr('draggable');
-      this.$el.css('-webkit-user-drag', 'none');
-    } else {
+    if (leapApp.isUninstallable()) {
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
         dataTransfer.setDragImage(this.$el[0], 300, 156);
         dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
       }.bind(this));
+    } else {
+      this.$el.removeAttr('draggable');
+      this.$el.css('-webkit-user-drag', 'none');
     }
 
     this.$el.attr('tile_id', leapApp.id);

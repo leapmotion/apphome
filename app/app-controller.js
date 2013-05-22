@@ -1,6 +1,7 @@
+var api = require('./utils/api.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var oauth = require('./utils/oauth.js');
-var api = require('./utils/api.js');
+var semver = require('./utils/semver.js');
 
 var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
@@ -65,16 +66,21 @@ AppController.prototype = {
     });
   },
 
-  _pollServerForUpdates: function() {
+  _pollServerForUpdates: function(installApps) {
     api.storeApps(function(err, apps) {
       if (!err) {
         apps.forEach(function(app) {
           if (uiGlobals.installedApps.get(app.get('id')) ||
               uiGlobals.uninstalledApps.get(app.get('id'))) {
             return;
-          } else if (uiGlobals.installedApps.findWhere({ appId: app.get('appId') })) {
-            app.set('isUpgrade', true);
-            uiGlobals.availableUpgrades.add(app);
+          } else if (!installApps || app.isUpgrade()) {
+            var existingUpgrade = uiGlobals.availableDownloads.findWhere({ appId: app.get('appId') });
+            if (existingUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), existingUpgrade.get('version'))) {
+              uiGlobals.availableDownloads.remove(existingUpgrade);
+              uiGlobals.availableDownloads.add(app);
+            } else if (!existingUpgrade) {
+              uiGlobals.availableDownloads.add(app);
+            }
           } else {
             console.log('installing app: ' + app.get('name'));
             uiGlobals.installedApps.add(app);

@@ -27,44 +27,92 @@ var PlatformUserDataDirs = {
 
 module.exports = LeapApp.extend({
 
+  initialize: function() {
+    if (!this.get('iconPath')) {
+      this._downloadIcon();
+    }
+
+    if (!this.get('tilePath')) {
+      this._downloadTile();
+    }
+
+    LeapApp.prototype.initialize.apply(this, arguments);
+  },
+
+  _downloadIcon: function(cb) {
+    var iconUrl = this.get('iconUrl');
+    download.getWithFallback(iconUrl, this.standardIconPath(), config.Defaults.IconPath, function(err, iconPathOrFallback) {
+      this.set('iconPath', iconPathOrFallback);
+      cb && cb(null);
+    }.bind(this));
+  },
+
+  _downloadTile: function(cb) {
+    var tileUrl = this.get('tileUrl');
+    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
+      this.set('tilePath', tilePathOrFallback);
+      cb && cb(null);
+    }.bind(this));
+  },
+
   isStoreApp: function() {
     return true;
   },
 
-  // Listen on the 'progress' event on the return value of this function
-  // to get download progress.
   install: function(cb) {
+    if (this.isUpgrade()) {
+      this._installAsUpgrade(cb);
+    } else {
+      this._installFromServer(cb);
+    }
+  },
+
+  _installAsUpgrade: function(cb) {
+    var appToUpgrade = this.findAppToUpgrade();
+    var errorMessage = 'Failed to upgrade app: ' + this.get('name') + ' from v.' + appToUpgrade.get('version') + ' to v.' + this.get('version');
+    if (appToUpgrade && appToUpgrade.isUninstallable()) {
+      appToUpgrade.uninstall(true, false, function(err) {
+        if (!err) {
+          uiGlobals.installedApps.remove(appToUpgrade);
+          this._installFromServer(function(err) {
+            if (err) {
+              console.error(errorMessage);
+            }
+            cb && cb(err);
+          }.bind(this));
+        } else {
+          console.error(errorMessage);
+          cb && cb(err);
+        }
+      }.bind(this));
+    }
+  },
+
+  _installFromServer: function(cb) {
+    uiGlobals.uninstalledApps.remove(this);
+    uiGlobals.availableDownloads.remove(this);
+    uiGlobals.installedApps.add(this);
     this.set('state', LeapApp.States.Installing);
 
-    // Can't use async.parallel here, because we want to
-    // pass on the progress stream return value of this._downloadBinary()
-    var numDownloads = 3;
-    function callbackWhenAllDownloadsComplete(err) {
-      numDownloads--;
+    var downloadProgress = this._downloadBinary(function(err) {
       if (err) {
         this.set('state', LeapApp.States.InstallFailed);
-        cb && cb(err);
-      } else if(numDownloads <= 0) {
-        this._findExecutable(function(err, executable) {
-          if (err) {
-            this.set('state', LeapApp.States.InstallFailed);
-            cb && cb(err);
-          } else {
-            this.set('executable', executable);
-            this.set('state', LeapApp.States.Ready);
-            cb && cb(null);
-          }
-        }.bind(this));
+        return cb && cb(err);
       }
-    }
+      this._findExecutable(function(err, executable) {
+        if (err) {
+          this.set('state', LeapApp.States.InstallFailed);
+          return cb && cb(err);
+        }
+        this.set('executable', executable);
+        this.set('state', LeapApp.States.Ready);
+        cb && cb(null);
+      }.bind(this));
+    }.bind(this));
 
-    this._downloadIcon(callbackWhenAllDownloadsComplete.bind(this));
-    this._downloadTile(callbackWhenAllDownloadsComplete.bind(this));
-    var downloadProgress = this._downloadBinary(callbackWhenAllDownloadsComplete.bind(this));
     downloadProgress.on('progress', function(progress) {
       this.trigger('progress', progress);
     }.bind(this));
-    return downloadProgress;
   },
 
   _downloadBinary: function(cb) {
@@ -81,24 +129,7 @@ module.exports = LeapApp.extend({
     }.bind(this));
   },
 
-  _downloadIcon: function(cb) {
-    var iconUrl = this.get('iconUrl');
-    download.getWithFallback(iconUrl, this.standardIconPath(), config.Defaults.IconPath, function(err, iconPathOrFallback) {
-      this.set('iconPath', iconPathOrFallback);
-      cb(null);
-    }.bind(this));
-  },
-
-
-  _downloadTile: function(cb) {
-    var tileUrl = this.get('tileUrl');
-    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
-      this.set('tilePath', tilePathOrFallback);
-      cb(null);
-    }.bind(this));
-  },
-
-  uninstall: function(deleteData, cb) {
+  uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
 
     var deletionFunctions = [
@@ -107,22 +138,24 @@ module.exports = LeapApp.extend({
       }.bind(this)
     ];
 
-/*    if (fs.existsSync(this.standardIconPath())) {
-      deletionFunctions.push(function(callback) {
-        fs.unlink(this.standardIconPath(), callback);
-      }.bind(this));
-    }
-
-    if (fs.existsSync(this.standardTilePath())) {
-      deletionFunctions.push(function(callback) {
-        fs.unlink(this.standardTilePath(), callback);
-      }.bind(this));
-    }*/
-
-    if (deleteData) {
+    if (deleteUserData) {
       deletionFunctions.push(function(callback) {
         fs.remove(this._userDataDir(), callback);
       }.bind(this));
+    }
+
+    if (deleteIconAndTile) {
+      if (fs.existsSync(this.standardIconPath())) {
+        deletionFunctions.push(function(callback) {
+          fs.unlink(this.standardIconPath(), callback);
+        }.bind(this));
+      }
+
+      if (fs.existsSync(this.standardTilePath())) {
+        deletionFunctions.push(function(callback) {
+          fs.unlink(this.standardTilePath(), callback);
+        }.bind(this));
+      }
     }
 
     async.parallel(deletionFunctions, function(err) {
@@ -130,6 +163,9 @@ module.exports = LeapApp.extend({
         this.set('state', LeapApp.States.UninstallFailed);
         return cb && cb(err);
       } else {
+        uiGlobals.installedApps.remove(this);
+        uiGlobals.uninstalledApps.add(this);
+        this.set('installedAt', null);
         this.set('state', LeapApp.States.Uninstalled);
         return cb && cb(null);
       }

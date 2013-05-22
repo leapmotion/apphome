@@ -1,24 +1,6 @@
 .carousel
-  .current-screen-holder
+  .slide-holder
     -webkit-transform-origin 0 0
-
-  .go-next, .go-previous
-    cursor pointer
-    width 30px
-    height 250px
-    background-color #c0ffee
-    border 2px solid #999
-    position absolute
-    top 200px
-    &.disabled
-      background-color #333
-      cursor default
-
-  .go-next
-    right 0
-
-  .go-previous
-    left 0
 
   .slide-indicator
     position absolute

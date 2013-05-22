@@ -9,9 +9,17 @@ var SlideView = BaseView.extend({
   className: 'slide',
 
   initialize: function(args) {
+    args = args || {};
     this.injectCss();
+    this.$el.append(this.templateHtml());
     this.$el.width(config.Layout.slideWidth);
     this.$el.height(config.Layout.slideHeight);
+    if (args.disabled) {
+      this.$el.addClass('disabled');
+    }
+    if (args.onClick) {
+      this.$el.click(args.onClick);
+    }
   },
 
   addTile: function(args) {

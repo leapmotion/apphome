@@ -6,7 +6,7 @@ body
   height 100%
   background-image linear-gradient(to bottom, #444, #040404)
 
-#top-bar
+#header
   background #222225
   border-bottom 1px solid #353639
   height 60px
@@ -72,6 +72,9 @@ body
 
   &.current
     color #a1abc9
+
+    &:hover
+      cursor default
 
 .app-list
   list-style none

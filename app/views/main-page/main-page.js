@@ -20,7 +20,7 @@ module.exports = BaseView.extend({
 
   _initCarousels: function() {
     this.upgradeCarousel = new Carousel({
-      collection: uiGlobals.availableUpgrades
+      collection: uiGlobals.availableDownloads
     });
     this.$('#upgrades').append(this.upgradeCarousel.$el.hide());
     this._linkMapping['#upgrades-link'] = this.upgradeCarousel;
@@ -78,7 +78,7 @@ module.exports = BaseView.extend({
       var leapApp = uiGlobals.installedApps.get(id);
 
       if (leapApp) {
-        leapApp.uninstall(true);
+        leapApp.uninstall(true, false);
       }
     }.bind(this));
   },
