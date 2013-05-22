@@ -12,4 +12,3 @@
   &.disabled
     .slide-blocker
       display block
-
