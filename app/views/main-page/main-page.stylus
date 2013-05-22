@@ -17,15 +17,20 @@ body
     left 0
     padding-left 22px
     padding-right 22px
+    text-shadow 0 -1px 0 rgba(0,0,0,.75) /* drop shadow */
     top 14px
 
-    &.current:after
-      bottom 0
-      content ""
-      height 1px
-      left 0
-      position absolute
-      width 100%
+    &.current
+      text-shadow 0 1px 0 rgba(0,0,0,.8) /* drop shadow */
+      text-shadow 0 0 30px rgba(161,171,200,.3) /* outer glow */
+
+      &:after
+        bottom 0
+        content ""
+        height 1px
+        left 0
+        position absolute
+        width 100%
     
   #my-apps-link
 
