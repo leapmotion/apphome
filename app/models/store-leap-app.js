@@ -106,7 +106,7 @@ module.exports = LeapApp.extend({
         }
         var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
         if (fs.existsSync(dependenciesReadmePath)) {
-          nwGui.Shell.openExternal(dependenciesReadmePath);
+          nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
         }
         this.set('executable', executable);
         this.set('state', LeapApp.States.Ready);
