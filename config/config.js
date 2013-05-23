@@ -22,11 +22,19 @@ var config = {
 
   BuiltinTiles: [
     {
-      name: 'Visit App Store',
+      name: 'App Store',
       tilePath:  staticImage('tiles', 'store-tile.png'),
       iconPath:  staticImage('icons', 'store-icon.png'),
       launchCallback: function() {
-        nwGui.Shell.openExternal('https://www.leapmotion.com/apps');
+        nwGui.Shell.openExternal('https://apps.leapmotion.com/');
+      }
+    },
+    {
+      name: 'Leap Community',
+      tilePath:  staticImage('tiles', 'community-tile.png'),
+      iconPath:  staticImage('icons', 'community-icon.png'),
+      launchCallback: function() {
+        nwGui.Shell.openExternal('https://forums.leapmotion.com/forum.php');
       }
     }
   ],
