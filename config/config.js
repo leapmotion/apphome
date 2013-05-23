@@ -52,7 +52,9 @@ var config = {
     slidePeekDistance: 50,
     minSlidePadding: 200,
     emptyMessageHeight: 32
-  }
+  },
+
+  FsScanIntervalMs: 60 * 60 * 1000 // 1 hour
 
 };
 

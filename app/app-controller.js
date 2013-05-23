@@ -1,4 +1,5 @@
 var api = require('./utils/api.js');
+var config = require('../config/config.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var oauth = require('./utils/oauth.js');
 var semver = require('./utils/semver.js');
@@ -22,6 +23,7 @@ AppController.prototype = {
       console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
       this._paintPage();
       this._scanFilesystem();
+      setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
       this._pollServerForUpdates();
     }.bind(this));
   },
@@ -49,17 +51,36 @@ AppController.prototype = {
 
   _scanFilesystem: function() {
     var fsScanner = new FsScanner(api.localApps());
+
+    var existingLocalAppsById = {};
+    var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
+    allApps.forEach(function(app) {
+      if (app.isLocalApp()) {
+        existingLocalAppsById[app.get('id')] = app;
+      }
+    });
+
     fsScanner.scan(function(err, apps) {
       if (!err) {
         apps.forEach(function(app) {
-          if (uiGlobals.installedApps.get(app.get('id')) ||
-              uiGlobals.uninstalledApps.get(app.get('id'))) {
+          console.log(app.get('name'));
+          if (existingLocalAppsById[app.get('id')]) {
+            delete existingLocalAppsById[app.get('id')];
             return;
           }
           console.log('installing app: ' + app.get('name'));
           uiGlobals.installedApps.add(app);
           app.install(function(err) {
             err && console.log('Failed to install app', app.get('name'), err.message);
+          });
+        });
+
+        // the remaining ones are apps we previously detected but weren't found in this last scan,
+        // which means they were uninstalled and need to be removed from the launcher
+        _(existingLocalAppsById).forEach(function(app){
+          app.uninstall(true, function() {
+            uiGlobals.uninstalledApps.remove(app.get('id'));
+            app.save(); // HACK, depends on app.save saving the whole collection
           });
         });
       }
