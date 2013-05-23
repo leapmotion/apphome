@@ -42,13 +42,19 @@ function extractDmg(src, dest, cb) {
       return cb(new Error('Mounting disk image failed.'));
     }
 
+    function unmount(callback) {
+      exec('hdiutil unmount -force ' + shell.escape(mountPoint), callback);
+    }
+
     var dirEntries = fs.readdirSync(mountPoint);
     var appPackage;
     for (var i = 0, len = dirEntries.length; i < len; i++) {
       var dirEntry = path.join(mountPoint, dirEntries[i]);
       if (/\.app$/i.test(dirEntry) && fs.statSync(dirEntry).isDirectory()) {
         if (appPackage) {
-          return cb(new Error('Multiple .app directories encountered in DMG: ' + appPackage + ', ' + dirEntry));
+          unmount(function() {
+            cb(new Error('Multiple .app directories encountered in DMG: ' + appPackage + ', ' + dirEntry));
+          });
         } else {
           appPackage = dirEntry;
         }
@@ -56,15 +62,17 @@ function extractDmg(src, dest, cb) {
     }
 
     if (!appPackage) {
-      return cb(new Error('No .app directory found in DMG.'));
+      unmount(function() {
+        cb(new Error('No .app directory found in DMG.'));
+      });
+    } else {
+      fs.copy(appPackage, dest, function(err) {
+        if (err) {
+          return cb(err);
+        }
+        unmount(cb);
+      });
     }
-
-    fs.copy(appPackage, dest, function(err) {
-      if (err) {
-        return cb(err);
-      }
-      exec('hdiutil unmount ' + shell.escape(mountPoint), cb);
-    });
   });
 }
 
