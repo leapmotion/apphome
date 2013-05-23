@@ -17,6 +17,9 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml());
     this.$iframe = this.$('iframe.oauth');
     this._savedIframeUrl = 'about:blank';
+
+    this._boundIframeCenteringFn = this._centerIframe.bind(this);
+    $(window).resize(this._boundIframeCenteringFn);
   },
 
   authorize: function(cb) {
@@ -37,7 +40,11 @@ module.exports = BaseView.extend({
 
       this.$iframe.on('urlChanged', function(elem, url) {
         clearTimeout(loadTimeoutId);
-        this._performActionBasedOnUrl(url, cb);
+        try {
+          this._performActionBasedOnUrl(url, cb);
+        } catch (err2) {
+          cb(err2);
+        }
       }.bind(this));
     }.bind(this));
   },
@@ -54,11 +61,18 @@ module.exports = BaseView.extend({
   },
 
   _waitForUserToSignIn: function() {
-    this.$iframe.addClass('needs-interaction');
+    var iframeWindow = this.$iframe.prop('contentWindow');
+    $(iframeWindow).load(function() {
+      var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
+      $rememberMe.parent().hide();
+    });
+
+    this.$iframe.removeClass('background');
+    this._centerIframe();
   },
 
   _allowOauthAuthorization: function() {
-    this.$iframe.removeClass('needs-interaction');
+    this.$iframe.addClass('background');
     var iframeWindow = this.$iframe.prop('contentWindow');
     $(iframeWindow).load(function() {
       $('form.approve', iframeWindow.document).submit();
@@ -66,7 +80,6 @@ module.exports = BaseView.extend({
   },
 
   _finishAuthorization: function(code, cb) {
-    this.remove();
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
         cb(err);
@@ -97,8 +110,18 @@ module.exports = BaseView.extend({
     this._iframeUrlPollingIntervalId = null;
   },
 
+  _centerIframe: function() {
+    if (!this.$iframe.hasClass('hidden')) {
+      this.$iframe.css({
+        left: ($(window).width() - this.$iframe.width()) / 2,
+        top: ($(window).height() - this.$iframe.height()) / 2
+      });
+    }
+  },
+
   remove: function() {
     this._stopPollingForIframeUrlChanges();
+    $(window).unbind('resize', this._boundIframeCenteringFn);
     this.$el.remove();
   }
 

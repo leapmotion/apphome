@@ -12,53 +12,32 @@ var LeapApp = require('./models/leap-app.js');
 
 var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
+var NoInternetView = require('./views/error-screens/no-internet/no-internet.js');
 
-var AppStates = enumerable.make([
-  'RequireInternetConnection',
-  'OfflineMode'
-], 'AppState');
+var AppErrors = enumerable.make([
+  'InternetConnectionRequired'
+], 'AppError');
 
 function AppController() {
-  this._initialized = false;
   this._accessToken = null;
-  this._offlineMode = false;
+  BuiltinTileApp.createBuiltinTiles();
+  LeapApp.hydrateCachedModels();
 }
 
 AppController.prototype = {
 
-  _initialize: function() {
-    if (!this._initialized) {
-      BuiltinTileApp.createBuiltinTiles();
-      LeapApp.hydrateCachedModels();
-      this._initialized = true;
-    }
-  },
-
   runApp: function() {
-    this._initialize();
-
     async.waterfall([
       this._checkInternetConnection.bind(this),
+      this._hideNoInternetError.bind(this),
       this._checkLeapConnection.bind(this),
       this._authorize.bind(this),
       this._afterAuthorize.bind(this)
     ], function(err) {
-      if (!err) {
-        return;
+      if (err === AppErrors.InternetConnectionRequired) {
+        this._showNoInternetError();
       }
-      switch (err) {
-        case AppStates.RequireInternetConnection:
-            // TODO: real error view
-            window.alert('get an internet connection, yo');
-            process.nextTick(this.runApp.bind(this));
-          break;
-        case AppStates.OfflineMode:
-          this._offlineMode = true;
-          this._afterAuthorize();
-          break;
-        default: // Well shit. Try again I guess?
-          process.nextTick(this.runApp.bind(this));
-      }
+      setTimeout(this.runApp.bind(this), 50); // Keep on trying...
     }.bind(this));
 
   },
@@ -66,7 +45,7 @@ AppController.prototype = {
   _checkInternetConnection: function(cb) {
     connection.check(function(ignored, isConnected) {
       if (!isConnected) {
-        cb(oauth.getRefreshToken() ? AppStates.OfflineMode : AppStates.RequireInternetConnection);
+        cb(oauth.getRefreshToken() ? null : AppErrors.InternetConnectionRequired);
       } else {
         cb(null);
       }
@@ -84,15 +63,11 @@ AppController.prototype = {
         var authorizationView = new AuthorizationView();
         authorizationView.authorize(function(err) {
           if (err) {
-            this._checkInternetConnection(function(err) {
-              if (err) {
-                cb(err);
-              } else {
-                this._authorize(cb); // Keep on trying, I guess...
-              }
-            });
+            this._checkInternetConnection(cb);
+          } else {
+            this._authorize(cb);
           }
-          this._authorize(cb);
+          authorizationView.remove();
         }.bind(this));
       } else {
         this._accessToken = accessToken;
@@ -179,6 +154,18 @@ AppController.prototype = {
         });
       }
     });
+  },
+
+  _showNoInternetError: function() {
+    if (!this._noInternetView) {
+      this._noInternetView = new NoInternetView();
+      this._noInternetView.$el.appendTo('body');
+    }
+    this._noInternetView.$el.show();
+  },
+
+  _hideNoInternetError: function() {
+    this._noInternetView && this._noInternetView.$el.hide();
   }
 
 };

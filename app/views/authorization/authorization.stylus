@@ -1,17 +1,19 @@
 .authorization
+  width 100%
+  height 100%
+  background -webkit-radial-gradient(center center, circle cover, #eee, #ddd)
+
   iframe.oauth
     position absolute
     z-index 2000
-    width 500px
-    height 500px
-    top: -1000px
-    left: -1000px
+    width 400px
+    height 300px
     margin 0
-    border none
+    border 1px solid #ddd
+    border-radius 8px
+    box-shadow 1px 1px 6px rgba(0, 0, 0, 0.2)
     background white
 
-    &.needs-interaction
-      width 100%
-      height 100%
-      top 0
-      left 0
+    &.background
+      top: -1000px !important
+      left: -1000px !important

@@ -94,7 +94,12 @@ function getAccessToken(cb) {
   });
 }
 
+function logOut() {
+  saveRefreshToken(null);
+}
+
 module.exports.getAuthorizationUrl = getAuthorizationUrl;
 module.exports.getRefreshToken = getRefreshToken;
 module.exports.authorizeWithCode = authorizeWithCode;
 module.exports.getAccessToken = getAccessToken;
+module.exports.logOut = logOut;

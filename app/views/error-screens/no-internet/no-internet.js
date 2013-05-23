@@ -8,7 +8,7 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     this.injectCss();
-    this.setElement($(this.templateHtml()));
+    this.$el.append($(this.templateHtml()));
   }
 
 });

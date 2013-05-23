@@ -1,7 +1,13 @@
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   overflow: hidden;
   font-family: "freightsans_probook";
+  width: 100%;
+  height: 100%;
 }
 
 body * {
