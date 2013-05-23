@@ -35,13 +35,11 @@ function oauthRequest(params, cb) {
   var options = {
     hostname: urlParts.hostname,
     path: urlParts.pathname + 'token',
+    port: urlParts.port,
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
-  };
-  if (urlParts.port) {
-    options.port = urlParts.port;
   };
   var protocolModule = (urlParts.protocol === 'https:' ? https : http);
   var responseChunks = [];
@@ -79,8 +77,8 @@ function authorizeWithCode(code, cb) {
 }
 
 function getAccessToken(cb) {
-  if (! getRefreshToken()) {
-    return cb('missing refresh token')
+  if (!getRefreshToken()) {
+    return cb(new Error('Missing refresh token.'));
   }
   return oauthRequest({
     grant_type: 'refresh_token',
