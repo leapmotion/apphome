@@ -39,7 +39,7 @@ var config = {
   Layout: {
     columnsPerSlide: 4,
     rowsPerSlide: 3,
-    slideWidth: 1392,
+    slideWidth: 1410,
     slideHeight: 702,
     slidePeekDistance: 50,
     minSlidePadding: 200
