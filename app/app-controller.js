@@ -4,6 +4,7 @@ var config = require('../config/config.js');
 var connection = require('./utils/connection.js');
 var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
+var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
 var semver = require('./utils/semver.js');
 
@@ -13,10 +14,7 @@ var LeapApp = require('./models/leap-app.js');
 var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
 var NoInternetView = require('./views/error-screens/no-internet/no-internet.js');
-
-var AppErrors = enumerable.make([
-  'InternetConnectionRequired'
-], 'AppError');
+var LeapNotConnectedView = require('./views/error-screens/leap-not-connected/leap-not-connected.js');
 
 function AppController() {
   this._accessToken = null;
@@ -52,9 +50,24 @@ AppController.prototype = {
     });
   },
 
+  _showNoInternetError: function() {
+    if (!this._noInternetView) {
+      this._noInternetView = new NoInternetView();
+      this._noInternetView.$el.appendTo('body');
+    }
+    this._noInternetView.$el.show();
+  },
+
+  _hideNoInternetError: function() {
+    this._noInternetView && this._noInternetView.$el.hide();
+  },
+
   _checkLeapConnection: function(cb) {
-    // TODO
-    cb(null);
+    if (leap.isConnected()) {
+      cb(null);
+    } else {
+      //this._showNoLeapError(cb);
+    }
   },
 
   _authorize: function(cb) {
@@ -154,20 +167,9 @@ AppController.prototype = {
         });
       }
     });
-  },
-
-  _showNoInternetError: function() {
-    if (!this._noInternetView) {
-      this._noInternetView = new NoInternetView();
-      this._noInternetView.$el.appendTo('body');
-    }
-    this._noInternetView.$el.show();
-  },
-
-  _hideNoInternetError: function() {
-    this._noInternetView && this._noInternetView.$el.hide();
   }
 
 };
 
 module.exports = AppController;
+
