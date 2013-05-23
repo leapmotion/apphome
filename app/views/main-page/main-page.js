@@ -124,7 +124,7 @@ module.exports = BaseView.extend({
       var leapApp = uiGlobals.installedApps.get(id);
 
       if (leapApp) {
-        leapApp.uninstall(true, false);
+        leapApp.uninstall(false, false);
       }
     }.bind(this));
   },

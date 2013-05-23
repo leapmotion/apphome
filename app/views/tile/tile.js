@@ -18,6 +18,7 @@ module.exports = BaseView.extend({
     this.listenTo(leapApp, 'change:state', function() {
       this.$el.removeClass(this._stateToClass(leapApp.previous('state')));
       this.$el.addClass(this._stateToClass(leapApp.get('state')));
+      this._setupDragging();
     }, this);
 
     this.listenTo(leapApp, 'change:tilePath', function() {
@@ -44,18 +45,23 @@ module.exports = BaseView.extend({
       }
     }.bind(this));
 
+    this.$el.attr('tile_id', leapApp.id);
+
+    this._setupDragging();
+  },
+
+  _setupDragging: function() {
+    var leapApp = this.options.leapApp;
     if (leapApp.isUninstallable()) {
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
-        dataTransfer.setDragImage(this.$el[0], 300, 156);
+        dataTransfer.setDragImage($('<img width="96" height="96" src="' + leapApp.get('iconPath') + '"/>')[0], 96, 96);
         dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
       }.bind(this));
     } else {
       this.$el.removeAttr('draggable');
       this.$el.css('-webkit-user-drag', 'none');
     }
-
-    this.$el.attr('tile_id', leapApp.id);
   },
 
   _stateToClass: function(state) {
