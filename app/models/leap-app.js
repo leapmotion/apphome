@@ -16,10 +16,8 @@ var UninstalledAppsDbKey = 'uninstalled_apps';
 var LeapAppStates = enumerable.make([
   'NotYetInstalled',
   'Installing',
-  'InstallFailed',
   'Ready',
   'Uninstalling',
-  'UninstallFailed',
   'Uninstalled'
 ], 'LeapAppStates');
 
@@ -29,9 +27,9 @@ var LeapApp = BaseModel.extend({
     if (!this.get('state')) {
       this.set('state', LeapApp.States.NotYetInstalled);
     } else if (this.get('state') === LeapApp.States.Installing) {
-      this.set('state', LeapApp.States.InstallFailed);
+      this.set('state', LeapApp.States.NotYetInstalled);
     } else if (this.get('state') === LeapApp.States.Uninstalling) {
-      this.set('state', LeapApp.States.UninstallFailed);
+      this.set('state', LeapApp.States.Uninstalled);
     }
 
     this.on('change:state', function() {

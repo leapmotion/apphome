@@ -96,12 +96,12 @@ module.exports = LeapApp.extend({
 
     var downloadProgress = this._downloadBinary(function(err) {
       if (err) {
-        this.set('state', LeapApp.States.InstallFailed);
+        this.set('state', LeapApp.States.NotYetInstalled);
         return cb && cb(err);
       }
       this._findExecutable(function(err, executable) {
         if (err) {
-          this.set('state', LeapApp.States.InstallFailed);
+          this.set('state', LeapApp.States.NotYetInstalled);
           return cb && cb(err);
         }
         var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
@@ -164,7 +164,7 @@ module.exports = LeapApp.extend({
 
     async.parallel(deletionFunctions, function(err) {
       if (err) {
-        this.set('state', LeapApp.States.UninstallFailed);
+        this.set('state', LeapApp.States.Uninstalled);
         return cb && cb(err);
       } else {
         uiGlobals.installedApps.remove(this);
