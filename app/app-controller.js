@@ -1,5 +1,8 @@
 var api = require('./utils/api.js');
+var async = require('async');
 var config = require('../config/config.js');
+var connection = require('./utils/connection.js');
+var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var oauth = require('./utils/oauth.js');
 var semver = require('./utils/semver.js');
@@ -10,26 +13,69 @@ var LeapApp = require('./models/leap-app.js');
 var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
 
+var AppStates = enumerable.make([
+  'RequireInternetConnection',
+  'OfflineMode'
+], 'AppState');
+
 function AppController() {
+  this._initialized = false;
+  this._accessToken = null;
+  this._offlineMode = false;
 }
 
 AppController.prototype = {
 
-  runApp: function() {
-    BuiltinTileApp.createBuiltinTiles();
-    LeapApp.hydrateCachedModels();
-
-    this._authorize(function(err, accessToken) {
-      console.log(err ? 'ERROR: ' + err : 'Access Token: ' + accessToken);
-      this._paintPage();
-      this._scanFilesystem();
-      setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
-      this._pollServerForUpdates();
-    }.bind(this));
+  _initialize: function() {
+    if (!this._initialized) {
+      BuiltinTileApp.createBuiltinTiles();
+      LeapApp.hydrateCachedModels();
+      this._initialized = true;
+    }
   },
 
-  _paintPage: function() {
-    $('body').append((new MainPage()).$el);
+  runApp: function() {
+    this._initialize();
+
+    async.waterfall([
+      this._checkInternetConnection.bind(this),
+      this._checkLeapConnection.bind(this),
+      this._authorize.bind(this),
+      this._afterAuthorize.bind(this)
+    ], function(err) {
+      if (!err) {
+        return;
+      }
+      switch (err) {
+        case AppStates.RequireInternetConnection:
+            // TODO: real error view
+            window.alert('get an internet connection, yo');
+            process.nextTick(this.runApp.bind(this));
+          break;
+        case AppStates.OfflineMode:
+          this._offlineMode = true;
+          this._afterAuthorize();
+          break;
+        default: // Well shit. Try again I guess?
+          process.nextTick(this.runApp.bind(this));
+      }
+    }.bind(this));
+
+  },
+
+  _checkInternetConnection: function(cb) {
+    connection.check(function(ignored, isConnected) {
+      if (!isConnected) {
+        cb(oauth.getRefreshToken() ? AppStates.OfflineMode : AppStates.RequireInternetConnection);
+      } else {
+        cb(null);
+      }
+    });
+  },
+
+  _checkLeapConnection: function(cb) {
+    // TODO
+    cb(null);
   },
 
   _authorize: function(cb) {
@@ -38,15 +84,36 @@ AppController.prototype = {
         var authorizationView = new AuthorizationView();
         authorizationView.authorize(function(err) {
           if (err) {
-            cb && cb(err);
-          } else {
-            this._authorize(cb);
+            this._checkInternetConnection(function(err) {
+              if (err) {
+                cb(err);
+              } else {
+                this._authorize(cb); // Keep on trying, I guess...
+              }
+            });
           }
+          this._authorize(cb);
         }.bind(this));
       } else {
-        cb(null, accessToken)
+        this._accessToken = accessToken;
+        cb(null);
       }
     }.bind(this));
+  },
+
+  _afterAuthorize: function() {
+    this._paintMainApp();
+    this._scanFilesystem();
+    setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
+
+    //TODO: real server API
+    this._pollServerForUpdates();
+  },
+
+  _paintMainApp: function() {
+    $('body').append((new MainPage({
+      offlineMode: this._offlineMode
+    })).$el);
   },
 
   _scanFilesystem: function() {

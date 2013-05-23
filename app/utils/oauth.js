@@ -95,5 +95,6 @@ function getAccessToken(cb) {
 }
 
 module.exports.getAuthorizationUrl = getAuthorizationUrl;
+module.exports.getRefreshToken = getRefreshToken;
 module.exports.authorizeWithCode = authorizeWithCode;
 module.exports.getAccessToken = getAccessToken;

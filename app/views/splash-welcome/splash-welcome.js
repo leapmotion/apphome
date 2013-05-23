@@ -4,6 +4,8 @@ module.exports = BaseView.extend({
 
   viewDir: __dirname,
 
+  className: 'splash-welcome',
+
   initialize: function() {
     this.injectCss();
     this.setElement($(this.templateHtml()));
