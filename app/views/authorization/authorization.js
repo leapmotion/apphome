@@ -6,7 +6,7 @@ var BaseView = require('../base-view.js');
 var connection = require('../../utils/connection.js');
 var oauth = require('../../utils/oauth.js');
 
-var LoadTimeoutMs = 10000;
+var LoadTimeoutMs = 20000;
 
 module.exports = BaseView.extend({
   viewDir: __dirname,
@@ -37,13 +37,12 @@ module.exports = BaseView.extend({
         this.$iframe.attr('src', oauth.getAuthorizationUrl());
         this._startPollingForIframeUrlChanges();
 
-        var loadTimeoutId = setTimeout(function() {
+        this._loadTimeoutId = setTimeout(function() {
           console.warn('Connecting auth to server timed out.');
           cb(new Error('Connection to login server timed out.'));
         }.bind(this), LoadTimeoutMs);
 
         this.$iframe.on('urlChanged', function(elem, url) {
-          clearTimeout(loadTimeoutId);
           try {
             this._performActionBasedOnUrl(url, cb);
           } catch (err2) {
@@ -101,6 +100,7 @@ module.exports = BaseView.extend({
         $('input[type=text]:first', iframeWindow.document).focus();
         this.$waiting.addClass('background');
         this.$iframe.removeClass('background');
+        clearTimeout(this._loadTimeoutId);
       }
     }.bind(this));
 
@@ -114,13 +114,15 @@ module.exports = BaseView.extend({
     var approveOauthInterval = setInterval(function() {
       var $approvalForm = $('form.approve', iframeWindow.document);
       if ($approvalForm.length) {
+        clearTimeout(this._loadTimeoutId);
         $approvalForm.submit();
         clearInterval(approveOauthInterval);
       }
-    }, 50);
+    }.bind(this), 50);
   },
 
   _finishAuthorization: function(code, cb) {
+    clearTimeout(this._loadTimeoutId);
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
         console.warn(err);
