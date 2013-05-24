@@ -8,7 +8,7 @@ var oauth = require('./oauth.js');
 var StoreLeapApp = require('../models/store-leap-app.js');
 
 // TODO: real data
-var FakeLocalAppData = require('../../test/support/fake-data/local-apps.js');
+var FakeLocalAppData = require('../../config/local-apps.js');
 
 function storeApps(cb) {
   oauth.getAccessToken(function(err, accessToken) {
@@ -37,6 +37,7 @@ function storeApps(cb) {
                 changelog: appJson.changelog,
                 releaseDate: appJson.certified_at || appJson.created_at
               };
+              console.log(JSON.stringify(cleanAppJson));
               if (cleanAppJson.platform === os.platform()) {
                 return new StoreLeapApp(cleanAppJson);
               } else {
