@@ -1,11 +1,13 @@
+var http = require('http');
+var https = require('https');
 var os = require('os');
 
+var config = require('../../config/config.js');
 var oauth = require('./oauth.js');
 
 var StoreLeapApp = require('../models/store-leap-app.js');
 
 // TODO: real data
-var FakeServerData = require('../../test/support/fake-data/store-apps.js');
 var FakeLocalAppData = require('../../test/support/fake-data/local-apps.js');
 
 function storeApps(cb) {
@@ -13,25 +15,41 @@ function storeApps(cb) {
     if (err) {
       return cb(err);
     } else {
-      var apps = FakeServerData.map(function(app) {
-        var appJson = {
-          id: app.id,
-          appId: app.app_id,
-          name: app.name,
-          version: app.version_number,
-          tileUrl: app.tile_url,
-          iconUrl: app.icon_url,
-          binaryUrl: app.binary.url,
-          platform: (app.binary.platform === 'osx' ? 'darwin' : (app.binary.platform === 'windows' ? 'win32' : app.binary.platform))
-        }
-        if (appJson.platform === os.platform()) {
-          return new StoreLeapApp(appJson);
-        } else {
-          return null;
-        }
-      });
+      var appListParts = [];
+      var protocolModule = /^https:/.test(config.AppListingEndpoint) ? https : http;
+      var appListingUrl = config.AppListingEndpoint + accessToken;
+      protocolModule.get(appListingUrl, function(resp) {
+        resp.on('data', function(chunk) {
+          appListParts.push(chunk);
+        });
+        resp.on('end', function() {
+          try {
+            var apps = JSON.parse(appListParts.join('')).map(function(appJson) {
+              var cleanAppJson = {
+                id: appJson.id,
+                appId: appJson.app_id,
+                name: appJson.name,
+                platform: (appJson.platform === 'osx' ? 'darwin' : (appJson.platform === 'windows' ? 'win32' : appJson.platform)),
+                iconUrl: appJson.icon_url,
+                tileUrl: appJson.tile_url,
+                binaryUrl: appJson.binary_url,
+                version: appJson.version_number,
+                changelog: appJson.changelog,
+                releaseDate: appJson.certified_at || appJson.created_at
+              };
+              if (cleanAppJson.platform === os.platform()) {
+                return new StoreLeapApp(cleanAppJson);
+              } else {
+                return null;
+              }
+            });
 
-      cb(null, _(apps).compact());
+            cb(null, _(apps).compact());
+          } catch(e) {
+            cb(e);
+          }
+        });
+      });
     }
   });
 }

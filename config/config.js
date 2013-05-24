@@ -15,6 +15,8 @@ var config = {
     redirect_uri: 'http://leapweb-stage7.herokuapp.com/'
   },
 
+  AppListingEndpoint: 'https://leap:200hands500fingers@leapweb-stage5.herokuapp.com/api/apps/myapps?access_token=',
+
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'
@@ -54,6 +56,7 @@ var config = {
     emptyMessageHeight: 32
   },
 
+  ServerPollIntervalMs: 15 * 1000, // 15 seconds
   FsScanIntervalMs: 60 * 60 * 1000 // 1 hour
 
 };
