@@ -1,6 +1,7 @@
 var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
+var UpgradeModalView = require('../upgrade-modal/upgrade-modal.js');
 
 module.exports = BaseView.extend({
   viewDir: __dirname,
@@ -35,7 +36,14 @@ module.exports = BaseView.extend({
 
     this.$el.click(function() {
       if (leapApp.isInstallable()) {
-        leapApp.install();
+        var upgradeModal = new UpgradeModalView({
+          leapApp: leapApp,
+          onConfirm: function() {
+            upgradeModal.remove();
+            leapApp.install();
+          }
+        });
+        upgradeModal.show();
       } else if (leapApp.isRunnable()) {
         this.$el.addClass('launching');
         leapApp.launch();

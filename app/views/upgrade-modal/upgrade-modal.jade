@@ -1,0 +1,19 @@
+.upgrade-modal
+  .modal
+    .header
+      img.icon(src=app.iconPath)
+      h1.name #{app.name}
+    .table-holder
+      table.details
+        tr
+          td.label Version
+          td.value #{app.version}
+        tr
+          td.label Release Date
+          td.value #{app.releaseDate}
+        tr
+          td.label What's New:
+          td.value #{app.changelog}
+    .footer
+      .button.cancel Cancel
+      .button.confirm Update #{app.name}

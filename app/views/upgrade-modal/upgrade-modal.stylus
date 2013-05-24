@@ -1,0 +1,71 @@
+.upgrade-modal
+  position absolute
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background rgba(0, 0, 0, 0.1)
+
+  .modal
+    position relative
+    top 10%
+    margin 0 auto
+    padding 30px
+    z-index 3000
+    width 600px
+    border-radius 10px
+    border 1px solid #999
+    background #151718
+    color white
+
+    .header
+      height 110px
+      border-bottom 1px solid #999
+
+      .icon
+        float left
+        height 96px
+        width 96px
+
+      h1.name
+        float left
+        margin-left 56px
+
+    .table-holder
+      height 300px
+      overflow-y auto
+      margin 20px 0
+
+      table.details
+        font-size 20px
+        font-weight bold
+
+        tr
+          padding 10px 0
+
+          td.label
+            vertical-align top
+            color #666
+            width 150px
+
+
+
+    .footer
+      height 64px
+      padding-top 16px
+      border-top 1px solid #999
+
+      .button
+        cursor pointer
+        font-size 24px
+        padding 20px 40px
+        color white
+        border-radius 10px
+
+        &.cancel
+          float left
+          background-color gray
+
+        &.confirm
+          float right
+          background-color lightblue
