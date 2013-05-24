@@ -9,13 +9,13 @@ function staticImage(subdir, name) {
 var config = {
 
   oauth: {
-    endpoint: 'http://leapweb-stage7.herokuapp.com/oauth/',
+    endpoint: 'http://stage7.leapmotion.com/oauth/',
     client_id: '73fde9aa45ef818ecb137aeacd886253',
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
     redirect_uri: 'http://leapweb-stage7.herokuapp.com/'
   },
 
-  AppListingEndpoint: 'https://leap:200hands500fingers@leapweb-stage5.herokuapp.com/api/apps/myapps?access_token=',
+  AppListingEndpoint: 'https://leap:200hands500fingers@warehouse-stage.leapmotion.com/api/apps/myapps?access_token=',
 
   AppSubdir: {
     AppIcons: 'app_icons',
