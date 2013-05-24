@@ -1,19 +1,64 @@
 .authorization
   width 100%
   height 100%
-  background -webkit-radial-gradient(center center, circle cover, #eee, #ddd)
+  background -webkit-radial-gradient(center center, circle cover, #f8faf8, #e8eae8)
 
-  iframe.oauth
+  .first-run-background
+    visibility hidden
+    background url(static/images/create-account-bg.png)
+    position relative
+    width 1184px
+    height 434px
+
+  &.first-run .first-run-background
+    visibility visible
+
+  iframe.oauth, .no-internet
     position absolute
-    z-index 2000
-    width 400px
+    width 350px
     height 300px
     margin 0
+    margin-top -5%
     border 1px solid #ddd
     border-radius 8px
     box-shadow 1px 1px 6px rgba(0, 0, 0, 0.2)
     background white
 
-    &.background
-      top: -1000px !important
-      left: -1000px !important
+  .waiting
+    position absolute
+    width 300px
+    height 300px
+
+    .message
+      text-align center
+      margin-top 50px
+      font-style italic
+      font-size 20px
+
+  .no-internet
+    text-align center
+    padding 20px
+    height 270px
+    color #444
+    background -webkit-radial-gradient(center center, circle cover, #f0f0f0, #fdfdfd)
+
+    h2
+      font-size 32px
+      padding-bottom 10px
+      border-bottom 1px solid #e8e8e8
+      margin 10px 20px 0
+      font-weight normal
+
+    .icon
+      background url(static/images/wifi-icon.png)
+      margin 30px auto
+      width 82px
+      height 82px
+
+    .instruction
+      font-size 20px
+      margin 0 50px
+
+  .background
+    top: -1000px !important
+    left: -1000px !important

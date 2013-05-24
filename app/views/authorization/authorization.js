@@ -1,3 +1,4 @@
+var Spinner = require('spin');
 var urlParse = require('url').parse;
 
 var BaseView = require('../base-view.js');
@@ -16,36 +17,65 @@ module.exports = BaseView.extend({
     this.injectCss();
     this.$el.append(this.templateHtml());
     this.$iframe = this.$('iframe.oauth');
+    this.$noInternet = this.$('.no-internet');
+    this.$waiting = this.$('.waiting');
+    new Spinner({ left: 135 }).spin(this.$waiting[0]);
+
     this._savedIframeUrl = 'about:blank';
 
-    this._boundIframeCenteringFn = this._centerIframe.bind(this);
-    $(window).resize(this._boundIframeCenteringFn);
+    this._boundCenteringFn = this._center.bind(this);
+    $(window).resize(this._boundCenteringFn);
   },
 
   authorize: function(cb) {
+    this.$el.appendTo('body');
+    this._center();
+    this.$el.toggleClass('first-run', this._isFirstRun());
+
     connection.check(function(err, isConnected) {
-      if (err) {
-        return cb(err);
-      } else if (!isConnected) {
-        return cb(new Error('Not connected to the internet.'));
-      }
+      if (isConnected) {
+        this.$iframe.attr('src', oauth.getAuthorizationUrl());
+        this._startPollingForIframeUrlChanges();
 
-      this.$el.appendTo('body');
-      this.$iframe.attr('src', oauth.getAuthorizationUrl());
-      this._startPollingForIframeUrlChanges();
+        var loadTimeoutId = setTimeout(function() {
+          this.$iframe.unbind('urlChanged');
+          cb(new Error('Connection to login server timed out.'));
+        }.bind(this), LoadTimeoutMs);
 
-      var loadTimeoutId = setTimeout(function() {
-        cb(new Error('Connection to login server timed out.'));
-      }.bind(this), LoadTimeoutMs);
-
-      this.$iframe.on('urlChanged', function(elem, url) {
-        clearTimeout(loadTimeoutId);
-        try {
-          this._performActionBasedOnUrl(url, cb);
-        } catch (err2) {
-          cb(err2);
+        console.log('waiting for iframe to do shit');
+        this.$iframe.on('urlChanged', function(elem, url) {
+          clearTimeout(loadTimeoutId);
+          try {
+            this._performActionBasedOnUrl(url, cb);
+          } catch (err2) {
+            cb(err2);
+          }
+        }.bind(this));
+      } else {
+        if (!oauth.getRefreshToken()) {
+          this._waitForInternetConnection(cb);
+        } else {
+          cb(null, null);
         }
-      }.bind(this));
+      }
+    }.bind(this));
+  },
+
+  _isFirstRun: function() {
+    return !oauth.getRefreshToken();
+  },
+
+  _waitForInternetConnection: function(cb) {
+    console.log('waiting for internets');
+    connection.check(function(err, isConnected) {
+      if (isConnected) {
+        this.$noInternet.addClass('background');
+        this.authorize(cb);
+      } else {
+        this._center();
+        this.$noInternet.removeClass('background');
+        setTimeout(this._waitForInternetConnection.bind(this), 250);
+      }
     }.bind(this));
   },
 
@@ -63,16 +93,24 @@ module.exports = BaseView.extend({
   _waitForUserToSignIn: function() {
     var iframeWindow = this.$iframe.prop('contentWindow');
     $(iframeWindow).load(function() {
-      var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
-      $rememberMe.parent().hide();
-    });
+      if (this._isFirstRun() && !this._hasRedirectedToSignUp && /^\/users\/sign_in/.test(iframeWindow.location.pathname)) {
+        this._hasRedirectedToSignUp = true;
+        iframeWindow.location = $('.auth-link:first', iframeWindow.document).attr('href');
+        this._waitForUserToSignIn();
+      } else {
+        var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
+        $rememberMe.parent().hide();
+        $('input[type=text]:first', iframeWindow.document).focus();
+        this.$iframe.removeClass('background');
+      }
+    }.bind(this));
 
-    this.$iframe.removeClass('background');
-    this._centerIframe();
+    this._center();
   },
 
   _allowOauthAuthorization: function() {
     this.$iframe.addClass('background');
+    this.$waiting.removeClass('background');
     var iframeWindow = this.$iframe.prop('contentWindow');
     $(iframeWindow).load(function() {
       $('form.approve', iframeWindow.document).submit();
@@ -110,13 +148,18 @@ module.exports = BaseView.extend({
     this._iframeUrlPollingIntervalId = null;
   },
 
-  _centerIframe: function() {
-    if (!this.$iframe.hasClass('hidden')) {
-      this.$iframe.css({
-        left: ($(window).width() - this.$iframe.width()) / 2,
-        top: ($(window).height() - this.$iframe.height()) / 2
-      });
-    }
+  _center: function() {
+    this._centerElement(this.$iframe);
+    this._centerElement(this.$noInternet);
+    this._centerElement(this.$waiting);
+    this._centerElement(this.$('.first-run-background'));
+  },
+
+  _centerElement: function($element) {
+    $element.css({
+      left: ($(window).width() - $element.outerWidth()) / 2,
+      top:  ($(window).height() - $element.outerHeight()) / 2
+    });
   },
 
   remove: function() {

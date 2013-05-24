@@ -20,6 +20,7 @@
     "fs-extra": "0.6.1",
     "jade": "0.30.0",
     "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e",
+    "spin": "0.0.1",
     "stylus": "0.32.1",
     "underscore": "1.4.4",
     "ws": "0.4.25"

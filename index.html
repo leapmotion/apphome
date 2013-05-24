@@ -22,6 +22,7 @@
   global.LeapHomeDir = path.resolve('.');
   global.leapEnv = global.leapEnv || process.env.LEAP_ENV || 'production';
   global.nwGui = window.nwGui = require('nw.gui');
+  global.document = window.document;
   window.onload = function() {
     nwGui.Window.get().show();
   };

@@ -1,4 +1,4 @@
-var BaseView = require('../../base-view.js');
+var BaseView = require('../base-view.js');
 
 module.exports = BaseView.extend({
 

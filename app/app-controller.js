@@ -13,8 +13,7 @@ var LeapApp = require('./models/leap-app.js');
 
 var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
-var NoInternetView = require('./views/error-screens/no-internet/no-internet.js');
-var LeapNotConnectedView = require('./views/error-screens/leap-not-connected/leap-not-connected.js');
+var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 
 function AppController() {
   this._accessToken = null;
@@ -26,43 +25,19 @@ AppController.prototype = {
 
   runApp: function() {
     async.waterfall([
-      this._checkInternetConnection.bind(this),
-      this._hideNoInternetError.bind(this),
       this._checkLeapConnection.bind(this),
       this._authorize.bind(this),
       this._afterAuthorize.bind(this)
     ], function(err) {
-      if (err === AppErrors.InternetConnectionRequired) {
-        this._showNoInternetError();
+      if (err) {
+        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
       }
-      setTimeout(this.runApp.bind(this), 50); // Keep on trying...
     }.bind(this));
 
   },
 
-  _checkInternetConnection: function(cb) {
-    connection.check(function(ignored, isConnected) {
-      if (!isConnected) {
-        cb(oauth.getRefreshToken() ? null : AppErrors.InternetConnectionRequired);
-      } else {
-        cb(null);
-      }
-    });
-  },
-
-  _showNoInternetError: function() {
-    if (!this._noInternetView) {
-      this._noInternetView = new NoInternetView();
-      this._noInternetView.$el.appendTo('body');
-    }
-    this._noInternetView.$el.show();
-  },
-
-  _hideNoInternetError: function() {
-    this._noInternetView && this._noInternetView.$el.hide();
-  },
-
   _checkLeapConnection: function(cb) {
+    return cb(null);
     if (leap.isConnected()) {
       cb(null);
     } else {
@@ -71,19 +46,18 @@ AppController.prototype = {
   },
 
   _authorize: function(cb) {
-    oauth.getAccessToken(function(err, accessToken) {
+    oauth.getAccessToken(function(err) {
       if (err) {
         var authorizationView = new AuthorizationView();
         authorizationView.authorize(function(err) {
-          if (err) {
-            this._checkInternetConnection(cb);
-          } else {
-            this._authorize(cb);
-          }
           authorizationView.remove();
+          if (err) {
+            this._authorize(cb);
+          } else {
+            cb(null);
+          }
         }.bind(this));
       } else {
-        this._accessToken = accessToken;
         cb(null);
       }
     }.bind(this));
