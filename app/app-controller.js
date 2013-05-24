@@ -64,7 +64,9 @@ AppController.prototype = {
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
     this._pollServerForUpdates();
-    setInterval(this._pollServerForUpdates.bind(this), config.ServerPollIntervalMs);
+    setInterval(function() {
+      this._pollServerForUpdates(true);
+    }.bind(this), config.ServerPollIntervalMs);
   },
 
   _paintMainApp: function() {
