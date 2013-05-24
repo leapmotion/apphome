@@ -25,6 +25,10 @@ function checkConnection() {
   });
 
   socket.on('message', function(message) {
+    if (/version/.test(message)) {
+      // not a real frame
+      return;
+    }
     isLeapConnected = true;
     timeOfLastMessage = now();
   });
