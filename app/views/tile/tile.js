@@ -1,3 +1,5 @@
+var Spinner = require('spin');
+
 var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
@@ -36,14 +38,18 @@ module.exports = BaseView.extend({
 
     this.$el.click(function() {
       if (leapApp.isInstallable()) {
-        var upgradeModal = new UpgradeModalView({
-          leapApp: leapApp,
-          onConfirm: function() {
-            upgradeModal.remove();
-            leapApp.install();
-          }
-        });
-        upgradeModal.show();
+        if (leapApp.isUpgrade()) {
+          var upgradeModal = new UpgradeModalView({
+            leapApp: leapApp,
+            onConfirm: function() {
+              upgradeModal.remove();
+              leapApp.install();
+            }
+          });
+          upgradeModal.show();
+        } else {
+          leapApp.install();
+        }
       } else if (leapApp.isRunnable()) {
         this.$el.addClass('launching');
         leapApp.launch();
@@ -54,6 +60,8 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this.$el.attr('tile_id', leapApp.id);
+
+    new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: 95, top: 3 }).spin(this.$('.message')[0]);
 
     this._setupDragging();
   },
