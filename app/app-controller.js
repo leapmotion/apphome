@@ -50,11 +50,7 @@ AppController.prototype = {
         var authorizationView = new AuthorizationView();
         authorizationView.authorize(function(err) {
           authorizationView.remove();
-          if (err) {
-            this._authorize(cb);
-          } else {
-            cb(null);
-          }
+          cb(null); // skip auth if there's an error
         }.bind(this));
       } else {
         cb(null);

@@ -36,6 +36,7 @@ function oauthRequest(params, cb) {
     hostname: urlParts.hostname,
     path: urlParts.pathname + 'token',
     port: urlParts.port,
+    auth: urlParts.auth,
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -49,7 +50,13 @@ function oauthRequest(params, cb) {
       responseChunks.push(chunk);
     });
     res.on('end', function() {
-      cb && cb(null, JSON.parse(responseChunks.join('')));
+      var result;
+      try {
+        result = JSON.parse(responseChunks.join(''));
+      } catch(e) {
+        return cb && cb(e);
+      }
+      cb && cb(null, result);
     });
   });
 

@@ -6,7 +6,7 @@ var BaseView = require('../base-view.js');
 var connection = require('../../utils/connection.js');
 var oauth = require('../../utils/oauth.js');
 
-var LoadTimeoutMs = 20000;
+var LoadTimeoutMs = 10000;
 
 module.exports = BaseView.extend({
   viewDir: __dirname,
@@ -38,11 +38,10 @@ module.exports = BaseView.extend({
         this._startPollingForIframeUrlChanges();
 
         var loadTimeoutId = setTimeout(function() {
-          this.$iframe.unbind('urlChanged');
+          console.warn('Connecting auth to server timed out.');
           cb(new Error('Connection to login server timed out.'));
         }.bind(this), LoadTimeoutMs);
 
-        console.log('waiting for iframe to do shit');
         this.$iframe.on('urlChanged', function(elem, url) {
           clearTimeout(loadTimeoutId);
           try {
@@ -66,7 +65,6 @@ module.exports = BaseView.extend({
   },
 
   _waitForInternetConnection: function(cb) {
-    console.log('waiting for internets');
     connection.check(function(err, isConnected) {
       if (isConnected) {
         this.$noInternet.addClass('background');
@@ -101,6 +99,7 @@ module.exports = BaseView.extend({
         var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
         $rememberMe.parent().hide();
         $('input[type=text]:first', iframeWindow.document).focus();
+        this.$waiting.addClass('background');
         this.$iframe.removeClass('background');
       }
     }.bind(this));
@@ -110,16 +109,21 @@ module.exports = BaseView.extend({
 
   _allowOauthAuthorization: function() {
     this.$iframe.addClass('background');
-    this.$waiting.removeClass('background');
+    this.$waiting.removeClass('background').removeClass('before').addClass('after');
     var iframeWindow = this.$iframe.prop('contentWindow');
-    $(iframeWindow).load(function() {
-      $('form.approve', iframeWindow.document).submit();
-    });
+    var approveOauthInterval = setInterval(function() {
+      var $approvalForm = $('form.approve', iframeWindow.document);
+      if ($approvalForm.length) {
+        $approvalForm.submit();
+        clearInterval(approveOauthInterval);
+      }
+    }, 50);
   },
 
   _finishAuthorization: function(code, cb) {
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
+        console.warn(err);
         cb(err);
       } else {
         oauth.getAccessToken(cb);
@@ -163,6 +167,7 @@ module.exports = BaseView.extend({
   },
 
   remove: function() {
+    this.$iframe.unbind();
     this._stopPollingForIframeUrlChanges();
     $(window).unbind('resize', this._boundIframeCenteringFn);
     this.$el.remove();
