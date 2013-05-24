@@ -1,36 +1,61 @@
 $borderWidth = 4px
 $borderColor = #bbb
-$borderRadius = 10px
-$progressBarColor = #ddd
+$borderRadius = 4px
+$progressBarColor = #e1e1e1
+$tileH = 176px
+$tileW = 320px
 
 .tile
-  width 310px // matt's is 320px?
-  height 166px // matt's is 176?
-  position relative
-  float left
-  margin 30px 15px
+  //border $borderWidth solid transparent
   border-radius $borderRadius
-  border $borderWidth solid transparent
+  float left
+  height $tileH
   list-style none
+  margin 16px 16px 32px
+  position relative
   -webkit-user-drag element
+  width $tileW
 
   &:hover
-    border $borderWidth solid $borderColor
+    //border $borderWidth solid $borderColor
     background-clip padding-box
-    background-color $borderColor
-    box-shadow 0 0 24px 4px rgba(255,255,255,.6); // outer glow
-    background-image linear-gradient(bottom, #99c947 0%, #fff 100%); // gradient overlay
+    //background-color $borderColor
+    //background-image linear-gradient(bottom, #99c947 0%, #fff 100%) // gradient overlay
+    box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
+
+    &:before, &:after
+      background -webkit-linear-gradient(top,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* Chrome10+,Safari5.1+ */
+      background linear-gradient(to bottom,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* W3C */
+      background-clip padding-box
+      border-radius $borderRadius+1
+      content ""
+      display block
+      height $tileH+2
+      left -1px
+      position absolute
+      top -1px
+      width $tileW+2
+      z-index -1
+    &:after
+      background -webkit-linear-gradient(top, #dcdcdc 0%, #a7a7a7 100%) /* Chrome10+,Safari5.1+ */
+      background linear-gradient(to bottom, #dcdcdc 0%, #a7a7a7 100%) /* W3C */      
+      border-radius 7px
+      height $tileH+6
+      left -3px
+      top -3px
+      width $tileW+6
+      z-index -2
 
     .name
       visibility visible
 
   h3
+    color rgba(255,255,255,1)
     position absolute
     width 100%
     text-align center
     bottom -55px
     font-size 20px
-    color rgba(255,255,255,.6)
     -webkit-user-drag none
 
   .name
@@ -64,10 +89,10 @@ $progressBarColor = #ddd
     height 12px
     width 70%
     position absolute
-    border 3px solid $progressBarColor
+    border 2px solid $progressBarColor
     border-radius 16px
     padding 2px
-    background-color #222
+    background-color rgba(37,37,37,.5)
     top 50%
     margin-top -6px
     left 50%
