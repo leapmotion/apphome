@@ -1,7 +1,10 @@
 li.tile(draggable="true")
   img.tile-bg(src="#{ tilePath }")
   img.icon(src="#{ iconPath }")
-  h3.name #{ name }
-  h3.message Installing...
+  div.name-outer
+    div.name-inner
+      div.dot
+      h3.name #{ name }
+      h3.message Installing...
   div.progress
     div.bar
