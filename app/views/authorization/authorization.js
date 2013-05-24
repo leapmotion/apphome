@@ -89,6 +89,9 @@ module.exports = BaseView.extend({
 
   _waitForUserToSignIn: function() {
     var iframeWindow = this.$iframe.prop('contentWindow');
+    this.$waiting.addClass('background');
+    this.$iframe.removeClass('background');
+    clearTimeout(this._loadTimeoutId);
     $(iframeWindow).load(function() {
       if (this._isFirstRun() && !this._hasRedirectedToSignUp && /^\/users\/sign_in/.test(iframeWindow.location.pathname)) {
         this._hasRedirectedToSignUp = true;
@@ -98,9 +101,6 @@ module.exports = BaseView.extend({
         var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
         $rememberMe.parent().hide();
         $('input[type=text]:first', iframeWindow.document).focus();
-        this.$waiting.addClass('background');
-        this.$iframe.removeClass('background');
-        clearTimeout(this._loadTimeoutId);
       }
     }.bind(this));
 

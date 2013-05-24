@@ -63,8 +63,10 @@ AppController.prototype = {
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    //TODO: real server API
     this._pollServerForUpdates();
+    setInterval(function() {
+      this._pollServerForUpdates(true);
+    }.bind(this), config.ServerPollIntervalMs);
   },
 
   _paintMainApp: function() {
