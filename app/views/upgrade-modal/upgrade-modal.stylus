@@ -1,26 +1,29 @@
+$borderColor = #3a3e48
+
 .upgrade-modal
   position absolute
   top 0
   left 0
   width 100%
   height 100%
-  background rgba(0, 0, 0, 0.1)
+  background rgba(0, 0, 0, 0.65)
 
   .modal
+    background #0b0c0e
+    border 2px solid $borderColor
+    border-radius 10px
+    box-shadow 0 0 15px rgba(0,0,0,.65)
+    color white
+    margin 0 auto
+    padding 24px
     position relative
     top 10%
-    margin 0 auto
-    padding 30px
-    z-index 3000
     width 600px
-    border-radius 10px
-    border 1px solid #999
-    background #151718
-    color white
+    z-index 3000
 
     .header
+      border-bottom 1px solid $borderColor
       height 110px
-      border-bottom 1px solid #999
 
       .icon
         float left
@@ -37,35 +40,48 @@
       margin 20px 0
 
       table.details
-        font-size 20px
         font-weight bold
 
         tr
           padding 10px 0
 
           td.label
-            vertical-align top
             color #666
+            font-size 21px
             width 150px
-
-
+            vertical-align top
+          td.value
+            font-size 18px
+            vertical-align bottom
 
     .footer
-      height 64px
-      padding-top 16px
-      border-top 1px solid #999
+      border-top 1px solid $borderColor
+      padding-top 24px
+      overflow auto
 
       .button
+        border-radius 7px
+        color #ededed
         cursor pointer
-        font-size 24px
-        padding 20px 40px
-        color white
-        border-radius 10px
+        font-size 21px
+        font-weight bold
+        padding 12px 21px 16px
+        text-shadow 0 -1px 0 rgba(0,0,0,.55)
 
         &.cancel
           float left
           background-color gray
+          background-image -webkit-linear-gradient(top, #cfd3d6 0%, #83868a 100%)
+          background-image linear-gradient(top, #cfd3d6 0%, #83868a 100%)
+          padding-left 40px
+          padding-right 40px
 
         &.confirm
+          background-clip padding-box
+          background-color #60aee5 /* layer fill content */
+          -webkit-box-shadow inset 0 2px 9px rgba(67,131,181,.45) /* inner shadow */
+          box-shadow inset 0 2px 9px rgba(67,131,181,.45) /* inner shadow */
+          background-image -webkit-linear-gradient(bottom, #478cc4 0%, #6cbaeb 100%) /* gradient overlay */
+          background-image linear-gradient(bottom, #478cc4 0%, #6cbaeb 100%) /* gradient overlay */
+          border 1px solid rgba(27,28,29,0) /* stroke */
           float right
-          background-color lightblue
