@@ -37,12 +37,11 @@ AppController.prototype = {
   },
 
   _checkLeapConnection: function(cb) {
-    return cb(null);
-    if (leap.isConnected()) {
+    var leapNotConnectedView = new LeapNotConnectedView();
+    leapNotConnectedView.encourageConnectingLeap(function() {
+      leapNotConnectedView.remove();
       cb(null);
-    } else {
-      //this._showNoLeapError(cb);
-    }
+    });
   },
 
   _authorize: function(cb) {
