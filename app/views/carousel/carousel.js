@@ -158,9 +158,9 @@ var CarouselView = BaseView.extend({
     var distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled (scaled below)
     var animating = this._animating = true;
     if (this._currentSlideIndex !== slideNum) {
-      new window.TWEEN.Tween({ x: 0, y: 0 })
+      new window.TWEEN.Tween({ x: 0, y: 0 }, 350)
           .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
-          .easing(window.TWEEN.Easing.Linear.None)
+          .easing(window.TWEEN.Easing.Quartic.Out)
           .onUpdate(function() {
             $slidesHolder.css('left', currentPosition + this.x);
           }).onComplete(function() {

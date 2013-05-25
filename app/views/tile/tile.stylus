@@ -49,14 +49,24 @@ $tileW = 320px
     .name
       visibility visible
 
+  .name-outer
+    float right
+    right 50%
+    position relative
+    margin-top 183px
+
+  .name-inner
+    float right
+    right -50%
+    position relative
+  
   h3
     color rgba(255,255,255,1)
-    position absolute
-    width 100%
-    text-align center
-    bottom -55px
-    font-size 20px
+    font-size 21px
     -webkit-user-drag none
+    float left
+    margin 0
+    text-align center
 
   .name
     visibility hidden
@@ -83,6 +93,22 @@ $tileW = 320px
 
   .message
     display none
+    width 100%
+
+  .dot
+    background -webkit-linear-gradient(top, #c5e171 0%, #bee267 50%, #95bf48 100%)
+    border 1px solid #161719
+    border-radius 7px
+    background-clip padding-box
+    box-shadow 0 0 10px rgba(154,201,72,1)
+    content ""
+    display none
+    left -26px
+    float left
+    height 14px
+    margin-top 6px
+    margin-right 12px
+    width 14px
 
   .progress
     display none
@@ -107,6 +133,14 @@ $tileW = 320px
   &.ready, &.notyetinstalled, &.uninstalled
     cursor pointer
 
+  &.notyetinstalled .name
+    color #b2b2b2
+    width auto
+
+  &.update .dot
+    background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
+    box-shadow 0 0 10px rgba(67,131,181,1)
+
   &.launching
     border-color transparent
     background transparent
@@ -118,7 +152,6 @@ $tileW = 320px
       -webkit-animation-name pulse
       z-index: 1000*/
 
-
   &.installing
     .progress, .message
       display block
@@ -127,12 +160,12 @@ $tileW = 320px
 
   &.uninstalled
     opacity 0.75
-    &:hover
-      border $borderWidth solid transparent
-      background-color transparent
-      box-shadow none
-      background-image none
 
+#downloads .tile 
+  .dot
+    display block
+  .name
+    visibility visible
 
 vendors = webkit
 @keyframes pulse
