@@ -18,6 +18,10 @@ module.exports = BaseView.extend({
     this.setElement($(this.templateHtml(templateData)));
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
+    if (leapApp.isUpgrade()) {
+      this.$el.addClass('upgrade');
+    }
+
     this.listenTo(leapApp, 'change:state', function() {
       this.$el.removeClass(this._stateToClass(leapApp.previous('state')));
       this.$el.addClass(this._stateToClass(leapApp.get('state')));
@@ -38,18 +42,14 @@ module.exports = BaseView.extend({
 
     this.$el.click(function() {
       if (leapApp.isInstallable()) {
-        if (leapApp.isUpgrade()) {
-          var upgradeModal = new UpgradeModalView({
-            leapApp: leapApp,
-            onConfirm: function() {
-              upgradeModal.remove();
-              leapApp.install();
-            }
-          });
-          upgradeModal.show();
-        } else {
-          leapApp.install();
-        }
+        var upgradeModal = new UpgradeModalView({
+          leapApp: leapApp,
+          onConfirm: function() {
+            upgradeModal.remove();
+            leapApp.install();
+          }
+        });
+        upgradeModal.show();
       } else if (leapApp.isRunnable()) {
         this.$el.addClass('launching');
         leapApp.launch();

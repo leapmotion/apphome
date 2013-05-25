@@ -137,7 +137,7 @@ $tileW = 320px
     color #b2b2b2
     width auto
 
-  &.update .dot
+  &.upgrade .dot
     background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
     box-shadow 0 0 10px rgba(67,131,181,1)
 
