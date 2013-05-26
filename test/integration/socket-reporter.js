@@ -10,13 +10,19 @@ function SocketReporter(runner) {
 
 // todo: delay start of tests until after connected?
 
-  var sendTestResult = function(result, test) {
+  var sendTestResult = function(result, test, err) {
     var data = {
       result: result,
       title: test.title,
       fullTitle: test.fullTitle(),
       duration: test.duration
     };
+    if (err) {
+      data.error = {
+        message: err.message,
+        stack: err.stack
+      };
+    }
     reporterClient.write(JSON.stringify(data), 'utf8');
   };
 
@@ -25,9 +31,7 @@ function SocketReporter(runner) {
   });
 
   runner.on('fail', function(test, err) {
-    // TODO: send/log more details
-    console.log('tmp - test.inspect ' + test.inspect());
-    sendTestResult('fail', test);
+    sendTestResult('fail', test, err);
   });
 
   runner.on('end', function() {
