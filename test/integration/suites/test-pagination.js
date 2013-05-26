@@ -1,7 +1,7 @@
 var integrationTest = require('../integration-test.js');
-var leapAppFactory = require('../../support/leap-app-factory.js');
 
 integrationTest.runInApp(__filename, function() {
+  var leapAppFactory = require('../../support/leap-app-factory.js');
 
   var leapApps;
   describe('pagination', function() {
@@ -17,7 +17,7 @@ integrationTest.runInApp(__filename, function() {
     });
 
     it('should advance on click', function(done) {
-      window.waitFor('tiles', '.tile:visible').then(function() {
+      window.waitFor('tiles', '.tile:visible', done).then(function() {
         assert.ok($('.go-previous:visible').hasClass('disabled'), 'should start previous slide button disabled');
         var $next = $('.go-next:visible');
         assert.ok(!$next.hasClass('disabled'), 'should start with next slide button enabled');
