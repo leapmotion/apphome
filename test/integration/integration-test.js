@@ -10,7 +10,6 @@ global.assert = require('assert');
 var ReportServerPort = 22001; // TODO: move to config file (used in socket-reporter.js)
 var IntegrationTestLoaderPath = path.resolve(__dirname, './preloader');
 global.LeapHomeDir = global.LeapHomeDir || path.resolve(__dirname, '../..');
-
 var MaxTestTime = 1000 * 15;
 
 global.isRunningTest = function() {
@@ -25,6 +24,7 @@ function runInApp(fileName, testFn) {
   } else {
     console.info('Running integration test: ' + fileName);
     describe('integration test for ' + fileName, function() {
+      this.timeout(MaxTestTime);
       it('should run actual tests', function(done) {
         testFn();
         done(null);
@@ -36,49 +36,70 @@ function runInApp(fileName, testFn) {
 function setupLeapHomeTestApp(fileName, testFn) {
   console.info('Starting leaphome to run integration test: ' + fileName);
   var reportServer;
-  describe('start leaphome for ' + fileName, function() {
-    it("should start app", function(done) {
-      this.timeout(MaxTestTime);
-      var testCount = 0;
-      reportServer = net.createServer(function(conn) { //'connection' listener
-        conn.on('data', function(data) {
-          var testResult = JSON.parse(data.toString('utf8'));
-          ++testCount;
-          describe(fileName + ' test #' + testCount, function() {
-            it(testResult.fullTitle, function() {
-              assert.ok(testResult.result === 'pass')
-            });
-          });
+  var allDone, isComplete;
+
+  describe('Node-webkit process for ' + fileName, function() {
+    this.timeout(MaxTestTime);
+    var testContext = this;
+
+    var reportTestResult = function(testResult) {
+      describe(fileName, function() {
+        it(testResult.fullTitle, function() {
+          if (testResult.result === 'pass') {
+            assert.ok(true); // needed?
+          } else if (testResult.error) {
+            var ex = new Error(testResult.error.message);
+            ex.stack = testResult.error.stack;
+            throw ex;
+          } else {
+            throw new Error('unknown error');
+          }
         });
       });
+    };
 
-      var reportError = function() {
-        it(msg, function() {
-          assert.ok(false);
+    var reportSyntaxError = function(msg) {
+      describe(fileName + ' reporting failure', function() {
+        it('should run mocha test without catastrophic failure', function() {
+          assert.ok('false', msg);
         });
-      };
+      });
+    };
 
-      var isComplete;
-      var tearDown = function() {
-        if (!isComplete) {
-          isComplete = true;
-          console.log('Integration test completed: ' + fileName);
-          if (reportServer) {
-            reportServer.close(function () {
-              done();
-            });
-          } else {
-            done();
-          }
+    var tearDown = function() {
+      if (!isComplete) {
+        isComplete = true;
+        console.log('Integration test completed: ' + fileName);
+        if (reportServer) {
+          reportServer.close(function () {
+            allDone();
+          });
+        } else {
+          allDone();
         }
-      };
+      }
+    };
+
+    it("should start app and run tests", function(done) {
+      allDone = done;
+      reportServer = net.createServer(function(conn) { //'connection' listener
+        conn.on('data', function(data) {
+          var jsonString = data.toString('utf8');
+          try {
+            reportTestResult.call(testContext, JSON.parse(jsonString));
+          } catch (err) {
+            console.error('Invalid test report: ' + data);
+            reportSyntaxError('Failed to parse test result: ' + err.message);
+            tearDown();
+          }
+        });
+      });
 
       reportServer.listen(ReportServerPort, function() {
         try {
           runApp(fileName, tearDown);
         } catch (err) {
           console.error(err);
-          reportError('should not crash with an error');
           tearDown();
         }
       });
@@ -97,12 +118,13 @@ function runApp(testFile, onFinish) {
     cwd: LeapHomeDir,
     env: targetEnv
   });
-  var timer = setTimeout(function() {
-    console.error(testFile + ' integration test did not finish, aborting.');
-    // TODO: report timeout (fail a test)
-    child.kill();
-    onFinish();
-  }, MaxTestTime);
+
+  //  var timer = setTimeout(function() {
+  //    console.error(testFile + ' integration test did not finish, aborting.');
+  //    // TODO: report timeout (fail a test)
+  //    child.kill();
+  //    onFinish();
+  //  }, MaxTestTime);
 
 
   // echo console:
@@ -115,7 +137,7 @@ function runApp(testFile, onFinish) {
   });
 
   child.on('close', function (code) {
-    clearTimeout(timer);
+    // clearTimeout(timer);
     onFinish();
   });
 }

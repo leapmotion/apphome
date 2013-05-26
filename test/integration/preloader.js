@@ -32,10 +32,7 @@ $(window).load(function() {
 
   var mocha = new Mocha();
   mocha.addFile(process.env.LEAPHOME_INTEGRATION_TEST_PATH);
-  mocha.reporter(socketReporter).run(function(failures) { // dot, list, etc
-    console.error('todo: better way to report results; better way to quit node-webkit');
-    process.exit(failures);
-  });
+  mocha.reporter(socketReporter).run();
 });
 
 function isJs(path) {
