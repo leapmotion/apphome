@@ -18,7 +18,7 @@ function handleConnectionEnd() {
 }
 
 function checkConnection() {
-  socket = new WebSocket('ws://localhost:6437');
+  socket = new WebSocket('ws://127.0.0.1:6437');
 
   socket.on('open', function() {
     isLeapControllerRunning = true;

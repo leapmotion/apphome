@@ -45,6 +45,10 @@
       .message.after
         display block
 
+    &.logout
+      .message.logout
+        display block
+
   .no-internet
     text-align center
     padding 20px

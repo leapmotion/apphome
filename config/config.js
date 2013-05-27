@@ -12,7 +12,8 @@ var config = {
     endpoint: 'http://stage7.leapmotion.com/oauth/',
     client_id: '73fde9aa45ef818ecb137aeacd886253',
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
-    redirect_uri: 'http://leapweb-stage7.herokuapp.com/'
+    redirect_uri: 'http://leapweb-stage7.herokuapp.com/',
+    log_out_url: 'http://stage7.leapmotion.com/users/sign_out'
   },
 
   AppListingEndpoint: 'https://leap:200hands500fingers@warehouse-stage.leapmotion.com/api/apps/myapps?access_token=',
@@ -57,7 +58,15 @@ var config = {
   },
 
   ServerPollIntervalMs: 15 * 1000, // 15 seconds
-  FsScanIntervalMs: 60 * 60 * 1000 // 1 hour
+  FsScanIntervalMs: 60 * 60 * 1000, // 1 hour
+  AuthLoadTimeoutMs: 10 * 1000, // 10 seconds
+
+  DbKeys: {
+    AlreadyDidFirstRun: 'AlreadyDidFirstRun',
+    OauthRefreshToken: 'OauthRefreshToken',
+    InstalledApps: 'InstalledApps',
+    UninstalledApps: 'UninstalledApps'
+  }
 
 };
 

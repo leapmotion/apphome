@@ -10,8 +10,6 @@ var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
 
 var BaseModel = require('./base-model.js');
-var InstalledAppsDbKey = 'installed_apps';
-var UninstalledAppsDbKey = 'uninstalled_apps';
 
 var LeapAppStates = enumerable.make([
   'NotYetInstalled',
@@ -58,8 +56,8 @@ var LeapApp = BaseModel.extend({
     var installedAppsToPersist = uiGlobals.installedApps.filter(function(app) {
       return !app.isBuiltinTile();
     });
-    db.setItem(InstalledAppsDbKey, JSON.stringify(_(installedAppsToPersist).invoke('toJSON')));
-    db.setItem(UninstalledAppsDbKey, JSON.stringify(uiGlobals.uninstalledApps.toJSON()))
+    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(_(installedAppsToPersist).invoke('toJSON')));
+    db.setItem(config.DbKeys.UninstalledApps, JSON.stringify(uiGlobals.uninstalledApps.toJSON()))
   },
 
   sortScore: function() {
@@ -139,8 +137,8 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
-  uiGlobals.installedApps.add(JSON.parse(db.getItem(InstalledAppsDbKey) || '[]'));
-  uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(UninstalledAppsDbKey) || '[]'));
+  uiGlobals.installedApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
+  uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(config.DbKeys.UninstalledApps) || '[]'));
 };
 
 module.exports = LeapApp;

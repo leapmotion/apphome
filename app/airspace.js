@@ -3,7 +3,7 @@ var AppController = require('./app-controller.js');
 
 $(window).load(function() {
   var appController = new AppController();
-  appController.restoreWindowSize();
+  appController.setupWindow();
   appController.restoreModels();
   appController.runApp();
 });

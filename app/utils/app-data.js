@@ -18,8 +18,7 @@ function getDir(subdir) {
       throw new Error('Unknown operating system: ' + os.platform());
     }
 
-    var appName = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'))).name;
-    appDataDir = path.join.apply(path, PlatformDirs[os.platform()].concat([ appName, 'AppData' ]));
+    appDataDir = path.join.apply(path, PlatformDirs[os.platform()].concat([ uiGlobals.appName, 'AppData' ]));
 
     if (!fs.existsSync(appDataDir)) {
       fs.mkdirSync(appDataDir);

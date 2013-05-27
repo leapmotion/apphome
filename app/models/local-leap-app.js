@@ -54,7 +54,11 @@ module.exports = LeapApp.extend({
     }
 
     function finishInstallation(err) {
-      this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
+      if (os.platform() === 'win32') {
+        this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
+      } else {
+        this.set('executable', this.get('keyFile'));
+      }
       this.set('iconPath', err ? config.Defaults.IconPath : this.standardIconPath());
       this.set('tilePath', config.Defaults.TilePath);
       this.set('state', LeapApp.States.Ready);

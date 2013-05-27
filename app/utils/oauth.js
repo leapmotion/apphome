@@ -6,14 +6,12 @@ var url = require('url');
 var config = require('../../config/config.js');
 var db = require('./db.js');
 
-var OauthRefreshTokenDbKey = 'OauthRefreshToken';
-
 function saveRefreshToken(refreshToken) {
-  db.setItem(OauthRefreshTokenDbKey, refreshToken);
+  db.setItem(config.DbKeys.OauthRefreshToken, refreshToken);
 }
 
 function getRefreshToken() {
-  return db.getItem(OauthRefreshTokenDbKey);
+  return db.getItem(config.DbKeys.OauthRefreshToken);
 }
 
 function getAuthorizationUrl() {
@@ -102,7 +100,11 @@ function getAccessToken(cb) {
 }
 
 function logOut() {
-  saveRefreshToken(null);
+  db.removeItem(config.DbKeys.OauthRefreshToken);
+}
+
+function logOutUrl() {
+  return config.oauth.log_out_url;
 }
 
 module.exports.getAuthorizationUrl = getAuthorizationUrl;
@@ -110,3 +112,4 @@ module.exports.getRefreshToken = getRefreshToken;
 module.exports.authorizeWithCode = authorizeWithCode;
 module.exports.getAccessToken = getAccessToken;
 module.exports.logOut = logOut;
+module.exports.logOutUrl = logOutUrl;

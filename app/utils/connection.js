@@ -1,11 +1,18 @@
 var dns = require('dns');
 
-function checkInternetConnection(cb) {
+var isConnected = false;
+
+function checkInternetConnection() {
   var domain = Math.round(Math.random() * 99999999999) + '.leapmotion.com';
   dns.resolve(domain, function(err) {
-    var isConnected = (!err || err.code === dns.NOTFOUND);
-    cb(null, isConnected);
+    isConnected = (!err || err.code === dns.NOTFOUND);
+    setTimeout(checkInternetConnection, 1000);
   });
 }
 
-module.exports.check = checkInternetConnection;
+checkInternetConnection();
+
+module.exports.isConnected = function() {
+  console.log(isConnected ? 'internet!' : 'no internet :(');
+  return isConnected;
+};

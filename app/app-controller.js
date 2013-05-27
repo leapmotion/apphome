@@ -1,7 +1,8 @@
-var api = require('./utils/api.js');
 var async = require('async');
+
+var api = require('./utils/api.js');
 var config = require('../config/config.js');
-var connection = require('./utils/connection.js');
+var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
@@ -16,14 +17,40 @@ var MainPage = require('./views/main-page/main-page.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 
 function AppController() {
-  this._accessToken = null;
 }
 
 AppController.prototype = {
 
-  restoreWindowSize: function() {
+  setupWindow: function() {
+    this._createMenu();
+
     // TODO: persist window dimensions when user resizes it, and restore that size on launch
     nwGui.Window.get().maximize();
+  },
+
+  _createMenu: function(enableLogOut) {
+    var mainMenu = new nwGui.Menu({ type: 'menubar' });
+    var appMenu;
+    if (mainMenu.items[0]) { // on OS X, the application menu is already created
+      appMenu = mainMenu.items[0];
+    } else {
+      appMenu = new nwGui.Menu();
+      var appMenuItem = new nwGui.MenuItem({
+        label: uiGlobals.appName,
+        submenu: appMenu
+      });
+      mainMenu.append(appMenuItem);
+    }
+    appMenu.append(new nwGui.MenuItem({
+      label: 'Sign Out',
+      click: this._logOut.bind(this),
+      enabled: !!enableLogOut
+    }));
+    appMenu.append(new nwGui.MenuItem({
+      label: 'Exit ' + uiGlobals.appName,
+      click: process.exit
+    }));
+    nwGui.Window.get().menu = mainMenu;
   },
 
   restoreModels: function() {
@@ -41,15 +68,18 @@ AppController.prototype = {
         setTimeout(this.runApp.bind(this), 50); // Keep on trying...
       }
     }.bind(this));
-
   },
 
   _checkLeapConnection: function(cb) {
+    if (this._noMoreLeapConnectionChecks) {
+      return cb(null);
+    }
     var leapNotConnectedView = new LeapNotConnectedView();
     leapNotConnectedView.encourageConnectingLeap(function() {
       leapNotConnectedView.remove();
+      this._noMoreLeapConnectionChecks = true;
       cb(null);
-    });
+    }.bind(this));
   },
 
   _authorize: function(cb) {
@@ -58,15 +88,17 @@ AppController.prototype = {
         var authorizationView = new AuthorizationView();
         authorizationView.authorize(function(err) {
           authorizationView.remove();
-          cb(null); // skip auth if there's an error
+          cb && cb(null); // skip auth if there's an error
         }.bind(this));
       } else {
-        cb(null);
+        cb && cb(null);
       }
     }.bind(this));
   },
 
   _afterAuthorize: function() {
+    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
+
     this._paintMainApp();
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
@@ -77,10 +109,23 @@ AppController.prototype = {
     }.bind(this), config.ServerPollIntervalMs);
   },
 
+  _logOut: function() {
+    this._createMenu(false);
+    if (this._mainPage) {
+      this._mainPage.$el.remove();
+      this._mainPage.remove();
+    }
+    var authorizationView = new AuthorizationView();
+    authorizationView.logOut(function() {
+      authorizationView.remove();
+      this._authorize(this._paintMainApp.bind(this));
+    }.bind(this));
+  },
+
   _paintMainApp: function() {
-    $('body').append((new MainPage({
-      offlineMode: this._offlineMode
-    })).$el);
+    this._createMenu(true);
+    this._mainPage = new MainPage();
+    $('body').append(this._mainPage.$el);
   },
 
   _scanFilesystem: function() {
