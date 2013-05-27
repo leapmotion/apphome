@@ -4,6 +4,7 @@ var domInjection = require('../../app/utils/dom-injection.js');
 var Mocha = require('mocha');
 var assert = require('assert');
 var socketReporter = require('./socket-reporter.js');
+var AppController = require('../../app/app-controller.js');
 
 global.leapEnv = 'test';
 global.assert = assert;
@@ -17,6 +18,11 @@ scripts = _(scripts).compact();
 var stylesheets = [
   './node_modules/mocha/mocha.css'
 ];
+
+
+AppController.prototype.restoreWindowSize = function() {
+  console.log('Stubbing window maximize'); // actual resize fails in tests for some reason, so stubbing it. // todo: determiner root problem
+};
 
 $(window).load(function() {
   console.info('\n\nInjecting Mocha and Test Scripts:\n' + scripts.join('\n'));

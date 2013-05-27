@@ -17,11 +17,19 @@ var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connecte
 
 function AppController() {
   this._accessToken = null;
-  BuiltinTileApp.createBuiltinTiles();
-  LeapApp.hydrateCachedModels();
 }
 
 AppController.prototype = {
+
+  restoreWindowSize: function() {
+    // TODO: persist window dimensions when user resizes it, and restore that size on launch
+    nwGui.Window.get().maximize();
+  },
+
+  restoreModels: function() {
+    BuiltinTileApp.createBuiltinTiles();
+    LeapApp.hydrateCachedModels();
+  },
 
   runApp: function() {
     async.waterfall([

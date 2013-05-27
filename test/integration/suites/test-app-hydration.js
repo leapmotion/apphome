@@ -2,7 +2,6 @@ var integrationTest = require('../integration-test.js');
 var db = require('../../../app/utils/db.js');
 var leapAppFactory = require('../../support/leap-app-factory.js');
 
-
 // rebuild db early (before app loads)
 if (global.isRunningTest()) {
   console.log('\n\nRebuilding database for test');
@@ -15,7 +14,7 @@ if (global.isRunningTest()) {
   }));
   leapApps.push(leapAppFactory.localAppData());
   leapApps.push(leapAppFactory.storeAppData());
-  db.setItem('leap_apps', JSON.stringify(leapApps));
+  db.setItem('installed_apps', JSON.stringify(leapApps));
 }
 
 
