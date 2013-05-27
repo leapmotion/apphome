@@ -89,19 +89,19 @@ module.exports = LeapApp.extend({
   },
 
   _installFromServer: function(cb) {
-    uiGlobals.uninstalledApps.remove(this);
-    uiGlobals.availableDownloads.remove(this);
+    var startingCollection = (uiGlobals.uninstalledApps.get(this.get('id')) ? uiGlobals.uninstalledApps : uiGlobals.availableDownloads);
+    startingCollection.remove(this);
     uiGlobals.installedApps.add(this);
     this.set('state', LeapApp.States.Installing);
 
     var downloadProgress = this._downloadBinary(function(err) {
       if (err) {
-        this.set('state', LeapApp.States.NotYetInstalled);
+        this._abortInstallation(startingCollection);
         return cb && cb(err);
       }
       this._findExecutable(function(err, executable) {
         if (err) {
-          this.set('state', LeapApp.States.NotYetInstalled);
+          this._abortInstallation(startingCollection);
           return cb && cb(err);
         }
         var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
@@ -117,6 +117,12 @@ module.exports = LeapApp.extend({
     downloadProgress.on('progress', function(progress) {
       this.trigger('progress', progress);
     }.bind(this));
+  },
+
+  _abortInstallation: function(previousCollection) {
+    uiGlobals.installedApps.remove(this);
+    this.set('state', LeapApp.States.NotYetInstalled);
+    previousCollection.add(this);
   },
 
   _downloadBinary: function(cb) {
@@ -216,6 +222,7 @@ module.exports = LeapApp.extend({
       executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
       cb(null, executable);
     } else if (os.platform() === 'darwin') {
+      cb
       var infoPlistPath = path.join(this._appDir(), 'Contents', 'Info.plist');
       plist.parseFile(infoPlistPath, function(err, parsedPlist) {
         if (err) {

@@ -116,14 +116,14 @@ var LeapApp = BaseModel.extend({
   },
 
   launch: function() {
-    var command = this.get('executable');
-    if (!command) {
+    var executable = this.get('executable');
+    if (!executable) {
       throw new Error("Don't know how to launch app: " + this.get('name'));
     } else {
-      console.log('Launching app with command: ' + command);
+      console.log('Launching app: ' + executable);
     }
 
-    return exec(shell.escape(command));
+    nwGui.Shell.openItem(executable);
   },
 
   standardIconPath: function() {
