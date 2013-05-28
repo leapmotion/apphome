@@ -83,19 +83,19 @@ function authorizeWithCode(code, cb) {
 
 function getAccessToken(cb) {
   if (!getRefreshToken()) {
-    return cb(new Error('Missing refresh token.'));
+    return cb && cb(new Error('Missing refresh token.'));
   }
   return oauthRequest({
     grant_type: 'refresh_token',
     refresh_token: getRefreshToken()
   }, function(err, result) {
     if (err) {
-      return cb(err);
+      return cb && cb(err);
     }
     if (result.error) {
-      return cb(new Error(result.error_description));
+      return cb && cb(new Error(result.error_description));
     }
-    cb(null, result.access_token);
+    cb && cb(null, result.access_token);
   });
 }
 
