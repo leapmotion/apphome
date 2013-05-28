@@ -11,13 +11,14 @@ var StoreLeapApp = require('../models/store-leap-app.js');
 var FakeLocalAppData = require('../../config/local-apps.js');
 
 function storeApps(cb) {
+  var platform = process.platform === 'darwin' ? 'osx' : 'win32';
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       return cb(err);
     } else {
       var appListParts = [];
       var protocolModule = /^https:/.test(config.AppListingEndpoint) ? https : http;
-      var appListingUrl = config.AppListingEndpoint + accessToken;
+      var appListingUrl = config.AppListingEndpoint + accessToken + '&platform=' + platform;
       protocolModule.get(appListingUrl, function(resp) {
         resp.on('data', function(chunk) {
           appListParts.push(chunk);
