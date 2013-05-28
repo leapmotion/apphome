@@ -36,7 +36,7 @@ AppController.prototype = {
     } else {
       appMenu = new nwGui.Menu();
       var appMenuItem = new nwGui.MenuItem({
-        label: uiGlobals.appName,
+        label: 'Account',
         submenu: appMenu
       });
       mainMenu.append(appMenuItem);
@@ -45,10 +45,6 @@ AppController.prototype = {
       label: 'Sign Out',
       click: this._logOut.bind(this),
       enabled: !!enableLogOut
-    }));
-    appMenu.append(new nwGui.MenuItem({
-      label: 'Exit ' + uiGlobals.appName,
-      click: process.exit
     }));
     nwGui.Window.get().menu = mainMenu;
   },
