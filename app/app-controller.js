@@ -30,22 +30,17 @@ AppController.prototype = {
 
   _createMenu: function(enableLogOut) {
     var mainMenu = new nwGui.Menu({ type: 'menubar' });
-    var appMenu;
-    if (mainMenu.items[0]) { // on OS X, the application menu is already created
-      appMenu = mainMenu.items[0];
-    } else {
-      appMenu = new nwGui.Menu();
-      var appMenuItem = new nwGui.MenuItem({
-        label: 'Account',
-        submenu: appMenu
-      });
-      mainMenu.append(appMenuItem);
-    }
-    appMenu.append(new nwGui.MenuItem({
+    var accountMenu = new nwGui.Menu();
+    var accountMenuItem = new nwGui.MenuItem({
+      label: 'Account',
+      submenu: accountMenu
+    });
+    accountMenu.append(new nwGui.MenuItem({
       label: 'Sign Out',
       click: this._logOut.bind(this),
       enabled: !!enableLogOut
     }));
+    mainMenu.append(accountMenuItem);
     nwGui.Window.get().menu = mainMenu;
   },
 
