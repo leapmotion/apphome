@@ -4,6 +4,9 @@ var archiver = require('archiver');
 var fs = require('fs-extra');
 var path = require('path');
 
+var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
+packageJson.window.toolbar = false;
+
 function buildDir(subdir) {
   var buildDir = path.join(__dirname, '..', 'build', subdir || '');
   if (!fs.existsSync(buildDir)) {
@@ -13,7 +16,7 @@ function buildDir(subdir) {
 }
 
 function prodDependencies() {
-  var deps = Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'))).dependencies);
+  var deps = Object.keys(packageJson.dependencies);
   return deps.map(function(dep) {
     return path.join('node_modules', dep);
   });
@@ -26,7 +29,6 @@ var appManifest = [
   'index.html',
   'node-main.js',
   'static/',
-  'package.json'
 ].concat(prodDependencies());
 
 fs.deleteSync(path.join(__dirname, '..', 'build'));
@@ -37,6 +39,9 @@ var appZipOutputPath = path.join(buildDir(), 'airspace.nw');
 var output = fs.createWriteStream(appZipOutputPath);
 appZip.pipe(output);
 
+console.log('package.json');
+appZip.append(JSON.stringify(packageJson), { name: 'package.json', store: true });
+
 while (appManifest.length > 0) {
   var fileToInclude = appManifest.shift();
   var fullPath = path.join(__dirname, '..', fileToInclude);
@@ -45,8 +50,9 @@ while (appManifest.length > 0) {
       appManifest.push(path.join(fileToInclude, file));
     });
   } else {
-    console.log(fileToInclude);
-    appZip.append(fs.readFileSync(fullPath), { name: fileToInclude });
+    var normalizedFilename = fileToInclude.replace(/\\/g, '/');
+    console.log(normalizedFilename);
+    appZip.append(fs.readFileSync(fullPath), { name: normalizedFilename, store: true });
   }
 }
 
@@ -62,8 +68,10 @@ appZip.finalize(function(err, bytesWritten) {
       throw err;
     }
     fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
-    fs.renameSync(path.join(buildDir('windows'), 'nw.exe'), path.join(buildDir('windows'), 'airspace.exe'));
-    fs.appendFileSync(path.join(buildDir('windows'), 'airspace.exe'), fs.readFileSync(path.join(buildDir(), 'airspace.nw')));
+    var executable = fs.readFileSync(path.join(buildDir('windows'), 'nw.exe'));
+    var nwArchive = fs.readFileSync(path.join(buildDir(), 'airspace.nw'));
+    fs.writeFileSync(path.join(buildDir('windows'), 'airspace.exe'), Buffer.concat([ executable, nwArchive ]));
+    fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
 
     console.log('Wrote Windows version to: ' + buildDir('windows'));
   });
