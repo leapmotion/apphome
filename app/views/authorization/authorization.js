@@ -58,7 +58,7 @@ module.exports = BaseView.extend({
     this.$el.appendTo('body');
     this._center();
     oauth.logOut();
-    this.$waiting.removeClass('before').addClass('logout');
+    this._showLoggingOutMessage();
     if (connection.isConnected()) {
       var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
       $logoutFrame.load(function() {
@@ -75,13 +75,11 @@ module.exports = BaseView.extend({
 
   _waitForInternetConnection: function(cb) {
     if (connection.isConnected()) {
-      this.$noInternet.addClass('background');
-      this.$waiting.removeClass('background');
+      this._showConnectingMessage();
       this.authorize(cb);
     } else {
       this._center();
-      this.$waiting.addClass('background');
-      this.$noInternet.removeClass('background');
+      this._showNoInternetMessage();
       setTimeout(this._waitForInternetConnection.bind(this), 250);
     }
   },
@@ -108,15 +106,14 @@ module.exports = BaseView.extend({
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
-      this.$waiting.addClass('background');
-      this.$iframe.removeClass('background');
+      $('form#new_user', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
+      this._showLoginForm();
       this._center();
     }
   },
 
   _allowOauthAuthorization: function() {
-    this.$iframe.addClass('background');
-    this.$waiting.removeClass('background').removeClass('before').addClass('after');
+    this._showLoggingInMessage();
     var iframeWindow = this.$iframe.prop('contentWindow');
     var approveOauthInterval = setInterval(function() {
       var $approvalForm = $('form.approve', iframeWindow.document);
@@ -136,6 +133,34 @@ module.exports = BaseView.extend({
         oauth.getAccessToken(cb);
       }
     }.bind(this));
+  },
+
+  _showLoginForm: function() {
+    this.$noInternet.addClass('background');
+    this.$waiting.addClass('background');
+    this.$iframe.removeClass('background');
+  },
+
+  _showConnectingMessage: function() {
+    this.$noInternet.addClass('background');
+    this.$iframe.addClass('background');
+    this.$waiting.removeClass('background').removeClass('after').addClass('before');
+  },
+
+  _showLoggingInMessage: function() {
+    this.$noInternet.addClass('background');
+    this.$iframe.addClass('background');
+    this.$waiting.removeClass('background').removeClass('before').addClass('after');
+  },
+
+  _showNoInternetMessage: function() {
+    this.$iframe.addClass('background');
+    this.$waiting.addClass('background');
+    this.$noInternet.removeClass('background');
+  },
+
+  _showLoggingOutMessage: function() {
+    this.$waiting.removeClass('background').removeClass('before').addClass('logout');
   },
 
   _center: function() {
