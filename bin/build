@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+
+var archiver = require('archiver');
+var fs = require('fs-extra');
+var path = require('path');
+
+function buildDir(subdir) {
+  var buildDir = path.join(__dirname, '..', 'build', subdir || '');
+  if (!fs.existsSync(buildDir)) {
+    fs.mkdirSync(buildDir);
+  }
+  return buildDir;
+}
+
+function prodDependencies() {
+  var deps = Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'))).dependencies);
+  return deps.map(function(dep) {
+    return path.join('node_modules', dep);
+  });
+}
+
+var appManifest = [
+  'app/',
+  'bin/',
+  'config/',
+  'index.html',
+  'node-main.js',
+  'static/',
+  'package.json'
+].concat(prodDependencies());
+
+fs.deleteSync(path.join(__dirname, '..', 'build'));
+fs.mkdirSync(path.join(__dirname, '..', 'build'));
+
+var appZip = archiver('zip');
+var appZipOutputPath = path.join(buildDir(), 'airspace.nw');
+var output = fs.createWriteStream(appZipOutputPath);
+appZip.pipe(output);
+
+while (appManifest.length > 0) {
+  var fileToInclude = appManifest.shift();
+  var fullPath = path.join(__dirname, '..', fileToInclude);
+  if (fs.statSync(fullPath).isDirectory()) {
+    fs.readdirSync(fullPath).forEach(function(file) {
+      appManifest.push(path.join(fileToInclude, file));
+    });
+  } else {
+    console.log(fileToInclude);
+    appZip.append(fs.readFileSync(fullPath), { name: fileToInclude });
+  }
+}
+
+appZip.finalize(function(err, bytesWritten) {
+  if (err) {
+    throw err;
+  }
+
+  console.log(bytesWritten + ' total bytes written to ' + appZipOutputPath);
+
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-win-ia32'), buildDir('windows'), function(err) {
+    if (err) {
+      throw err;
+    }
+    fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
+    fs.renameSync(path.join(buildDir('windows'), 'nw.exe'), path.join(buildDir('windows'), 'airspace.exe'));
+    fs.appendFileSync(path.join(buildDir('windows'), 'airspace.exe'), fs.readFileSync(path.join(buildDir(), 'airspace.nw')));
+
+    console.log('Wrote Windows version to: ' + buildDir('windows'));
+  });
+
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), 'Airspace.app'), function(err) {
+    if (err) {
+      throw err;
+    }
+
+    fs.copy(appZipOutputPath, path.join(buildDir('osx'), 'Airspace.app', 'Contents', 'Resources', 'app.nw'), function(err) {
+      if (err) {
+        throw err;
+      }
+
+      var infoPlistPath = path.join(buildDir('osx'), 'Airspace.app', 'Contents', 'Info.plist');
+      var plist = fs.readFileSync(infoPlistPath, 'utf-8');
+      plist = plist.replace(/<key>CFBundleDisplayName<\/key>\s*<string>node-webkit<\/string>/, '<key>CFBundleDisplayName</key>\n\t<string>Airspace</string>');
+      fs.writeFileSync(infoPlistPath, plist);
+
+      console.log('Wrote OS X version to: ' + buildDir('osx'));
+    });
+  });
+});
