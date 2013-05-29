@@ -46,9 +46,6 @@ $tileW = 320px
       width $tileW+6
       z-index -2
 
-    .name
-      visibility visible
-
   .name-outer
     float right
     right 50%
@@ -59,7 +56,7 @@ $tileW = 320px
     float right
     right -50%
     position relative
-  
+
   h3
     color rgba(255,255,255,1)
     font-size 21px
@@ -67,9 +64,6 @@ $tileW = 320px
     float left
     margin 0
     text-align center
-
-  .name
-    visibility hidden
 
   .icon
     position: absolute;
