@@ -10,6 +10,15 @@ var shell = require('./shell.js');
 function extractZip(src, dest, cb) {
   var zip = new Zip(src);
   zip.extractAllTo(dest);
+  var extractedFiles = fs.readdirSync(dest);
+  if (extractedFiles.length === 1 && fs.statSync(path.join(dest, extractedFiles[0])).isDirectory()) {
+    // application has a single top-level directory, so pull the contents out of that
+    var topLevelDir = path.join(dest, extractedFiles[0]);
+    fs.readdirSync(topLevelDir).forEach(function(appFile) {
+      fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+    });
+    fs.rmdirSync(topLevelDir);
+  }
   cb(null);
 }
 
