@@ -61,7 +61,7 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    return 'b_' + (9999999999999 - (this.get('installedAt') || 9999999999999));
+    return 'b_' + (this.get('installedAt') || this.get('name'));
   },
 
   isLocalApp: function() {
