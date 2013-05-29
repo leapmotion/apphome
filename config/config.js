@@ -18,6 +18,8 @@ var config = {
 
   AppListingEndpoint: 'https://leap:200hands500fingers@warehouse-stage.leapmotion.com/api/apps/myapps?access_token=',
 
+  PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
+
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'
