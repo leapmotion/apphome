@@ -19,10 +19,23 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
 
-var pubnub = require('pubnub').init({
-  subscribe_key: config.PubnubSubscribeKey,
-  ssl: true
-});
+var subscribe = (function() {
+  var pubnub = require("pubnub").init({
+      subscribe_key : config.PubnubSubscribeKey,
+      ssl           : true
+  });
+  var subscribed = {};
+  // Don't subscribe to the same channel more than once
+  return function(channel, callback) {
+    if (subscribed[channel] === callback) return;
+    subscribed[channel] = callback;
+
+    pubnub.subscribe({
+      channel: channel,
+      callback: callback
+    });
+  };
+})();
 
 function createAppModel(appJson) {
   var cleanAppJson = {
@@ -73,17 +86,11 @@ function handleAppJson(appJson, noAutoInstall) {
 }
 
 function subscribeToUserChannel(userId) {
-  pubnub.subscribe({
-    channel: userId + '.user.purchased',
-    callback: handleAppJson
-  });
+  subscribe(userId + '.user.purchased', handleAppJson);
 }
 
 function subscribeToAppChannel(appId) {
-  pubnub.subscribe({
-    channel: appId + '.app.updated',
-    callback: handleAppJson
-  });
+  subscribe(appId + '.app.updated', handleAppJson);
 }
 
 function connectToStoreServer(cb) {
