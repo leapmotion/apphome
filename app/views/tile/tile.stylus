@@ -85,7 +85,7 @@ $tileW = 320px
     overflow hidden
     -webkit-user-drag none
 
-  .message
+  .message .installing, .message .downloading, .message .spinner
     display none
     width 100%
 
@@ -147,7 +147,13 @@ $tileW = 320px
       z-index: 1000*/
 
   &.installing
-    .progress, .message
+    .message .installing, .message .spinner
+      display block
+    .name
+      display none
+
+  &.downloading
+    .progress, .message .downloading, .message .spinner
       display block
     .name
       display none

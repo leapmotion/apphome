@@ -92,7 +92,6 @@ module.exports = LeapApp.extend({
     var startingCollection = (uiGlobals.uninstalledApps.get(this.get('id')) ? uiGlobals.uninstalledApps : uiGlobals.availableDownloads);
     startingCollection.remove(this);
     uiGlobals.installedApps.add(this);
-    this.set('state', LeapApp.States.Installing);
 
     var downloadProgress = this._downloadBinary(function(err) {
       if (err) {
@@ -127,8 +126,9 @@ module.exports = LeapApp.extend({
 
   _downloadBinary: function(cb) {
     var binaryUrl = this.get('binaryUrl');
+    this.set('state', LeapApp.States.Downloading);
     return download.get(binaryUrl, function(err, tempFilename) {
-      console.log('Downloading app from ' + binaryUrl + ' to: ' + tempFilename);
+      this.set('state', LeapApp.States.Installing);
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cb);
       } else if (os.platform() === 'darwin') {

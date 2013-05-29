@@ -13,6 +13,7 @@ var BaseModel = require('./base-model.js');
 
 var LeapAppStates = enumerable.make([
   'NotYetInstalled',
+  'Downloading',
   'Installing',
   'Ready',
   'Uninstalling',

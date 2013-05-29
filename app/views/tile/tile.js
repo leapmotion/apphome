@@ -61,7 +61,7 @@ module.exports = BaseView.extend({
 
     this.$el.attr('tile_id', leapApp.id);
 
-    new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -30, top: 3 }).spin(this.$('.message')[0]);
+    new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -32, top: 4 }).spin(this.$('.message')[0]);
 
     this._setupDragging();
   },
