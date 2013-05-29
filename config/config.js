@@ -59,7 +59,6 @@ var config = {
     emptyMessageHeight: 32
   },
 
-  ServerPollIntervalMs: 15 * 1000, // 15 seconds
   FsScanIntervalMs: 60 * 60 * 1000, // 1 hour
   AuthLoadTimeoutMs: 10 * 1000, // 10 seconds
 

@@ -94,10 +94,7 @@ AppController.prototype = {
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    this._pollServerForUpdates();
-    setInterval(function() {
-      this._pollServerForUpdates(true);
-    }.bind(this), config.ServerPollIntervalMs);
+    this._connectToStoreServer();
   },
 
   _logOut: function() {
@@ -157,31 +154,13 @@ AppController.prototype = {
     });
   },
 
-  _pollServerForUpdates: function(installApps) {
-    api.storeApps(function(err, apps) {
-      if (!err) {
-        apps.forEach(function(app) {
-          if (uiGlobals.installedApps.get(app.get('id')) ||
-              uiGlobals.uninstalledApps.get(app.get('id'))) {
-            return;
-          } else if (!installApps || app.isUpgrade()) {
-            var existingUpgrade = uiGlobals.availableDownloads.findWhere({ appId: app.get('appId') });
-            if (existingUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), existingUpgrade.get('version'))) {
-              uiGlobals.availableDownloads.remove(existingUpgrade);
-              uiGlobals.availableDownloads.add(app);
-            } else if (!existingUpgrade) {
-              uiGlobals.availableDownloads.add(app);
-            }
-          } else {
-            console.log('installing app: ' + app.get('name'));
-            uiGlobals.installedApps.add(app);
-            app.install(function(err) {
-              err && console.log('Failed to install app', app.get('name'), err.message);
-            });
-          }
-        });
+  _connectToStoreServer: function() {
+    api.connectToStoreServer(function(err) {
+      if (err) {
+        // retry
+        setTimeout(this._connectToStoreServer.bind(this), 1000);
       }
-    });
+    }.bind(this));
   }
 
 };
