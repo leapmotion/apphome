@@ -76,8 +76,8 @@ function storeApps(cb) {
         resp.on('end', function() {
           try {
             var apps = JSON.parse(appListParts.join('')).map(function(appJson) {
-              if (appJson.userid) {
-                setUser(appJson.userid);
+              if (appJson.user_id) {
+                setUser(appJson.user_id);
                 return null;
               } else {
                 pubnub.subscribe({
