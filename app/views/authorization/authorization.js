@@ -178,8 +178,19 @@ module.exports = BaseView.extend({
   },
 
   remove: function() {
-    this.$iframe.unbind();
     $(window).unbind('resize', this._boundIframeCenteringFn);
+
+    // Workaround for strange bug on OS X where everything freezes
+    // if the spinner gets removed... try commenting out these
+    // lines and log out / log in again, you'll see what I mean.
+    var $spinner = this.$('.spinner');
+    $spinner.appendTo('body');
+    $spinner.css({
+      position: 'absolute',
+      left: -10000,
+      visibility: 'hidden'
+    });
+
     this.$el.remove();
   }
 
