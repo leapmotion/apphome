@@ -29,29 +29,31 @@ module.exports = BaseView.extend({
     this._center();
     this.$el.toggleClass('first-run', this._isFirstRun());
 
-    if (connection.isConnected()) {
-      this.$iframe.attr('src', oauth.getAuthorizationUrl());
+    connection.check(function(isConnected) {
+      if (isConnected) {
+        this.$iframe.attr('src', oauth.getAuthorizationUrl());
 
-      var loadTimeoutId = setTimeout(function() {
-        console.warn('Connecting auth to server timed out.');
-        cb(new Error('Connection to login server timed out.'));
-      }.bind(this), config.AuthLoadTimeoutMs);
+        var loadTimeoutId = setTimeout(function() {
+          console.warn('Connecting auth to server timed out.');
+          cb(new Error('Connection to login server timed out.'));
+        }.bind(this), config.AuthLoadTimeoutMs);
 
-      this.$iframe.load(function() {
-        clearTimeout(loadTimeoutId);
-        try {
-          this._performActionBasedOnUrl(this.$iframe.prop('contentWindow').location.href, cb);
-        } catch (err2) {
-          cb(err2);
-        }
-      }.bind(this));
-    } else {
-      if (!oauth.getRefreshToken()) {
-        this._waitForInternetConnection(cb);
+        this.$iframe.load(function() {
+          clearTimeout(loadTimeoutId);
+          try {
+            this._performActionBasedOnUrl(this.$iframe.prop('contentWindow').location.href, cb);
+          } catch (err2) {
+            cb(err2);
+          }
+        }.bind(this));
       } else {
-        cb(null, null);
+        if (!oauth.getRefreshToken()) {
+          this._waitForInternetConnection(cb);
+        } else {
+          cb(null, null);
+        }
       }
-    }
+    }.bind(this));
   },
 
   logOut: function(cb) {
@@ -59,14 +61,16 @@ module.exports = BaseView.extend({
     this._center();
     oauth.logOut();
     this._showLoggingOutMessage();
-    if (connection.isConnected()) {
-      var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
-      $logoutFrame.load(function() {
-        $logoutFrame.remove();
-        cb(null);
-      })
-      $logoutFrame.appendTo('body');
-    }
+    connection.check(function(isConnected) {
+      if (isConnected) {
+        var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
+        $logoutFrame.load(function() {
+          $logoutFrame.remove();
+          cb(null);
+        })
+        $logoutFrame.appendTo('body');
+      }
+    }.bind(this));
   },
 
   _isFirstRun: function() {
@@ -74,14 +78,16 @@ module.exports = BaseView.extend({
   },
 
   _waitForInternetConnection: function(cb) {
-    if (connection.isConnected()) {
-      this._showConnectingMessage();
-      this.authorize(cb);
-    } else {
-      this._center();
-      this._showNoInternetMessage();
-      setTimeout(this._waitForInternetConnection.bind(this), 250);
-    }
+    connection.check(function(isConnected) {
+      if (isConnected) {
+        this._showConnectingMessage();
+        this.authorize(cb);
+      } else {
+        this._center();
+        this._showNoInternetMessage();
+        setTimeout(this._waitForInternetConnection.bind(this), 250);
+      }
+    }.bind(this));
   },
 
   _performActionBasedOnUrl: function(url, cb) {

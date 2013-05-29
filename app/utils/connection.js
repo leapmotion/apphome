@@ -1,17 +1,21 @@
 var dns = require('dns');
 
-var isConnected = true;
+var MinPollingIntervalMs = 5000;
+var lastCheck;
+var lastIsConnected;
 
-function checkInternetConnection() {
-  var domain = Math.round(Math.random() * 99999999999) + '.leapmotion.com';
-  dns.resolve(domain, function(err) {
-    isConnected = (!err || err.code === dns.NOTFOUND);
-    setTimeout(checkInternetConnection, 10000);
-  });
+function checkInternetConnection(cb) {
+  if (lastCheck && (new Date()).getTime() - lastCheck < MinPollingIntervalMs) {
+    cb && cb(lastIsConnected);
+  } else {
+    var domain = Math.round(Math.random() * 99999999999) + '.leapmotion.com';
+    dns.resolve(domain, function(err) {
+      lastCheck = (new Date()).getTime();
+      lastIsConnected = !err || err.code === dns.NOTFOUND;
+      console.log(lastIsConnected ? 'Internet!' : 'No internet. :(');
+      cb && cb(lastIsConnected);
+    });
+  }
 }
 
-checkInternetConnection();
-
-module.exports.isConnected = function() {
-  return isConnected;
-};
+module.exports.check = checkInternetConnection;
