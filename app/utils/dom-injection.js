@@ -6,7 +6,7 @@ function appendScript(src) {
   $('body').append('<script src="' + src + '"></script>');
 }
 
-function appendScriptTag(href) {
+function appendStylesheet(href) {
   $('body').append('<link rel="stylesheet" type="text/css" href="' + href + '"/>');
 }
 
@@ -29,5 +29,5 @@ function applyStylus(path) {
 }
 
 module.exports.appendScript = appendScript;
-module.exports.appendScriptTag = appendScriptTag;
+module.exports.appendStylesheet = appendStylesheet;
 module.exports.applyStylus = applyStylus;

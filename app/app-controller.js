@@ -23,8 +23,6 @@ AppController.prototype = {
 
   setupWindow: function() {
     this._createMenu();
-
-    // TODO: persist window dimensions when user resizes it, and restore that size on launch
     nwGui.Window.get().maximize();
   },
 

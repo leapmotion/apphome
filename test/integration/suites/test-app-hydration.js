@@ -1,4 +1,5 @@
 var integrationTest = require('../integration-test.js');
+var config = require('../../../config/config.js');
 var db = require('../../../app/utils/db.js');
 var leapAppFactory = require('../../support/leap-app-factory.js');
 
@@ -14,14 +15,13 @@ if (global.isRunningTest()) {
   }));
   leapApps.push(leapAppFactory.localAppData());
   leapApps.push(leapAppFactory.storeAppData());
-  db.setItem('installed_apps', JSON.stringify(leapApps));
+  db.setItem(config.DbKeys.InstalledApps, JSON.stringify(leapApps));
 }
 
 
 integrationTest.runInApp(__filename, function() {
 
   describe('apps hydrated', function() {
-
     it('should create leapApp models from persisted data', function() {
       assert.ok(uiGlobals.installedApps.length >  3, 'should add models to central leapApp collection');
       var expected = uiGlobals.installedApps.find(function(leapApp) {

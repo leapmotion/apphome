@@ -30,12 +30,12 @@ $(window).load(function() {
   console.info('\n\nInjecting Mocha and Test Scripts:\n' + scripts.join('\n'));
 
   $('body').append('<div id="mocha"/>');
-  window.$('body').append(scripts.map(function(src) {
-    return '<script src="' + src + '"></script>';
-  }).join('\n'));
+  scripts.forEach(function(src) {
+    $('<script src="' + src + '"></script>').appendTo('body');
+  });
 
   stylesheets.forEach(function(src) {
-    domInjection.appendScriptTag(src);
+    domInjection.appendStylesheet(src);
   });
 
   var mocha = new Mocha();

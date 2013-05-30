@@ -34,7 +34,7 @@ function runInApp(fileName, testFn) {
 }
 
 function setupLeapHomeTestApp(fileName, testFn) {
-  console.info('Starting leaphome to run integration test: ' + fileName);
+  console.info('Starting app to run integration test: ' + fileName);
   var reportServer;
   var allDone, isComplete;
 
