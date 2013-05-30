@@ -5,14 +5,17 @@
   background -webkit-radial-gradient(center center, circle cover, #f8faf8, #e8eae8)
 
   .leap-graphic
-    width 1232px
-    height 442px
-    margin 10% auto 20px
     background url(static/images/plug-in-device.png)
+    background-repeat no-repeat
+    background-size contain
+    height 442px
+    margin 5% auto 20px
+    max-width 1232px
+    width 100%
 
   .skip-button-holder
     position absolute
-    bottom 20px
+    bottom 50px
     width 100%
 
     .skip-button
