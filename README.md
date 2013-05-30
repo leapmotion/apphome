@@ -2,12 +2,6 @@
 
 ### Running (dev mode)
 
-Mac / Linux:
-
-    bin/airspace
-
-Windows:
-
     node bin/airspace
 
 ### Testing
@@ -16,7 +10,7 @@ Windows:
 
 ### Building
 
-    bin/build
+    node bin/build
 
 Outputs to: <code>build/</code>
 
