@@ -103,7 +103,6 @@ module.exports = BaseView.extend({
   _initCarouselLinks: function() {
     _(this._linkMapping).each(function(carousel, selector) {
       this.$(selector).click(function(evt) {
-        evt.stopPropagation();
         if (!$(selector).hasClass('current')) {
           this._switchToCarousel(carousel);
           this.$('.carousel-link').removeClass('current');

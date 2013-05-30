@@ -81,7 +81,6 @@ var CarouselView = BaseView.extend({
           $dot.addClass('current');
         }
         $dot.click(function(evt) {
-          evt.stopPropagation();
           if (!this._animating && !$dot.hasClass('current')) {
             this._switchToSlide(Number($dot.attr('slide_index')));
           }

@@ -41,7 +41,6 @@ module.exports = BaseView.extend({
     }, this);
 
     this.$el.click(function(evt) {
-      evt.stopPropagation();
       if (leapApp.isInstallable()) {
         var downloadModal = new DownloadModalView({
           leapApp: leapApp,
@@ -72,7 +71,13 @@ module.exports = BaseView.extend({
     if (leapApp.isUninstallable()) {
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
-        dataTransfer.setDragImage($('<img width="96" height="96" src="' + leapApp.get('iconPath') + '"/>')[0], 96, 96);
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('width', 96);
+        canvas.setAttribute('height', 96);
+        canvas.getContext('2d').drawImage(this.$('.icon')[0], 0, 0, 96, 96);
+        var dragImage = document.createElement('img');
+        dragImage.setAttribute('src', canvas.toDataURL());
+        dataTransfer.setDragImage(dragImage, 96, 96);
         dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
       }.bind(this));
     } else {
