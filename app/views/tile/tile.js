@@ -45,7 +45,7 @@ module.exports = BaseView.extend({
         var downloadModal = new DownloadModalView({
           leapApp: leapApp,
           onConfirm: function() {
-            upgradeModal.remove();
+            downloadModal.remove();
             leapApp.install();
           }
         });
