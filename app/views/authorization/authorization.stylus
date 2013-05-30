@@ -1,41 +1,60 @@
 .authorization
-  width 100%
-  height 100%
   background -webkit-radial-gradient(center center, circle cover, #f8faf8, #e8eae8)
+  height 100%
+  width 100%
 
   .first-run-background
-    visibility hidden
     background url(static/images/create-account-bg.png)
-    position relative
-    width 1184px
     height 434px
+    position relative
+    visibility hidden
+    width 1184px
 
   &.first-run .first-run-background
     visibility visible
 
-  iframe.oauth, .no-internet
-    position absolute
-    width 350px
-    height 570px
-    overflow hidden
-    margin 0
-    margin-top -5%
+  iframe.oauth, .no-internet, .leap-logo-box
+    background white
     border 1px solid #ddd
     border-radius 8px
     box-shadow 1px 1px 6px rgba(0, 0, 0, 0.2)
-    background white
+    height 570px
+    margin 0
+    margin-top -5%
+    position absolute
+    overflow hidden
+    width 350px
+
 
   .waiting
-    position absolute
-    width 300px
+    margin-top -5%
     height 300px
+    position absolute
+    width 350px
+
+    .leap-logo-box
+      margin-top 0
+      border-color white
+      height 96px
+      padding 50px 0
+      position static
+
+      .leap-logo
+        background url(static/images/leap-logo.png)
+        display block
+        height 96px
+        margin 0 auto
+        width 200px
+
+    .spinner-holder
+      margin-top 65px
 
     .message
       display none
-      text-align center
-      margin-top 50px
-      font-style italic
       font-size 20px
+      font-style italic
+      margin-top 100px
+      text-align center
 
     &.before
       .message.before
@@ -50,29 +69,29 @@
         display block
 
   .no-internet
-    text-align center
-    padding 20px
-    height 270px
-    color #444
     background -webkit-radial-gradient(center center, circle cover, #f0f0f0, #fdfdfd)
+    color #444
+    height 270px
+    padding 20px
+    text-align center
 
     h2
-      font-size 32px
-      padding-bottom 10px
       border-bottom 1px solid #e8e8e8
-      margin 10px 20px 0
+      font-size 32px
       font-weight normal
+      margin 10px 20px 0
+      padding-bottom 10px
 
     .icon
       background url(static/images/wifi-icon.png)
+      height 82px
       margin 30px auto
       width 82px
-      height 82px
 
     .instruction
       font-size 20px
       margin 0 50px
 
   .background
-    top: -1000px !important
     left: -1000px !important
+    top: -1000px !important
