@@ -35,7 +35,8 @@ fs.deleteSync(path.join(__dirname, '..', 'build'));
 fs.mkdirSync(path.join(__dirname, '..', 'build'));
 
 var appZip = archiver('zip');
-var appZipOutputPath = path.join(buildDir(), 'airspace.nw');
+var archiveName = packageJson.name + '.nw';
+var appZipOutputPath = path.join(buildDir(), archiveName);
 var output = fs.createWriteStream(appZipOutputPath);
 appZip.pipe(output);
 
@@ -56,6 +57,11 @@ while (appManifest.length > 0) {
   }
 }
 
+function changePlistString(plist, key, newValue) {
+  var searchRegex = new RegExp('(<key>' + key + '<\\/key>\\s*<string>)[^<]*(<\\/string>)');
+  return plist.replace(searchRegex, '$1' + newValue + '$2');
+}
+
 appZip.finalize(function(err, bytesWritten) {
   if (err) {
     throw err;
@@ -69,26 +75,29 @@ appZip.finalize(function(err, bytesWritten) {
     }
     fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
     var executable = fs.readFileSync(path.join(buildDir('windows'), 'nw.exe'));
-    var nwArchive = fs.readFileSync(path.join(buildDir(), 'airspace.nw'));
-    fs.writeFileSync(path.join(buildDir('windows'), 'airspace.exe'), Buffer.concat([ executable, nwArchive ]));
+    var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
+    fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
     fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
 
     console.log('Wrote Windows version to: ' + buildDir('windows'));
   });
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), 'Airspace.app'), function(err) {
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
     if (err) {
       throw err;
     }
 
-    fs.copy(appZipOutputPath, path.join(buildDir('osx'), 'Airspace.app', 'Contents', 'Resources', 'app.nw'), function(err) {
+    fs.copy(appZipOutputPath, path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'app.nw'), function(err) {
       if (err) {
         throw err;
       }
 
-      var infoPlistPath = path.join(buildDir('osx'), 'Airspace.app', 'Contents', 'Info.plist');
+      var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
       var plist = fs.readFileSync(infoPlistPath, 'utf-8');
-      plist = plist.replace(/<key>CFBundleDisplayName<\/key>\s*<string>node-webkit<\/string>/, '<key>CFBundleDisplayName</key>\n\t<string>Airspace</string>');
+      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.name);
+      plist = changePlistString(plist, 'CFBundleName', packageJson.name);
+      plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
+      plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
       fs.writeFileSync(infoPlistPath, plist);
 
       console.log('Wrote OS X version to: ' + buildDir('osx'));
