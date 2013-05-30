@@ -117,40 +117,44 @@ AppController.prototype = {
   },
 
   _scanFilesystem: function() {
-    var fsScanner = new FsScanner(api.localApps());
-
-    var existingLocalAppsById = {};
-    var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
-    allApps.forEach(function(app) {
-      if (app.isLocalApp()) {
-        existingLocalAppsById[app.get('id')] = app;
+    api.getLocalAppManifest(function(err, manifest) {
+      if (err) {
+        return;
       }
-    });
 
-    fsScanner.scan(function(err, apps) {
-      if (!err) {
-        apps.forEach(function(app) {
-          console.log(app.get('name'));
-          if (existingLocalAppsById[app.get('id')]) {
-            delete existingLocalAppsById[app.get('id')];
-            return;
-          }
-          console.log('installing app: ' + app.get('name'));
-          uiGlobals.installedApps.add(app);
-          app.install(function(err) {
-            err && console.log('Failed to install app', app.get('name'), err.message);
-          });
-        });
+      var existingLocalAppsById = {};
+      var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
+      allApps.forEach(function(app) {
+        if (app.isLocalApp()) {
+          existingLocalAppsById[app.get('id')] = app;
+        }
+      });
 
-        // the remaining ones are apps we previously detected but weren't found in this last scan,
-        // which means they were uninstalled and need to be removed from the launcher
-        _(existingLocalAppsById).forEach(function(app){
-          app.uninstall(true, function() {
-            uiGlobals.uninstalledApps.remove(app.get('id'));
-            app.save(); // HACK, depends on app.save saving the whole collection
+      var fsScanner = new FsScanner(manifest);
+      fsScanner.scan(function(err, apps) {
+        if (!err) {
+          apps.forEach(function(app) {
+            if (existingLocalAppsById[app.get('id')]) {
+              delete existingLocalAppsById[app.get('id')];
+              return;
+            }
+            console.log('Found new local app: ' + app.get('name'));
+            uiGlobals.installedApps.add(app);
+            app.install(function(err) {
+              err && console.log('Failed to install app: ', app.get('name'), err.message);
+            });
           });
-        });
-      }
+
+          // the remaining ones are apps we previously detected but weren't found in this last scan,
+          // which means they were uninstalled and need to be removed from the launcher
+          _(existingLocalAppsById).forEach(function(app){
+            app.uninstall(true, function() {
+              uiGlobals.uninstalledApps.remove(app.get('id'));
+              app.save(); // HACK, depends on app.save saving the whole collection
+            });
+          });
+        }
+      });
     });
   },
 
@@ -158,8 +162,8 @@ AppController.prototype = {
     api.connectToStoreServer(function(err) {
       if (err) {
         // retry
-        console.log('Failed to connect to app store.' + (err.stack ? err.stack : err));
-        setTimeout(this._connectToStoreServer.bind(this), 1000);
+        console.log('Failed to connect to app store.' + (err.stack || err.message || JSON.stringify(err)));
+        setTimeout(this._connectToStoreServer.bind(this), config.ServerConnectRetryMs);
       }
     }.bind(this));
   }

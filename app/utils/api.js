@@ -8,9 +8,6 @@ var oauth = require('./oauth.js');
 
 var StoreLeapApp = require('../models/store-leap-app.js');
 
-// TODO: real data
-var FakeLocalAppData = require('../../config/local-apps.js');
-
 var NodePlatformToServerPlatform = {
   'darwin': 'osx',
   'win32': 'windows'
@@ -22,8 +19,8 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
 
 var subscribe = (function() {
   var pubnub = require("pubnub").init({
-      subscribe_key : config.PubnubSubscribeKey,
-      ssl           : true
+    subscribe_key: config.PubnubSubscribeKey,
+    ssl: true
   });
   var subscribed = {};
   // Don't subscribe to the same channel more than once
@@ -37,6 +34,31 @@ var subscribe = (function() {
     });
   };
 })();
+
+function getJson(url, cb) {
+  var protocolModule = (/^https:/.test(url) ? https : http);
+  var responseParts = [];
+  return protocolModule.get(url, function(resp) {
+    resp.on('data', function(chunk) {
+      responseParts.push(chunk);
+    });
+    resp.on('end', function() {
+      try {
+        var response = responseParts.join('');
+        cb && cb(null, JSON.parse(response));
+      } catch(err) {
+        cb && cb(err);
+      } finally {
+        cb = null;
+      }
+    });
+
+    resp.on('error', function(err) {
+      cb && cb(err);
+      cb = null;
+    });
+  });
+}
 
 function createAppModel(appJson) {
   var cleanAppJson = {
@@ -59,7 +81,6 @@ function createAppModel(appJson) {
 }
 
 function handleAppJson(appJson, noAutoInstall) {
-  console.log(JSON.stringify(appJson, null, 2));
   var app = createAppModel(appJson);
   if (app) {
     if (uiGlobals.installedApps.get(app.get('id')) ||
@@ -100,38 +121,27 @@ function connectToStoreServer(cb) {
     if (err) {
       cb && cb(err);
     } else {
-      var responseParts = [];
-      var protocolModule = (/^https:/.test(config.AppListingEndpoint) ? https : http);
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
-      var req = protocolModule.get(apiEndpoint, function(resp) {
-        resp.on('data', function(chunk) {
-          responseParts.push(chunk);
-        });
-        resp.on('end', function() {
-          try {
-            var parsedServerResponse = JSON.parse(responseParts.join(''));
-            parsedServerResponse.forEach(function(message) {
-              if (message.user_id) {
-                subscribeToUserChannel(message.user_id);
-              } else {
-                var app = handleAppJson(message, true);
-                if (app) {
-                  subscribeToAppChannel(app.get('appId'));
-                }
-              }
-            });
-            cb && cb(null);
-            cb = null;
-          } catch(err) {
-            cb && cb(err);
-            cb = null;
-          }
-        });
-        resp.on('error', function(err){
+      var req = getJson(apiEndpoint, function(err, messages) {
+        if (err) {
           cb && cb(err);
           cb = null;
-        });
+        } else {
+          messages.forEach(function(message) {
+            console.log('Connected to store server.');
+            if (message.user_id) {
+              subscribeToUserChannel(message.user_id);
+            } else {
+              var app = handleAppJson(message, true);
+              if (app) {
+                subscribeToAppChannel(app.get('appId'));
+              }
+            }
+          });
+          cb && cb(null);
+          cb = null;
+        }
       });
 
       req.on('error', function(err) {
@@ -142,9 +152,21 @@ function connectToStoreServer(cb) {
   });
 }
 
-function localApps() {
-  return FakeLocalAppData[os.platform()] || [];
+function getLocalAppManifest(cb) {
+  var req = getJson(config.LocalAppManifestUrl, function(err, manifest) {
+    if (err) {
+      cb && cb(err);
+    } else {
+      cb && cb(null, manifest[NodePlatformToServerPlatform[os.platform()]] || []);
+    }
+    cb = null;
+  });
+
+  req.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
-module.exports.localApps = localApps;
+module.exports.getLocalAppManifest = getLocalAppManifest;

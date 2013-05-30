@@ -20,6 +20,8 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
+  LocalAppManifestUrl: 'https://gist.github.com/paulbaumgart/881a98757dcde29fde79/raw/85a97868924e29ef6212a9f2abf43707b58a6e9e/gistfile1.json',
+
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'
@@ -59,6 +61,7 @@ var config = {
     emptyMessageHeight: 32
   },
 
+  ServerConnectRetryMs: 30 * 1000, // 30 seconds
   FsScanIntervalMs: 60 * 60 * 1000, // 1 hour
   AuthLoadTimeoutMs: 10 * 1000, // 10 seconds
 
