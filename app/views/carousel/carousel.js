@@ -32,6 +32,13 @@ var CarouselView = BaseView.extend({
     this._updateEmptyState();
     this._updateSlideIndicator();
     this._initAddRemoveRepainting();
+
+    $('body').mousedown(function(evt) {
+      if (this._isActive) {
+        this._lastMouseDownEvent = evt.originalEvent;
+      }
+    }.bind(this));
+    $('body').mouseup(this._handlePotentialSwipe.bind(this));
   },
 
   _initAddRemoveRepainting: function() {
@@ -148,6 +155,10 @@ var CarouselView = BaseView.extend({
       slideNum = this._slides.length - 1;
     }
 
+    if (slideNum === this._currentSlideIndex) {
+      return;
+    }
+
     this._slides.forEach(function(slideView) {
       slideView.disable();
     });
@@ -180,6 +191,33 @@ var CarouselView = BaseView.extend({
     }
   },
 
+  _handlePotentialSwipe: function(evt) {
+    if (!this._lastMouseDownEvent) {
+      return;
+    }
+    var startPos = {
+      x: this._lastMouseDownEvent.x,
+      y: this._lastMouseDownEvent.y
+    };
+    var endPos = {
+      x: evt.originalEvent.x,
+      y: evt.originalEvent.y
+    };
+
+    var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
+    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 50 &&
+        Math.abs(Math.atan(slope)) < Math.PI / 4) {
+      // Treat it as a swipe if the angle is less than 45 degrees from horizontal.
+      if (endPos.x > startPos.x) {
+        // swipe to the right
+        this._switchToSlide(this._currentSlideIndex - 1);
+      } else {
+        // swipe to the left
+        this._switchToSlide(this._currentSlideIndex + 1);
+      }
+    }
+  },
+
   rescale: function() {
     this._positionSlides();
     var $emptyMessage = this.$('.empty-message');
@@ -196,6 +234,16 @@ var CarouselView = BaseView.extend({
 
   isEmpty: function() {
     return this.collection.length === 0;
+  },
+
+  show: function() {
+    this._isActive = true;
+    this.$el.show();
+  },
+
+  hide: function() {
+    this._isActive = false;
+    this.$el.hide();
   }
 
 });

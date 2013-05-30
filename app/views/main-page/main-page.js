@@ -24,14 +24,16 @@ module.exports = BaseView.extend({
       emptyMessage: 'New downloads and upgrades will appear here.',
       position: 0
     });
-    this.$('#downloads').append(this.downloadsCarousel.$el.hide());
+    this.downloadsCarousel.hide();
+    this.$('#downloads').append(this.downloadsCarousel.$el);
     this._linkMapping['#downloads-link'] = this.downloadsCarousel;
 
     this.installedAppsCarousel = new Carousel({
       collection: uiGlobals.installedApps,
       position: 1
     });
-    this.$('#my-apps').append(this.installedAppsCarousel.$el.hide());
+    this.installedAppsCarousel.hide();
+    this.$('#my-apps').append(this.installedAppsCarousel.$el);
     this._linkMapping['#my-apps-link'] = this.installedAppsCarousel;
 
     this.uninstalledAppsCarousel = new Carousel({
@@ -39,7 +41,8 @@ module.exports = BaseView.extend({
       emptyMessage: 'Uninstalled apps will appear here.',
       position: 2
     });
-    this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el.hide());
+    this.uninstalledAppsCarousel.hide();
+    this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el);
     this._linkMapping['#uninstalled-link'] = this.uninstalledAppsCarousel;
 
     this.listenTo(uiGlobals.availableDownloads, 'add remove', function() {
@@ -62,10 +65,10 @@ module.exports = BaseView.extend({
 
       newCarousel.setTop(coefficient * windowHeight);
       if (!newCarousel.isEmpty()) {
-        newCarousel.$el.show();
+        newCarousel.show();
       }
       if (currentCarousel.isEmpty()) {
-        currentCarousel.$el.hide();
+        currentCarousel.hide();
       }
       new window.TWEEN.Tween({ x: 0, y: 0 })
           .to({ x: windowHeight }, 500)
@@ -76,8 +79,8 @@ module.exports = BaseView.extend({
           }).onComplete(function() {
             animating = false;
             currentCarousel.setTop(0);
-            newCarousel.$el.show();
-            currentCarousel.$el.hide();
+            newCarousel.show();
+            currentCarousel.hide();
             this._currentCarousel = newCarousel;
           }.bind(this)).start();
 
@@ -90,10 +93,10 @@ module.exports = BaseView.extend({
       animate();
     } else {
       if (this._currentCarousel) {
-        this._currentCarousel.$el.hide();
+        this._currentCarousel.hide();
       }
       this._currentCarousel = newCarousel;
-      this._currentCarousel.$el.show();
+      this._currentCarousel.show();
     }
   },
 
