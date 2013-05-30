@@ -1,6 +1,6 @@
 $borderColor = #3a3e48
 
-.upgrade-modal
+.download-modal
   position absolute
   top 0
   left 0
@@ -83,7 +83,7 @@ $borderColor = #3a3e48
           background linear-gradient(top, #a2d16e 0%, #82b544 50%, #71a859 100%)
           float right
 
-          &.update
+          &.upgrade
             background-color #60aee5 /* layer fill content */
             background-image -webkit-linear-gradient(bottom, #478cc4 0%, #6cbaeb 100%) /* gradient overlay */
             background-image linear-gradient(bottom, #478cc4 0%, #6cbaeb 100%) /* gradient overlay */

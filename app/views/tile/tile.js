@@ -3,7 +3,7 @@ var Spinner = require('spin');
 var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
-var UpgradeModalView = require('../upgrade-modal/upgrade-modal.js');
+var DownloadModalView = require('../download-modal/download-modal.js');
 
 module.exports = BaseView.extend({
   viewDir: __dirname,
@@ -42,14 +42,14 @@ module.exports = BaseView.extend({
 
     this.$el.click(function() {
       if (leapApp.isInstallable()) {
-        var upgradeModal = new UpgradeModalView({
+        var downloadModal = new DownloadModalView({
           leapApp: leapApp,
           onConfirm: function() {
             upgradeModal.remove();
             leapApp.install();
           }
         });
-        upgradeModal.show();
+        downloadModal.show();
       } else if (leapApp.isRunnable()) {
         this.$el.addClass('launching');
         leapApp.launch();

@@ -6,14 +6,21 @@ module.exports = BaseView.extend({
 
   viewDir: __dirname,
 
-  className: 'upgrade-modal',
+  className: 'download-modal',
 
   initialize: function() {
+    var leapApp = this.options.leapApp;
+
     this.injectCss();
-    this.$el.append($(this.templateHtml({ app: this.options.leapApp.toJSON() })));
+    this.$el.append($(this.templateHtml({ app: leapApp.toJSON() })));
 
     this.$('.button.cancel').click(this.remove.bind(this));
-    this.$('.button.confirm').click(this.options.onConfirm);
+    this.$('.button.confirm').hide().click(this.options.onConfirm);
+    if (leapApp.isUpgrade()) {
+      this.$('.button.confirm.upgrade').show();
+    } else {
+      this.$('.button.confirm.install').show();
+    }
   },
 
   show: function() {
