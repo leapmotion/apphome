@@ -148,8 +148,6 @@ var CarouselView = BaseView.extend({
       slideNum = this._slides.length - 1;
     }
 
-    console.log('switching to slide #' + slideNum + ' from #' + this._currentSlideIndex);
-
     this._slides.forEach(function(slideView) {
       slideView.disable();
     });

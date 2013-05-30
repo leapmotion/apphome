@@ -187,11 +187,10 @@ module.exports = BaseView.extend({
     $(window).unbind('resize', this._boundIframeCenteringFn);
 
     // Workaround for strange bug on OS X where everything freezes
-    // if the spinner gets removed... try commenting out these
+    // if the waiting view gets removed... try commenting out these
     // lines and log out / log in again, you'll see what I mean.
-    var $spinner = this.$('.spinner');
-    $spinner.appendTo('body');
-    $spinner.css({
+    this.$waiting.appendTo('body');
+    this.$waiting.css({
       position: 'absolute',
       left: -10000,
       visibility: 'hidden'
