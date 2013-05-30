@@ -128,8 +128,8 @@ function connectToStoreServer(cb) {
           cb && cb(err);
           cb = null;
         } else {
+          console.log('Connected to store server.');
           messages.forEach(function(message) {
-            console.log('Connected to store server.');
             if (message.user_id) {
               subscribeToUserChannel(message.user_id);
             } else {
