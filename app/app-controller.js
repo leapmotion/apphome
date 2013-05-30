@@ -158,6 +158,7 @@ AppController.prototype = {
     api.connectToStoreServer(function(err) {
       if (err) {
         // retry
+        console.log('Failed to connect to app store.' + (err.stack ? err.stack : err));
         setTimeout(this._connectToStoreServer.bind(this), 1000);
       }
     }.bind(this));

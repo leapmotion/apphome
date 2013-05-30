@@ -1,6 +1,7 @@
 var http = require('http');
 var https = require('https');
 var os = require('os');
+var qs = require('querystring');
 
 var config = require('../../config/config.js');
 var oauth = require('./oauth.js');
@@ -58,6 +59,7 @@ function createAppModel(appJson) {
 }
 
 function handleAppJson(appJson, noAutoInstall) {
+  console.log(JSON.stringify(appJson, null, 2));
   var app = createAppModel(appJson);
   if (app) {
     if (uiGlobals.installedApps.get(app.get('id')) ||
@@ -101,7 +103,7 @@ function connectToStoreServer(cb) {
       var responseParts = [];
       var protocolModule = (/^https:/.test(config.AppListingEndpoint) ? https : http);
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
-      var apiEndpoint = config.AppListingEndpoint + accessToken + '&platform=' + platform;
+      var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
       var req = protocolModule.get(apiEndpoint, function(resp) {
         resp.on('data', function(chunk) {
           responseParts.push(chunk);
