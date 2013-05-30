@@ -12,6 +12,7 @@ var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package
 packageJson.window.toolbar = false;
 var pngIconPath = path.join.apply(path, [ __dirname, '..' ].concat(packageJson.window.icon.split('/')));
 var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
+var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
 
 function buildDir(subdir) {
   var buildDir = path.join(__dirname, '..', 'build', subdir || '');
@@ -117,8 +118,8 @@ appZip.finalize(function(err, bytesWritten) {
         throw err;
       }
 
-      var icon = fs.readFileSync(pngIconPath);
-      fs.writeFileSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'icon.png'));
+      var icon = fs.readFileSync(icnsIconPath);
+      fs.writeFileSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', packageJson.name + '.icns'), icon);
       fs.unlinkSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
 
       var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
@@ -127,7 +128,7 @@ appZip.finalize(function(err, bytesWritten) {
       plist = changePlistString(plist, 'CFBundleName', packageJson.name);
       plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
       plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
-      plist = changePlistString(plist, 'CFBundleIconFile', 'icon.png');
+      plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
       fs.writeFileSync(infoPlistPath, plist);
 
       console.log('Wrote OS X version to: ' + buildDir('osx'));
