@@ -7,6 +7,7 @@
   "chromium-args": "--disable-accelerated-layers",
   "window": {
     "title": "Airspace",
+    "icon": "static/icon.png",
     "show": false,
     "toolbar": true,
     "min_width": 932,

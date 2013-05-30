@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 var archiver = require('archiver');
+var exec = require('child_process').exec;
 var fs = require('fs-extra');
+var os = require('os');
 var path = require('path');
+
+var shell = require('../app/utils/shell.js');
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
 packageJson.window.toolbar = false;
+var pngIconPath = path.join.apply(path, [ __dirname, '..' ].concat(packageJson.window.icon.split('/')));
+var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 
 function buildDir(subdir) {
   var buildDir = path.join(__dirname, '..', 'build', subdir || '');
@@ -24,12 +30,15 @@ function prodDependencies() {
 
 var appManifest = [
   'app/',
-  'bin/',
   'config/',
   'index.html',
   'node-main.js',
   'static/',
 ].concat(prodDependencies());
+
+if (os.platform() === 'win32') {
+  appManifest.push('bin/IconExtractor.exe');
+}
 
 fs.deleteSync(path.join(__dirname, '..', 'build'));
 fs.mkdirSync(path.join(__dirname, '..', 'build'));
@@ -69,18 +78,34 @@ appZip.finalize(function(err, bytesWritten) {
 
   console.log(bytesWritten + ' total bytes written to ' + appZipOutputPath);
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-win-ia32'), buildDir('windows'), function(err) {
-    if (err) {
-      throw err;
-    }
-    fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
-    var executable = fs.readFileSync(path.join(buildDir('windows'), 'nw.exe'));
-    var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
-    fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
-    fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
+  if (os.platform() === 'win32') {
+    fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-win-ia32'), buildDir('windows'), function(err) {
+      if (err) {
+        throw err;
+      }
+      fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
+      var exePath = path.join(buildDir('windows'), 'nw.exe');
+      var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
+      var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
+      console.log(clearIconCommand);
+      exec(clearIconCommand, function(err) {
+        console.log(setIconCommand);
+        exec(setIconCommand, function(err) {
+          if (err) {
+            throw err;
+          }
+          var executable = fs.readFileSync(exePath);
+          var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
+          fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
+          fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
 
-    console.log('Wrote Windows version to: ' + buildDir('windows'));
-  });
+          console.log('Wrote Windows version to: ' + buildDir('windows'));
+        });
+      });
+    });
+  } else {
+    console.log('Building for Windows must be done on Windows, unfortunately.');
+  }
 
   fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
     if (err) {
@@ -92,12 +117,17 @@ appZip.finalize(function(err, bytesWritten) {
         throw err;
       }
 
+      var icon = fs.readFileSync(pngIconPath);
+      fs.writeFileSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'icon.png'));
+      fs.unlinkSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
+
       var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
       var plist = fs.readFileSync(infoPlistPath, 'utf-8');
       plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.name);
       plist = changePlistString(plist, 'CFBundleName', packageJson.name);
       plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
       plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
+      plist = changePlistString(plist, 'CFBundleIconFile', 'icon.png');
       fs.writeFileSync(infoPlistPath, plist);
 
       console.log('Wrote OS X version to: ' + buildDir('osx'));
