@@ -5,10 +5,13 @@
 
   .first-run-background
     background url(static/images/create-account-bg.png)
+    background-repeat no-repeat
+    background-size contain
     height 434px
     position relative
+    max-width 1184px
     visibility hidden
-    width 1184px
+    width 100%
 
   &.first-run .first-run-background
     visibility visible
