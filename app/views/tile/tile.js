@@ -40,7 +40,8 @@ module.exports = BaseView.extend({
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
     }, this);
 
-    this.$el.click(function() {
+    this.$el.click(function(evt) {
+      evt.stopPropagation();
       if (leapApp.isInstallable()) {
         var downloadModal = new DownloadModalView({
           leapApp: leapApp,

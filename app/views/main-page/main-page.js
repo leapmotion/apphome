@@ -72,7 +72,7 @@ module.exports = BaseView.extend({
       }
       new window.TWEEN.Tween({ x: 0, y: 0 })
           .to({ x: windowHeight }, 500)
-          .easing(window.TWEEN.Easing.Linear.None)
+          .easing(window.TWEEN.Easing.Quartic.Out)
           .onUpdate(function() {
             newCarousel.setTop(coefficient * (windowHeight - this.x));
             currentCarousel.setTop(-coefficient * this.x);
@@ -102,7 +102,8 @@ module.exports = BaseView.extend({
 
   _initCarouselLinks: function() {
     _(this._linkMapping).each(function(carousel, selector) {
-      this.$(selector).click(function() {
+      this.$(selector).click(function(evt) {
+        evt.stopPropagation();
         if (!$(selector).hasClass('current')) {
           this._switchToCarousel(carousel);
           this.$('.carousel-link').removeClass('current');
