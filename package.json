@@ -4,7 +4,7 @@
   "description": "LeapMotion desktop client",
   "main": "index.html",
   "node-main": "node-main.js",
-  "window-todo": "replace width & height with fullscreen: true",
+  "chromium-args": "--disable-accelerated-layers",
   "window": {
     "title": "Airspace",
     "show": false,
