@@ -20,7 +20,7 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  LocalAppManifestUrl: 'https://gist.github.com/paulbaumgart/881a98757dcde29fde79/raw/85a97868924e29ef6212a9f2abf43707b58a6e9e/gistfile1.json',
+  LocalAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/local-app-manifest.json',
 
   AppSubdir: {
     AppIcons: 'app_icons',
