@@ -129,6 +129,9 @@ module.exports = LeapApp.extend({
     var binaryUrl = this.get('binaryUrl');
     this.set('state', LeapApp.States.Downloading);
     return download.get(binaryUrl, function(err, tempFilename) {
+      if (err) {
+        return cb(err);
+      }
       this.set('state', LeapApp.States.Installing);
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cb);

@@ -20,13 +20,9 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
 });
 
 var subscribe = (function() {
-  var pubnub = require('pubnub').init({
-    subscribe_key: config.PubnubSubscribeKey,
-    ssl: true
-  });
   var subscribed = {};
   var pubnubDomain = domain.create();
-  pubnubDomain.on('error', function() {
+  pubnubDomain.on('error', function(err) {
     Object.keys(subscribed).forEach(function(channel) {
       try {
         pubnub.unsubscribe({ channel: channel });
@@ -35,25 +31,35 @@ var subscribe = (function() {
       }
     });
     subscribed = {};
-    connectToStoreServer();
+    reconnectAfterError(err);
   });
+
+  var pubnub;
+  pubnubDomain.run(function() {
+    pubnub = require('pubnub').init({
+      subscribe_key: config.PubnubSubscribeKey,
+      ssl: true
+    });
+  });
+
   // Don't subscribe to the same channel more than once
   return function(channel, callback) {
-    if (subscribed[channel] === callback) return;
-    subscribed[channel] = callback;
+    if (subscribed[channel] !== callback) {
+      subscribed[channel] = callback;
 
-    pubnubDomain.run(function() {
-      pubnub.subscribe({
-        channel: channel,
-        callback: function(data) {
-          try {
-            callback(JSON.parse(data));
-          } catch (e) {
-            console.error('failed to parse pubsub response for', channel, data, e);
+      pubnubDomain.run(function() {
+        pubnub.subscribe({
+          channel: channel,
+          callback: function(data) {
+            try {
+              callback(JSON.parse(data));
+            } catch (e) {
+              console.error('failed to parse pubsub response for', channel, data, e);
+            }
           }
-        }
+        });
       });
-    });
+    }
   };
 })();
 
@@ -117,12 +123,12 @@ function handleAppJson(appJson, noAutoInstall) {
       uninstalledApps.remove(upgradableUninstalledApp);
       uninstalledApps.add(app);
     } else if (noAutoInstall || app.isUpgrade()) {
-      var existingUpgrade = availableDownloads.findWhere({ appId: app.get('appId') });
-      if (existingUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), existingUpgrade.get('version'))) {
+      var existingDownload = availableDownloads.findWhere({ appId: app.get('appId') });
+      if (existingDownload && semver.isFirstGreaterThanSecond(app.get('version'), existingDownload.get('version'))) {
         // replace the older upgrade if a new one comes in
-        availableDownloads.remove(existingUpgrade);
+        availableDownloads.remove(existingDownload);
         availableDownloads.add(app);
-      } else if (!existingUpgrade) {
+      } else if (!existingDownload) {
         // add a new download
         availableDownloads.add(app);
       }
@@ -146,12 +152,17 @@ function subscribeToAppChannel(appId) {
   subscribe(appId + '.app.updated', handleAppJson);
 }
 
+var reconnectionTimeoutId;
 function reconnectAfterError(err) {
-  console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err.stack ? err.stack : err);
-  setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
+  console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
+  if (!reconnectionTimeoutId) {
+    reconnectionTimeoutId = setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
+  }
 }
 
 function connectToStoreServer(cb) {
+  reconnectionTimeoutId = null;
+
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       reconnectAfterError(err);

@@ -25,8 +25,11 @@ var LeapApp = BaseModel.extend({
   initialize: function() {
     if (!this.get('state')) {
       this.set('state', LeapApp.States.NotYetInstalled);
-    } else if (this.get('state') === LeapApp.States.Installing) {
+    } else if (this.get('state') === LeapApp.States.Installing ||
+               this.get('state') === LeapApp.States.Downloading) {
       this.set('state', LeapApp.States.NotYetInstalled);
+      uiGlobals.installedApps.remove(this);
+      uiGlobals.availableDownloads.add(this);
     } else if (this.get('state') === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }

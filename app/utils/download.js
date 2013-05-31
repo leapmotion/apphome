@@ -23,13 +23,13 @@ DownloadProgressStream.prototype.setTotalBytes = function(totalBytes) {
   this._totalBytes = Number(totalBytes);
 }
 
-DownloadProgressStream.prototype.listenTo = function(resp) {
-  resp.on('data', function(chunk) {
+DownloadProgressStream.prototype.listenTo = function(res) {
+  res.on('data', function(chunk) {
     this._bytesSoFar += chunk.length;
     this.emit('progress', this._bytesSoFar / this._totalBytes);
   }.bind(this));
 
-  resp.on('end', function() {
+  res.on('end', function() {
     this.emit('end');
   }.bind(this));
 }
@@ -57,6 +57,11 @@ function getFile(sourceUrl, destPath, cb) {
     cb = null;
   });
 
+  destStream.on('close', function() {
+    cb && cb(null, destPath);
+    cb = null;
+  });
+
   var protocolModule;
   if (url.parse(sourceUrl).protocol === 'https:') {
     protocolModule = https;
@@ -68,12 +73,13 @@ function getFile(sourceUrl, destPath, cb) {
     progressStream.setTotalBytes(res.headers['content-length']);
     progressStream.listenTo(res);
 
-    res.pipe(destStream);
-    destStream.on('close', function() {
-      cb && cb(null, destPath);
+    res.on('error', function(err) {
+      cb && cb(err);
       cb = null;
     });
+    res.pipe(destStream);
   });
+
   req.on('error', function(err) {
     cb && cb(err);
     cb = null;
