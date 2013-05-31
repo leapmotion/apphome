@@ -41,7 +41,7 @@ module.exports = LeapApp.extend({
 
   _downloadIcon: function(cb) {
     var iconUrl = this.get('iconUrl');
-    download.getWithFallback(iconUrl, this.standardIconPath(), config.Defaults.IconPath, function(err, iconPathOrFallback) {
+    download.getWithFallback(iconUrl, this.standardIconPath(), '', function(err, iconPathOrFallback) {
       this.set('iconPath', iconPathOrFallback);
       cb && cb(null);
     }.bind(this));

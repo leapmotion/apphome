@@ -47,7 +47,6 @@ var config = {
   ],
 
   Defaults: {
-    IconPath: staticImage('icons', 'default-icon.png'),
     TilePath: staticImage('tiles', 'default-tile.png')
   },
 

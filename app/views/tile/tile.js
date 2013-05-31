@@ -13,7 +13,7 @@ module.exports = BaseView.extend({
     this.injectCss();
     var leapApp = args.leapApp;
     var templateData = _.extend({
-      iconPath: config.Defaults.IconPath,
+      iconPath: '',
       tilePath: config.Defaults.TilePath
     }, leapApp.toJSON());
     this.setElement($(this.templateHtml(templateData)));
@@ -21,6 +21,10 @@ module.exports = BaseView.extend({
 
     if (leapApp.isUpgrade()) {
       this.$el.addClass('upgrade');
+    }
+
+    if (!leapApp.get('iconPath')) {
+      this.$('.icon').hide();
     }
 
     this.listenTo(leapApp, 'change:state', function() {
@@ -34,7 +38,12 @@ module.exports = BaseView.extend({
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      this.$('.icon').attr('src', leapApp.get('iconPath'));
+      var newIconPath = leapApp.get('tilePath');
+      if (newIconPath) {
+        this.$('.icon').attr('src', newIconPath).show();
+      } else {
+        this.$('.icon').hide();
+      }
     }, this);
 
     this.listenTo(leapApp, 'progress', function(progress) {
