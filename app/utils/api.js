@@ -31,7 +31,13 @@ var subscribe = (function() {
 
     pubnub.subscribe({
       channel: channel,
-      callback: callback
+      callback: function(data) {
+        try {
+          callback(JSON.parse(data));
+        } catch (e) {
+          console.error('failed to parse pubsub response for', channel, data, e);
+        }
+      }
     });
   };
 })();
