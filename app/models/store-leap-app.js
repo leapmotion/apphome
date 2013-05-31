@@ -98,19 +98,19 @@ module.exports = LeapApp.extend({
         this._abortInstallation(startingCollection);
         return cb && cb(err);
       }
-      this._findExecutable(function(err, executable) {
-        if (err) {
-          this._abortInstallation(startingCollection);
-          return cb && cb(err);
-        }
-        var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
-        if (fs.existsSync(dependenciesReadmePath)) {
-          nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
-        }
-        this.set('executable', executable);
-        this.set('state', LeapApp.States.Ready);
-        cb && cb(null);
-      }.bind(this));
+      var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
+      if (fs.existsSync(dependenciesReadmePath)) {
+        nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
+      }
+      var executable;
+      if (os.platform() === 'win32') {
+        executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+      } else {
+        executable = this._appDir();
+      }
+      this.set('executable', executable);
+      this.set('state', LeapApp.States.Ready);
+      cb && cb(null);
     }.bind(this));
 
     downloadProgress.on('progress', function(progress) {
@@ -214,26 +214,6 @@ module.exports = LeapApp.extend({
       this[attributeName] = dir;
     }
     return dir;
-  },
-
-  _findExecutable: function(cb) {
-    var executable;
-    if (os.platform() === 'win32') {
-      executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
-      cb(null, executable);
-    } else if (os.platform() === 'darwin') {
-      cb
-      var infoPlistPath = path.join(this._appDir(), 'Contents', 'Info.plist');
-      plist.parseFile(infoPlistPath, function(err, parsedPlist) {
-        if (err) {
-          return cb(err);
-        }
-        executable = path.join(this._appDir(), 'Contents', 'MacOS', parsedPlist.CFBundleExecutable);
-        cb(null, executable);
-      }.bind(this));
-    } else {
-      cb(new Error('Unknown platform: ' + os.platform()));
-    }
   }
 
 });
