@@ -91,7 +91,7 @@ AppController.prototype = {
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    this._connectToStoreServer();
+    api.connectToStoreServer();
   },
 
   _logOut: function() {
@@ -153,16 +153,6 @@ AppController.prototype = {
         }
       });
     });
-  },
-
-  _connectToStoreServer: function() {
-    api.connectToStoreServer(function(err) {
-      if (err) {
-        // retry
-        console.log('Failed to connect to app store.' + (err.stack || err.message || JSON.stringify(err)));
-        setTimeout(this._connectToStoreServer.bind(this), config.ServerConnectRetryMs);
-      }
-    }.bind(this));
   }
 
 };

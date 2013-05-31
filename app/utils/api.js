@@ -1,3 +1,4 @@
+var domain = require('domain');
 var http = require('http');
 var https = require('https');
 var os = require('os');
@@ -19,25 +20,39 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
 });
 
 var subscribe = (function() {
-  var pubnub = require("pubnub").init({
+  var pubnub = require('pubnub').init({
     subscribe_key: config.PubnubSubscribeKey,
     ssl: true
   });
   var subscribed = {};
+  var pubnubDomain = domain.create();
+  pubnubDomain.on('error', function() {
+    Object.keys(subscribed).forEach(function(channel) {
+      try {
+        pubnub.unsubscribe({ channel: channel });
+      } catch (e) {
+        console.warn('Could not unsubscribe from channel: ' + channel);
+      }
+    });
+    subscribed = {};
+    connectToStoreServer();
+  });
   // Don't subscribe to the same channel more than once
   return function(channel, callback) {
     if (subscribed[channel] === callback) return;
     subscribed[channel] = callback;
 
-    pubnub.subscribe({
-      channel: channel,
-      callback: function(data) {
-        try {
-          callback(JSON.parse(data));
-        } catch (e) {
-          console.error('failed to parse pubsub response for', channel, data, e);
+    pubnubDomain.run(function() {
+      pubnub.subscribe({
+        channel: channel,
+        callback: function(data) {
+          try {
+            callback(JSON.parse(data));
+          } catch (e) {
+            console.error('failed to parse pubsub response for', channel, data, e);
+          }
         }
-      }
+      });
     });
   };
 })();
@@ -123,17 +138,21 @@ function subscribeToAppChannel(appId) {
   subscribe(appId + '.app.updated', handleAppJson);
 }
 
-function connectToStoreServer(cb) {
+function reconnectAfterError(err) {
+  console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err.stack ? err.stack : err);
+  setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
+}
+
+function connectToStoreServer() {
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
-      cb && cb(err);
+      reconnectAfterError(err);
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
       var req = getJson(apiEndpoint, function(err, messages) {
         if (err) {
-          cb && cb(err);
-          cb = null;
+          reconnectAfterError(err);
         } else {
           console.log('Connected to store server.');
           messages.forEach(function(message) {
@@ -146,15 +165,10 @@ function connectToStoreServer(cb) {
               }
             }
           });
-          cb && cb(null);
-          cb = null;
         }
       });
 
-      req.on('error', function(err) {
-        cb && cb(err);
-        cb = null;
-      });
+      req.on('error', reconnectAfterError);
     }
   });
 }
