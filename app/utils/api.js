@@ -5,6 +5,7 @@ var qs = require('querystring');
 
 var config = require('../../config/config.js');
 var oauth = require('./oauth.js');
+var semver = require('./utils/semver.js');
 
 var StoreLeapApp = require('../models/store-leap-app.js');
 

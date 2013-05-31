@@ -7,7 +7,6 @@ var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
-var semver = require('./utils/semver.js');
 
 var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
