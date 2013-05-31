@@ -95,7 +95,7 @@ module.exports = LeapApp.extend({
 
     var downloadProgress = this._downloadBinary(function(err) {
       if (err) {
-        this._abortInstallation(startingCollection);
+        this._abortInstallation(startingCollection, err);
         return cb && cb(err);
       }
       var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
@@ -118,7 +118,8 @@ module.exports = LeapApp.extend({
     }.bind(this));
   },
 
-  _abortInstallation: function(previousCollection) {
+  _abortInstallation: function(previousCollection, err) {
+    console.warn('Installation failed:', err.stack);
     uiGlobals.installedApps.remove(this);
     this.set('state', LeapApp.States.NotYetInstalled);
     previousCollection.add(this);
@@ -142,44 +143,33 @@ module.exports = LeapApp.extend({
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
 
-    var deletionFunctions = [
-      function(callback) {
-        fs.remove(this._appDir(), callback);
-      }.bind(this)
-    ];
-
-    if (deleteUserData) {
-      deletionFunctions.push(function(callback) {
-        fs.remove(this._userDataDir(), callback);
-      }.bind(this));
+    try {
+      fs.removeSync(this._appDir());
+    } catch(err) {
+      this.set('state', LeapApp.States.Ready);
+      console.warn("Can't uninstall, app is probably running.");
+      return;
     }
 
-    if (deleteIconAndTile) {
-      if (fs.existsSync(this.standardIconPath())) {
-        deletionFunctions.push(function(callback) {
-          fs.unlink(this.standardIconPath(), callback);
-        }.bind(this));
+    try {
+      if (deleteUserData) {
+        fs.removeSync(this._userDataDir());
       }
 
-      if (fs.existsSync(this.standardTilePath())) {
-        deletionFunctions.push(function(callback) {
-          fs.unlink(this.standardTilePath(), callback);
-        }.bind(this));
+      if (deleteIconAndTile) {
+        fs.removeSync(this.standardIconPath());
+        fs.removeSync(this.standardTilePath());
       }
+      return cb && cb(null);
+    } catch (err) {
+      console.warn('Failed to uninstall app:', err.stack);
+      return cb && cb(err);
+    } finally {
+      uiGlobals.installedApps.remove(this);
+      uiGlobals.uninstalledApps.add(this);
+      this.set('installedAt', null);
+      this.set('state', LeapApp.States.Uninstalled);
     }
-
-    async.parallel(deletionFunctions, function(err) {
-      if (err) {
-        this.set('state', LeapApp.States.Uninstalled);
-        return cb && cb(err);
-      } else {
-        uiGlobals.installedApps.remove(this);
-        uiGlobals.uninstalledApps.add(this);
-        this.set('installedAt', null);
-        this.set('state', LeapApp.States.Uninstalled);
-        return cb && cb(null);
-      }
-    }.bind(this));
   },
 
   _appDir: function() {

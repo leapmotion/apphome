@@ -1,5 +1,6 @@
 var Spinner = require('spin');
 
+var api = require('../../utils/api.js');
 var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
@@ -42,12 +43,38 @@ module.exports = BaseView.extend({
 
     this.$el.click(function(evt) {
       if (leapApp.isInstallable()) {
-        var downloadModal = new DownloadModalView({
-          leapApp: leapApp,
-          onConfirm: function() {
+        var onConfirm;
+        var downloadModal;
+
+        if (leapApp.isStoreApp()) {
+          var shouldInstall;
+          var polledServer;
+          function maybeInstallApp() {
+            if (polledServer && shouldInstall) {
+              leapApp.install(function() {
+                this._setupDragging();
+              }.bind(this));
+            }
+          }
+          api.connectToStoreServer(function() {
+            polledServer = true;
+            maybeInstallApp.call(this);
+          }.bind(this));
+
+          onConfirm = function() {
+            downloadModal.remove();
+            shouldInstall = true;
+            maybeInstallApp.call(this);
+          };
+        } else {
+          onConfirm = function() {
             downloadModal.remove();
             leapApp.install();
-          }
+          };
+        }
+        downloadModal = new DownloadModalView({
+          leapApp: leapApp,
+          onConfirm: onConfirm.bind(this)
         });
         downloadModal.show();
       } else if (leapApp.isRunnable()) {

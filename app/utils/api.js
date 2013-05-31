@@ -105,23 +105,31 @@ function createAppModel(appJson) {
 function handleAppJson(appJson, noAutoInstall) {
   var app = createAppModel(appJson);
   if (app) {
-    if (uiGlobals.installedApps.get(app.get('id')) ||
-        uiGlobals.uninstalledApps.get(app.get('id'))) {
-      // app already exists, so ignore it
-      return;
+    var availableDownloads = uiGlobals.availableDownloads;
+    var installedApps = uiGlobals.installedApps;
+    var uninstalledApps = uiGlobals.uninstalledApps;
+    var existingApp = availableDownloads.get(app.get('id')) || installedApps.get(app.get('id')) || uninstalledApps.get(app.get('id'));
+    var upgradableUninstalledApp = uninstalledApps.findWhere({ appId: app.get('appId') });
+    if (existingApp) {
+      existingApp.set('binaryUrl', app.get('binaryUrl'));
+    } else if (upgradableUninstalledApp && semver.isFirstGreaterThanSecond(app.get('version'), upgradableUninstalledApp.get('version'))) {
+      // upgrade to an uninstalled app
+      uninstalledApps.remove(upgradableUninstalledApp);
+      uninstalledApps.add(app);
     } else if (noAutoInstall || app.isUpgrade()) {
-      var existingUpgrade = uiGlobals.availableDownloads.findWhere({ appId: app.get('appId') });
+      var existingUpgrade = availableDownloads.findWhere({ appId: app.get('appId') });
       if (existingUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), existingUpgrade.get('version'))) {
         // replace the older upgrade if a new one comes in
-        uiGlobals.availableDownloads.remove(existingUpgrade);
-        uiGlobals.availableDownloads.add(app);
+        availableDownloads.remove(existingUpgrade);
+        availableDownloads.add(app);
       } else if (!existingUpgrade) {
         // add a new download
-        uiGlobals.availableDownloads.add(app);
+        availableDownloads.add(app);
       }
     } else {
+      // new app to install
       console.log('installing app: ' + app.get('name'));
-      uiGlobals.installedApps.add(app);
+      installedApps.add(app);
       app.install(function(err) {
         err && console.log('Failed to install app', app.get('name'), err.message);
       });
@@ -143,16 +151,20 @@ function reconnectAfterError(err) {
   setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
 }
 
-function connectToStoreServer() {
+function connectToStoreServer(cb) {
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       reconnectAfterError(err);
+      cb && cb(err);
+      cb = null;
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
       var req = getJson(apiEndpoint, function(err, messages) {
         if (err) {
           reconnectAfterError(err);
+          cb && cb(err);
+          cb = null;
         } else {
           console.log('Connected to store server.');
           messages.forEach(function(message) {
@@ -165,10 +177,16 @@ function connectToStoreServer() {
               }
             }
           });
+          cb && cb(null);
+          cb = null;
         }
       });
 
-      req.on('error', reconnectAfterError);
+      req.on('error', function(err) {
+        reconnectAfterError(err);
+        cb && cb(err);
+        cb = null;
+      });
     }
   });
 }

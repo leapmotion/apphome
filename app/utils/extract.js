@@ -22,7 +22,6 @@ function extractZip(src, dest, cb) {
     }
     cb(null);
   } catch (err) {
-    console.warn(err.stack);
     cb(err);
   }
 }
