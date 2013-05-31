@@ -9,14 +9,24 @@ function staticImage(subdir, name) {
 var config = {
 
   oauth: {
-    endpoint: 'http://stage7.leapmotion.com/oauth/',
+    endpoint: 'https://central-stage.leapmotion.com/oauth/',
     client_id: '73fde9aa45ef818ecb137aeacd886253',
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
-    redirect_uri: 'http://leapweb-stage7.herokuapp.com/',
-    log_out_url: 'http://stage7.leapmotion.com/users/sign_out'
+    redirect_uri: 'https://central-stage.leapmotion.com/',
+    log_out_url: 'https://central-stage.leapmotion.com/users/sign_out'
   },
 
-  AppListingEndpoint: 'https://leap:200hands500fingers@warehouse-stage.leapmotion.com/api/apps/myapps',
+  applistingendpoint: 'https://leap:200hands500fingers@warehouse-stage.leapmotion.com/api/apps/myapps',
+
+  /*oauth: {
+    endpoint: 'https://central.leapmotion.com/oauth/',
+    client_id: '73fde9aa45ef818ecb137aeacd886253',
+    client_key: '8daf22818f30f4a9f86201d1b276b39c',
+    redirect_uri: 'https://central.leapmotion.com/',
+    log_out_url: 'https://central.leapmotion.com/users/sign_out'
+  },
+
+  applistingendpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',*/
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
@@ -33,7 +43,7 @@ var config = {
       tilePath:  staticImage('tiles', 'store-tile.png'),
       iconPath:  staticImage('icons', 'store-icon.png'),
       launchCallback: function() {
-        nwGui.Shell.openExternal('https://apps.leapmotion.com/');
+        nwGui.Shell.openExternal('https://airspace.leapmotion.com/');
       }
     },
     {
