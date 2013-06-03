@@ -38,7 +38,7 @@ module.exports = BaseView.extend({
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      var newIconPath = leapApp.get('tilePath');
+      var newIconPath = leapApp.get('iconPath');
       if (newIconPath) {
         this.$('.icon').attr('src', newIconPath).show();
       } else {
