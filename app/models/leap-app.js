@@ -28,8 +28,10 @@ var LeapApp = BaseModel.extend({
     } else if (this.get('state') === LeapApp.States.Installing ||
                this.get('state') === LeapApp.States.Downloading) {
       this.set('state', LeapApp.States.NotYetInstalled);
-      uiGlobals.installedApps.remove(this);
-      uiGlobals.availableDownloads.add(this);
+      process.nextTick(function() {
+        uiGlobals.installedApps.remove(this);
+        uiGlobals.availableDownloads.add(this);
+      }.bind(this));
     } else if (this.get('state') === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }
