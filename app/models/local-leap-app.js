@@ -60,7 +60,6 @@ module.exports = LeapApp.extend({
         this.set('executable', this.get('keyFile'));
       }
       this.set('iconPath', err ? '' : this.standardIconPath());
-      this.set('tilePath', config.Defaults.TilePath);
       this.set('state', LeapApp.States.Ready);
       cb && cb(null);
     }
