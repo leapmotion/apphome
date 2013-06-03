@@ -9,6 +9,7 @@ var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
 var StoreLeapApp = require('../models/store-leap-app.js');
+var WebLinkApp = require('../models/web-link-app.js');
 
 var NodePlatformToServerPlatform = {
   'darwin': 'osx',
@@ -202,12 +203,35 @@ function connectToStoreServer(cb) {
   });
 }
 
+function createWebLinkApps(webAppData) {
+  webAppData = webAppData || [];
+  var existingWebAppsById = {};
+  var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
+  allApps.forEach(function(app) {
+    if (app.isWebLinkApp()) {
+      existingWebAppsById[app.get('id')] = app;
+    }
+  });
+  webAppData.forEach(function(webAppDatum) {
+    var webApp = new WebLinkApp(webAppDatum);
+    if (!existingWebAppsById[webApp.get('id')]) {
+      uiGlobals.installedApps.add(webApp);
+      console.log('Added web link: ', webApp.get('urlToLaunch'));
+      webApp.save();
+    }
+  });
+}
+
 function getLocalAppManifest(cb) {
-  var req = getJson(config.LocalAppManifestUrl, function(err, manifest) {
+  var req = getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
     if (err) {
+      console.error('Failed to get app manifest: ' + err && err.stack);
       cb && cb(err);
     } else {
-      cb && cb(null, manifest[NodePlatformToServerPlatform[os.platform()]] || []);
+      createWebLinkApps(manifest.web);
+
+      var platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
+      cb && cb(null, platformApps);
     }
     cb = null;
   });

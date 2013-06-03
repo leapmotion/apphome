@@ -5,6 +5,7 @@ var os = require('os');
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
+var download = require('../utils/download.js');
 var enumerable = require('../utils/enumerable.js');
 var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
@@ -59,10 +60,7 @@ var LeapApp = BaseModel.extend({
 
   save: function() {
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
-    var installedAppsToPersist = uiGlobals.installedApps.filter(function(app) {
-      return !app.isBuiltinTile();
-    });
-    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(_(installedAppsToPersist).invoke('toJSON')));
+    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(uiGlobals.installedApps.toJSON()));
     db.setItem(config.DbKeys.UninstalledApps, JSON.stringify(uiGlobals.uninstalledApps.toJSON()))
   },
 
@@ -75,6 +73,10 @@ var LeapApp = BaseModel.extend({
   },
 
   isStoreApp: function() {
+    return false;
+  },
+
+  isWebLinkApp: function() {
     return false;
   },
 
@@ -136,6 +138,24 @@ var LeapApp = BaseModel.extend({
 
   standardTilePath: function() {
     return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
+  },
+
+  downloadIcon: function(cb) {
+    var iconUrl = this.get('iconUrl');
+    download.getWithFallback(iconUrl, this.standardIconPath(), '', function(err, iconPathOrFallback) {
+      this.set('iconPath', iconPathOrFallback);
+      this.save();
+      cb && cb(null);
+    }.bind(this));
+  },
+
+  downloadTile: function(cb) {
+    var tileUrl = this.get('tileUrl');
+    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
+      this.set('tilePath', tilePathOrFallback);
+      this.save();
+      cb && cb(null);
+    }.bind(this));
   }
 
 });
@@ -143,6 +163,7 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
+  console.log(db.getItem(config.DbKeys.InstalledApps));
   uiGlobals.installedApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
   uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(config.DbKeys.UninstalledApps) || '[]'));
 };

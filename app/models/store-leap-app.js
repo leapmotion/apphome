@@ -29,30 +29,14 @@ module.exports = LeapApp.extend({
 
   initialize: function() {
     if (!this.get('iconPath')) {
-      this._downloadIcon();
+      this.downloadIcon();
     }
 
     if (!this.get('tilePath')) {
-      this._downloadTile();
+      this.downloadTile();
     }
 
     LeapApp.prototype.initialize.apply(this, arguments);
-  },
-
-  _downloadIcon: function(cb) {
-    var iconUrl = this.get('iconUrl');
-    download.getWithFallback(iconUrl, this.standardIconPath(), '', function(err, iconPathOrFallback) {
-      this.set('iconPath', iconPathOrFallback);
-      cb && cb(null);
-    }.bind(this));
-  },
-
-  _downloadTile: function(cb) {
-    var tileUrl = this.get('tileUrl');
-    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
-      this.set('tilePath', tilePathOrFallback);
-      cb && cb(null);
-    }.bind(this));
   },
 
   isStoreApp: function() {

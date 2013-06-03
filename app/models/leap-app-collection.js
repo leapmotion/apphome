@@ -1,13 +1,13 @@
 var LocalLeapApp = require('./local-leap-app.js');
 var StoreLeapApp = require('./store-leap-app.js');
-var BuiltinTileApp = require('./builtin-tile-app.js');
+var WebLinkApp = require('./web-link-app.js');
 
 module.exports = window.Backbone.Collection.extend({
 
   model: function(attrs, options) {
     console.info('Building leapApp model from attribs ' + JSON.stringify(attrs));
-    if (attrs.isBuiltin) {
-      return new BuiltinTileApp(attrs, options);
+    if (attrs.urlToLaunch) {
+      return new WebLinkApp(attrs, options);
     } else if (attrs.appId) {
       return new StoreLeapApp(attrs, options);
     } else if (attrs.name) {

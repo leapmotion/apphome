@@ -8,7 +8,6 @@ var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
 
-var BuiltinTileApp = require('./models/builtin-tile-app.js');
 var LeapApp = require('./models/leap-app.js');
 
 var AuthorizationView = require('./views/authorization/authorization.js');
@@ -42,7 +41,6 @@ AppController.prototype = {
   },
 
   restoreModels: function() {
-    BuiltinTileApp.createBuiltinTiles();
     LeapApp.hydrateCachedModels();
   },
 

@@ -23,7 +23,7 @@ function writeXml(authId, token) {
       }
       fs.writeFileSync(outputPath, generateXml(authId, token));
     } catch (err) {
-      console.error('Cannot write DRM XML for platform: ' + err.stack);
+      console.error('Cannot write DRM XML: ' + err.stack);
     }
   } else {
     console.error('Cannot write DRM XML for platform: ' + os.platform());

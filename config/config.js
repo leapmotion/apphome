@@ -20,31 +20,12 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  LocalAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/local-app-manifest.json',
+  NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest.json',
 
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'
   },
-
-  BuiltinTiles: [
-    {
-      name: 'App Store',
-      tilePath:  staticImage('tiles', 'store-tile.png'),
-      iconPath:  staticImage('icons', 'store-icon.png'),
-      launchCallback: function() {
-        nwGui.Shell.openExternal('https://airspace.leapmotion.com/');
-      }
-    },
-    {
-      name: 'Leap Community',
-      tilePath:  staticImage('tiles', 'community-tile.png'),
-      iconPath:  staticImage('icons', 'community-icon.png'),
-      launchCallback: function() {
-        nwGui.Shell.openExternal('https://forums.leapmotion.com/forum.php');
-      }
-    }
-  ],
 
   Defaults: {
     TilePath: staticImage('tiles', 'default-tile.png')
