@@ -4,7 +4,6 @@ var domInjection = require('../../app/utils/dom-injection.js');
 var Mocha = require('mocha');
 var assert = require('assert');
 var socketReporter = require('./socket-reporter.js');
-var AppController = require('../../app/app-controller.js');
 var db = require('../../app/utils/db.js');
 
 global.leapEnv = 'test';
@@ -16,10 +15,6 @@ var stylesheets = [
   './node_modules/mocha/mocha.css'
 ];
 
-
-AppController.prototype.restoreWindowSize = function() {
-  console.log('Stubbing window maximize'); // actual resize fails in tests for some reason, so stubbing it. // todo: determiner root problem
-};
 db.setDbName('test');
 
 $(window).load(function() {

@@ -163,7 +163,6 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
-  console.log(db.getItem(config.DbKeys.InstalledApps));
   uiGlobals.installedApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
   uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(config.DbKeys.UninstalledApps) || '[]'));
 };
