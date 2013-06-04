@@ -3,6 +3,21 @@
 // require a DOM
 
 var window = global.window = {};
+
+function blankFn() {
+
+}
+
+window.localStorage = {
+  setItem: blankFn,
+  getItem: blankFn,
+  removeItem: blankFn,
+  clear: blankFn,
+  key: blankFn,
+  length: blankFn
+}
+
 window._ = global._ = require('underscore');
 window.Backbone = require('backbone');
 global.assert = require('assert');
+global.uiGlobals = require('../../app/ui-globals.js');

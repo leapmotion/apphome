@@ -14,9 +14,6 @@ module.exports = window.Backbone.Collection.extend({
       return new LocalLeapApp(attrs, options);
     } else {
       console.error('unknown app type: ' + JSON.stringify(attrs));
-      return new BuiltinTileApp({
-        id: uiGlobals.Builtin.ErrorTile
-      });
     }
   },
 

@@ -11,7 +11,7 @@ describe('pagination', function() {
       collection.add({
         id: 'builtin_fake_' + i,
         myNdx: i,
-        isBuiltin: true
+        urlToLaunch: 'http://' + i
       })
     }
   });
