@@ -203,7 +203,7 @@ module.exports = LeapApp.extend({
         var foundExecutable = false;
         var appFiles = fs.readdirSync(this._appDir());
         for (var i = 0, len = appFiles.length; i < len; i++) {
-          if (path.extname(appFiles[i]) === '.exe') {
+          if (/_lm\.exe$/i.test(appFiles[i])) {
             if (foundExecutable) { // multiple exe files in directory
               return null;
             } else {
