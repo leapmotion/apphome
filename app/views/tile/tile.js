@@ -105,6 +105,8 @@ module.exports = BaseView.extend({
   _setupDragging: function() {
     var leapApp = this.options.leapApp;
     if (leapApp.isUninstallable()) {
+      this.$el.attr('draggable', 'true');
+      this.$el.css('-webkit-user-drag', 'element');
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
         var canvas = document.createElement('canvas');
@@ -119,6 +121,7 @@ module.exports = BaseView.extend({
     } else {
       this.$el.removeAttr('draggable');
       this.$el.css('-webkit-user-drag', 'none');
+      this.$el.unbind('dragstart');
     }
   },
 
