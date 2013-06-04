@@ -41,8 +41,14 @@ module.exports = BaseView.extend({
         this.$iframe.load(function() {
           clearTimeout(loadTimeoutId);
           try {
-            this._performActionBasedOnUrl(this.$iframe.prop('contentWindow').location.href, cb);
+            var iframeWindow = this.$iframe.prop('contentWindow');
+            $(iframeWindow).unload(function() {
+              this.$iframe.css('visibility', 'hidden');
+            }.bind(this));
+            this._center();
+            this._performActionBasedOnUrl(iframeWindow.location.href, cb);
           } catch (err2) {
+            console.error(err2.stack);
             cb(err2);
           }
         }.bind(this));
@@ -170,10 +176,17 @@ module.exports = BaseView.extend({
   },
 
   _center: function() {
+    var iframeWindow = this.$iframe.prop('contentWindow');
+    this.$iframe.css('visibility', 'hidden');
+    this.$iframe.height(0);
+    this.$iframe.height($(iframeWindow.document).height());
+
     this._centerElement(this.$iframe);
     this._centerElement(this.$noInternet);
     this._centerElement(this.$waiting);
     this._centerElement(this.$('.first-run-background'));
+
+    this.$iframe.css('visibility', 'visible');
   },
 
   _centerElement: function($element) {
