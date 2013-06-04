@@ -10,7 +10,7 @@ global.assert = require('assert');
 var ReportServerPort = 22001; // TODO: move to config file (used in socket-reporter.js)
 var IntegrationTestLoaderPath = path.resolve(__dirname, './preloader');
 global.LeapHomeDir = global.LeapHomeDir || path.resolve(__dirname, '../..');
-var MaxTestTime = 1000 * 5;
+var MaxTestTime = 1000 * 20;
 
 global.isRunningTest = function() {
   return !!process.env.LEAPHOME_INTEGRATION_TEST_PATH;

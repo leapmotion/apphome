@@ -16,7 +16,7 @@ integrationTest.runInApp(__filename, function() {
       }
     });
 
-    it('should advance on click', function(done) {
+    xit('should advance on click', function(done) {
       window.waitFor('tiles', '.tile:visible', done).then(function() {
         assert.ok($('.go-previous:visible').hasClass('disabled'), 'should start previous slide button disabled');
         var $next = $('.go-next:visible');

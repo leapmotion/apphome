@@ -10,11 +10,7 @@ var db = require('../../app/utils/db.js');
 global.leapEnv = 'test';
 global.assert = assert;
 
-var scripts = [
-  './node_modules/mocha/mocha.js'
-];
-scripts = scripts.concat(sources(path.resolve(__dirname, './js_support')));
-scripts = _(scripts).compact();
+var scripts = _.compact(sources(path.resolve(__dirname, './js_support')));
 
 var stylesheets = [
   './node_modules/mocha/mocha.css'
@@ -43,12 +39,12 @@ $(window).load(function() {
   mocha.reporter(socketReporter).run();
 });
 
-function isJs(path) {
-  return path.substr(-3) === '.js';
-}
-
 function sources(dir) {
-  return fs.readdirSync(path.resolve(dir)).map(function(relPath) {
-    return isJs(relPath) && ('./' + path.relative(global.LeapHomeDir, path.resolve(dir, relPath)));
-  })
+  var jsSources = [];
+  fs.readdirSync(dir).forEach(function(relPath) {
+    if (path.extname(relPath) === 'js') {
+      jsSources.push('./' + path.relative(global.LeapHomeDir, path.resolve(dir, relPath)));
+    }
+  });
+  return jsSources;
 }
