@@ -5,6 +5,7 @@ var os = require('os');
 var qs = require('querystring');
 
 var config = require('../../config/config.js');
+var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
@@ -182,6 +183,10 @@ function connectToStoreServer(noAutoInstall, cb) {
         } else {
           console.log('Connected to store server.');
           messages.forEach(function(message) {
+            if (message.auth_id && message.secret_token) {
+              drm.writeXml(message.auth_id, message.secret_token);
+            }
+
             if (message.user_id) {
               subscribeToUserChannel(message.user_id);
             } else {
