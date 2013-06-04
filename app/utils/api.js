@@ -155,11 +155,12 @@ function subscribeToAppChannel(appId) {
 }
 
 var reconnectionTimeoutId;
+var hasEverConnected;
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
     reconnectionTimeoutId = setTimeout(function() {
-      connectToStoreServer(false);
+      connectToStoreServer(!hasEverConnected);
     }, config.ServerConnectRetryMs);
   }
 }
@@ -181,6 +182,7 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb && cb(err);
           cb = null;
         } else {
+          hasEverConnected = true;
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
