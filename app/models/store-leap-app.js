@@ -86,15 +86,16 @@ module.exports = LeapApp.extend({
       if (fs.existsSync(dependenciesReadmePath)) {
         nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
       }
-      var executable;
-      if (os.platform() === 'win32') {
-        executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+      var executable = this._findExecutable();
+      if (executable) {
+        this.set('executable', executable);
+        this.set('state', LeapApp.States.Ready);
+        return cb && cb(null);
       } else {
-        executable = this._appDir();
+        var exeNotFoundError = new Error('Could not find executable for app: ' + this.get('name'));
+        this._abortInstallation(startingCollection, exeNotFoundError);
+        return cb && cb(exeNotFoundError);
       }
-      this.set('executable', executable);
-      this.set('state', LeapApp.States.Ready);
-      cb && cb(null);
     }.bind(this));
 
     downloadProgress.on('progress', function(progress) {
@@ -191,6 +192,32 @@ module.exports = LeapApp.extend({
       this[attributeName] = dir;
     }
     return dir;
+  },
+
+  _findExecutable: function() {
+    var executable;
+
+    if (os.platform() === 'win32') {
+      executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+      if (!fs.existsSync(executable)) {
+        var foundExecutable = false;
+        var appFiles = fs.readdirSync(this._appDir());
+        for (var i = 0, len = appFiles.length; i < len; i++) {
+          if (path.extname(appFiles[i]) === '.exe') {
+            if (foundExecutable) { // multiple exe files in directory
+              return null;
+            } else {
+              foundExecutable = true;
+              executable = path.join(this._appDir(), appFiles[i]);
+            }
+          }
+        }
+      }
+    } else {
+      executable = this._appDir();
+    }
+
+    return executable;
   }
 
 });
