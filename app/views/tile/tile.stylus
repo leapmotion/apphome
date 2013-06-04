@@ -23,6 +23,7 @@ $tileW = 320px
     //background-image linear-gradient(bottom, #99c947 0%, #fff 100%) // gradient overlay
     box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
 
+
     &:before, &:after
       background -webkit-linear-gradient(top,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* Chrome10+,Safari5.1+ */
       background linear-gradient(to bottom,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* W3C */
@@ -46,6 +47,9 @@ $tileW = 320px
       width $tileW+6
       z-index -2
 
+    h3
+      color #fff
+
   .name-outer
     float right
     right 50%
@@ -58,7 +62,7 @@ $tileW = 320px
     position relative
 
   h3
-    color rgba(255,255,255,1)
+    color #b2b2b2
     font-size 21px
     -webkit-user-drag none
     float left
