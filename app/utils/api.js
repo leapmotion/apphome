@@ -157,11 +157,13 @@ var reconnectionTimeoutId;
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
-    reconnectionTimeoutId = setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
+    reconnectionTimeoutId = setTimeout(function() {
+      connectToStoreServer(false);
+    }, config.ServerConnectRetryMs);
   }
 }
 
-function connectToStoreServer(cb) {
+function connectToStoreServer(noAutoInstall, cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -183,7 +185,7 @@ function connectToStoreServer(cb) {
             if (message.user_id) {
               subscribeToUserChannel(message.user_id);
             } else {
-              var app = handleAppJson(message, true);
+              var app = handleAppJson(message, noAutoInstall);
               if (app) {
                 subscribeToAppChannel(app.get('appId'));
               }

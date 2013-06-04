@@ -65,7 +65,7 @@ module.exports = BaseView.extend({
               }.bind(this));
             }
           }
-          api.connectToStoreServer(function() {
+          api.connectToStoreServer(false, function() {
             polledServer = true;
             maybeInstallApp.call(this);
           }.bind(this));

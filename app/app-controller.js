@@ -89,7 +89,7 @@ AppController.prototype = {
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    api.connectToStoreServer();
+    api.connectToStoreServer(true);
   },
 
   _logOut: function() {
