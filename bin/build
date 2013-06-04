@@ -89,10 +89,21 @@ appZip.finalize(function(err, bytesWritten) {
       var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
       var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
       console.log(clearIconCommand);
-      exec(clearIconCommand, function(err) {
+	  
+	  exec(clearIconCommand, function(err, stdout, stderr) {
+	    if(err) {
+	      console.log('error: ' + err);
+	      console.log('stdout: ' + stdout);
+	      console.log('stderr: ' + stderr);
+		}
         console.log(setIconCommand);
-        exec(setIconCommand, function(err) {
-          if (err) {
+		
+		exec(setIconCommand, function(err, stdout, stderr) {
+		  if (err) {
+	        console.log('error: ' + err);
+	        console.log('stdout: ' + stdout);
+	        console.log('stderr: ' + stderr);
+         
             throw err;
           }
           var executable = fs.readFileSync(exePath);
