@@ -88,24 +88,23 @@ appZip.finalize(function(err, bytesWritten) {
       var exePath = path.join(buildDir('windows'), 'nw.exe');
       var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
       var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
+
       console.log(clearIconCommand);
-	  
-	  exec(clearIconCommand, function(err, stdout, stderr) {
-	    if(err) {
-	      console.log('error: ' + err);
-	      console.log('stdout: ' + stdout);
-	      console.log('stderr: ' + stderr);
-		}
+       exec(clearIconCommand, function(err, stdout, stderr) {
+        if (err) {
+          console.log('stdout: ' + stdout);
+          console.log('stderr: ' + stderr);
+          throw err;
+        }
+
         console.log(setIconCommand);
-		
-		exec(setIconCommand, function(err, stdout, stderr) {
-		  if (err) {
-	        console.log('error: ' + err);
-	        console.log('stdout: ' + stdout);
-	        console.log('stderr: ' + stderr);
-         
+        exec(setIconCommand, function(err, stdout, stderr) {
+          if (err) {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
             throw err;
           }
+
           var executable = fs.readFileSync(exePath);
           var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
           fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
