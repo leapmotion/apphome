@@ -9,6 +9,7 @@ var oauth = require('../../utils/oauth.js');
 var BaseView = require('../base-view.js');
 
 module.exports = BaseView.extend({
+
   viewDir: __dirname,
 
   className: 'authorization',
@@ -39,16 +40,20 @@ module.exports = BaseView.extend({
         }.bind(this), config.AuthLoadTimeoutMs);
 
         this.$iframe.load(function() {
-          clearTimeout(loadTimeoutId);
           try {
+            clearTimeout(loadTimeoutId);
             var iframeWindow = this.$iframe.prop('contentWindow');
-            $(iframeWindow).unload(function() {
-              this.$iframe.css('visibility', 'hidden');
-            }.bind(this));
-            this._center();
-            this._performActionBasedOnUrl(iframeWindow.location.href, cb);
+            if (/^http/i.test(iframeWindow.location.href)) {
+              $(iframeWindow).unload(function() {
+                this.$iframe.css('visibility', 'hidden');
+              }.bind(this));
+              this._center();
+              this._performActionBasedOnUrl(iframeWindow.location.href, cb);
+            } else {
+              cb(new Error('Could not load auth page.'));
+            }
           } catch (err2) {
-            console.error(err2.stack);
+            console.error('Authorization error: ' + err2.stack);
             cb(err2);
           }
         }.bind(this));
@@ -56,7 +61,7 @@ module.exports = BaseView.extend({
         if (!oauth.getRefreshToken()) {
           this._waitForInternetConnection(cb);
         } else {
-          cb(null, null);
+          cb(null);
         }
       }
     }.bind(this));
@@ -198,7 +203,6 @@ module.exports = BaseView.extend({
 
   remove: function() {
     $(window).unbind('resize', this._boundIframeCenteringFn);
-
     this.$el.remove();
   }
 
