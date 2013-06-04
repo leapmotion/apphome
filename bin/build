@@ -86,8 +86,8 @@ appZip.finalize(function(err, bytesWritten) {
       }
       fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
       var exePath = path.join(buildDir('windows'), 'nw.exe');
-      var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
-      var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
+      var clearIconCommand = ""//shell.escape(path.join(__dirname, 'ResourceEditor.exe')) + ' /C ' + shell.escape(exePath);
+      var setIconCommand = ""//shell.escape(path.join(__dirname, 'ResourceEditor.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
       console.log(clearIconCommand);
 	  
 	  exec(clearIconCommand, function(err, stdout, stderr) {
