@@ -3,7 +3,6 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
-var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var icns = require('../utils/icns.js');
 var ico = require('../utils/ico.js');

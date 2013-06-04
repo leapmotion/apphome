@@ -30,5 +30,4 @@ function writeXml(authId, token) {
   }
 }
 
-writeXml(4000, 'abc123');
-
+module.exports.writeXml = writeXml;

@@ -50,10 +50,11 @@ module.exports = BaseView.extend({
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
     }, this);
 
-    this.$el.click(function(evt) {
-      if (leapApp.isInstallable()) {
+    this.$el.click(function() {
+      if (leapApp.isInstallable() && !this._currentlyInstalling) {
         var onConfirm;
         var downloadModal;
+        this._currentlyInstalling = true;
 
         if (leapApp.isStoreApp()) {
           var shouldInstall;
@@ -62,10 +63,11 @@ module.exports = BaseView.extend({
             if (polledServer && shouldInstall) {
               leapApp.install(function() {
                 this._setupDragging();
+                this._currentlyInstalling = false;
               }.bind(this));
             }
           }
-          api.connectToStoreServer(function() {
+          api.connectToStoreServer(false, function() {
             polledServer = true;
             maybeInstallApp.call(this);
           }.bind(this));
@@ -105,6 +107,8 @@ module.exports = BaseView.extend({
   _setupDragging: function() {
     var leapApp = this.options.leapApp;
     if (leapApp.isUninstallable()) {
+      this.$el.attr('draggable', 'true');
+      this.$el.css('-webkit-user-drag', 'element');
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
         var canvas = document.createElement('canvas');
@@ -119,6 +123,7 @@ module.exports = BaseView.extend({
     } else {
       this.$el.removeAttr('draggable');
       this.$el.css('-webkit-user-drag', 'none');
+      this.$el.unbind('dragstart');
     }
   },
 

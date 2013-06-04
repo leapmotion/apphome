@@ -89,7 +89,7 @@ var LeapApp = BaseModel.extend({
   },
 
   isUninstallable: function() {
-    return !this.isUninstalled() && !this.isBuiltinTile() && !this.isUpgrade();
+    return this.get('state') === LeapApp.States.Ready && !this.isBuiltinTile();
   },
 
   isInstallable: function() {
@@ -156,6 +156,10 @@ var LeapApp = BaseModel.extend({
       this.save();
       cb && cb(null);
     }.bind(this));
+  },
+
+  cleanAppName: function() {
+    return (this.get('name') || '').replace(/[^A-Za-z0-9]/g, '');
   }
 
 });

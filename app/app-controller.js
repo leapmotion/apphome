@@ -72,7 +72,7 @@ AppController.prototype = {
     oauth.getAccessToken(function(err) {
       if (err) {
         var authorizationView = new AuthorizationView();
-        authorizationView.authorize(function(err) {
+        authorizationView.authorize(function() {
           authorizationView.remove();
           cb && cb(null); // skip auth if there's an error
         }.bind(this));
@@ -89,7 +89,7 @@ AppController.prototype = {
     this._scanFilesystem();
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    api.connectToStoreServer();
+    api.connectToStoreServer(true);
   },
 
   _logOut: function() {

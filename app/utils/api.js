@@ -5,6 +5,7 @@ var os = require('os');
 var qs = require('querystring');
 
 var config = require('../../config/config.js');
+var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
@@ -154,14 +155,17 @@ function subscribeToAppChannel(appId) {
 }
 
 var reconnectionTimeoutId;
+var hasEverConnected;
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
-    reconnectionTimeoutId = setTimeout(connectToStoreServer, config.ServerConnectRetryMs);
+    reconnectionTimeoutId = setTimeout(function() {
+      connectToStoreServer(!hasEverConnected);
+    }, config.ServerConnectRetryMs);
   }
 }
 
-function connectToStoreServer(cb) {
+function connectToStoreServer(noAutoInstall, cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -178,12 +182,17 @@ function connectToStoreServer(cb) {
           cb && cb(err);
           cb = null;
         } else {
+          hasEverConnected = true;
           console.log('Connected to store server.');
           messages.forEach(function(message) {
+            if (message.auth_id && message.secret_token) {
+              drm.writeXml(message.auth_id, message.secret_token);
+            }
+
             if (message.user_id) {
               subscribeToUserChannel(message.user_id);
             } else {
-              var app = handleAppJson(message, true);
+              var app = handleAppJson(message, noAutoInstall);
               if (app) {
                 subscribeToAppChannel(app.get('appId'));
               }
