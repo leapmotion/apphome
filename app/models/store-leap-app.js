@@ -104,7 +104,7 @@ module.exports = LeapApp.extend({
   },
 
   _abortInstallation: function(previousCollection, err) {
-    console.warn('Installation failed:', err.stack);
+    console.warn('Installation of ' + this.get('name') + ' failed: ' + err.stack);
     uiGlobals.installedApps.remove(this);
     this.set('state', LeapApp.States.NotYetInstalled);
     previousCollection.add(this);

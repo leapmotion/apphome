@@ -50,10 +50,11 @@ module.exports = BaseView.extend({
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
     }, this);
 
-    this.$el.click(function(evt) {
-      if (leapApp.isInstallable()) {
+    this.$el.click(function() {
+      if (leapApp.isInstallable() && !this._currentlyInstalling) {
         var onConfirm;
         var downloadModal;
+        this._currentlyInstalling = true;
 
         if (leapApp.isStoreApp()) {
           var shouldInstall;
@@ -62,6 +63,7 @@ module.exports = BaseView.extend({
             if (polledServer && shouldInstall) {
               leapApp.install(function() {
                 this._setupDragging();
+                this._currentlyInstalling = false;
               }.bind(this));
             }
           }
