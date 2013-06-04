@@ -156,6 +156,10 @@ var LeapApp = BaseModel.extend({
       this.save();
       cb && cb(null);
     }.bind(this));
+  },
+
+  cleanAppName: function() {
+    return (this.get('name') || '').replace(/[^A-Za-z0-9]/g, '');
   }
 
 });

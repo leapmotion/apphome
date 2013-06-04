@@ -185,7 +185,7 @@ module.exports = LeapApp.extend({
       if (!fs.existsSync(baseDir)) {
         fs.mkdirSync(baseDir);
       }
-      dir = path.join(baseDir, this.get('name'));
+      dir = path.join(baseDir, this.cleanAppName());
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
@@ -198,7 +198,7 @@ module.exports = LeapApp.extend({
     var executable;
 
     if (os.platform() === 'win32') {
-      executable = path.join(this._appDir(), this.get('name') + '_LM.exe');
+      executable = path.join(this._appDir(), this.cleanAppName() + '_LM.exe');
       if (!fs.existsSync(executable)) {
         var foundExecutable = false;
         var appFiles = fs.readdirSync(this._appDir());
