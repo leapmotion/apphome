@@ -14,7 +14,7 @@ module.exports = BaseView.extend({
     var leapApp = args.leapApp;
     var templateData = _.extend({
       iconPath: '',
-      tilePath: config.Defaults.TilePath
+      tilePath: config.DefaulTilePath
     }, leapApp.toJSON());
     this.setElement($(this.templateHtml(templateData)));
     this.$el.addClass(this._stateToClass(leapApp.get('state')));

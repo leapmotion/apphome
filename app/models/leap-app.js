@@ -151,7 +151,7 @@ var LeapApp = BaseModel.extend({
 
   downloadTile: function(cb) {
     var tileUrl = this.get('tileUrl');
-    download.getWithFallback(tileUrl, this.standardTilePath(), config.Defaults.TilePath, function(err, tilePathOrFallback) {
+    download.getWithFallback(tileUrl, this.standardTilePath(), config.DefaultTilePath, function(err, tilePathOrFallback) {
       this.set('tilePath', tilePathOrFallback);
       this.save();
       cb && cb(null);

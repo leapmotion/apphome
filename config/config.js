@@ -3,7 +3,7 @@ var path = require('path');
 var enumerable = require('../app/utils/enumerable.js');
 
 function staticImage(subdir, name) {
-  return path.join(__dirname, '..', 'static', 'images', subdir, name);
+  return [ 'static', 'images', subdir, name ].join('/');
 }
 
 var config = {
@@ -27,9 +27,8 @@ var config = {
     AppTiles: 'app_tiles'
   },
 
-  Defaults: {
-    TilePath: staticImage('tiles', 'default-tile.png')
-  },
+  LocalAppTilePath: 'static/images/tiles/default-tile.png',
+  DefaultTilePath: 'static/images/tiles/downloading-tile.png',
 
   Layout: {
     columnsPerSlide: 4,

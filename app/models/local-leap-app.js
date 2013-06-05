@@ -21,6 +21,8 @@ module.exports = LeapApp.extend({
       }
     }
 
+    args.tilePath = config.LocalAppTilePath;
+
     LeapApp.prototype.constructor.call(this, args);
   },
 

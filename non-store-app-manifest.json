@@ -1,0 +1,35 @@
+{
+  "web": [
+    {
+      "name": "App Store",
+      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-tile.png?v=2",
+      "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-icon.png?v=2",
+      "urlToLaunch": "https://airspace.leapmotion.com/",
+      "passAccessToken": true,
+      "deletable": false
+    },
+    {
+      "name": "Leap Community",
+      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-tile.png?v=2",
+      "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-icon.png?v=2",
+      "urlToLaunch": "https://forums.leapmotion.com/forum.php",
+      "passAccessToken": true,
+      "deletable": false
+    }
+  ],
+
+  "windows": [
+    {
+      "name": "Google Earth",
+      "minVersion": "7.1",
+      "relativeExePath": "client\\googleearth.exe"
+    }
+  ],
+
+  "osx": [
+    {
+      "name": "Google Earth",
+      "minVersion": "7.1"
+    }
+  ]
+}

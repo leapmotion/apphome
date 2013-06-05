@@ -223,7 +223,19 @@ function createWebLinkApps(webAppData) {
   });
   webAppData.forEach(function(webAppDatum) {
     var webApp = new WebLinkApp(webAppDatum);
-    if (!existingWebAppsById[webApp.get('id')]) {
+    var existingWebApp = existingWebAppsById[webApp.get('id')];
+    if (existingWebApp) {
+      if (existingWebApp.get('iconUrl') !== webApp.get('iconUrl')) {
+        existingWebApp.set('iconUrl', webApp.get('iconUrl'));
+        existingWebApp.downloadIcon();
+        console.info('icon updated for ' + existingWebApp.get('name'));
+      }
+      if (existingWebApp.get('tileUrl') !== webApp.get('tileUrl')) {
+        existingWebApp.set('tileUrl', webApp.get('tileUrl'));
+        existingWebApp.downloadTile();
+        console.info('tile updated for ' + existingWebApp.get('name'));
+      }
+    } else {
       uiGlobals.installedApps.add(webApp);
       console.log('Added web link: ', webApp.get('urlToLaunch'));
       webApp.save();
