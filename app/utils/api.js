@@ -3,6 +3,7 @@ var http = require('http');
 var https = require('https');
 var os = require('os');
 var qs = require('querystring');
+var gui = window.require('nw.gui');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
@@ -184,6 +185,11 @@ function connectToStoreServer(noAutoInstall, cb) {
         } else {
           hasEverConnected = true;
           console.log('Connected to store server.');
+          var win = gui.Window.get();
+          window.LOCAL_NW.desktopNotifications.notify('', 'Connected to store server.', 'Yes we are!', function() {
+            win.focus();
+            win.restore();
+          });
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
               drm.writeXml(message.auth_id, message.secret_token);
