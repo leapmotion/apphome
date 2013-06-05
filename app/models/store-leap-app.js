@@ -89,6 +89,7 @@ module.exports = LeapApp.extend({
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
+        uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.')
         this.set('state', LeapApp.States.Ready);
         return cb && cb(null);
       } else {
@@ -112,11 +113,13 @@ module.exports = LeapApp.extend({
 
   _downloadBinary: function(cb) {
     var binaryUrl = this.get('binaryUrl');
+    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.')
     this.set('state', LeapApp.States.Downloading);
     return download.get(binaryUrl, function(err, tempFilename) {
       if (err) {
         return cb(err);
       }
+      uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.')
       this.set('state', LeapApp.States.Installing);
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cb);
