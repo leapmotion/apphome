@@ -1,0 +1,18 @@
+"node-webkit" https://github.com/rogerwang/node-webkit https://github.com/rogerwang/node-webkit/blob/master/LICENSE
+"npm" https://npmjs.org/ https://raw.github.com/isaacs/npm/master/LICENSE
+"adm-zip" https://npmjs.org/package/adm-zip https://raw.github.com/kriskowal/zip/master/LICENSE
+"archive" https://npmjs.org/package/archive https://github.com/Skomski/node-archive/blob/master/Readme.md
+"async" https://npmjs.org/package/async https://github.com/caolan/async/raw/master/LICENSE
+"backbone" https://npmjs.org/package/backbone https://github.com/documentcloud/backbone/blob/master/LICENSE
+"connect" https://npmjs.org/package/connect https://github.com/senchalabs/connect/blob/master/LICENSE
+"fs-extra" https://npmjs.org/package/fs-extra http://github.com/jprichardson/node-fs-extra/raw/master/LICENSE
+"jade" https://npmjs.org/package/jade https://npmjs.org/package/jade#a19
+"mocha" https://npmjs.org/package/mocha https://github.com/visionmedia/mocha/blob/master/LICENSE
+"plist" https://npmjs.org/package/plist https://github.com/TooTallNate/node-plist/blob/master/LICENSE
+"pubnub" https://npmjs.org/package/pubnub http://opensource.org/licenses/MIT
+"rewire" https://npmjs.org/package/rewire https://github.com/jhnns/rewire/blob/master/LICENSE
+"spin" https://npmjs.org/package/spin https://github.com/visionmedia/spin.js/blob/gh-pages/LICENSE.txt
+"stylus" https://npmjs.org/package/stylus https://github.com/LearnBoost/stylus/blob/master/LICENSE
+"underscore" https://npmjs.org/package/underscore https://github.com/documentcloud/underscore/blob/master/LICENSE
+"ws" https://npmjs.org/package/ws https://github.com/einaros/ws
+
