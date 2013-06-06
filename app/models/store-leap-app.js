@@ -6,7 +6,6 @@ var path = require('path');
 var config = require('../../config/config.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
-var plist = require('../utils/plist.js');
 var shell = require('../utils/shell.js');
 
 var LeapApp = require('./leap-app.js');

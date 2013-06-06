@@ -10,6 +10,10 @@ var shell = require('./shell.js');
 function extractZip(src, dest, cb) {
   try {
     var zip = new Zip(src);
+    if (fs.existsSync(dest)) {
+      fs.deleteSync(dest);
+    }
+    fs.mkdirSync(dest);
     zip.extractAllTo(dest);
     var extractedFiles = fs.readdirSync(dest);
     if (extractedFiles.length === 1 && fs.statSync(path.join(dest, extractedFiles[0])).isDirectory()) {
@@ -79,11 +83,21 @@ function extractDmg(src, dest, cb) {
         cb(new Error('No .app directory found in DMG.'));
       });
     } else {
-      fs.copy(appPackage, dest, function(err) {
-        if (err) {
-          return cb(err);
+      try {
+        if (fs.existsSync(dest)) {
+          fs.deleteSync(dest);
         }
-        unmount(cb);
+      } catch(err2) {
+        return unmount(function() {
+          cb(err2);
+        });
+      }
+      console.log('Installing app from ' + appPackage + ' to ' + dest);
+
+      exec('cp -r ' + shell.escape(appPackage) + ' ' + shell.escape(dest), function(err) {
+        unmount(function(err2) {
+          cb(err || err2 || null);
+        });
       });
     }
   });
