@@ -23,4 +23,12 @@ uiGlobals.scaling = 1;
 
 uiGlobals.appName = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'))).name;
 
+uiGlobals.sendNotification = function(header, body, icon) {
+  var win = nwGui.Window.get();
+  window.LOCAL_NW.desktopNotifications.notify(icon || '', header, body, function() {
+    win.focus();
+    win.restore();
+  });
+};
+
 module.exports = uiGlobals;
