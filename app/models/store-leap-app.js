@@ -28,11 +28,9 @@ module.exports = LeapApp.extend({
 
   initialize: function() {
     if (!this.get('tilePath')) {
-      this.downloadTile(function(err) {
-        if (err) {
-          if (!this.get('iconPath')) {
-            this.downloadIcon();
-          }
+      this.downloadTile(function() {
+        if (!this.get('iconPath')) {
+          this.downloadIcon();
         }
       }.bind(this));
     }
