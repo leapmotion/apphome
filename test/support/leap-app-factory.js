@@ -17,8 +17,7 @@ if (typeof window !== 'undefined') {
       version: args.version || (randomInt(1) + '.' + randomInt(2) + '.' + randomInt(2)),
       name: args.name || (randomString(7) + ' ' + randomString(5)),
       binaryUrl: args.appurl || ('https://dev.leapmotion.com/apps/' + verId),
-      iconPath: config.Defaults.IconPath,
-      tilePath: config.Defaults.TilePath,
+      tilePath: config.DefaultTilePath,
       installedAt: (new Date()).getTime(),
       state: LeapApp.States.Ready
     };
@@ -31,8 +30,7 @@ if (typeof window !== 'undefined') {
     return {
       id: args.id || id,
       name: args.name || randomString(14),
-      iconPath: config.Defaults.IconPath,
-      tilePath: config.Defaults.TilePath,
+      tilePath: config.DefaultTilePath,
       installedAt: (new Date()).getTime(),
       state: LeapApp.States.Ready
     }
