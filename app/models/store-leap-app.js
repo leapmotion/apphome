@@ -27,12 +27,14 @@ var PlatformUserDataDirs = {
 module.exports = LeapApp.extend({
 
   initialize: function() {
-    if (!this.get('iconPath')) {
-      this.downloadIcon();
-    }
-
     if (!this.get('tilePath')) {
-      this.downloadTile();
+      this.downloadTile(function(err) {
+        if (err) {
+          if (!this.get('iconPath')) {
+            this.downloadIcon();
+          }
+        }
+      }.bind(this));
     }
 
     LeapApp.prototype.initialize.apply(this, arguments);
@@ -52,19 +54,13 @@ module.exports = LeapApp.extend({
 
   _installAsUpgrade: function(cb) {
     var appToUpgrade = this.findAppToUpgrade();
-    var errorMessage = 'Failed to upgrade app: ' + this.get('name') + ' from v.' + appToUpgrade.get('version') + ' to v.' + this.get('version');
     if (appToUpgrade && appToUpgrade.isUninstallable()) {
       appToUpgrade.uninstall(true, false, function(err) {
         if (!err) {
           uiGlobals.installedApps.remove(appToUpgrade);
-          this._installFromServer(function(err) {
-            if (err) {
-              console.error(errorMessage);
-            }
-            cb && cb(err);
-          }.bind(this));
+          this._installFromServer(cb);
         } else {
-          console.error(errorMessage);
+          this._abortInstallation(null, err);
           cb && cb(err);
         }
       }.bind(this));
@@ -94,7 +90,7 @@ module.exports = LeapApp.extend({
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
-        uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.')
+        uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
         this.set('state', LeapApp.States.Ready);
         return cb && cb(null);
       } else {
@@ -113,18 +109,21 @@ module.exports = LeapApp.extend({
     console.warn('Installation of ' + this.get('name') + ' failed: ' + err.stack);
     uiGlobals.installedApps.remove(this);
     this.set('state', LeapApp.States.NotYetInstalled);
-    previousCollection.add(this);
+    if (previousCollection) {
+      previousCollection.add(this);
+    }
+    uiGlobals.sendNotification('Installation of ' + this.get('name') + ' failed.', 'Try again in a few moments.');
   },
 
   _downloadBinary: function(cb) {
     var binaryUrl = this.get('binaryUrl');
-    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.')
+    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     this.set('state', LeapApp.States.Downloading);
     return download.get(binaryUrl, function(err, tempFilename) {
       if (err) {
         return cb(err);
       }
-      uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.')
+      uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
       this.set('state', LeapApp.States.Installing);
       console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
       function cleanupTempfile(err) {
