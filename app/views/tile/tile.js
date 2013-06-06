@@ -14,7 +14,7 @@ module.exports = BaseView.extend({
     var leapApp = args.leapApp;
     var templateData = _.extend({
       iconPath: '',
-      tilePath: config.DefaulTilePath
+      tilePath: config.DefaultTilePath
     }, leapApp.toJSON());
     this.setElement($(this.templateHtml(templateData)));
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
@@ -85,7 +85,10 @@ module.exports = BaseView.extend({
         }
         downloadModal = new DownloadModalView({
           leapApp: leapApp,
-          onConfirm: onConfirm.bind(this)
+          onConfirm: onConfirm.bind(this),
+          onCancel: function() {
+            this._currentlyInstalling = false;
+          }.bind(this)
         });
         downloadModal.show();
       } else if (leapApp.isRunnable()) {

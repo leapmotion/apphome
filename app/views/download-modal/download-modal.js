@@ -14,7 +14,12 @@ module.exports = BaseView.extend({
     this.injectCss();
     this.$el.append($(this.templateHtml({ app: leapApp.toJSON() })));
 
-    this.$('.button.cancel').click(this.remove.bind(this));
+    this.$('.button.cancel').click(function() {
+      if (_.isFunction(this.options.onCancel)) {
+        this.options.onCancel();
+      }
+      this.remove();
+    }.bind(this));
     this.$('.button.confirm').hide().click(this.options.onConfirm);
     if (leapApp.isUpgrade()) {
       this.$('.button.confirm.upgrade').show();
