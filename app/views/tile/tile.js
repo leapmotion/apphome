@@ -7,6 +7,7 @@ var BaseView = require('../base-view.js');
 var DownloadModalView = require('../download-modal/download-modal.js');
 
 module.exports = BaseView.extend({
+
   viewDir: __dirname,
 
   initialize: function(args) {
@@ -51,58 +52,20 @@ module.exports = BaseView.extend({
     }, this);
 
     this.$el.click(function() {
-      if (leapApp.isInstallable() && !this._currentlyInstalling) {
-        var onConfirm;
-        var downloadModal;
-        this._currentlyInstalling = true;
-
-        if (leapApp.isStoreApp()) {
-          var shouldInstall;
-          var polledServer;
-          function maybeInstallApp() {
-            if (polledServer && shouldInstall) {
-              leapApp.install(function() {
-                this._setupDragging();
-                this._currentlyInstalling = false;
-              }.bind(this));
-            }
-          }
-          api.connectToStoreServer(false, function() {
-            polledServer = true;
-            maybeInstallApp.call(this);
-          }.bind(this));
-
-          onConfirm = function() {
-            downloadModal.remove();
-            shouldInstall = true;
-            maybeInstallApp.call(this);
-          };
-        } else {
-          onConfirm = function() {
-            downloadModal.remove();
-            leapApp.install();
-          };
-        }
-        downloadModal = new DownloadModalView({
-          leapApp: leapApp,
-          onConfirm: onConfirm.bind(this),
-          onCancel: function() {
-            this._currentlyInstalling = false;
-          }.bind(this)
-        });
-        downloadModal.show();
+      if (leapApp.isInstallable()) {
+        this._promptForInstall();
       } else if (leapApp.isRunnable()) {
-        this.$el.addClass('launching');
-        leapApp.launch();
-        setTimeout(function() {
-          this.$el.removeClass('launching');
-        }.bind(this), 2000);
+        this._launchApp();
       }
     }.bind(this));
 
     this.$el.attr('tile_id', leapApp.id);
 
     new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -32, top: 4 }).spin(this.$('.message')[0]);
+
+    nwGui.Window.get().on('focus', function() {
+      this._markLaunchComplete();
+    }.bind(this));
 
     this._setupDragging();
   },
@@ -132,6 +95,69 @@ module.exports = BaseView.extend({
 
   _stateToClass: function(state) {
     return _.last((state || '').split('_')).toLowerCase();
+  },
+
+  _promptForInstall: function() {
+    if (this._currentlyInstalling) {
+      return;
+    }
+
+    var onConfirm;
+    var downloadModal;
+    var leapApp = this.options.leapApp;
+    this._currentlyInstalling = true;
+
+    if (leapApp.isStoreApp()) {
+      var shouldInstall;
+      var polledServer;
+      function maybeInstallApp() {
+        if (polledServer && shouldInstall) {
+          leapApp.install(function() {
+            this._setupDragging();
+            this._currentlyInstalling = false;
+          }.bind(this));
+        }
+      }
+      api.connectToStoreServer(false, function() {
+        polledServer = true;
+        maybeInstallApp.call(this);
+      }.bind(this));
+
+      onConfirm = function() {
+        downloadModal.remove();
+        shouldInstall = true;
+        maybeInstallApp.call(this);
+      };
+    } else {
+      onConfirm = function() {
+        downloadModal.remove();
+        leapApp.install();
+      };
+    }
+    downloadModal = new DownloadModalView({
+      leapApp: leapApp,
+      onConfirm: onConfirm.bind(this),
+      onCancel: function() {
+        this._currentlyInstalling = false;
+      }.bind(this)
+    });
+    downloadModal.show();
+  },
+
+  _launchApp: function() {
+    if (this._currentlyLaunching) {
+      return;
+    }
+
+    this._currentlyLaunching = true;
+    this.$el.addClass('launching');
+    this.options.leapApp.launch();
+    setTimeout(this._markLaunchComplete.bind(this), 2000);
+  },
+
+  _markLaunchComplete: function() {
+    this.$el.removeClass('launching');
+    this._currentlyLaunching = false;
   }
 
 });
