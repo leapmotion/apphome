@@ -127,10 +127,17 @@ module.exports = LeapApp.extend({
       }
       uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.')
       this.set('state', LeapApp.States.Installing);
+      console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
+      function cleanupTempfile(err) {
+        if (fs.existsSync(tempFilename)) {
+          fs.deleteSync(tempFilename);
+        }
+        cb(err || null);
+      }
       if (os.platform() === 'win32') {
-        extract.unzip(tempFilename, this._appDir(), cb);
+        extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
       } else if (os.platform() === 'darwin') {
-        extract.undmg(tempFilename, this._appDir(), cb);
+        extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
       } else {
         return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }

@@ -136,7 +136,7 @@ function handleAppJson(appJson, noAutoInstall) {
       }
     } else {
       // new app to install
-      console.log('installing app: ' + app.get('name'));
+      console.log('Installing app: ' + app.get('name'));
       installedApps.add(app);
       app.install(function(err) {
         err && console.log('Failed to install app', app.get('name'), err.message);
