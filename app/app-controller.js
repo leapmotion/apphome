@@ -45,6 +45,7 @@ AppController.prototype = {
   },
 
   runApp: function() {
+    this._scanFilesystem();
     async.waterfall([
       this._checkLeapConnection.bind(this),
       this._authorize.bind(this),
@@ -80,7 +81,7 @@ AppController.prototype = {
     db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
     this._paintMainApp();
-    this._scanFilesystem();
+
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
     api.connectToStoreServer(true);
