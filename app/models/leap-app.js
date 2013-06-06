@@ -142,24 +142,32 @@ var LeapApp = BaseModel.extend({
 
   downloadIcon: function(cb) {
     var iconUrl = this.get('iconUrl');
-    download.getWithFallback(iconUrl, this.standardIconPath(), '', function(err, iconPathOrFallback) {
-      this.set('iconPath', iconPathOrFallback);
-      this.save();
-      cb && cb(null);
+    download.get(iconUrl, this.standardIconPath(), function(err, iconPath) {
+      if (!err) {
+        this.set('iconPath', iconPath);
+        this.save();
+      }
+      cb && cb(err || null);
     }.bind(this));
   },
 
   downloadTile: function(cb) {
     var tileUrl = this.get('tileUrl');
-    download.getWithFallback(tileUrl, this.standardTilePath(), config.DefaultTilePath, function(err, tilePathOrFallback) {
-      this.set('tilePath', tilePathOrFallback);
-      this.save();
-      cb && cb(null);
+    download.get(tileUrl, this.standardTilePath(), function(err, tilePath) {
+      if (!err) {
+        this.set('tilePath', tilePath);
+        this.save();
+      }
+      cb && cb(err || null);
     }.bind(this));
   },
 
   cleanAppName: function() {
     return (this.get('name') || '').replace(/[^A-Za-z0-9]/g, '');
+  },
+
+  showIcon: function() {
+    return this.get('iconPath') && (!this.isStoreApp() || !this.get('tilePath'));
   }
 
 });

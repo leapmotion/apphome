@@ -24,9 +24,7 @@ module.exports = BaseView.extend({
       this.$el.addClass('upgrade');
     }
 
-    if (!leapApp.get('iconPath')) {
-      this.$('.icon').hide();
-    }
+    this._showOrHideIcon();
 
     this.listenTo(leapApp, 'change:state', function() {
       this.$el.removeClass(this._stateToClass(leapApp.previous('state')));
@@ -35,16 +33,18 @@ module.exports = BaseView.extend({
     }, this);
 
     this.listenTo(leapApp, 'change:tilePath', function() {
-      this.$('.tile-bg').attr('src', leapApp.get('tilePath'));
+      var tilePath = leapApp.get('tilePath');
+      if (tilePath) {
+        this.$('.tile-bg').attr('src', tilePath);
+      } else {
+        this.$('.tile-bg').attr('src', config.DefaultTilePath);
+      }
+      this._showOrHideIcon();
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      var newIconPath = leapApp.get('iconPath');
-      if (newIconPath) {
-        this.$('.icon').attr('src', newIconPath).show();
-      } else {
-        this.$('.icon').hide();
-      }
+      this.$('.icon').attr('src', leapApp.get('iconPath'));
+      this._showOrHideIcon();
     }, this);
 
     this.listenTo(leapApp, 'progress', function(progress) {
@@ -77,13 +77,13 @@ module.exports = BaseView.extend({
       this.$el.css('-webkit-user-drag', 'element');
       this.$el.on('dragstart', function(evt) {
         var dataTransfer = evt.originalEvent.dataTransfer;
-        var canvas = document.createElement('canvas');
+        /*var canvas = document.createElement('canvas');
         canvas.setAttribute('width', 96);
         canvas.setAttribute('height', 96);
         canvas.getContext('2d').drawImage(this.$('.icon')[0], 0, 0, 96, 96);
         var dragImage = document.createElement('img');
-        dragImage.setAttribute('src', canvas.toDataURL());
-        dataTransfer.setDragImage(dragImage, 96, 96);
+        dragImage.setAttribute('src', canvas.toDataURL());*/
+        dataTransfer.setDragImage(this.$('.tile-bg')[0], 320, 176);
         dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
       }.bind(this));
     } else {
@@ -158,6 +158,14 @@ module.exports = BaseView.extend({
   _markLaunchComplete: function() {
     this.$el.removeClass('launching');
     this._currentlyLaunching = false;
+  },
+
+  _showOrHideIcon: function() {
+    if (this.options.leapApp.showIcon()) {
+      this.$('.icon').show();
+    } else {
+      this.$('.icon').hide();
+    }
   }
 
 });
