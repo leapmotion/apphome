@@ -69,17 +69,11 @@ AppController.prototype = {
   },
 
   _authorize: function(cb) {
-    oauth.getAccessToken(function(err) {
-      if (err) {
-        var authorizationView = new AuthorizationView();
-        authorizationView.authorize(function() {
-          authorizationView.remove();
-          cb && cb(null); // skip auth if there's an error
-        }.bind(this));
-      } else {
-        cb && cb(null);
-      }
-    }.bind(this));
+    if (!oauth.getRefreshToken()) {
+      oauth.getAccessToken(cb);
+    } else {
+      cb(null);
+    }
   },
 
   _afterAuthorize: function() {

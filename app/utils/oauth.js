@@ -6,6 +6,8 @@ var url = require('url');
 var config = require('../../config/config.js');
 var db = require('./db.js');
 
+var AuthorizationView = require('../views/authorization/authorization.js');
+
 function saveRefreshToken(refreshToken) {
   db.setItem(config.DbKeys.OauthRefreshToken, refreshToken);
 }
@@ -81,22 +83,44 @@ function authorizeWithCode(code, cb) {
   });
 }
 
-function getAccessToken(cb) {
-  if (!getRefreshToken()) {
-    return cb && cb(new Error('Missing refresh token.'));
-  }
-  return oauthRequest({
-    grant_type: 'refresh_token',
-    refresh_token: getRefreshToken()
-  }, function(err, result) {
-    if (err) {
-      return cb && cb(err);
-    }
-    if (result.error) {
-      return cb && cb(new Error(result.error_description));
-    }
-    cb && cb(null, result.access_token);
+var promptingForLogin;
+function promptForLogin(cb) {
+  console.log('Prompting for login.');
+  promptingForLogin = true;
+  var authorizationView = new AuthorizationView();
+  authorizationView.authorize(function(err) {
+    authorizationView.remove();
+    promptingForLogin = false;
+    cb && cb(null); // skip auth if there's an error
   });
+}
+
+function getAccessToken(cb) {
+  console.log('Getting OAUTH access token.');
+  if (!getRefreshToken() && !promptingForLogin) {
+    promptForLogin(function() {
+      getAccessToken(cb);
+    });
+  } else {
+    return oauthRequest({
+      grant_type: 'refresh_token',
+      refresh_token: getRefreshToken()
+    }, function(err, result) {
+      if (err) {
+        cb && cb(err);
+      } else if (result.error) {
+        if (promptForLogin) {
+          cb && cb(new Error(result.error));
+        } else {
+          promptForLogin(function() {
+            getAccessToken(cb);
+          });
+        }
+      } else {
+        cb && cb(null, result.access_token);
+      }
+    });
+  }
 }
 
 function logOut() {
@@ -113,3 +137,4 @@ module.exports.authorizeWithCode = authorizeWithCode;
 module.exports.getAccessToken = getAccessToken;
 module.exports.logOut = logOut;
 module.exports.logOutUrl = logOutUrl;
+
