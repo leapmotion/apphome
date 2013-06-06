@@ -86,6 +86,12 @@ module.exports = LeapApp.extend({
       if (fs.existsSync(dependenciesReadmePath)) {
         nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
       }
+
+      var userDataDir = this._userDataDir();
+      if (!fs.existsSync(userDataDir)) {
+        fs.mkdirSync(userDataDir);
+      }
+
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
@@ -164,18 +170,16 @@ module.exports = LeapApp.extend({
   },
 
   _appDir: function() {
-    var dir = this._getDir(PlatformAppDirs, '__appDir');
-    if (os.platform() === 'darwin') {
-      dir = dir + '.app';
-    }
-    return dir;
+    var suffix = (os.platform() === 'darwin' ? '.app' : '');
+    return this._getDir(PlatformAppDirs, '__appDir', suffix);
   },
 
   _userDataDir: function() {
     return this._getDir(PlatformUserDataDirs, '__userDataDir');
   },
 
-  _getDir: function(dirsByPlatform, attributeName) {
+  _getDir: function(dirsByPlatform, attributeName, suffix) {
+    suffix = suffix || '';
     var dir = this[attributeName];
     if (!dir) {
       if (!dirsByPlatform[os.platform()]) {
@@ -188,7 +192,7 @@ module.exports = LeapApp.extend({
       if (!fs.existsSync(baseDir)) {
         fs.mkdirSync(baseDir);
       }
-      dir = path.join(baseDir, this.cleanAppName());
+      dir = path.join(baseDir, this.cleanAppName() + suffix);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
