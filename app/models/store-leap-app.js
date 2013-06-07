@@ -3,6 +3,7 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 
+var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
@@ -43,6 +44,7 @@ module.exports = LeapApp.extend({
   },
 
   install: function(cb) {
+    this.trigger('installstart');
     if (this.isUpgrade()) {
       this._installAsUpgrade(cb);
     } else {
@@ -70,7 +72,7 @@ module.exports = LeapApp.extend({
     startingCollection.remove(this);
     uiGlobals.installedApps.add(this);
 
-    var downloadProgress = this._downloadBinary(function(err) {
+    this._downloadBinary(function(err) {
       if (err) {
         this._abortInstallation(startingCollection, err);
         return cb && cb(err);
@@ -97,14 +99,10 @@ module.exports = LeapApp.extend({
         return cb && cb(exeNotFoundError);
       }
     }.bind(this));
-
-    downloadProgress.on('progress', function(progress) {
-      this.trigger('progress', progress);
-    }.bind(this));
   },
 
   _abortInstallation: function(previousCollection, err) {
-    console.warn('Installation of ' + this.get('name') + ' failed: ' + err.stack);
+    console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
     uiGlobals.installedApps.remove(this);
     this.set('state', LeapApp.States.NotYetInstalled);
     if (previousCollection) {
@@ -114,29 +112,35 @@ module.exports = LeapApp.extend({
   },
 
   _downloadBinary: function(cb) {
-    var binaryUrl = this.get('binaryUrl');
-    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     this.set('state', LeapApp.States.Downloading);
-    return download.get(binaryUrl, function(err, tempFilename) {
-      if (err) {
-        return cb(err);
-      }
-      uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
-      this.set('state', LeapApp.States.Installing);
-      console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
-      function cleanupTempfile(err) {
-        if (fs.existsSync(tempFilename)) {
-          fs.deleteSync(tempFilename);
+    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
+    api.connectToStoreServer(true, function() {
+      var binaryUrl = this.get('binaryUrl');
+      var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
+        if (err) {
+          return cb(err);
         }
-        cb(err || null);
-      }
-      if (os.platform() === 'win32') {
-        extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
-      } else if (os.platform() === 'darwin') {
-        extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
-      } else {
-        return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-      }
+        uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
+        this.set('state', LeapApp.States.Installing);
+        console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
+        function cleanupTempfile(err) {
+          if (fs.existsSync(tempFilename)) {
+            fs.deleteSync(tempFilename);
+          }
+          cb(err || null);
+        }
+        if (os.platform() === 'win32') {
+          extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
+        } else if (os.platform() === 'darwin') {
+          extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
+        } else {
+          return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+        }
+      }.bind(this));
+
+      downloadProgress.on('progress', function(progress) {
+        this.trigger('progress', progress);
+      }.bind(this));
     }.bind(this));
   },
 

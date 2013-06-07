@@ -1,6 +1,5 @@
 var Spinner = require('spin');
 
-var api = require('../../utils/api.js');
 var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
@@ -94,50 +93,20 @@ module.exports = BaseView.extend({
   },
 
   _promptForInstall: function() {
-    if (this._currentlyInstalling) {
-      return;
-    }
-
-    var onConfirm;
-    var downloadModal;
     var leapApp = this.options.leapApp;
-    this._currentlyInstalling = true;
 
     if (leapApp.isStoreApp()) {
-      var shouldInstall;
-      var polledServer;
-      function maybeInstallApp() {
-        if (polledServer && shouldInstall) {
-          leapApp.install(function() {
-            this._setupDragging();
-            this._currentlyInstalling = false;
-          }.bind(this));
-        }
-      }
-      api.connectToStoreServer(true, function() {
-        polledServer = true;
-        maybeInstallApp.call(this);
-      }.bind(this));
-
-      onConfirm = function() {
-        downloadModal.remove();
-        shouldInstall = true;
-        maybeInstallApp.call(this);
-      };
+      var downloadModal = new DownloadModalView({
+        leapApp: leapApp,
+        onConfirm: function() {
+          downloadModal.remove();
+          leapApp.install(this._setupDragging.bind(this));
+        }.bind(this)
+      });
+      downloadModal.show();
     } else {
-      onConfirm = function() {
-        downloadModal.remove();
-        leapApp.install();
-      };
+      leapApp.install(this._setupDragging.bind(this));
     }
-    downloadModal = new DownloadModalView({
-      leapApp: leapApp,
-      onConfirm: onConfirm.bind(this),
-      onCancel: function() {
-        this._currentlyInstalling = false;
-      }.bind(this)
-    });
-    downloadModal.show();
   },
 
   _launchApp: function() {

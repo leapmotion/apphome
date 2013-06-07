@@ -2,6 +2,10 @@
   width 100%
   height 100%
 
+  &.animating
+    .empty-message
+      display none !important
+
   #header
     background #222225
     border-bottom 1px solid #353639

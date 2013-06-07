@@ -9,7 +9,6 @@ var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
-var StoreLeapApp = require('../models/store-leap-app.js');
 var WebLinkApp = require('../models/web-link-app.js');
 
 var NodePlatformToServerPlatform = {
@@ -104,6 +103,7 @@ function createAppModel(appJson) {
     releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString()
   };
   if (cleanAppJson.platform === os.platform()) {
+    var StoreLeapApp = require('../models/store-leap-app.js');
     return new StoreLeapApp(cleanAppJson);
   } else {
     return null;

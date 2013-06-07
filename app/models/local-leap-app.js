@@ -37,6 +37,7 @@ module.exports = LeapApp.extend({
   },
 
   install: function(cb) {
+    this.trigger('installstart');
     uiGlobals.uninstalledApps.remove(this);
     uiGlobals.installedApps.add(this);
     this.set('state', LeapApp.States.Installing);

@@ -49,6 +49,7 @@ module.exports = BaseView.extend({
       this._updateDownloadsJewel();
     }, this);
 
+    this._initInstallBindings();
     this._initCarouselLinks();
     this._initDraggingToTrash();
 
@@ -57,11 +58,18 @@ module.exports = BaseView.extend({
 
   _switchToCarousel: function(newCarousel) {
     if (this._currentCarousel && this._currentCarousel !== newCarousel) {
+      Object.keys(this._linkMapping).forEach(function(selector) {
+        if (this._linkMapping[selector] === newCarousel) {
+          this.$('.carousel-link').removeClass('current');
+          this.$(selector).addClass('current');
+        }
+      }.bind(this));
       var currentCarousel = this._currentCarousel;
       // coefficient = -1 means slide down from top, coefficient = 1 means slide up from bottom
       var coefficient = (currentCarousel.position() > newCarousel.position() ? -1 : 1);
       var windowHeight = $(window).height();
       var animating = true;
+      this.$el.addClass('animating');
 
       newCarousel.setTop(coefficient * windowHeight);
       if (!newCarousel.isEmpty()) {
@@ -78,6 +86,7 @@ module.exports = BaseView.extend({
             currentCarousel.setTop(-coefficient * this.x);
           }).onComplete(function() {
             animating = false;
+            this.$el.removeClass('animating');
             currentCarousel.setTop(0);
             newCarousel.show();
             currentCarousel.hide();
@@ -100,13 +109,21 @@ module.exports = BaseView.extend({
     }
   },
 
+  _initInstallBindings: function() {
+    uiGlobals.availableDownloads.on('installstart', function() {
+      this._switchToCarousel(this.installedAppsCarousel);
+    }.bind(this));
+
+    uiGlobals.uninstalledApps.on('installstart', function() {
+      this._switchToCarousel(this.installedAppsCarousel);
+    }.bind(this));
+  },
+
   _initCarouselLinks: function() {
     _(this._linkMapping).each(function(carousel, selector) {
-      this.$(selector).click(function(evt) {
+      this.$(selector).click(function() {
         if (!$(selector).hasClass('current')) {
           this._switchToCarousel(carousel);
-          this.$('.carousel-link').removeClass('current');
-          this.$(selector).addClass('current');
         }
       }.bind(this));
      }.bind(this));

@@ -48,6 +48,7 @@ var CarouselView = BaseView.extend({
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
+      this._switchToSlide(Infinity);
     }, this);
 
     this.listenTo(collection, 'remove', function(tileModel) {
