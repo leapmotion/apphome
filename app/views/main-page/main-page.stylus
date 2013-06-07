@@ -149,6 +149,11 @@
       .icon
         background url(static/images/trash-icon-current.png)
 
+    &.highlight
+      color #a1abc9
+      .icon
+        background url(static/images/trash-icon-current.png)
+
     .label
       float left
     .icon

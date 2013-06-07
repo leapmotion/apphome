@@ -75,17 +75,13 @@ module.exports = BaseView.extend({
     if (leapApp.isUninstallable()) {
       this.$el.attr('draggable', 'true');
       this.$el.css('-webkit-user-drag', 'element');
+      this.$el.on('dragend', function() {
+        leapApp.trigger('dragend');
+      });
       this.$el.on('dragstart', function(evt) {
-        var dataTransfer = evt.originalEvent.dataTransfer;
-        /*var canvas = document.createElement('canvas');
-        canvas.setAttribute('width', 96);
-        canvas.setAttribute('height', 96);
-        canvas.getContext('2d').drawImage(this.$('.icon')[0], 0, 0, 96, 96);
-        var dragImage = document.createElement('img');
-        dragImage.setAttribute('src', canvas.toDataURL());*/
-        dataTransfer.setDragImage(this.$('.tile-bg')[0], 320, 176);
-        dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
-      }.bind(this));
+        evt.originalEvent.dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
+        leapApp.trigger('dragstart');
+      });
     } else {
       this.$el.removeAttr('draggable');
       this.$el.css('-webkit-user-drag', 'none');

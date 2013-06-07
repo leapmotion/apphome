@@ -123,12 +123,22 @@ module.exports = BaseView.extend({
     $trashCan.on('drop', function(evt) {
       evt.stopPropagation();
 
+      this.$('#uninstalled-link').removeClass('highlight');
+
       var id = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json')).id;
       var leapApp = uiGlobals.installedApps.get(id);
 
       if (leapApp) {
         leapApp.uninstall();
       }
+    }.bind(this));
+
+    uiGlobals.installedApps.on('dragstart', function() {
+      this.$('#uninstalled-link').addClass('highlight');
+    }.bind(this));
+
+    uiGlobals.installedApps.on('dragend', function() {
+      this.$('#uninstalled-link').removeClass('highlight');
     }.bind(this));
   },
 
