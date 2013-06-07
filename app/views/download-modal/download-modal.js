@@ -26,6 +26,10 @@ module.exports = BaseView.extend({
     } else {
       this.$('.button.confirm.install').show();
     }
+
+    this.listenTo(leapApp, 'change:iconPath', function() {
+      this.$('.icon').attr('src', leapApp.get('iconPath'));
+    }.bind(this));
   },
 
   show: function() {
