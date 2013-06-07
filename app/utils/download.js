@@ -47,7 +47,7 @@ function newTempFilePath(extension) {
 function getFile(sourceUrl, destPath, cb) {
   if (typeof destPath === 'function') {
     cb = destPath;
-    destPath = newTempFilePath(path.extname(sourceUrl));
+    destPath = newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
   }
   var destStream = fs.createWriteStream(destPath);
   var progressStream = new DownloadProgressStream();

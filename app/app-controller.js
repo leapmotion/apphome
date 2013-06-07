@@ -45,6 +45,7 @@ AppController.prototype = {
   },
 
   runApp: function() {
+    this._scanFilesystem();
     async.waterfall([
       this._checkLeapConnection.bind(this),
       this._authorize.bind(this),
@@ -69,24 +70,18 @@ AppController.prototype = {
   },
 
   _authorize: function(cb) {
-    oauth.getAccessToken(function(err) {
-      if (err) {
-        var authorizationView = new AuthorizationView();
-        authorizationView.authorize(function() {
-          authorizationView.remove();
-          cb && cb(null); // skip auth if there's an error
-        }.bind(this));
-      } else {
-        cb && cb(null);
-      }
-    }.bind(this));
+    if (!oauth.getRefreshToken()) {
+      oauth.getAccessToken(cb);
+    } else {
+      cb(null);
+    }
   },
 
   _afterAuthorize: function() {
     db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
     this._paintMainApp();
-    this._scanFilesystem();
+
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
     api.connectToStoreServer(true);

@@ -145,10 +145,8 @@ module.exports = BaseView.extend({
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
         console.warn(err);
-        cb(err);
-      } else {
-        oauth.getAccessToken(cb);
       }
+      cb(err || null);
     }.bind(this));
   },
 
