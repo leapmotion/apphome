@@ -45,6 +45,9 @@ function newTempFilePath(extension) {
 }
 
 function getFile(sourceUrl, destPath, cb) {
+  if (!sourceUrl) {
+    return cb(new Error('No source url specified.'));
+  }
   if (typeof destPath === 'function') {
     cb = destPath;
     destPath = newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');

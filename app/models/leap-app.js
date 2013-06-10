@@ -140,16 +140,16 @@ var LeapApp = BaseModel.extend({
     return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
   },
 
-  downloadIcon: function(cb) {
-    this._downloadAsset('iconUrl', 'iconPath', this.standardIconPath(), cb);
+  downloadIcon: function(force, cb) {
+    this._downloadAsset(force, 'iconUrl', 'iconPath', this.standardIconPath(), cb);
   },
 
-  downloadTile: function(cb) {
-    this._downloadAsset('tileUrl', 'tilePath', this.standardTilePath(), cb);
+  downloadTile: function(force, cb) {
+    this._downloadAsset(force, 'tileUrl', 'tilePath', this.standardTilePath(), cb);
   },
 
-  _downloadAsset: function(urlAttrName, pathAttrName, destPath, cb) {
-    if (fs.existsSync(destPath)) {
+  _downloadAsset: function(force, urlAttrName, pathAttrName, destPath, cb) {
+    if (!force && fs.existsSync(destPath)) {
       this.set(pathAttrName, destPath);
       this.save();
       cb && cb(null);

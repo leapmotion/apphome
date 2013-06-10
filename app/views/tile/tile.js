@@ -18,6 +18,17 @@ module.exports = BaseView.extend({
     templateData.tilePath = 'file://' + (templateData.tilePath || config.DefaultTilePath);
     this.setElement($(this.templateHtml(templateData)));
 
+    this.$('img').on('load error', function() {
+      if (this.$('.icon').prop('naturalWidth') === 0) {
+        leapApp.set('iconPath', '');
+        leapApp.downloadIcon(true);
+      }
+      if (this.$('.tile-bg').prop('naturalWidth') === 0) {
+        leapApp.set('tilePath', '');
+        leapApp.downloadTile(true);
+      }
+    }.bind(this));
+
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
     if (leapApp.isUpgrade()) {

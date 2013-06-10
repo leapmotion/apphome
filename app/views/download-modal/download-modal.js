@@ -14,6 +14,13 @@ module.exports = BaseView.extend({
     this.injectCss();
     this.$el.append($(this.templateHtml({ app: leapApp.toJSON() })));
 
+    this.$('img').on('load error', function() {
+      if (this.$('.icon').prop('naturalWidth') === 0) {
+        leapApp.set('iconPath', '');
+        leapApp.downloadIcon(true);
+      }
+    }.bind(this));
+
     this.$('.button.cancel').click(function() {
       if (_.isFunction(this.options.onCancel)) {
         this.options.onCancel();
