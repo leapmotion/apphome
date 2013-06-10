@@ -3,18 +3,26 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var plist = require('plist');
-var Zip = require('adm-zip');
+var unzip = require('unzip');
 
 var shell = require('./shell.js');
 
 function extractZip(src, dest, cb) {
   try {
-    var zip = new Zip(src);
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
     }
     fs.mkdirSync(dest);
-    zip.extractAllTo(dest);
+  } catch (err) {
+    return cb(err);
+  }
+  var unzipper = unzip.Extract({
+    path: dest,
+    verbose: true,
+    chunkSize: 20 * 1024 * 1024 // 20 MB
+  });
+  unzipper.on('error', cb);
+  unzipper.on('close', function() {
     var extractedFiles = fs.readdirSync(dest);
     if (extractedFiles.length === 1 && fs.statSync(path.join(dest, extractedFiles[0])).isDirectory()) {
       // application has a single top-level directory, so pull the contents out of that
@@ -25,9 +33,8 @@ function extractZip(src, dest, cb) {
       fs.rmdirSync(topLevelDir);
     }
     cb(null);
-  } catch (err) {
-    cb(err);
-  }
+  });
+  fs.createReadStream(src).pipe(unzipper);
 }
 
 function extractDmg(src, dest, cb) {

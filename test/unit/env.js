@@ -5,7 +5,6 @@
 var window = global.window = {};
 
 function blankFn() {
-
 }
 
 window.localStorage = {
@@ -16,6 +15,21 @@ window.localStorage = {
   key: blankFn,
   length: blankFn
 }
+
+window.document = global.document = {
+  createElement: function() {
+    return {
+      style: {}
+    };
+  },
+  getElementsByTagName: function() {
+    return [
+      {
+        appendChild: blankFn
+      }
+    ]
+  }
+};
 
 window._ = global._ = require('underscore');
 window.Backbone = require('backbone');

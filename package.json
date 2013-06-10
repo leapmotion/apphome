@@ -14,7 +14,6 @@
     "min_height": 699
   },
   "dependencies": {
-    "adm-zip": "0.4.3",
     "async": "0.2.8",
     "backbone": "1.0.0",
     "connect": "2.7.9",
@@ -25,6 +24,7 @@
     "spin": "0.0.1",
     "stylus": "0.32.1",
     "underscore": "1.4.4",
+    "unzip": "git://github.com/proxv/node-unzip.git#89047b80642595eff9d5e5f6de7f8749e14d1675",
     "ws": "0.4.25"
   },
   "devDependencies": {

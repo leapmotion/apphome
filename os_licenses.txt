@@ -1,6 +1,6 @@
 "node-webkit" https://github.com/rogerwang/node-webkit https://github.com/rogerwang/node-webkit/blob/master/LICENSE
 "npm" https://npmjs.org/ https://raw.github.com/isaacs/npm/master/LICENSE
-"adm-zip" https://npmjs.org/package/adm-zip https://raw.github.com/kriskowal/zip/master/LICENSE
+"unzip" https://npmjs.org/package/unzip https://github.com/proxv/node-unzip/blob/master/LICENSE
 "archive" https://npmjs.org/package/archive https://github.com/Skomski/node-archive/blob/master/Readme.md
 "async" https://npmjs.org/package/async https://github.com/caolan/async/raw/master/LICENSE
 "backbone" https://npmjs.org/package/backbone https://github.com/documentcloud/backbone/blob/master/LICENSE
