@@ -2,10 +2,6 @@ var path = require('path');
 
 var enumerable = require('../app/utils/enumerable.js');
 
-function staticImage(subdir, name) {
-  return [ 'static', 'images', subdir, name ].join('/');
-}
-
 var config = {
 
   oauth: {
@@ -27,8 +23,8 @@ var config = {
     AppTiles: 'app_tiles'
   },
 
-  LocalAppTilePath: 'static/images/tiles/default-tile.png',
-  DefaultTilePath: 'static/images/tiles/downloading-tile.png',
+  LocalAppTilePath: path.resolve(__dirname, '../static/images/tiles/default-tile.png'),
+  DefaultTilePath: path.resolve(__dirname, '../static/images/tiles/downloading-tile.png'),
 
   Layout: {
     columnsPerSlide: 4,

@@ -12,11 +12,12 @@ module.exports = BaseView.extend({
   initialize: function(args) {
     this.injectCss();
     var leapApp = args.leapApp;
-    var templateData = _.extend({
-      iconPath: '',
-      tilePath: config.DefaultTilePath
-    }, leapApp.toJSON());
+
+    var templateData = leapApp.toJSON();
+    templateData.iconPath = (templateData.iconPath ? 'file://' + templateData.iconPath : '');
+    templateData.tilePath = 'file://' + (templateData.tilePath || config.DefaultTilePath);
     this.setElement($(this.templateHtml(templateData)));
+
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
     if (leapApp.isUpgrade()) {
@@ -34,15 +35,15 @@ module.exports = BaseView.extend({
     this.listenTo(leapApp, 'change:tilePath', function() {
       var tilePath = leapApp.get('tilePath');
       if (tilePath) {
-        this.$('.tile-bg').attr('src', tilePath);
+        this.$('.tile-bg').attr('src', 'file://' + tilePath);
       } else {
-        this.$('.tile-bg').attr('src', config.DefaultTilePath);
+        this.$('.tile-bg').attr('src', 'file://' + config.DefaultTilePath);
       }
       this._showOrHideIcon();
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      this.$('.icon').attr('src', leapApp.get('iconPath'));
+      this.$('.icon').attr('src', 'file://' + leapApp.get('iconPath'));
       this._showOrHideIcon();
     }, this);
 
