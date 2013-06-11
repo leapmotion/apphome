@@ -1,5 +1,6 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
+var markdown = require('markdown').markdown;
 var os = require('os');
 
 var appData = require('../utils/app-data.js');
@@ -170,6 +171,15 @@ var LeapApp = BaseModel.extend({
 
   showIcon: function() {
     return this.get('iconPath') && (!this.isStoreApp() || !this.get('tilePath'));
+  },
+
+  getMarkdown: function(attrName) {
+    try {
+      var rawMarkdown = (this.get(attrName) || '').replace(/<\s*br[\s\/]*>/g, ''); // strip <br> tags
+      return markdown.renderJsonML(markdown.toHTMLTree(markdown.parse(rawMarkdown)));
+    } catch (e) {
+      return this.get(attrName) || '';
+    }
   }
 
 });
