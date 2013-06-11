@@ -21,9 +21,10 @@ if (process.env.LEAPHOME_ENV === 'development') {
 function getLogger(level) {
   level = level || 'log';
   return function() {
+    var sourceFile = ((new Error()).stack.split('\n')[2] || '').replace(/^\s+|\s+$/g, '');
     log(level.toUpperCase() + ': ' + Array.prototype.slice.call(arguments).map(function(arg) {
       return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
-    }).join(' '));
+    }).join(' ') + ' (' + sourceFile + ')');
   }
 }
 
