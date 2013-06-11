@@ -56,6 +56,11 @@ module.exports = LeapApp.extend({
     }
 
     function finishInstallation(err) {
+      if (err) {
+        console.error(err.stack || err);
+      } else {
+        console.info('Converted ' + rawIconFile + ' icon to PNG.');
+      }
       if (os.platform() === 'win32') {
         this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
       } else {
