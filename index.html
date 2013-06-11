@@ -13,23 +13,28 @@
   <script src="./static/notifications/nw-desktop-notifications.js"></script>
 </head>
 <body>
-<script>
-  var path = require('path');
-  global.$ = window.$;
-  global._ = window._;
-  global.LeapHomeDir = path.resolve('.');
-  global.leapEnv = global.leapEnv || process.env.LEAP_ENV || 'production';
-  global.nwGui = window.nwGui = require('nw.gui');
-  global.document = window.document;
-  window.onload = function() {
-    nwGui.Window.get().show();
-  };
-  var preloadScriptPath = process.env.LEAPHOME_PRELOAD_SCRIPT_PATH;
-  if (preloadScriptPath) {
-    require(preloadScriptPath); // a hook primarily used for testing
-  }
-  require('./app/airspace.js');
-</script>
+  <script>
+    (function() {
+      var path = require('path');
+      global.$ = window.$;
+      global._ = window._;
+      global.LeapHomeDir = path.resolve('.');
+      global.leapEnv = global.leapEnv || process.env.LEAP_ENV || 'production';
+      global.nwGui = window.nwGui = require('nw.gui');
+      global.document = window.document;
+      global.uiGlobals = require('./app/ui-globals.js');
+      require('./app/utils/logging.js');
+      var preloadScriptPath = process.env.LEAPHOME_PRELOAD_SCRIPT_PATH;
+      if (preloadScriptPath) {
+        require(preloadScriptPath); // a hook primarily used for testing
+      };
+      var airspace = require('./app/airspace.js')
+      window.onload = function() {
+        nwGui.Window.get().show();
+        airspace.run(true);
+      };
+    })();
+  </script>
 </body>
 </html>
 

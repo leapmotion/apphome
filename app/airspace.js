@@ -1,4 +1,3 @@
-global.uiGlobals = require('./ui-globals.js');
 var AppController = require('./app-controller.js');
 
 function run(firstRun) {
@@ -10,14 +9,10 @@ function run(firstRun) {
   appController.runApp();
 }
 
-$(window).load(function() {
-  run(true);
-});
-
 process.on('uncaughtException', function(err) {
   console.error('Uncaught exception: ' + err.stack);
   $('body').empty();
   run();
 });
 
-
+exports.run = run;

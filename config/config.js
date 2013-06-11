@@ -45,6 +45,12 @@ var config = {
     OauthRefreshToken: 'OauthRefreshToken',
     InstalledApps: 'InstalledApps',
     UninstalledApps: 'UninstalledApps'
+  },
+
+  PlatformDirs: {
+    win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',
+    darwin: process.env.HOME + '/Library/Application Support',
+    linux: process.env.HOME + '/.config'
   }
 
 };

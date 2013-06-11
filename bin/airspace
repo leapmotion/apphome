@@ -11,6 +11,8 @@ var platformSuffixes = {
   linux:  'linux-ia32/nw'
 };
 
+process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'development';
+
 var executable = 'nw/node-webkit-v' + NodeWebkitVersion + '-' + platformSuffixes[os.platform()];
 var nw = spawn(executable, [ '.' ].concat(process.argv.slice(2)), {
   cwd: workingDir,

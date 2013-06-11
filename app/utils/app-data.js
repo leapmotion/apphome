@@ -2,23 +2,18 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
-var PlatformDirs = {
-  win32:  [ process.env.LOCALAPPDATA || process.env.APPDATA ],
-  darwin: [ process.env.HOME, 'Library', 'Application Support' ],
-  linux:  [ process.env.HOME, '.config' ]
-};
-
+var config = require('../../config/config.js');
 
 var appDataDir;
 var appDataSubDirs = {};
 
 function getDir(subdir) {
   if (!appDataDir) {
-    if (!PlatformDirs[os.platform()]) {
+    if (!config.PlatformDirs[os.platform()]) {
       throw new Error('Unknown operating system: ' + os.platform());
     }
 
-    appDataDir = path.join.apply(path, PlatformDirs[os.platform()].concat([ uiGlobals.appName, 'AppData' ]));
+    appDataDir = path.join((config.PlatformDirs[os.platform()] || ''), uiGlobals.appName, 'AppData');
 
     if (!fs.existsSync(appDataDir)) {
       fs.mkdirSync(appDataDir);
