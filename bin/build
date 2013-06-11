@@ -10,6 +10,10 @@ var shell = require('../app/utils/shell.js');
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
 packageJson.window.toolbar = false;
+if (process.argv[2]) {
+  packageJson.version = process.argv[2];
+}
+
 var pngIconPath = path.join.apply(path, [ __dirname, '..' ].concat(packageJson.window.icon.split('/')));
 var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
@@ -110,7 +114,7 @@ appZip.finalize(function(err, bytesWritten) {
           fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
           fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
 
-          console.log('Wrote Windows version to: ' + buildDir('windows'));
+          console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
         });
       });
     });
@@ -141,7 +145,7 @@ appZip.finalize(function(err, bytesWritten) {
       plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
       fs.writeFileSync(infoPlistPath, plist);
 
-      console.log('Wrote OS X version to: ' + buildDir('osx'));
+      console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir('osx'));
     });
   });
 });
