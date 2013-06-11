@@ -1,5 +1,13 @@
 (function(){
-	var requireNode = window.require;
+	function getWindow() {
+		if (window) {
+			return window;
+		} else {
+			process.exit();
+		}
+	}
+
+	var requireNode = getWindow().require;
 	var WINDOW_WIDTH = 290;
 	var gui = null;
 	var counter = 0;
@@ -7,10 +15,9 @@
 		gui = requireNode('nw.gui');
 	}
 
-	if(!window.LOCAL_NW){
-		window.LOCAL_NW = {};
+	if(!getWindow().LOCAL_NW){
+		getWindow().LOCAL_NW = {};
 	}
-
 
 	function makeNewNotifyWindow(){
 		var win = gui.Window.open(
@@ -23,10 +30,10 @@
 			show: false,
 			resizable: false
 		});
-		window.LOCAL_NW.DesktopNotificationsWindow = win;
-		window.LOCAL_NW.DesktopNotificationsWindowIsLoaded = false;
+		getWindow().LOCAL_NW.DesktopNotificationsWindow = win;
+		getWindow().LOCAL_NW.DesktopNotificationsWindowIsLoaded = false;
 		win.on('loaded', function(){
-			window.LOCAL_NW.DesktopNotificationsWindowIsLoaded = true;
+			getWindow().LOCAL_NW.DesktopNotificationsWindowIsLoaded = true;
 			$(win.window.document.body).find('#closer').click(function(){
 				slideOutNotificationWindow();
 			});
@@ -37,9 +44,9 @@
 		if(!gui){
 			return false;
 		}
-		if(window.LOCAL_NW.DesktopNotificationsWindow){
-			window.LOCAL_NW.DesktopNotificationsWindow.close(true);
-			window.LOCAL_NW.DesktopNotificationsWindow = null;
+		if(getWindow().LOCAL_NW.DesktopNotificationsWindow){
+      getWindow().LOCAL_NW.DesktopNotificationsWindow.close(true);
+      getWindow().LOCAL_NW.DesktopNotificationsWindow = null;
 		}
 	}
 
@@ -47,19 +54,19 @@
 		if(!gui){
 			return false;
 		}
-		if(!window.LOCAL_NW.DesktopNotificationsWindow){
+		if(!getWindow().LOCAL_NW.DesktopNotificationsWindow){
 			makeNewNotifyWindow();
 		}
 		var continuation = function(){
 			appendNotificationToWindow(icon, title, content, onClick);
 			slideInNotificationWindow();
-			$(window.LOCAL_NW.DesktopNotificationsWindow.window.document.body).find('#shouldstart').text('true');	
+			$(getWindow().LOCAL_NW.DesktopNotificationsWindow.window.document.body).find('#shouldstart').text('true');
 		};
-		if(window.LOCAL_NW.DesktopNotificationsWindowIsLoaded){
+		if(getWindow().LOCAL_NW.DesktopNotificationsWindowIsLoaded){
 			continuation();
 		}
 		else{
-			window.LOCAL_NW.DesktopNotificationsWindow.on('loaded',continuation);	
+      getWindow().LOCAL_NW.DesktopNotificationsWindow.on('loaded',continuation);
 		}
 		return true;
 	}
@@ -77,13 +84,13 @@
 	function appendNotificationToWindow(iconUrl, title, content, onClick){
 		var elemId = getUniqueId();
 		var markup = makeNotificationMarkup(iconUrl, title, content, elemId);
-		var jqBody = $(window.LOCAL_NW.DesktopNotificationsWindow.window.document.body);
+		var jqBody = $(getWindow().LOCAL_NW.DesktopNotificationsWindow.window.document.body);
 		jqBody.find('#notifications').append(markup);
 		jqBody.find('#'+elemId).click(onClick);
 	}
 
 	function slideInNotificationWindow(){
-		var win = window.LOCAL_NW.DesktopNotificationsWindow;
+		var win = getWindow().LOCAL_NW.DesktopNotificationsWindow;
 		if(win.NOTIFICATION_IS_SHOWING){
 			return;
 		}
@@ -108,7 +115,7 @@
 	}
 
 	function slideOutNotificationWindow(callback){
-		var win = window.LOCAL_NW.DesktopNotificationsWindow;
+		var win = getWindow().LOCAL_NW.DesktopNotificationsWindow;
 		var y = win.height;
 		var x = WINDOW_WIDTH;
 		function animate(){
@@ -148,7 +155,7 @@
 		}
 	}
 
-	window.LOCAL_NW.desktopNotifications = {
+  getWindow().LOCAL_NW.desktopNotifications = {
 		notify: notify,
 		closeAnyOpenNotificationWindows: closeAnyOpenNotificationWindows
 	};
