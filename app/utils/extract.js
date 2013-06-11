@@ -18,7 +18,6 @@ function extractZip(src, dest, cb) {
   }
   var unzipper = unzip.Extract({
     path: dest,
-    verbose: true,
     chunkSize: 20 * 1024 * 1024 // 20 MB
   });
   unzipper.on('error', cb);
