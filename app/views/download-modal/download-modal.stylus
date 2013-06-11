@@ -56,9 +56,17 @@ $borderColor = #3a3e48
             vertical-align bottom
             padding 4px 0
 
-            pre
-              font-family "freightsans_probook"
+            *
               margin 0
+
+            h1, h2, h3, h4, h5, h6
+              font-size 1em
+
+            ol, ul
+              margin-left -1em
+
+            a
+              color #6cbaeb
 
     .footer
       border-top 1px solid $borderColor

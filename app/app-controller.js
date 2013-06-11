@@ -20,8 +20,10 @@ function AppController() {
 AppController.prototype = {
 
   setupWindow: function() {
+    var win = nwGui.Window.get();
     this._createMenu();
-    nwGui.Window.get().maximize();
+    win.show();
+    win.maximize();
   },
 
   _createMenu: function(enableLogOut) {
@@ -46,6 +48,7 @@ AppController.prototype = {
 
   runApp: function() {
     this._scanFilesystem();
+    $('body').removeClass('startup');
     async.waterfall([
       this._checkLeapConnection.bind(this),
       this._authorize.bind(this),

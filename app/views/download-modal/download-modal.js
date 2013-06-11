@@ -1,3 +1,5 @@
+var markdown = require('markdown').markdown;
+
 var leap = require('../../utils/leap.js');
 
 var BaseView = require('../base-view.js');
@@ -12,7 +14,16 @@ module.exports = BaseView.extend({
     var leapApp = this.options.leapApp;
 
     this.injectCss();
-    this.$el.append($(this.templateHtml({ app: leapApp.toJSON() })));
+    var appJson = leapApp.toJSON();
+    if (appJson.changelog) {
+      try {
+        appJson.changelog = appJson.changelog.replace(/<\s*br\s*\/?\s*>/g, '');
+        appJson.changelog = markdown.renderJsonML(markdown.toHTMLTree(markdown.parse(appJson.changelog)));
+      } catch (e) {
+        // ignore markdown parsing errors
+      }
+    }
+    this.$el.append($(this.templateHtml({ app: appJson })));
 
     this.$('img').on('load error', function() {
       if (this.$('.icon').prop('naturalWidth') === 0) {

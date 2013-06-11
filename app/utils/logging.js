@@ -7,7 +7,7 @@ var config = require('../../config/config.js');
 var log;
 
 if (process.env.LEAPHOME_ENV === 'development') {
-  log = console.error.bind(console);
+  log = console.log.bind(console);
 } else {
   var logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], uiGlobals.appName, 'log.txt'));
   log = function(message) {

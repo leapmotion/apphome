@@ -12,7 +12,7 @@
   <script src="./static/js/Tween.js"></script>
   <script src="./static/notifications/nw-desktop-notifications.js"></script>
 </head>
-<body>
+<body class="startup">
   <script>
     (function() {
       var path = require('path');
@@ -30,7 +30,6 @@
       };
       var airspace = require('./app/airspace.js')
       window.onload = function() {
-        nwGui.Window.get().show();
         airspace.run(true);
       };
     })();

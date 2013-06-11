@@ -15,6 +15,11 @@ body {
   position: fixed;
 }
 
+body.startup {
+  visibility: hidden;
+  background: transparent;
+}
+
 body * {
   user-select: none;
   -webkit-user-select: none;
