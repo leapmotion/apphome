@@ -97,7 +97,16 @@ function promptForLogin(cb) {
   });
 }
 
+var accessTokenExpiry;
+var accessToken;
 function getAccessToken(cb) {
+  var now = (new Date()).getTime();
+  if (accessTokenExpiry && (now < accessTokenExpiry)) {
+    console.log('Using cached OAUTH access token.');
+    cb(null, accessToken);
+    return;
+  }
+
   console.log('Getting OAUTH access token.');
   if (!getRefreshToken() && !promptingForLogin) {
     promptForLogin(function() {
@@ -119,7 +128,9 @@ function getAccessToken(cb) {
           });
         }
       } else {
-        cb && cb(null, result.access_token);
+        accessToken = result.access_token;
+        accessTokenExpiry = now + config.oauth.auth_token_expiration_time;
+        cb && cb(null, accessToken);
       }
     });
   }
