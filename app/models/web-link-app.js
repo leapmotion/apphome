@@ -4,6 +4,8 @@ var config = require('../../config/config.js');
 
 var LeapApp = require('./leap-app.js');
 
+var api = require('../utils/api.js');
+
 var WebLinkApp = LeapApp.extend({
 
   constructor: function(args) {
@@ -43,7 +45,19 @@ var WebLinkApp = LeapApp.extend({
   },
 
   launch: function() {
-    nwGui.Shell.openExternal(this.get('urlToLaunch'));
+    var url = this.get('urlToLaunch');
+    if (this.get('passAccessToken')) {
+      api.getAuthURL(url, function(err, authURL) {
+        if (err) {
+          console.log('error getting an authenticated URL', err);
+          nwGui.Shell.openExternal(url);
+        } else {
+          nwGui.Shell.openExternal(authURL);
+        }
+      });
+    } else {
+      nwGui.Shell.openExternal();
+    }
   }
 
 });

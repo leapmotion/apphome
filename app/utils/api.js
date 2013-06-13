@@ -154,6 +154,16 @@ function subscribeToAppChannel(appId) {
   subscribe(appId + '.app.updated', handleAppJson);
 }
 
+function getAuthURL(url, cb) {
+  oauth.getAccessToken(function(err, accessToken) {
+    if (err, null) {
+      cb(err);
+    } else {
+      cb(null, config.oauth.redirect_uri + '?' + qs.stringify({ access_token: accessToken, _r: url }));
+    }
+  });
+}
+
 var reconnectionTimeoutId;
 var hasEverConnected;
 function reconnectAfterError(err) {
@@ -265,3 +275,4 @@ function getLocalAppManifest(cb) {
 
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
+module.exports.getAuthURL = getAuthURL;
