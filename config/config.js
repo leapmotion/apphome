@@ -9,7 +9,8 @@ var config = {
     client_id: '73fde9aa45ef818ecb137aeacd886253',
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
     redirect_uri: 'https://central.leapmotion.com/',
-    log_out_url: 'https://central.leapmotion.com/users/sign_out'
+    log_out_url: 'https://central.leapmotion.com/users/sign_out',
+    auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
 
   AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
