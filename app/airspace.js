@@ -9,9 +9,15 @@ function run(firstRun) {
   appController.runApp();
 }
 
+// This code redirects links in app description/changelog
+// markdown to open in the default browser, instead of
+// trying to open in node-webkit.
 $('body').on('click', 'a', function(evt) {
   evt.preventDefault();
-  nwGui.Shell.openExternal($(this).attr('href'));
+  var href = $(this).attr('href');
+  if (href) {
+    nwGui.Shell.openExternal(href);
+  }
 });
 
 process.on('uncaughtException', function(err) {
