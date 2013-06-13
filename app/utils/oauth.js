@@ -85,10 +85,12 @@ function authorizeWithCode(code, cb) {
 
 var promptingForLogin;
 function promptForLogin(cb) {
-  console.log('Prompting for login.');
   promptingForLogin = true;
   var authorizationView = new AuthorizationView();
   authorizationView.authorize(function(err) {
+    if (err) {
+      console.warn('Error logging in: ' + err.stack || err);
+    }
     authorizationView.remove();
     promptingForLogin = false;
     cb && cb(null); // skip auth if there's an error
@@ -109,7 +111,7 @@ function getAccessToken(cb) {
       if (err) {
         cb && cb(err);
       } else if (result.error) {
-        if (promptForLogin) {
+        if (promptingForLogin) {
           cb && cb(new Error(result.error));
         } else {
           promptForLogin(function() {

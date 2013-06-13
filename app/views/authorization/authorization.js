@@ -34,22 +34,22 @@ module.exports = BaseView.extend({
       if (isConnected) {
         this.$iframe.attr('src', oauth.getAuthorizationUrl());
 
-        var loadTimeoutId = setTimeout(function() {
-          console.warn('Connecting auth to server timed out.');
-          cb(new Error('Connection to login server timed out.'));
-        }.bind(this), config.AuthLoadTimeoutMs);
+        this._startLoadTimeout(cb);
 
         this.$iframe.load(function() {
           try {
-            clearTimeout(loadTimeoutId);
             var iframeWindow = this.$iframe.prop('contentWindow');
+
             if (/^http/i.test(iframeWindow.location.href)) {
               $(iframeWindow).unload(function() {
                 this.$iframe.css('visibility', 'hidden');
+                this._startLoadTimeout(cb);
               }.bind(this));
               this._center();
+              this._clearLoadTimeout();
               this._performActionBasedOnUrl(iframeWindow.location.href, cb);
             } else {
+              this._clearLoadTimeout();
               cb(new Error('Could not load auth page.'));
             }
           } catch (err2) {
@@ -109,6 +109,8 @@ module.exports = BaseView.extend({
       this._allowOauthAuthorization();
     } else if (urlParts.query && urlParts.query.code) {
       this._finishAuthorization(urlParts.query.code, cb);
+    } else {
+      cb(new Error('Unknown URL: ' + url));
     }
   },
 
@@ -199,7 +201,22 @@ module.exports = BaseView.extend({
     });
   },
 
+  _clearLoadTimeout: function() {
+    if (this._loadTimeoutId) {
+      clearTimeout(this._loadTimeoutId);
+      this._loadTimeoutId = null;
+    }
+  },
+
+  _startLoadTimeout: function(cb) {
+    this._clearLoadTimeout();
+    this._loadTimeoutId = setTimeout(function() {
+      cb(new Error('Connection to login server timed out.'));
+    }, config.AuthLoadTimeoutMs);
+  },
+
   remove: function() {
+    this._clearLoadTimeout();
     $(window).unbind('resize', this._boundIframeCenteringFn);
     this.$el.remove();
   }

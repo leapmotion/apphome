@@ -12,7 +12,7 @@ function checkInternetConnection(cb) {
     dns.resolve(domain, function(err) {
       lastCheck = (new Date()).getTime();
       lastIsConnected = !err || err.code === dns.NOTFOUND;
-      console.log(lastIsConnected ? 'Internet!' : 'No internet. :(');
+      console.log(lastIsConnected ? 'Internet connection is up.' : 'Internet connection is down.');
       cb && cb(lastIsConnected);
     });
   }
