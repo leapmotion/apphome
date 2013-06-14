@@ -6,7 +6,7 @@ var xmlTemplate = fs.readFileSync(path.join(__dirname, '..', '..', 'config', 'tt
 
 var PlatformOutputPaths = {
   darwin: [ process.env.HOME, 'Library', 'Preferences', 'DSS', 'auth.plist' ],
-  win32: [ process.env.APPDATA, 'LeapMotion', 'tt.xml' ]
+  win32: [ process.env.APPDATA, 'Leap Motion', 'tt.xml' ]
 };
 
 function generateXml(authId, token) {
