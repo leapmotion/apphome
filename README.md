@@ -20,14 +20,14 @@ Outputs to: <code>build/</code>
 
 ### App Manifest
 
-See <code>non-store-app-manifest.json</code>
+See <code>config/non-store-app-manifest.json</code>.
 
 Get [s3cmd](http://s3tools.org/), and configure it with the correct credentials for
 the <code>lm-assets</code> S3 bucket (ask Josh Hull if you don't have them).
 
 Upload with:
 
-    s3cmd put -P non-store-app-manifest.json s3://lm-assets/airspace-desktop/
+    s3cmd put -P config/non-store-app-manifest.json s3://lm-assets/airspace-desktop/
 
 App Store and Leap Community tiles can be uploaded with:
 
