@@ -7,17 +7,17 @@ var mixpanel = Mixpanel.init(config.MixpanelToken);
 function getTrackFn(eventName) {
   return function() {
     console.log('Tracking Mixpanel event: ' + eventName);
-    mixpanel.track(eventName, {
+    mixpanel.track(uiGlobals.appName + ' - ' + eventName, {
       version: uiGlobals.appVersion
     });
   }
 }
 
 module.exports = {
-  trackOpen: getTrackFn('Open Airspace Home'),
-  trackClose: getTrackFn('Close Airspace Home'),
+  trackOpen: getTrackFn('Open'),
+  trackClose: getTrackFn('Close'),
   trackAirspaceStoreTileClick: getTrackFn('Click Airspace Store Tile'),
   trackCommunityTileClick: getTrackFn('Click Leap Community Tile'),
-  trackSignUp: getTrackFn('Sign Up from Airspace Home'),
-  trackSignIn: getTrackFn('Sign In from Airspace Home')
+  trackSignUp: getTrackFn('Sign Up'),
+  trackSignIn: getTrackFn('Sign In')
 };
