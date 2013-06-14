@@ -19,6 +19,7 @@
     "connect": "2.7.9",
     "fs-extra": "0.6.1",
     "jade": "0.30.0",
+    "markdown": "0.4.0",
     "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e",
     "pubnub": "3.4.4",
     "spin": "0.0.1",
