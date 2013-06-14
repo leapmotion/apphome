@@ -1,7 +1,7 @@
 {
   "web": [
     {
-      "name": "App Store",
+      "name": "Airspace Store",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-tile.png?v=2",
       "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-icon.png?v=2",
       "urlToLaunch": "https://airspace.leapmotion.com/",
@@ -9,7 +9,7 @@
       "deletable": false
     },
     {
-      "name": "Leap Community",
+      "name": "Beta Community",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-tile.png?v=2",
       "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-icon.png?v=2",
       "urlToLaunch": "https://forums.leapmotion.com/forum.php",

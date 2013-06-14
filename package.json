@@ -1,12 +1,12 @@
 {
-  "name": "Airspace",
-  "version": "0.0.1",
+  "name": "Airspace Home",
+  "version": "0.0.1-dev",
   "description": "Leap Motion Airspace Desktop Client",
   "main": "index.html",
   "node-main": "node-main.js",
   "chromium-args": "--disable-accelerated-layers",
   "window": {
-    "title": "Airspace",
+    "title": "Airspace Home",
     "icon": "static/icon/icon.png",
     "show": false,
     "toolbar": true,

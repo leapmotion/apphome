@@ -17,7 +17,7 @@
 
       &.current
         .divot
-          left -14px
+          left -22px
         &:after
           background -webkit-linear-gradient(left,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
           background linear-gradient(to right,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)

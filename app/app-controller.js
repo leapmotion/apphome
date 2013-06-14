@@ -1,4 +1,5 @@
-var async = require('async');
+var async = require('async')
+var os = require('os');
 
 var api = require('./utils/api.js');
 var config = require('../config/config.js');
@@ -28,17 +29,45 @@ AppController.prototype = {
 
   _createMenu: function(enableLogOut) {
     var mainMenu = new nwGui.Menu({ type: 'menubar' });
+
+    if (os.platform() === 'win32') {
+      var fileMenu = new nwGui.Menu();
+      fileMenu.append(new nwGui.MenuItem({
+        label: 'Exit ' + uiGlobals.appName,
+        click: process.exit
+      }));
+      mainMenu.append(new nwGui.MenuItem({
+        label: 'File',
+        submenu: fileMenu
+      }));
+    }
+
     var accountMenu = new nwGui.Menu();
-    var accountMenuItem = new nwGui.MenuItem({
-      label: 'Account',
-      submenu: accountMenu
-    });
     accountMenu.append(new nwGui.MenuItem({
       label: 'Sign Out',
       click: this._logOut.bind(this),
       enabled: !!enableLogOut
     }));
-    mainMenu.append(accountMenuItem);
+    mainMenu.append(new nwGui.MenuItem({
+      label: 'Account',
+      submenu: accountMenu
+    }));
+
+    // TODO: support website links on both OS X and Windows
+    if (os.platform() === 'win32') {
+      var helpMenu = new nwGui.Menu();
+      helpMenu.append(new nwGui.MenuItem({
+        label: 'About ' + uiGlobals.appName,
+        click: function() {
+          window.alert(uiGlobals.appName + ' v' + uiGlobals.appVersion);
+        }
+      }));
+      mainMenu.append(new nwGui.MenuItem({
+        label: 'Help',
+        submenu: helpMenu
+      }));
+    }
+
     nwGui.Window.get().menu = mainMenu;
   },
 

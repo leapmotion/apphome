@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8"/>
-  <title>Airspace</title>
   <link rel="stylesheet" type="text/css" href="./static/css/reset.css"/>
   <link rel="stylesheet" type="text/css" href="./static/css/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="./static/css/shared.css"/>
@@ -23,6 +22,7 @@
       global.nwGui = window.nwGui = require('nw.gui');
       global.document = window.document;
       global.uiGlobals = require('./app/ui-globals.js');
+      window.document.title = global.uiGlobals.appName;
       require('./app/utils/logging.js');
       var preloadScriptPath = process.env.LEAPHOME_PRELOAD_SCRIPT_PATH;
       if (preloadScriptPath) {

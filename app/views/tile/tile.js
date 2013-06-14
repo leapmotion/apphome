@@ -58,6 +58,10 @@ module.exports = BaseView.extend({
       this._showOrHideIcon();
     }, this);
 
+    this.listenTo(leapApp, 'change:name', function() {
+      this.$('.name').text(leapApp.get('name'));
+    }, this);
+
     this.listenTo(leapApp, 'progress', function(progress) {
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
     }, this);
