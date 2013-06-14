@@ -14,7 +14,7 @@
 
 ### Building
 
-    node bin/build
+    node bin/build [version]
 
 Outputs to: <code>build/</code>
 
