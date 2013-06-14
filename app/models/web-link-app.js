@@ -56,17 +56,10 @@ var WebLinkApp = LeapApp.extend({
         }
       });
     } else {
-      nwGui.Shell.openExternal();
+      nwGui.Shell.openExternal(url);
     }
   }
 
 });
-
-WebLinkApp.createBuiltinTiles = function() {
-  console.log("Creating builtin tiles");
-  config.BuiltinTiles.forEach(function(args) {
-    uiGlobals.installedApps.add(new BuiltinTileApp(args));
-  });
-};
 
 module.exports = WebLinkApp;
