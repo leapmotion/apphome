@@ -248,8 +248,7 @@ function createWebLinkApps(webAppData) {
         existingWebApp.downloadTile();
         console.info('tile updated for ' + existingWebApp.get('name'));
       }
-      existingWebApp.set('name', webApp.get('name'));
-      existingWebApp.set('urlToLaunch', webApp.get('urlToLaunch'));
+      existingWebApp.set(webAppDatum);
     } else {
       uiGlobals.installedApps.add(webApp);
       console.log('Added web link: ', webApp.get('urlToLaunch'));
