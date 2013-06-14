@@ -33,7 +33,7 @@ AppController.prototype = {
     if (os.platform() === 'win32') {
       var fileMenu = new nwGui.Menu();
       fileMenu.append(new nwGui.MenuItem({
-        label: 'Exit ' + uiGlobals.appName,
+        label: 'Exit',
         click: process.exit
       }));
       mainMenu.append(new nwGui.MenuItem({
