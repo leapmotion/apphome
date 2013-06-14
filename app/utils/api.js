@@ -191,6 +191,9 @@ function connectToStoreServer(noAutoInstall, cb) {
           reconnectAfterError(err);
           cb && cb(err);
           cb = null;
+        } else if (messages.errors) {
+          cb && cb(new Error(messages.errors));
+          cb = null;
         } else {
           hasEverConnected = true;
           console.log('Connected to store server.');
