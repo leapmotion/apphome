@@ -1,10 +1,10 @@
 var crypto = require('crypto');
 
+var api = require('../utils/api.js');
 var config = require('../../config/config.js');
+var mixpanel = require('../utils/mixpanel.js');
 
 var LeapApp = require('./leap-app.js');
-
-var api = require('../utils/api.js');
 
 var WebLinkApp = LeapApp.extend({
 
@@ -57,6 +57,11 @@ var WebLinkApp = LeapApp.extend({
       });
     } else {
       nwGui.Shell.openExternal(url);
+    }
+
+    var eventToTrack = this.get('eventToTrack');
+    if (eventToTrack && _.isFunction(mixpanel['track' + eventToTrack])) {
+      mixpanel['track' + eventToTrack]();
     }
   }
 

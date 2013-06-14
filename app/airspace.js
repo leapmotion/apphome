@@ -1,4 +1,7 @@
 var AppController = require('./app-controller.js');
+var mixpanel = require('./utils/mixpanel.js');
+
+mixpanel.trackOpen();
 
 function run(firstRun) {
   var appController = new AppController();
@@ -25,5 +28,7 @@ process.on('uncaughtException', function(err) {
   $('body').empty();
   run();
 });
+
+process.on('exit', mixpanel.trackClose);
 
 exports.run = run;

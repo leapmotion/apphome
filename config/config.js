@@ -13,6 +13,8 @@ var config = {
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
 
+  MixpanelToken: '77d363605f0470115eb82352f14b2981',
+
   AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',

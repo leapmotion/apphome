@@ -5,6 +5,7 @@ var config = require('../../../config/config.js');
 var connection = require('../../utils/connection.js');
 var db = require('../../utils/db.js');
 var oauth = require('../../utils/oauth.js');
+var mixpanel = require('../../utils/mixpanel.js');
 
 var BaseView = require('../base-view.js');
 
@@ -118,6 +119,14 @@ module.exports = BaseView.extend({
     var iframeWindow = this.$iframe.prop('contentWindow');
     var signUpUrl = $('.auth-link:first', iframeWindow.document).attr('href');
     var isShowingSignInForm = /^\/users\/sign_in/.test(iframeWindow.location.pathname);
+    var isShowingSignUpForm = /^\/users\/sign_up/.test(iframeWindow.location.pathname);
+
+    if (isShowingSignUpForm) {
+      $('form', iframeWindow.document).submit(mixpanel.trackSignUp);
+    } else if (isShowingSignInForm) {
+      $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
+    }
+
     if (this._isFirstRun() && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
       iframeWindow.location = signUpUrl;
       this._hasRedirectedToSignUp = true;
@@ -125,7 +134,7 @@ module.exports = BaseView.extend({
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
-      $('form#new_user', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
+      $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
       this._showLoginForm();
       this._center();
     }
