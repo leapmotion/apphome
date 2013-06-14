@@ -1,9 +1,12 @@
 var Mixpanel = require('mixpanel');
 
+var config = require('../../config/config.js');
+
 var mixpanel = Mixpanel.init(config.MixpanelToken);
 
 function getTrackFn(eventName) {
   return function() {
+    console.log('Tracking Mixpanel event: ' + eventName);
     mixpanel.track(eventName, {
       version: uiGlobals.appVersion
     });
