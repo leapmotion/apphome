@@ -110,10 +110,18 @@ AppController.prototype = {
   },
 
   _scanFilesystem: function() {
+    if (this._scanningFilesystem) {
+      return;
+    }
+
+    this._scanningFilesystem = true;
     api.getLocalAppManifest(function(err, manifest) {
       if (err) {
+        this._scanningFilesystem = false;
         return;
       }
+
+      console.info('Scanning filesystem.');
 
       var existingLocalAppsById = {};
       var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
@@ -125,6 +133,7 @@ AppController.prototype = {
 
       var fsScanner = new FsScanner(manifest);
       fsScanner.scan(function(err, apps) {
+        this._scanningFilesystem = false;
         if (!err) {
           apps.forEach(function(app) {
             if (existingLocalAppsById[app.get('id')]) {
@@ -147,8 +156,8 @@ AppController.prototype = {
             });
           });
         }
-      });
-    });
+      }.bind(this));
+    }.bind(this));
   }
 
 };
