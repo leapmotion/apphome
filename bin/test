@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+var Mocha = require('mocha');
+
+var projectDir = path.join(__dirname, '..');
+var queue = [ path.join(projectDir, 'test') ];
+var testFiles = process.argv.slice(2);
+
+if (testFiles.length === 0) {
+  while (queue.length > 0) {
+    var currentFile = queue.shift();
+    if (fs.statSync(currentFile).isDirectory()) {
+      fs.readdirSync(currentFile).forEach(function(containedFile) {
+        queue.push(path.join(currentFile, containedFile));
+      });
+    } else if (/^test.*\.js$/.test(path.basename(currentFile))) {
+      testFiles.push(currentFile);
+    }
+  }
+}
+
+console.log('Testing files: ' + testFiles.join(', '));
+
+var mocha = new Mocha();
+testFiles.forEach(function(testFile) {
+  mocha.addFile(testFile);
+});
+mocha.run(process.exit);

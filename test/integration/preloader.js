@@ -3,16 +3,16 @@ var path = require('path');
 var domInjection = require('../../app/utils/dom-injection.js');
 var Mocha = require('mocha');
 var assert = require('assert');
-var socketReporter = require('./socket-reporter.js');
+var SocketReporter = require('./socket-reporter.js');
 var db = require('../../app/utils/db.js');
 
 global.leapEnv = 'test';
 global.assert = assert;
 
-var scripts = _.compact(sources(path.resolve(__dirname, './js_support')));
+var scripts = _.compact(sources(path.join(__dirname, 'js_support')));
 
 var stylesheets = [
-  './node_modules/mocha/mocha.css'
+  'file://' + path.join(__dirname, '..', '..', 'node_modules', 'mocha', 'mocha.css')
 ];
 
 db.setDbName('test');
@@ -31,14 +31,14 @@ $(window).load(function() {
 
   var mocha = new Mocha();
   mocha.addFile(process.env.LEAPHOME_INTEGRATION_TEST_PATH);
-  mocha.reporter(socketReporter).run();
+  mocha.reporter(SocketReporter).run();
 });
 
 function sources(dir) {
   var jsSources = [];
-  fs.readdirSync(dir).forEach(function(relPath) {
-    if (path.extname(relPath) === 'js') {
-      jsSources.push('./' + path.relative(global.LeapHomeDir, path.resolve(dir, relPath)));
+  fs.readdirSync(dir).forEach(function(file) {
+    if (path.extname(file) === '.js') {
+      jsSources.push('file://' + path.join(dir, file));
     }
   });
   return jsSources;

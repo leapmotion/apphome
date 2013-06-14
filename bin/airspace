@@ -20,6 +20,10 @@ var nw = spawn(executable, [ '.' ].concat(process.argv.slice(2)), {
 });
 nw.stdout.pipe(process.stdout);
 nw.stderr.pipe(process.stderr);
+nw.on('exit', function(code) {
+  process.exit(code);
+});
+
 function killNodeWebkit() {
   nw.kill();
 }

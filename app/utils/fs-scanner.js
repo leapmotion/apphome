@@ -45,7 +45,7 @@ FsScanner.prototype = {
   },
 
   _scanForMacApps: function(cb) {
-    var userAppsDir = path.join(process.env.HOME, 'Applications');
+    var userAppsDir = path.join(process.env.HOME || '', 'Applications');
     if (!fs.existsSync(userAppsDir)) {
       fs.mkdirSync(userAppsDir);
     }
