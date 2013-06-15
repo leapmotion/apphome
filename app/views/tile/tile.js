@@ -1,3 +1,4 @@
+var os = require('os');
 var Spinner = require('spin');
 
 var config = require('../../../config/config.js');
@@ -94,9 +95,19 @@ module.exports = BaseView.extend({
         leapApp.trigger('dragend');
       });
       this.$el.on('dragstart', function(evt) {
-        evt.originalEvent.dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
+        var dataTransfer = evt.originalEvent.dataTransfer;
+        if (os.platform() !== 'win32') {
+          var canvas = document.createElement('canvas');
+          canvas.setAttribute('width', 96);
+          canvas.setAttribute('height', 96);
+          canvas.getContext('2d').drawImage(this.$('.icon')[0], 0, 0, 96, 96);
+          var dragImage = document.createElement('img');
+          dragImage.setAttribute('src', canvas.toDataURL());
+          dataTransfer.setDragImage(dragImage, 96, 96);
+        }
+        dataTransfer.setData('application/json', JSON.stringify(leapApp.toJSON()));
         leapApp.trigger('dragstart');
-      });
+      }.bind(this));
     } else {
       this.$el.removeAttr('draggable');
       this.$el.css('-webkit-user-drag', 'none');
