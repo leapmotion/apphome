@@ -236,7 +236,8 @@ function createWebLinkApps(webAppData) {
   });
   webAppData.forEach(function(webAppDatum) {
     var webApp = new WebLinkApp(webAppDatum);
-    var existingWebApp = existingWebAppsById[webApp.get('id')];
+    var id = webApp.get('id');
+    var existingWebApp = existingWebAppsById[id];
     if (existingWebApp) {
       if (existingWebApp.get('iconUrl') !== webApp.get('iconUrl')) {
         existingWebApp.set('iconUrl', webApp.get('iconUrl'));
@@ -249,10 +250,22 @@ function createWebLinkApps(webAppData) {
         console.info('tile updated for ' + existingWebApp.get('name'));
       }
       existingWebApp.set(webAppDatum);
+      console.log('Updating existing web link: ' + existingWebApp.get('name'));
+      delete existingWebAppsById[id];
+      existingWebApp.save();
     } else {
       uiGlobals.installedApps.add(webApp);
       console.log('Added web link: ', webApp.get('urlToLaunch'));
       webApp.save();
+    }
+  });
+
+  Object.keys(existingWebAppsById).forEach(function(id) {
+    var oldWebApp = existingWebAppsById[id];
+    if (oldWebApp.isBuiltinTile()) {
+      console.log('Deleting old builtin web link: ' + oldWebApp.get('name'));
+      uiGlobals.installedApps.remove(oldWebApp);
+      oldWebApp.save();
     }
   });
 }
