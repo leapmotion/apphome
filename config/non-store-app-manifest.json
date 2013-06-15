@@ -10,11 +10,11 @@
       "eventToTrack": "AirspaceStoreTileClick"
     },
     {
-      "name": "Beta Community",
+      "name": "Feedback",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-tile.png?v=2",
       "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-icon.png?v=2",
-      "urlToLaunch": "https://forums.leapmotion.com/forum.php",
-      "passAccessToken": true,
+      "urlToLaunch": "http://feedback.leapmotion.com/",
+      "passAccessToken": false,
       "deletable": false,
       "eventToTrack": "CommunityTileClick"
     }
