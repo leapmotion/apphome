@@ -10,7 +10,9 @@
 
 ### Testing
 
-    npm test
+    node bin/test [test_file1 [test_file2] ...]
+
+Running without specifying test file(s) will run the entire set of test suites.
 
 ### Building
 
