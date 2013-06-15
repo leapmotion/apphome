@@ -21,6 +21,8 @@ var config = {
 
   NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest.json',
 
+  SentryDSN: 'https://03b4e3bdfc974421860ef1a2747540b6:97e879a1dd80479f86c9780a415b0f80@app.getsentry.com/9610',
+
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'

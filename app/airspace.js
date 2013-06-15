@@ -1,3 +1,7 @@
+raven = require('raven');
+var config = require('../config/config.js');
+var client = new raven.Client(config.SentryDSN);
+
 var AppController = require('./app-controller.js');
 var mixpanel = require('./utils/mixpanel.js');
 
@@ -24,6 +28,7 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
+  client.captureError(err);
   console.error('Uncaught exception: ' + err.stack);
   $('body').empty();
   run();
