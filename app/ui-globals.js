@@ -22,7 +22,7 @@ uiGlobals.availableDownloads = new LeapAppCollection();
 uiGlobals.scaling = 1;
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
-uiGlobals.appName = packageJson.name;
+uiGlobals.appName = packageJson.fullName;
 uiGlobals.appVersion = packageJson.version;
 
 uiGlobals.sendNotification = function(header, body, icon) {

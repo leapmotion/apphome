@@ -1,7 +1,8 @@
 {
-  "name": "Airspace Home",
+  "name": "Airspace",
+  "fullName": "Airspace Home",
   "version": "0.0.1-dev",
-  "description": "Leap Motion Airspace Desktop Client",
+  "description": "Leap Motion Airspace Home",
   "main": "index.html",
   "node-main": "node-main.js",
   "chromium-args": "--disable-accelerated-layers",
@@ -16,7 +17,6 @@
   "dependencies": {
     "async": "0.2.8",
     "backbone": "1.0.0",
-    "connect": "2.7.9",
     "fs-extra": "0.6.1",
     "jade": "0.30.0",
     "markdown": "0.4.0",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "archiver": "0.4.3",
+    "connect": "2.7.9",
     "mocha": "1.9.x",
     "rewire": "1.1.3"
   },

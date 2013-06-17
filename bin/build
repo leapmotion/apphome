@@ -138,7 +138,7 @@ appZip.finalize(function(err, bytesWritten) {
 
       var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
       var plist = fs.readFileSync(infoPlistPath, 'utf-8');
-      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.name);
+      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
       plist = changePlistString(plist, 'CFBundleName', packageJson.name);
       plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
       plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
