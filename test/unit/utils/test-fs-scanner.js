@@ -5,7 +5,7 @@ var os = require('os');
 var path = require('path');
 var rewire = require('rewire');
 
-var allowedApps = require('../../support/fake-data/local-apps.js');
+var allowedApps = require('../../support/local-apps.js');
 
 var mockExec = {
   win32: function(command, cb) {

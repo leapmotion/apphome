@@ -4,9 +4,6 @@
 
 Access the devtools window by clicking on the gear icon in the toolbar.
 
-You can temporarily enable the toolbar in package.json, or [TODO: figure out command line switch]
-
-
 ## Clearing persisted data
 In console:
 
