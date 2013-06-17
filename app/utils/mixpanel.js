@@ -7,9 +7,11 @@ var mixpanel = Mixpanel.init(config.MixpanelToken);
 function getTrackFn(eventName) {
   return function() {
     console.log('Tracking Mixpanel event: ' + eventName);
-    mixpanel.track(uiGlobals.appName + ' - ' + eventName, {
-      version: uiGlobals.appVersion
-    });
+    if (process.env.LEAPHOME_ENV !== 'test') {
+      mixpanel.track(uiGlobals.appName + ' - ' + eventName, {
+        version: uiGlobals.appVersion
+      });
+    }
   }
 }
 
