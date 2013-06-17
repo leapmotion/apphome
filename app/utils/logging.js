@@ -23,7 +23,11 @@ function getLogger(level) {
   return function() {
     var sourceFile = ((new Error()).stack.split('\n')[2] || '').replace(/^\s+|\s+$/g, '');
     log(level.toUpperCase() + ': ' + Array.prototype.slice.call(arguments).map(function(arg) {
-      return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
+      try {
+        return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
+      } catch(e) {
+        return String(arg);
+      }
     }).join(' ') + ' (' + sourceFile + ')');
   }
 }
