@@ -13,7 +13,7 @@ function getDir(subdir) {
       throw new Error('Unknown operating system: ' + os.platform());
     }
 
-    appDataDir = path.join((config.PlatformDirs[os.platform()] || ''), uiGlobals.appName, 'AppData');
+    appDataDir = path.join((config.PlatformDirs[os.platform()] || ''), 'Airspace', 'AppData');
 
     if (!fs.existsSync(appDataDir)) {
       fs.mkdirSync(appDataDir);

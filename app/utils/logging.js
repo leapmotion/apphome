@@ -9,7 +9,7 @@ var log;
 if (process.env.LEAPHOME_ENV === 'development') {
   log = console.log.bind(console);
 } else {
-  var logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], uiGlobals.appName, 'log.txt'));
+  var logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'));
   log = function(message) {
     logStream.write(message + '\r\n', 'utf-8');
   };
