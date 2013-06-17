@@ -11,40 +11,40 @@ var app = express();
 
 app.use(express.bodyParser());
 
-app.get('/oauth', function(req, res) {
+app.all(/\/oauth(\/.+)?/, function(req, res) {
   if (req.query.client_id === config.oauth.client_id &&
-      req.query.redirect_uri === config.oauth.redirect_uri) {
-    if (req.query.response_type === 'code') {
+      req.query.redirect_uri === config.oauth.redirect_uri &&
+      req.query.response_type === 'code') {
       res.redirect('/users/sign_in');
-    } else if (req.query.client_secret === config.oauth.client_key) {
-      if (req.query.client_secret === config.oauth.client_key && req.query.grant_type === 'authorization_code') {
-        if (req.query.code === FakeAuthorizationCode) {
-          res.json(200, {
-            refresh_token: FakeRefreshToken
-          });
-        } else {
-          res.json(400, {
-            error: 'bad authorization code'
-          });
-        }
-      } else if (req.query.grant_type === 'refresh_token') {
-        if (req.query.refresh_token === FakeRefreshToken) {
-          res.json(200, {
-            access_token: FakeAccessToken
-          });
-        } else {
-          res.json(400, {
-            error: 'bad refresh token'
-          });
-        }
+  } else if (req.body.client_id === config.oauth.client_id &&
+             req.body.redirect_uri === config.oauth.redirect_uri &&
+             req.body.client_secret === config.oauth.client_key) {
+    if (req.body.grant_type === 'authorization_code') {
+      if (req.body.code === FakeAuthorizationCode) {
+        res.json(200, {
+          refresh_token: FakeRefreshToken
+        });
       } else {
         res.json(400, {
-          error: 'invalid request'
+          error: true,
+          error_description: 'Bad authorization code.'
+        });
+      }
+    } else if (req.body.grant_type === 'refresh_token') {
+      if (req.body.refresh_token === FakeRefreshToken) {
+        res.json(200, {
+          access_token: FakeAccessToken
+        });
+      } else {
+        res.json(400, {
+          error: true,
+          error_description: 'Bad refresh token.'
         });
       }
     } else {
       res.json(400, {
-        error: 'invalid client secret'
+        error: true,
+        error_description: 'Invalid request.'
       });
     }
   } else {
