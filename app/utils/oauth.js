@@ -44,6 +44,7 @@ function oauthRequest(params, cb) {
   };
   var protocolModule = (urlParts.protocol === 'https:' ? https : http);
   var responseChunks = [];
+  console.log('Making oauth request: ' + JSON.stringify(options));
   var req = protocolModule.request(options, function(res) {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
@@ -73,13 +74,13 @@ function authorizeWithCode(code, cb) {
     code: code
   }, function(err, result) {
     if (err) {
-      return cb(err);
+      cb(err);
+    } else if (result.error) {
+      cb(new Error(result.error_description));
+    } else {
+      saveRefreshToken(result.refresh_token);
+      cb(null);
     }
-    if (result.error) {
-      return cb(new Error(result.error_description));
-    }
-    saveRefreshToken(result.refresh_token);
-    cb(null);
   });
 }
 
