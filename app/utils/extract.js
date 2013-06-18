@@ -5,6 +5,8 @@ var path = require('path');
 var plist = require('plist');
 var unzip = require('unzip');
 
+var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
+
 var shell = require('./shell.js');
 
 function extractZip(src, dest, cb) {
@@ -23,9 +25,15 @@ function extractZip(src, dest, cb) {
   unzipper.on('error', cb);
   unzipper.on('close', function() {
     var extractedFiles = fs.readdirSync(dest);
-    if (extractedFiles.length === 1 && fs.statSync(path.join(dest, extractedFiles[0])).isDirectory()) {
+    var possibleAppDirs = [];
+    extractedFiles.forEach(function(extractedFile) {
+      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+        possibleAppDirs.push(extractedFile);
+      }
+    });
+    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
       // application has a single top-level directory, so pull the contents out of that
-      var topLevelDir = path.join(dest, extractedFiles[0]);
+      var topLevelDir = path.join(dest, possibleAppDirs[0]);
       fs.readdirSync(topLevelDir).forEach(function(appFile) {
         fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
       });
