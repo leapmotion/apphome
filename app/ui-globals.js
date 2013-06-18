@@ -29,7 +29,6 @@ uiGlobals.sendNotification = function(header, body, icon) {
   var win = nwGui.Window.get();
   window.LOCAL_NW.desktopNotifications.notify(icon || '', header, body, function() {
     win.focus();
-    win.restore();
   });
 };
 
