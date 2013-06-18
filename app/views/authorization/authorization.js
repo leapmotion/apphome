@@ -225,7 +225,7 @@ module.exports = BaseView.extend({
   },
 
   remove: function() {
-    $(window).unbind('resize', this._boundIframeCenteringFn);
+    $(window).unbind('resize', this._boundCenteringFn);
     this.$el.remove();
     this._clearLoadTimeout();
   }
