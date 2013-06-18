@@ -113,11 +113,13 @@ var CarouselView = BaseView.extend({
           this._switchToSlide(slideNum);
         }.bind(this)
       });
-      this.$('.slides-holder').append(slideView.$el);
+
       this._slides[i] = slideView;
       if (i !== this._currentSlideIndex) {
         slideView.disable();
       }
+
+      this.$('.slides-holder').append(slideView.$el);
 
       var leapApps = this.collection.getPageModels(i, this._tilesPerSlide);
       leapApps.forEach(function(leapApp) {
