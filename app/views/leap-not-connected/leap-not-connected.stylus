@@ -6,16 +6,21 @@
 
   .leap-graphic
     background url(static/images/plug-in-device.png)
+    background-position center center
     background-repeat no-repeat
     background-size contain
     height 442px
-    margin 5% auto 20px
+    left 50%
+    margin -221px 0 0 -616px
     max-width 1232px
+    position absolute
+    top 40%
     width 100%
 
   .skip-button-holder
+    margin-top 160px
     position absolute
-    bottom 50px
+    top 40%
     width 100%
 
     .skip-button
