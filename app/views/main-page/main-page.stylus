@@ -43,22 +43,24 @@
         -webkit-background-clip padding-box
         background-clip padding-box /* prevents bg color from leaking outside the border */
         background-color #d12e2e /* layer fill content */
-        background-image -webkit-linear-gradient(bottom, rgba(208,56,56,0) 0%, #cf3737 100%) /* gradient overlay */
-        background-image linear-gradient(bottom, rgba(208,56,56,0) 0%, #cf3737 100%) /* gradient overlay */
+        background-image -webkit-linear-gradient(bottom, rgba(208,56,56,0) 0%, #f75c5c 100%) /* gradient overlay */
+        background-image linear-gradient(bottom, rgba(208,56,56,0) 0%, #f75c5c 100%) /* gradient overlay */
         -webkit-border-radius 3px
         border-radius 3px /* border radius */
         -webkit-box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
         box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
+        box-sizing border-box
         color white
         font-size 13px
         font-weight bold
-        padding-bottom 4px
+        min-width 18px
+        padding 3px 4px 4px
         position absolute
-        right 4px
+        right 8px
         text-align center
         text-shadow 0 1px 0 rgba(0,0,0,.6) /* drop shadow */
         top -5px
-        width 18px
+        width auto
       .icon
         background url(static/images/downloads-icon.png)
         float right
@@ -67,8 +69,8 @@
 
   .carousel-link
       left 0
-      padding-left 22px
-      padding-right 22px
+      padding-left 28px
+      padding-right 28px
       text-shadow 0 -1px 0 rgba(0,0,0,.75) /* drop shadow */
       top 14px
 
