@@ -68,7 +68,6 @@ function getFile(sourceUrl, destPath, cb) {
       if (fileSize === totalBytes) {
         cb && cb(null, destPath);
       } else {
-        console.log(totalBytes + ', ' + fileSize);
         cb && cb(new Error('Expected: ' + totalBytes + ' bytes, but got: ' + fileSize + ' bytes.'));
       }
     } catch(err) {
