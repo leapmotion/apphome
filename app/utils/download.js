@@ -48,10 +48,12 @@ function getFile(sourceUrl, destPath, cb) {
   if (!sourceUrl) {
     return cb(new Error('No source url specified.'));
   }
+
   if (typeof destPath === 'function') {
     cb = destPath;
     destPath = newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
   }
+  var totalBytes = 0;
   var destStream = fs.createWriteStream(destPath);
   var progressStream = new DownloadProgressStream();
 
@@ -61,7 +63,17 @@ function getFile(sourceUrl, destPath, cb) {
   });
 
   destStream.on('close', function() {
-    cb && cb(null, destPath);
+    try {
+      var fileSize = fs.statSync(destPath).size;
+      if (fileSize === totalBytes) {
+        cb && cb(null, destPath);
+      } else {
+        console.log(totalBytes + ', ' + fileSize);
+        cb && cb(new Error('Expected: ' + totalBytes + ' bytes, but got: ' + fileSize + ' bytes.'));
+      }
+    } catch(err) {
+      cb && cb(err);
+    }
     cb = null;
   });
 
@@ -73,13 +85,15 @@ function getFile(sourceUrl, destPath, cb) {
   }
 
   var req = protocolModule.get(sourceUrl, function(res) {
-    progressStream.setTotalBytes(res.headers['content-length']);
+    totalBytes = Number(res.headers['content-length']);
+    progressStream.setTotalBytes(totalBytes);
     progressStream.listenTo(res);
 
     res.on('error', function(err) {
       cb && cb(err);
       cb = null;
     });
+
     res.pipe(destStream);
   });
 
