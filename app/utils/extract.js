@@ -41,7 +41,7 @@ function extractDmg(src, dest, cb) {
     return cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }
 
-  exec('hdiutil mount ' + shell.escape(src) + ' -plist', function(err, stdout) {
+  exec('hdiutil mount -nobrowse ' + shell.escape(src) + ' -plist', function(err, stdout) {
     if (err) {
       return cb(err);
     }
