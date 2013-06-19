@@ -9,7 +9,7 @@ var util = require('util');
 
 var PlatformTempDirs = {
   win32:  process.env.TEMP,
-  darwin: process.env.TMPDIR,
+  darwin: '/tmp',
   linux:  '/tmp'
 };
 
