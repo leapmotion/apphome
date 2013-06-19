@@ -16,6 +16,7 @@ module.exports = BaseView.extend({
     this._initCarousels();
     this._setupResizeBehavior();
     $(window).resize();
+    this.animateIn();
   },
 
   _initCarousels: function() {
@@ -179,6 +180,12 @@ module.exports = BaseView.extend({
       this.installedAppsCarousel.rescale();
       this.uninstalledAppsCarousel.rescale();
     }.bind(this));
+  },
+
+  animateIn: function(){
+    //this.$("#header").delay(800).animate({top: 0}, 250, "easeInOutCirc");
+    this.$("#header").delay(800).switchClass("initial", "loaded", 250, "easeInOutCirc");
+    this.$(".footer.initial").delay(800).switchClass("initial", "loaded", 250, "easeInOutCirc");
   }
 
 });

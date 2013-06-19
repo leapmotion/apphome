@@ -13,6 +13,11 @@
     position absolute
     width 100%
 
+    &.initial
+      top -60px
+    &.loaded
+      top 0
+
     #my-apps-link
 
       &.current
@@ -191,5 +196,9 @@
     border-top 1px solid #353639
     height 60px
     position absolute
-    bottom 0
     width 100%
+
+    &.initial
+      bottom -60px
+    &.loaded
+      bottom 0

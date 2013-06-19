@@ -235,6 +235,11 @@ var CarouselView = BaseView.extend({
     return this.collection.length === 0;
   },
 
+  create: function(){
+    this._isActive = true;
+    this.$el.fadeIn(2000);
+  },
+
   show: function() {
     this._isActive = true;
     this.$el.show();
