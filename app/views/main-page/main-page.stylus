@@ -54,7 +54,7 @@
         font-size 13px
         font-weight bold
         min-width 18px
-        padding 3px 4px 4px
+        padding 2px 4px 3px
         position absolute
         right 8px
         text-align center
