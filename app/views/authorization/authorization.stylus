@@ -58,24 +58,19 @@
       font-size 20px
       font-style italic
       margin-top 110px
-      opacity 0
       text-align center
-      transition opacity 0.5s ease
 
     &.before
       .message.before
         display block
-        opacity 1
 
     &.after
       .message.after
         display block
-        opacity 1
 
     &.logout
       .message.logout
         display block
-        opacity 1
 
   .no-internet
     background -webkit-radial-gradient(center center, circle cover, #f0f0f0, #fdfdfd)
