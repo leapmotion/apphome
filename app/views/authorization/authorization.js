@@ -21,7 +21,7 @@ module.exports = BaseView.extend({
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
     this.$waiting = this.$('.waiting');
-    new Spinner({ left: 160 }).spin(this.$waiting.find('.spinner-holder')[0]);
+    new Spinner({ color: '#8c8c8c', width: 3, left: 160 }).spin(this.$waiting.find('.spinner-holder')[0]);
     this._boundCenteringFn = this._center.bind(this);
     $(window).resize(this._boundCenteringFn);
   },

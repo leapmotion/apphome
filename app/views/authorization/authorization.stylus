@@ -50,13 +50,14 @@
         width 200px
 
     .spinner-holder
-      margin-top 65px
+      margin-top 72px
 
     .message
+      color #999
       display none
       font-size 20px
       font-style italic
-      margin-top 100px
+      margin-top 110px
       text-align center
 
     &.before
