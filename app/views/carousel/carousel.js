@@ -57,8 +57,7 @@ var CarouselView = BaseView.extend({
       this._updateEmptyState();
       this._updateSlideIndicator();
       if (this._currentSlideIndex >= slideCount) {
-        this._currentSlideIndex--;
-        this._switchToSlide(this._currentSlideIndex);
+        this._switchToSlide(this._currentSlideIndex - 1);
       }
     }, this);
 
@@ -151,12 +150,18 @@ var CarouselView = BaseView.extend({
     $slidesHolder.css('left', this._currentPosition * uiGlobals.scaling);
   },
 
-  _switchToSlide: function(slideNum) {
+  _validSlideNum: function(slideNum) {
     if (!slideNum || slideNum < 0) {
-      slideNum = 0;
+      return 0;
     } else if (slideNum >= this._slides.length) {
-      slideNum = this._slides.length - 1;
+      return this._slides.length - 1;
+    } else {
+      return slideNum;
     }
+  },
+
+  _switchToSlide: function(slideNum) {
+    slideNum = this._validSlideNum(slideNum);
 
     if (slideNum === this._currentSlideIndex || this._animating) {
       return;
@@ -169,8 +174,6 @@ var CarouselView = BaseView.extend({
     var currentPosition = this._currentPosition * uiGlobals.scaling; // scaled coordinates
     var distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled (scaled below)
     var animating = this._animating = true;
-    this._currentSlideIndex = slideNum;
-    this._updateSlideIndicator();
     new window.TWEEN.Tween({ x: 0, y: 0 }, 350)
         .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
         .easing(window.TWEEN.Easing.Quartic.Out)
@@ -178,6 +181,10 @@ var CarouselView = BaseView.extend({
           $slidesHolder.css('left', currentPosition + this.x);
         }).onComplete(function() {
           animating = this._animating = false;
+          slideNum = this._validSlideNum(slideNum); // slides could have been removed during animation by add/remove bindings
+          distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled
+          this._currentSlideIndex = slideNum;
+          this._updateSlideIndicator();
           this._slides[slideNum].enable();
           this._currentPosition += distanceToSlide;
           this._positionSlides();
