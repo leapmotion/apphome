@@ -106,7 +106,7 @@ module.exports = BaseView.extend({
         this._currentCarousel.hide();
       }
       this._currentCarousel = newCarousel;
-      this._currentCarousel.show();
+      this._currentCarousel.create();
     }
   },
 
