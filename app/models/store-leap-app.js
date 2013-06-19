@@ -46,6 +46,7 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
+    console.log('Installing: ' + this.get('name'));
     if (this.isUpgrade()) {
       this._installAsUpgrade(cb);
     } else {
