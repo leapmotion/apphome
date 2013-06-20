@@ -10,7 +10,6 @@
     height 434px
     position relative
     max-width 1184px
-    margin-left 15px
     visibility hidden
     width 100%
 
