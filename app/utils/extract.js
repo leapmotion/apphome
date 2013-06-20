@@ -3,7 +3,6 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var plist = require('plist');
-var unzip = require('unzip');
 
 var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 
@@ -18,12 +17,11 @@ function extractZip(src, dest, cb) {
   } catch (err) {
     return cb(err);
   }
-  var unzipper = unzip.Extract({
-    path: dest,
-    chunkSize: 20 * 1024 * 1024 // 20 MB
-  });
-  unzipper.on('error', cb);
-  unzipper.on('close', function() {
+
+  exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest), function(err) {
+    if (err) {
+      return cb(err);
+    }
     var extractedFiles = fs.readdirSync(dest);
     var possibleAppDirs = [];
     extractedFiles.forEach(function(extractedFile) {
@@ -41,7 +39,6 @@ function extractZip(src, dest, cb) {
     }
     cb(null);
   });
-  fs.createReadStream(src).pipe(unzipper);
 }
 
 function extractDmg(src, dest, cb) {
