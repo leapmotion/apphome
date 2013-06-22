@@ -1,3 +1,3 @@
-start Airspace.exe --disable-accelerated-layers --disable-accelerated-compositing --disable-gpu
+start Airspace.exe --disable-gpu --disable-software-rasterizer
 
 exit

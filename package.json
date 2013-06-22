@@ -5,7 +5,7 @@
   "description": "Leap Motion Airspace Home",
   "main": "index.html",
   "node-main": "node-main.js",
-  "chromium-args": "--disable-accelerated-layers --disable-accelerated-compositing --disable-gpu",
+  "chromium-args": "--disable-gpu --disable-software-rasterizer",
   "window": {
     "title": "Airspace Home",
     "icon": "static/icon/icon.png",
