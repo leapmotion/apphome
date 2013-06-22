@@ -34,17 +34,11 @@ if [ ! -n "${BUILD_BRANCH}" ]; then
   echo "Warning: GIT_BRANCH and BUILD_BRANCH were not set. Defaulting to ${BUILD_BRANCH}"
 fi
 
-export BUILD_IS_PUBLIC
-
 _branch_basename="$(basename ${BUILD_BRANCH})"
 
+#airspace builds are always public
 export BUILD_SHARE
-
-if [ "${BUILD_IS_PUBLIC}" = "true" ]; then
-  BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Public/${BUILD_PLAT}/${_branch_basename}"
-else
-  BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Internal/${BUILD_PLAT}/${_branch_basename}"
-fi
+BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Public/${BUILD_PLAT}/${_branch_basename}"
 
 export AIRSPACE_REPO_DIR
 if [ -d "${WORKSPACE}" ]; then
