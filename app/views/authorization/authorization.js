@@ -97,7 +97,9 @@ module.exports = BaseView.extend({
       } else {
         this._center();
         this._showNoInternetMessage();
-        setTimeout(this._waitForInternetConnection.bind(this), 250);
+        setTimeout(function() {
+          this._waitForInternetConnection(cb);
+        }.bind(this), 250);
       }
     }.bind(this));
   },
