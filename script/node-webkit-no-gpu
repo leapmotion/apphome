@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+$(cd "$(dirname "$0")"; pwd)/node-webkit --disable-accelerated-layers --disable-accelerated-compositing --disable-gpu
