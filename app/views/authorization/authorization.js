@@ -191,16 +191,17 @@ module.exports = BaseView.extend({
 
   _center: function() {
     var iframeWindow = this.$iframe.prop('contentWindow');
-    this.$iframe.css('visibility', 'hidden');
-    this.$iframe.height(0);
-    this.$iframe.height($(iframeWindow.document).height());
+    if (iframeWindow) {
+      this.$iframe.css('visibility', 'hidden');
+      this.$iframe.height(0);
+      this.$iframe.height($(iframeWindow.document).height());
+      this._centerElement(this.$iframe);
+      this.$iframe.css('visibility', 'visible');
+    }
 
-    this._centerElement(this.$iframe);
     this._centerElement(this.$noInternet);
     this._centerElement(this.$waiting);
     this._centerElement(this.$('.first-run-background'));
-
-    this.$iframe.css('visibility', 'visible');
   },
 
   _centerElement: function($element) {
