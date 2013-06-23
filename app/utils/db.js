@@ -26,4 +26,4 @@ function setDbName(dbName) {
   dbPrefix = dbName + ':';
 }
 module.exports.setDbName = setDbName;
-setDbName(global.leapEnv || 'production');
+setDbName(process.env.LEAPHOME_ENV || 'production');

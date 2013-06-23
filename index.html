@@ -15,11 +15,11 @@
 <body class="startup">
   <script>
     (function() {
+      process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'production';
       var path = require('path');
       global.$ = window.$;
       global._ = window._;
       global.LeapHomeDir = path.resolve('.');
-      global.leapEnv = global.leapEnv || process.env.LEAP_ENV || 'production';
       global.nwGui = window.nwGui = require('nw.gui');
       global.document = window.document;
       global.uiGlobals = require('./app/ui-globals.js');

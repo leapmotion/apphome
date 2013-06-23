@@ -9,13 +9,13 @@ function subscribe(args) {
     throw new Error('Multiple subscriptions to the same channel are bad. No soup for you.');
   }
   callbacksByChannel[args.channel] = args.callback;
-  process.nextTick(function() {
+  /*process.nextTick(function() {
     if (/user/.test(args.channel)) {
       args.callback(JSON.stringify(appUpgrade.forAppId(AppId)));
     } else {
       args.callback(JSON.stringify(newApp.withOverrides({ app_id: AppId })));
     }
-  });
+  });*/
 }
 
 function unsubscribe(args) {

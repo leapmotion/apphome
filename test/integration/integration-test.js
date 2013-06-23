@@ -45,14 +45,12 @@ function setupLeapHomeTestApp(fileName) {
     function reportTestResult(testResult) {
       describe(fileName, function() {
         it(testResult.fullTitle, function() {
-          if (testResult.result === 'pass') {
-            assert.ok(true); // needed?
-          } else if (testResult.error) {
+          if (testResult.error) {
             var ex = new Error(testResult.error.message);
             ex.stack = testResult.error.stack;
             console.log(testResult.error.message + ex.stack);
             throw ex;
-          } else {
+          } else if (testResult.result !== 'pass') {
             throw new Error('unknown error');
           }
         });
@@ -88,13 +86,22 @@ function setupLeapHomeTestApp(fileName) {
           // swallow connection errors, because they pop up randomly on Windows
         });
         conn.on('data', function(data) {
-          try {
-            reportTestResult.call(testContext, JSON.parse(data.toString('utf8')));
-          } catch (err) {
-            console.error('Invalid test report: ' + data);
-            reportSyntaxError('Failed to parse test result: ' + err.message);
-            tearDown();
-          }
+          data = data.toString('utf8');
+          data.split('}{').forEach(function(datum) {
+            if (!/^{/.test(datum)) {
+              datum = '{' + datum;
+            }
+            if (!/}$/.test(datum)) {
+              datum = datum + '}';
+            }
+            console.log(datum);
+            try {
+              reportTestResult.call(testContext, JSON.parse(datum));
+            } catch (err) {
+              reportSyntaxError('Failed to parse test result: ' + datum);
+              tearDown();
+            }
+          });
         });
       });
 
@@ -131,6 +138,7 @@ function runApp(testFile, tearDown) {
   });
 
   child.on('exit', function() {
+    console.log('stopping...');
     tearDown();
   });
 }

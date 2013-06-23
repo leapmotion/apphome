@@ -6,7 +6,7 @@ var config = require('../../config/config.js');
 
 var log;
 
-if (process.env.LEAPHOME_ENV === 'development') {
+if (/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
   log = console.log.bind(console);
 } else {
   var logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'));

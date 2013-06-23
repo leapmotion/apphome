@@ -6,8 +6,8 @@ var mixpanel = Mixpanel.init(config.MixpanelToken);
 
 function getTrackFn(eventName) {
   return function() {
-    console.log('Tracking Mixpanel event: ' + eventName);
-    if (process.env.LEAPHOME_ENV !== 'test') {
+    if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
+      console.log('Tracking Mixpanel event: ' + eventName);
       mixpanel.track(uiGlobals.appName + ' - ' + eventName, {
         version: uiGlobals.appVersion
       });

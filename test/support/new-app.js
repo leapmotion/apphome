@@ -1,6 +1,5 @@
 var os = require('os');
-
-require('../unit/env.js');
+var _ = require('underscore');
 
 var randomValue = require('./random-value.js');
 
