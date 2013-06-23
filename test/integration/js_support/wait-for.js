@@ -1,5 +1,5 @@
 (function() {
-  var DEFAULT_MAX_DURATION = 500; // note: timeout should be less than mocha's timeout
+  var DEFAULT_MAX_DURATION = 1500;
 
   window.waitFor = function(title, checkFnOrCssSelector, mochaDone, opts) {
     var defer = jQuery.Deferred();

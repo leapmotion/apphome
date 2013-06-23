@@ -2,6 +2,7 @@ var domain = require('domain');
 var http = require('http');
 var https = require('https');
 var os = require('os');
+var pubnub = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub'));
 var qs = require('querystring');
 
 var config = require('../../config/config.js');
@@ -35,9 +36,8 @@ var subscribe = (function() {
     reconnectAfterError(err);
   });
 
-  var pubnub;
   pubnubDomain.run(function() {
-    pubnub = require('pubnub').init({
+    pubnub.init({
       subscribe_key: config.PubnubSubscribeKey,
       ssl: true
     });

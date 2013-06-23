@@ -1,6 +1,5 @@
 var fs = require('fs');
 var path = require('path');
-var domInjection = require('../../app/utils/dom-injection.js');
 var Mocha = require('mocha');
 var assert = require('assert');
 var SocketReporter = require('./socket-reporter.js');
@@ -11,22 +10,22 @@ global.assert = assert;
 
 var scripts = _.compact(sources(path.join(__dirname, 'js_support')));
 
-var stylesheets = [
-  'file://' + path.join(__dirname, '..', '..', 'node_modules', 'mocha', 'mocha.css')
-];
+window.localStorage.clear();
 
-db.setDbName('test');
+setInterval(function() {
+  var authIframeWindow = $('.authorization iframe').prop('contentWindow');
+  if (authIframeWindow) {
+    $('input[name=username]', authIframeWindow.document).val('blah');
+    $('input[name=password]', authIframeWindow.document).val('blah');
+    $('form#new_user', authIframeWindow.document).submit();
+  }
+}, 100);
 
 $(window).load(function() {
   console.info('\n\nInjecting Mocha and Test Scripts:\n' + scripts.join('\n'));
 
-  $('body').append('<div id="mocha"/>');
   scripts.forEach(function(src) {
     $('<script src="' + src + '"></script>').appendTo('body');
-  });
-
-  stylesheets.forEach(function(src) {
-    domInjection.appendStylesheet(src);
   });
 
   var mocha = new Mocha();

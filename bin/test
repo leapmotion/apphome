@@ -3,6 +3,8 @@ var fs = require('fs');
 var path = require('path');
 var Mocha = require('mocha');
 
+var fakeServers = require('../test/support/fake-servers.js');
+
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
 
 var projectDir = path.join(__dirname, '..');
@@ -28,4 +30,9 @@ var mocha = new Mocha();
 testFiles.forEach(function(testFile) {
   mocha.addFile(testFile);
 });
-mocha.run(process.exit);
+fakeServers.start(function() {
+  mocha.run(function() {
+    fakeServers.stop();
+    process.exit();
+  });
+});
