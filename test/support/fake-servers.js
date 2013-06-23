@@ -17,6 +17,8 @@ function startFakeLeapWebSocketServer(cb) {
   fakeLeapWebSocketServer.on('error', function() {
     // ignore existing leap service
     console.log('Leap service already running.');
+    fakeLeapWebSocketServer.removeAllListeners();
+    fakeLeapWebSocketServer = null;
     cb(null);
   });
   fakeLeapWebSocketServer.on('connection', function(ws) {
@@ -60,7 +62,10 @@ function stop(cb) {
   fakeOauthServer && closeFuncs.push(fakeOauthServer.close.bind(fakeOauthServer));
   fakeWarehouseServer && closeFuncs.push(fakeWarehouseServer.close.bind(fakeWarehouseServer));
   fakeS3Server && closeFuncs.push(fakeS3Server.close.bind(fakeS3Server));
-  fakeLeapWebSocketServer && closeFuncs.push(fakeLeapWebSocketServer.close.bind(fakeLeapWebSocketServer));
+  if (fakeLeapWebSocketServer) {
+    fakeLeapWebSocketServer.removeAllListeners();
+    closeFuncs.push(fakeLeapWebSocketServer.close.bind(fakeLeapWebSocketServer));
+  }
   async.parallel(closeFuncs, function() {
     console.log('closed all servers');
     fakeOauthServer = fakeWarehouseServer = fakeS3Server = fakeLeapWebSocketServer = null;
