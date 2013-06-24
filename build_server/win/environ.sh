@@ -20,15 +20,6 @@ if [ ! -x "${NODE}" ]; then
   NODE="${PROGRAMFILES//\\//}/nodejs/node.exe"
 fi
 
-ZIP=$(which 7z.exe) || true
-if [ ! -x "${ZIP}" ]; then
-  ZIP="${PROGRAMW6432//\\//}/7-Zip/7z.exe"
-  
-  if [ ! -x "${ZIP}" ]; then
-    ZIP="${PROGRAMFILES//\\//}/7-Zip/7z.exe"
-  fi
-fi
-
 #
 #common environment setup
 #
@@ -55,6 +46,5 @@ Win Environment
 BUILD_X64_APPS=${BUILD_X64_APPS}
 BUILD_X64_INSTALLER=${BUILD_X64_INSTALLER}
 LIBRARY_SHARE=${LIBRARY_SHARE}
-MAKENSIS=${MAKENSIS}
 
 EOF
