@@ -57,15 +57,26 @@ module.exports = LeapApp.extend({
   _installAsUpgrade: function(cb) {
     var appToUpgrade = this.findAppToUpgrade();
     if (appToUpgrade && appToUpgrade.isUninstallable()) {
-      appToUpgrade.uninstall(true, false, function(err) {
+      appToUpgrade.uninstall(false, false, function(err) {
         if (!err) {
-          uiGlobals.installedApps.remove(appToUpgrade);
-          this._installFromServer(cb);
+          this._installFromServer(function(err2) {
+            if (err2) {
+              appToUpgrade._installFromServer(function(err3) {
+                cb(err3 || err2);
+              });
+            } else {
+              uiGlobals.uninstalledApps.remove(appToUpgrade);
+              this.save();
+              cb(null);
+            }
+          });
         } else {
           this._abortInstallation(null, err);
           cb && cb(err);
         }
       }.bind(this));
+    } else {
+      this._installFromServer(cb);
     }
   },
 
@@ -148,7 +159,7 @@ module.exports = LeapApp.extend({
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
-
+    console.log('Uninstalling: ' + this.get('name'));
     try {
       fs.removeSync(this._appDir());
     } catch(err) {
