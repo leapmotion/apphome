@@ -55,7 +55,6 @@ fi
 if [ "$(whoami)" = 'wgray-pc\walter gray' ]; then
   export WORKSPACE="/e/code/platform/homebase"
   export SHARE_ROOT="/e/LeapMotion"
-  export LIBRARY_DIR="/c/dev/Libraries"
   export LATEST_ROOT="/e/LeapMotion"
   export LOCAL_BUILD=true
   

@@ -11,34 +11,13 @@ export PATH=".:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:${PATH}"
 #platform-specific environment setup
 #
 
-export NODE
-NODE=$(which node) || true
-if [ ! -x "${NODE}" ]; then
-  NODE="/usr/local/bin/node"
-fi
-
-if [ ! -n "${BUILD_CRT}" ]; then
-  export BUILD_CRT=libstdc++
-  echo "Warning: BUILD_CRT was not set. Defaulting to ${BUILD_CRT}"
-fi
-
-if [ "${BUILD_CRT}" == "libc++" ]; then
-  if [ "${BUILD_PRODUCT}" != "None" ]; then
-    echo "BUILD_CRT is ${BUILD_CRT}. Forcing BUILD_PRODUCT from ${BUILD_PRODUCT} to None."
-    BUILD_PRODUCT=None
-  fi
-fi
-
-#
-#common environment setup
-#
 
 _default_build_arch=x64
 _default_build_plat=mac
 _multi_config_build=false
 
 export SHARE_ROOT
-if [ ! -n "${SHARE_ROOT}" ]; then
+if [ -z "${SHARE_ROOT}" ]; then
   SHARE_ROOT="/Users/tombuilder/LeapMotion/OcuShare"
 fi
 
