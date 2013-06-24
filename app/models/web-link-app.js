@@ -60,8 +60,9 @@ var WebLinkApp = LeapApp.extend({
     }
 
     var eventToTrack = this.get('eventToTrack');
-    if (eventToTrack && _.isFunction(mixpanel['track' + eventToTrack])) {
-      mixpanel['track' + eventToTrack]();
+    if (eventToTrack) {
+      var trackFn = mixpanel.getTrackFn(eventToTrack);
+      trackFn();
     }
   }
 

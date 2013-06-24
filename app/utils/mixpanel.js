@@ -18,8 +18,7 @@ function getTrackFn(eventName) {
 module.exports = {
   trackOpen: getTrackFn('Open'),
   trackClose: getTrackFn('Close'),
-  trackAirspaceStoreTileClick: getTrackFn('Click Airspace Store Tile'),
-  trackCommunityTileClick: getTrackFn('Click Leap Community Tile'),
   trackSignUp: getTrackFn('Sign Up'),
-  trackSignIn: getTrackFn('Sign In')
+  trackSignIn: getTrackFn('Sign In'),
+  getTrackFn: getTrackFn
 };

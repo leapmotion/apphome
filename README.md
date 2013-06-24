@@ -37,6 +37,7 @@ App Store and Leap Community tiles can be uploaded with:
     s3cmd put -P static/images/icons/store-icon.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/community-tile.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/store-tile.png s3://lm-assets/airspace-desktop/
+    s3cmd put -P static/images/tiles/gesture-tile.png s3://lm-assets/airspace-desktop/documentation-tile.png
 
 ### Notes
 
