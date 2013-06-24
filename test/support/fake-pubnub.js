@@ -9,19 +9,35 @@ function subscribe(args) {
     throw new Error('Multiple subscriptions to the same channel are bad. No soup for you.');
   }
   callbacksByChannel[args.channel] = args.callback;
-  /*process.nextTick(function() {
-    if (/user/.test(args.channel)) {
-      args.callback(JSON.stringify(appUpgrade.forAppId(AppId)));
-    } else {
-      args.callback(JSON.stringify(newApp.withOverrides({ app_id: AppId })));
-    }
-  });*/
 }
 
 function unsubscribe(args) {
   delete callbacksByChannel[args.channel];
 }
 
+function triggerNewApp(appId) {
+  Object.keys(callbacksByChannel).forEach(function(channel) {
+    if (/user/.test(channel)) {
+      process.nextTick(function() {
+        callbacksByChannel[channel](JSON.stringify(newApp.withOverrides({ app_id: appId })));
+      });
+    }
+  });
+}
+
+function triggerAppUpgrade(appId) {
+  Object.keys(callbacksByChannel).forEach(function(channel) {
+    if ((new RegExp(appId + '\\.app')).test(channel)) {
+      process.nextTick(function() {
+        callbacksByChannel[channel](JSON.stringify(appUpgrade.forAppId(appId)));
+      });
+    }
+  });
+}
+
 module.exports.init = function() {};
 module.exports.subscribe = subscribe;
 module.exports.unsubscribe = unsubscribe;
+module.exports.triggerNewApp = triggerNewApp;
+module.exports.triggerAppUpgrade = triggerAppUpgrade;
+
