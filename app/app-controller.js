@@ -59,7 +59,10 @@ AppController.prototype = {
       helpMenu.append(new nwGui.MenuItem({
         label: 'About ' + uiGlobals.appName,
         click: function() {
-          nwGui.Window.open('/static/about/about.html', {
+          if (this._aboutWindow) {
+            this._aboutWindow.close(true);
+          }
+          this._aboutWindow = nwGui.Window.open('/static/about/about.html', {
             'toolbar': false,
             'frame': true,
             'width': 300,
@@ -70,7 +73,12 @@ AppController.prototype = {
             'max_height': 150,
             'always-on-top': true
           });
-        }
+          var appController = this;
+          this._aboutWindow.on('close', function() {
+            appController._aboutWindow = null;
+            this.close(true);
+          });
+        }.bind(this)
       }));
       mainMenu.append(new nwGui.MenuItem({
         label: 'Help',
