@@ -14,6 +14,10 @@ function generateXml(authId, token) {
 }
 
 function writeXml(authId, token) {
+  if (!PlatformOutputPaths[os.platform()]) {
+    console.warn('DRM not supported for platform: ' + os.platform());
+    return;
+  }
   var outputPath = path.join.apply(null, PlatformOutputPaths[os.platform()]);
   if (outputPath) {
     try {
