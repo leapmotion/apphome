@@ -5,7 +5,7 @@
   "description": "Leap Motion Airspace Home",
   "main": "index.html",
   "node-main": "node-main.js",
-  "chromium-args": "--disable-accelerated-layers",
+  "chromium-args": "--disable-gpu --disable-software-rasterizer",
   "window": {
     "title": "Airspace Home",
     "icon": "static/icon/icon.png",
@@ -27,7 +27,6 @@
     "spin": "0.0.1",
     "stylus": "0.32.1",
     "underscore": "1.4.4",
-    "unzip": "git://github.com/proxv/node-unzip.git#89047b80642595eff9d5e5f6de7f8749e14d1675",
     "ws": "0.4.25"
   },
   "devDependencies": {

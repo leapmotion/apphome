@@ -10,7 +10,6 @@
     height 434px
     position relative
     max-width 1184px
-    margin-left 15px
     visibility hidden
     width 100%
 
@@ -27,7 +26,7 @@
     margin-top -2%
     position absolute
     overflow hidden
-    width 350px
+    width 362px
 
 
   .waiting
@@ -50,13 +49,14 @@
         width 200px
 
     .spinner-holder
-      margin-top 65px
+      margin-top 72px
 
     .message
+      color #999
       display none
       font-size 20px
       font-style italic
-      margin-top 100px
+      margin-top 110px
       text-align center
 
     &.before

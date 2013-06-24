@@ -114,11 +114,11 @@ var LeapApp = BaseModel.extend({
     }
   },
 
-  install: function(cb) {
+  install: function() {
     throw new Error('install is an abstract method');
   },
 
-  uninstall: function(deleteData, cb) {
+  uninstall: function() {
     throw new Error('uninstall is an abstract method');
   },
 
@@ -156,7 +156,13 @@ var LeapApp = BaseModel.extend({
       cb && cb(null);
     } else {
       download.get(this.get(urlAttrName), destPath, function(err) {
-        if (!err) {
+        if (err && fs.existsSync(destPath)) {
+          try {
+            fs.unlinkSync(destPath);
+          } catch(err2) {
+            return cb && cb(err2);
+          }
+        } else if (!err) {
           this.set(pathAttrName, destPath);
           this.save();
         }

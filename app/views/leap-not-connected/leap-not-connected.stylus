@@ -47,3 +47,8 @@
 
       &:active
         background-image -webkit-linear-gradient(bottom, #f7f7f7 0%, #eee 100%)
+
+
+@media (max-width: 1232px)
+  .leap-not-connected .leap-graphic
+    margin-left -50%

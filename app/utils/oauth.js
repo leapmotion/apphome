@@ -102,7 +102,7 @@ var accessTokenExpiry;
 var accessToken;
 function getAccessToken(cb) {
   var now = (new Date()).getTime();
-  if (accessTokenExpiry && (now < accessTokenExpiry)) {
+  if (accessToken && accessTokenExpiry && (now < accessTokenExpiry)) {
     console.log('Using cached OAUTH access token.');
     cb(null, accessToken);
     return;
@@ -139,6 +139,7 @@ function getAccessToken(cb) {
 
 function logOut() {
   db.removeItem(config.DbKeys.OauthRefreshToken);
+  accessToken = null;
 }
 
 function logOutUrl() {

@@ -1,4 +1,5 @@
 var async = require('async');
+var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
@@ -45,6 +46,7 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
+    console.log('Installing: ' + this.get('name'));
     if (this.isUpgrade()) {
       this._installAsUpgrade(cb);
     } else {
@@ -55,15 +57,26 @@ module.exports = LeapApp.extend({
   _installAsUpgrade: function(cb) {
     var appToUpgrade = this.findAppToUpgrade();
     if (appToUpgrade && appToUpgrade.isUninstallable()) {
-      appToUpgrade.uninstall(true, false, function(err) {
+      appToUpgrade.uninstall(false, false, function(err) {
         if (!err) {
-          uiGlobals.installedApps.remove(appToUpgrade);
-          this._installFromServer(cb);
+          this._installFromServer(function(err2) {
+            if (err2) {
+              appToUpgrade._installFromServer(function(err3) {
+                cb(err3 || err2);
+              });
+            } else {
+              uiGlobals.uninstalledApps.remove(appToUpgrade);
+              this.save();
+              cb(null);
+            }
+          });
         } else {
           this._abortInstallation(null, err);
           cb && cb(err);
         }
       }.bind(this));
+    } else {
+      this._installFromServer(cb);
     }
   },
 
@@ -146,15 +159,40 @@ module.exports = LeapApp.extend({
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
-
+    console.log('Uninstalling: ' + this.get('name'));
     try {
       fs.removeSync(this._appDir());
     } catch(err) {
-      this.set('state', LeapApp.States.Ready);
-      console.warn("Can't uninstall, app is probably running.");
-      return;
+      if (err.code === 'EACCES' && os.platform() === 'darwin') {
+        // if permissions are broken on OS X, try to fix them
+        exec('chmod -R +w ' + shell.escape(this._appDir()), function(err) {
+          if (err) {
+            return this._failUninstallation(err, cb);
+          } else {
+            try {
+              fs.removeSync(this._appDir());
+            } catch(err2) {
+              return this._failUninstallation(err2, cb);
+            }
+            this._finishUninstallation(deleteIconAndTile, deleteUserData, cb);
+          }
+        }.bind(this));
+        return;
+      } else {
+        return this._failUninstallation(err, cb);
+      }
     }
 
+    this._finishUninstallation(deleteIconAndTile, deleteUserData, cb);
+  },
+
+  _failUninstallation: function(err, cb) {
+    this.set('state', LeapApp.States.Ready);
+    console.warn("Can't uninstall app: " + ((err && err.stack) || err));
+    cb && cb(err2);
+  },
+
+  _finishUninstallation: function(deleteIconAndTile, deleteUserData, cb) {
     try {
       if (deleteUserData) {
         fs.removeSync(this._userDataDir());
@@ -166,8 +204,7 @@ module.exports = LeapApp.extend({
       }
       return cb && cb(null);
     } catch (err) {
-      console.warn('Failed to uninstall app:', err.stack);
-      return cb && cb(err);
+      return this._failUninstallation(err, cb);
     } finally {
       uiGlobals.installedApps.remove(this);
       uiGlobals.uninstalledApps.add(this);

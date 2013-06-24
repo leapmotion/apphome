@@ -34,6 +34,13 @@ process.on('uncaughtException', function(err) {
   run();
 });
 
+nwGui.Window.get().on('close', function() {
+  this.hide();
+  this.close(true);
+  process.exit();
+});
+
 process.on('exit', mixpanel.trackClose);
 
 exports.run = run;
+

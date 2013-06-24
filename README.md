@@ -37,9 +37,13 @@ App Store and Leap Community tiles can be uploaded with:
     s3cmd put -P static/images/icons/store-icon.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/community-tile.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/store-tile.png s3://lm-assets/airspace-desktop/
+    s3cmd put -P static/images/tiles/gesture-tile.png s3://lm-assets/airspace-desktop/documentation-tile.png
 
 ### Notes
 
 * 64-bit Ubuntu requires 32-bit GTK libs: <code>sudo apt-get install ia32-libs-gtk</code>
 * If RCEDIT.exe fails, make sure your virus scanner has the build folder listed as an exception-
   they scan files as they're created, and this causes access violations when RCEDIT goes to change the icon.
+* You may want to set <code>ulimit -n 1200</code> on OS X to get around the low default max number of open files.
+  (In release builds, this gets done automatically.)
+

@@ -9,7 +9,7 @@ function convertToPng(inputBinary, outputPng, cb) {
     return cb(new Error('ico conversion is only supported on Windows'));
   }
 
-  exec(path.join(__dirname, '..', '..', 'bin', 'IconExtractor.exe') + ' ' +
+  exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'IconExtractor.exe')) + ' ' +
        shell.escape(inputBinary) + ' ' + shell.escape(outputPng), cb);
 
 }

@@ -3,7 +3,8 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var plist = require('plist');
-var unzip = require('unzip');
+
+var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 
 var shell = require('./shell.js');
 
@@ -16,16 +17,21 @@ function extractZip(src, dest, cb) {
   } catch (err) {
     return cb(err);
   }
-  var unzipper = unzip.Extract({
-    path: dest,
-    chunkSize: 20 * 1024 * 1024 // 20 MB
-  });
-  unzipper.on('error', cb);
-  unzipper.on('close', function() {
+
+  exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest), function(err) {
+    if (err) {
+      return cb(err);
+    }
     var extractedFiles = fs.readdirSync(dest);
-    if (extractedFiles.length === 1 && fs.statSync(path.join(dest, extractedFiles[0])).isDirectory()) {
+    var possibleAppDirs = [];
+    extractedFiles.forEach(function(extractedFile) {
+      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+        possibleAppDirs.push(extractedFile);
+      }
+    });
+    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
       // application has a single top-level directory, so pull the contents out of that
-      var topLevelDir = path.join(dest, extractedFiles[0]);
+      var topLevelDir = path.join(dest, possibleAppDirs[0]);
       fs.readdirSync(topLevelDir).forEach(function(appFile) {
         fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
       });
@@ -33,7 +39,6 @@ function extractZip(src, dest, cb) {
     }
     cb(null);
   });
-  fs.createReadStream(src).pipe(unzipper);
 }
 
 function extractDmg(src, dest, cb) {
@@ -41,7 +46,7 @@ function extractDmg(src, dest, cb) {
     return cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }
 
-  exec('hdiutil mount ' + shell.escape(src) + ' -plist', function(err, stdout) {
+  exec('hdiutil mount -nobrowse ' + shell.escape(src) + ' -plist', function(err, stdout) {
     if (err) {
       return cb(err);
     }

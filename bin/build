@@ -43,6 +43,7 @@ var appManifest = [
 
 if (os.platform() === 'win32') {
   appManifest.push('bin/IconExtractor.exe');
+  appManifest.push('bin/unzip.exe');
 }
 
 fs.deleteSync(path.join(__dirname, '..', 'build'));
@@ -84,7 +85,7 @@ appZip.finalize(function(err, bytesWritten) {
   console.log(bytesWritten + ' total bytes written to ' + appZipOutputPath);
 
   if (os.platform() === 'win32') {
-    fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-win-ia32'), buildDir('windows'), function(err) {
+    fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.6.0-win-ia32'), buildDir('windows'), function(err) {
       if (err) {
         throw err;
       }
@@ -113,8 +114,12 @@ appZip.finalize(function(err, bytesWritten) {
           var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
           fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
           fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
-
-          console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
+          fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir('windows'), 'Airspace_NoGPU.cmd'), function(err) {
+            if (err) {
+              throw err;
+            }
+            console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
+          });
         });
       });
     });
@@ -122,7 +127,7 @@ appZip.finalize(function(err, bytesWritten) {
     console.log('Building for Windows must be done on Windows, unfortunately.');
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.5.1-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.6.0-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
     if (err) {
       throw err;
     }
@@ -135,17 +140,23 @@ appZip.finalize(function(err, bytesWritten) {
       var icon = fs.readFileSync(icnsIconPath);
       fs.writeFileSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', packageJson.name + '.icns'), icon);
       fs.unlinkSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
+      fs.copy(path.join(__dirname, '..', 'script', 'node-webkit-no-gpu'), path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'MacOS', 'node-webkit-no-gpu'), function(err) {
+        if (err) {
+          throw err;
+        }
 
-      var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
-      var plist = fs.readFileSync(infoPlistPath, 'utf-8');
-      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
-      plist = changePlistString(plist, 'CFBundleName', packageJson.name);
-      plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
-      plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
-      plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
-      fs.writeFileSync(infoPlistPath, plist);
+        var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
+        var plist = fs.readFileSync(infoPlistPath, 'utf-8');
+        plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
+        plist = changePlistString(plist, 'CFBundleName', packageJson.name);
+        plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
+        plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
+        plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
+        plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit-no-gpu');
+        fs.writeFileSync(infoPlistPath, plist);
 
-      console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir('osx'));
+        console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir('osx'));
+      });
     });
   });
 });
