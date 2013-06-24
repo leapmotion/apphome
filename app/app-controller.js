@@ -59,7 +59,17 @@ AppController.prototype = {
       helpMenu.append(new nwGui.MenuItem({
         label: 'About ' + uiGlobals.appName,
         click: function() {
-          window.alert(uiGlobals.appName + ' v' + uiGlobals.appVersion);
+          nwGui.Window.open('/static/about/about.html', {
+            'toolbar': false,
+            'frame': true,
+            'width': 300,
+            "height": 150,
+            'min_width': 300,
+            'min_height': 150,
+            'max_width': 300,
+            'max_height': 150,
+            'always-on-top': true
+          });
         }
       }));
       mainMenu.append(new nwGui.MenuItem({
