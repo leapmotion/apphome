@@ -8,23 +8,34 @@ var fakeServers = require('../test/support/fake-servers.js');
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
 
 var projectDir = path.join(__dirname, '..');
-var queue = [ path.join(projectDir, 'test') ];
+var queue = [];
 var testFiles = process.argv.slice(2);
-
 if (testFiles.length === 0) {
-  while (queue.length > 0) {
-    var currentFile = queue.shift();
-    if (fs.statSync(currentFile).isDirectory()) {
-      fs.readdirSync(currentFile).forEach(function(containedFile) {
-        queue.push(path.join(currentFile, containedFile));
-      });
-    } else if (/^test.*\.js$/.test(path.basename(currentFile))) {
-      testFiles.push(currentFile);
+  queue = [ path.join(projectDir, 'test') ];
+} else {
+  for (var i = 0; i < testFiles.length; i++) {
+    var testFile = testFiles[i];
+    if (fs.statSync(testFile).isDirectory()) {
+      queue.push(testFile);
+      testFiles.splice(i, 1);
+      i--;
     }
   }
 }
 
-console.log('Testing files: ' + testFiles.join(', '));
+
+while (queue.length > 0) {
+  var currentFile = queue.shift();
+  if (fs.statSync(currentFile).isDirectory()) {
+    fs.readdirSync(currentFile).forEach(function(containedFile) {
+      queue.push(path.join(currentFile, containedFile));
+    });
+  } else if (/^test.*\.js$/.test(path.basename(currentFile))) {
+    testFiles.push(currentFile);
+  }
+}
+
+console.log('Testing file' + (testFiles.length > 1 ? 's' : '') + ': ' + testFiles.join(', '));
 
 var mocha = new Mocha();
 testFiles.forEach(function(testFile) {
@@ -36,3 +47,4 @@ fakeServers.start(function() {
     process.exit();
   });
 });
+
