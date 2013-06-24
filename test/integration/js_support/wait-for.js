@@ -8,7 +8,11 @@
       opts = {};
     }
     var checkFn = _.isFunction(checkFnOrCssSelector) ? checkFnOrCssSelector : function() {
-      return $(checkFnOrCssSelector).length;
+      if (checkFnOrCssSelector.charAt(0) === '!') {
+        return !$(checkFnOrCssSelector.substring(1)).length;
+      } else {
+        return $(checkFnOrCssSelector).length;
+      }
     };
     var startTime = new Date().getTime();
     var maxDuration = opts.maxDuration || global.WaitForMaxDuration || DEFAULT_MAX_DURATION;
@@ -26,11 +30,13 @@
         }
         if (isReady) {
           console.log('Wait on "' + title + '" completed in ' + (now - startTime) + ' ms');
-          try {
-            cb();
-          } catch (err) {
-            failTest(mochaDone, err);
-          }
+          setTimeout(function() {
+            try {
+              cb();
+            } catch (err) {
+              failTest(mochaDone, err);
+            }
+          }, 5);
         } else {
           window.setTimeout(pollFn, pollInterval);
         }

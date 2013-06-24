@@ -7,8 +7,8 @@ function withOverrides(overrides) {
   overrides = overrides || {};
 
   var appJson = {
-    id: randomValue.randomInt(4),
-    app_id: randomValue.randomInt(4),
+    id: randomValue.randomInt(4) + 100000,
+    app_id: randomValue.randomInt(4) + 10000,
     name: randomValue.randomString(16),
     platform: os.platform() === 'darwin' ? 'ox' : 'windows',
     icon_url: randomValue.randomString(16),

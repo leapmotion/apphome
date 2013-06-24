@@ -22,7 +22,7 @@ integrationTest.runInApp(__filename, function() {
         $('.slide:eq(2)').click();
         window.waitFor('slide to transition', function() {
           return !$('.slide:eq(2)').hasClass('disabled');
-        }, done).then(function() {
+        }, done, function() {
           assert.ok($('.slide:eq(1)').hasClass('disabled'), 'first slide is disabled after transition');
           assert.ok($('.slide:eq(3)').hasClass('disabled'), 'third slide is also disabled');
           done();

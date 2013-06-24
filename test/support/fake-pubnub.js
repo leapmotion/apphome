@@ -2,8 +2,6 @@ var newApp = require('./new-app.js');
 var appUpgrade = require('./app-upgrade.js');
 var callbacksByChannel = {};
 
-var AppId = 1;
-
 function subscribe(args) {
   if (callbacksByChannel[args.channel]) {
     throw new Error('Multiple subscriptions to the same channel are bad. No soup for you.');
@@ -18,19 +16,17 @@ function unsubscribe(args) {
 function triggerNewApp(appId) {
   Object.keys(callbacksByChannel).forEach(function(channel) {
     if (/user/.test(channel)) {
-      process.nextTick(function() {
-        callbacksByChannel[channel](JSON.stringify(newApp.withOverrides({ app_id: appId })));
-      });
+      console.log('Triggering new app on channel: ' + channel);
+      callbacksByChannel[channel](JSON.stringify(newApp.withOverrides({ app_id: appId })));
     }
   });
 }
 
-function triggerAppUpgrade(appId) {
+function triggerAppUpgrade(appId, version) {
   Object.keys(callbacksByChannel).forEach(function(channel) {
     if ((new RegExp(appId + '\\.app')).test(channel)) {
-      process.nextTick(function() {
-        callbacksByChannel[channel](JSON.stringify(appUpgrade.forAppId(appId)));
-      });
+      console.log('Triggering upgrade on channel: ' + channel);
+      callbacksByChannel[channel](JSON.stringify(appUpgrade.forAppIdAndVersion(appId, version)));
     }
   });
 }

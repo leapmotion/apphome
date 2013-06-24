@@ -15,9 +15,9 @@ function getAppsForPlatform(platform) {
         auth_id: 4000,
         secret_token: randomValue.randomString(16)
       },
-      newApp.withOverrides({ platform: platform }),
-      newApp.withOverrides({ platform: platform }),
-      newApp.withOverrides({ platform: platform })
+      newApp.withOverrides({ platform: platform, app_id: 1 }),
+      newApp.withOverrides({ platform: platform, app_id: 2 }),
+      newApp.withOverrides({ platform: platform, app_id: 3 })
     ];
   }
   return availableAppsByPlatform[platform];
