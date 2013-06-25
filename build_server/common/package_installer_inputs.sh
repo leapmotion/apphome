@@ -7,15 +7,13 @@ if [ "${BUILD_STEP}" != "package_installer_inputs.sh" ]; then
   exit 1
 fi
 
-_zip_target="platform.tgz"
-_zip_share_target="platform_${BUILD_IDENTIFIER}.tgz"
+_zip_target="airspace.tgz"
+_zip_share_target="airspace_${BUILD_IDENTIFIER}.tgz"
 
 if [ -f "${_zip_target}" ]; then
   /bin/rm -f "${_zip_target}"
 fi
 
-echo "${BUILD_SHARE}"
-exit 0
 if "${TAR}" czvf "${_zip_target}" build_products; then
   if [ "${DISTRIBUTE_TO_SHARE}" = "true" ]; then
     if [ ! -d "${BUILD_SHARE}" ]; then
