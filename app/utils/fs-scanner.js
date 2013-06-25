@@ -15,7 +15,9 @@ function FsScanner(allowedApps) {
   if (Array.isArray(allowedApps)) {
     this._allowedApps = {};
     allowedApps.forEach(function(allowedApp) {
-      this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
+      if (allowedApp.findByScanning) {
+        this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
+      }
     }.bind(this));
   }
 }

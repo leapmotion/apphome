@@ -10,7 +10,6 @@ var WebLinkApp = LeapApp.extend({
 
   constructor: function(args) {
     args = args || {};
-    args.isBuiltin = !args.deletable;
     args.state = LeapApp.States.Ready;
 
     var md5hash = crypto.createHash('md5');
@@ -33,7 +32,7 @@ var WebLinkApp = LeapApp.extend({
   },
 
   isBuiltinTile: function() {
-    return this.get('isBuiltin');
+    return !this.get('deletable');
   },
 
   isWebLinkApp: function() {

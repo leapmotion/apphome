@@ -31,14 +31,30 @@
     {
       "name": "Google Earth",
       "minVersion": "7.1",
-      "relativeExePath": "client\\googleearth.exe"
+      "relativeExePath": "client\\googleearth.exe",
+      "findByScanning": true,
+      "deletable": true
+    },
+    {
+      "name": "Orientation",
+      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/orientation-tile.png",
+      "relativeExePath": "Leap Motion\\Leap Motion Software\\Orientation\\Orientation.exe",
+      "deletable": false
     }
   ],
 
   "osx": [
     {
       "name": "Google Earth",
-      "minVersion": "7.1"
+      "minVersion": "7.1",
+      "findByScanning": true,
+      "deletable": true
+    },
+    {
+      "name": "Orientation",
+      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/orientation-tile.png",
+      "relativeExePath": "Leap Motion Orientation.app",
+      "deletable": false
     }
   ]
 }

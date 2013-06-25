@@ -13,6 +13,38 @@ var LeapApp = require('./leap-app.js');
 module.exports = LeapApp.extend({
 
   constructor: function(args) {
+    if (!args.keyFile && args.relativeExePath) {
+      try {
+        var keyFile;
+        if (os.platform() === 'win32') {
+          keyFile = path.join(process.env.PROGRAMFILES, args.relativeExePath);
+          if (fs.existsSync(keyFile)) {
+            args.keyFile = keyFile;
+          } else if (process.env['PROGRAMFILES(X86)']) {
+            keyFile = path.join(process.env['PROGRAMFILES(X86)'], args.relativeExePath);
+            if (fs.existSync(keyFile)) {
+              args.keyFile = keyFile;
+            }
+          }
+        } else if (os.platform() === 'darwin') {
+          keyFile = path.join('/Applications', args.relativeExePath);
+          if (fs.existsSync(keyFile)) {
+            args.keyFile = keyFile;
+          } else {
+            keyFile = path.join(process.env.HOME, 'Applications', args.relativeExePath);
+            if (fs.existsSync(keyFile)) {
+              args.keyFile = keyFile;
+            }
+          }
+        }
+        if (!args.executable) {
+          args.executable = args.keyFile;
+        }
+      } catch(e) {
+        console.warn(e.stack);
+      }
+    }
+
     if (!args.id) {
       if (!args.keyFile) {
         throw new Error('No id and no keyFile set.');
@@ -21,7 +53,9 @@ module.exports = LeapApp.extend({
       }
     }
 
-    args.tilePath = config.LocalAppTilePath;
+    if (!args.tileUrl) {
+      args.tilePath = config.LocalAppTilePath;
+    }
 
     LeapApp.prototype.constructor.call(this, args);
   },
@@ -36,35 +70,51 @@ module.exports = LeapApp.extend({
     return true;
   },
 
+  isBuiltinTile: function() {
+    return !this.get('deletable');
+  },
+
+  isValid: function() {
+    try {
+      return fs.existsSync(this.get('keyFile')) && fs.existsSync(this.get('executable'));
+    } catch (e) {
+      return false;
+    }
+  },
+
   install: function(cb) {
     this.trigger('installstart');
     uiGlobals.uninstalledApps.remove(this);
     uiGlobals.installedApps.add(this);
     this.set('state', LeapApp.States.Installing);
     var rawIconFile = this.get('rawIconFile');
-    var conversionModule;
-    if (/\.icns$/i.test(rawIconFile)) {
-      conversionModule = icns;
-    } else if (os.platform() === 'win32') {
-      conversionModule = ico;
-    }
+    if (rawIconFile) {
+      var conversionModule;
+      if (/\.icns$/i.test(rawIconFile)) {
+        conversionModule = icns;
+      } else if (os.platform() === 'win32') {
+        conversionModule = ico;
+      }
 
-    if (conversionModule) {
-      conversionModule.convertToPng(rawIconFile, this.standardIconPath(), finishInstallation.bind(this));
+      if (conversionModule) {
+        conversionModule.convertToPng(rawIconFile, this.standardIconPath(), finishInstallation.bind(this));
+      } else {
+        finishInstallation.call(this, new Error('Cannot convert icon file: ' + rawIconFile));
+      }
     } else {
-      finishInstallation.call(this, true);
+      finishInstallation.call(this);
     }
 
     function finishInstallation(err) {
       if (err) {
         console.error(err.stack || err);
-      } else {
-        console.info('Converted ' + rawIconFile + ' icon to PNG.');
       }
-      if (os.platform() === 'win32') {
-        this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
-      } else {
-        this.set('executable', this.get('keyFile'));
+      if (!this.get('executable')) {
+        if (os.platform() === 'win32') {
+          this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
+        } else {
+          this.set('executable', this.get('keyFile'));
+        }
       }
       this.set('iconPath', err ? '' : this.standardIconPath());
       this.set('state', LeapApp.States.Ready);

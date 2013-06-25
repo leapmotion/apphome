@@ -168,6 +168,12 @@ AppController.prototype = {
         return;
       }
 
+      manifest.forEach(function(appToFind) {
+        if (!appToFind.findByScanning) { // explicit path
+          console.log('Should look for app: ' + appToFind.name);
+        }
+      });
+
       console.info('Scanning filesystem.');
 
       var existingLocalAppsById = {};
@@ -195,12 +201,14 @@ AppController.prototype = {
           });
 
           // the remaining ones are apps we previously detected but weren't found in this last scan,
-          // which means they were uninstalled and need to be removed from the launcher
+          // which means they may have been uninstalled and, if so, need to be removed from the collection
           _(existingLocalAppsById).forEach(function(app){
-            app.uninstall(true, function() {
-              uiGlobals.uninstalledApps.remove(app.get('id'));
-              app.save(); // HACK, depends on app.save saving the whole collection
-            });
+            if (!app.isValid()) {
+              app.uninstall(true, function() {
+                uiGlobals.uninstalledApps.remove(app);
+                app.save();
+              });
+            }
           });
         }
       }.bind(this));

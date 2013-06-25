@@ -28,18 +28,6 @@ var PlatformUserDataDirs = {
 
 module.exports = LeapApp.extend({
 
-  initialize: function() {
-    if (!this.get('tilePath')) {
-      this.downloadTile(false, function() {
-        if (!this.get('iconPath')) {
-          this.downloadIcon();
-        }
-      }.bind(this));
-    }
-
-    LeapApp.prototype.initialize.apply(this, arguments);
-  },
-
   isStoreApp: function() {
     return true;
   },
