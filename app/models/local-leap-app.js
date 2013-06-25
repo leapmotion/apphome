@@ -105,22 +105,25 @@ module.exports = LeapApp.extend({
       }
 
       if (conversionModule) {
-        conversionModule.convertToPng(rawIconFile, this.standardIconPath(), finishInstallation.bind(this));
+        conversionModule.convertToPng(rawIconFile, this.standardIconPath(), function(err) {
+          if (err) {
+            console.error(err.stack || err);
+          }
+          this._finishInstallation(!!err, cb);
+        }.bind(this));
       } else {
-        finishInstallation.call(this, new Error('Cannot convert icon file: ' + rawIconFile));
+        this._finishInstallation(true, cb);
       }
     } else {
-      finishInstallation.call(this);
+      this._finishInstallation(true, cb);
     }
 
-    function finishInstallation(err) {
-      if (err) {
-        console.error(err.stack || err);
-      }
-      this.set('iconPath', err ? '' : this.standardIconPath());
-      this.set('state', LeapApp.States.Ready);
-      cb && cb(null);
-    }
+  },
+
+  _finishInstallation: function(noIcon, cb) {
+    this.set('iconPath', noIcon ? '' : this.standardIconPath());
+    this.set('state', LeapApp.States.Ready);
+    cb && cb(null);
   },
 
   uninstall: function(deleteData, cb) {

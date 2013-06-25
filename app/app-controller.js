@@ -192,7 +192,8 @@ AppController.prototype = {
             if (existingExplicitPathLocalAppsById[id]) {
               delete existingExplicitPathLocalAppsById[id];
             } else {
-              uiGlobals.installedApps.add(app);
+              console.log('New local app: ' + app.get('name'));
+              app.install();
             }
           }
         } catch(e) {
@@ -228,10 +229,7 @@ AppController.prototype = {
             delete existingScannedLocalAppsById[id];
           } else {
             console.log('Found new local app: ' + app.get('name'));
-            uiGlobals.installedApps.add(app);
-            app.install(function(err) {
-              err && console.log('Failed to install app: ', app.get('name'), err.message);
-            });
+            app.install();
           }
         });
 
