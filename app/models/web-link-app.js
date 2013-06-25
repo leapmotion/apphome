@@ -39,10 +39,6 @@ var WebLinkApp = LeapApp.extend({
     return true;
   },
 
-  sortScore: function() {
-    return (this.isBuiltinTile() ? 'a_' + this.get('name') : LeapApp.prototype.sortScore.apply(this, arguments));
-  },
-
   launch: function() {
     var url = this.get('urlToLaunch');
     if (this.get('passAccessToken')) {

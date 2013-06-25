@@ -65,6 +65,8 @@ var LeapApp = BaseModel.extend({
           this.downloadIcon();
         }
       }.bind(this));
+    } else if (!this.get('iconPath') && this.get('iconUrl')) {
+      this.downloadIcon();
     }
   },
 
@@ -75,7 +77,7 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    return 'b_' + (this.get('installedAt') || this.get('name'));
+    return (this.isBuiltinTile() ? 'a_' + this.get('name') : 'b_' + (this.get('installedAt') || this.get('name')));
   },
 
   isLocalApp: function() {

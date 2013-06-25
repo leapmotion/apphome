@@ -22,7 +22,7 @@ module.exports = LeapApp.extend({
             args.keyFile = keyFile;
           } else if (process.env['PROGRAMFILES(X86)']) {
             keyFile = path.join(process.env['PROGRAMFILES(X86)'], args.relativeExePath);
-            if (fs.existSync(keyFile)) {
+            if (fs.existsSync(keyFile)) {
               args.keyFile = keyFile;
             }
           }
@@ -50,6 +50,14 @@ module.exports = LeapApp.extend({
         throw new Error('No id and no keyFile set.');
       } else {
         args.id = this._makeIdFromKeyFile(args.keyFile);
+      }
+    }
+
+    if (!args.executable) {
+      if (args.relativeExePath) {
+        args.executable = path.join(args.keyFile, args.relativeExePath);
+      } else {
+        args.executable = path.join(args.keyFile);
       }
     }
 
@@ -108,13 +116,6 @@ module.exports = LeapApp.extend({
     function finishInstallation(err) {
       if (err) {
         console.error(err.stack || err);
-      }
-      if (!this.get('executable')) {
-        if (os.platform() === 'win32') {
-          this.set('executable', path.join(this.get('keyFile') || '', this.get('relativeExePath') || ''));
-        } else {
-          this.set('executable', this.get('keyFile'));
-        }
       }
       this.set('iconPath', err ? '' : this.standardIconPath());
       this.set('state', LeapApp.States.Ready);

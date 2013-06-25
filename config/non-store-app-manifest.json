@@ -32,8 +32,7 @@
       "name": "Google Earth",
       "minVersion": "7.1",
       "relativeExePath": "client\\googleearth.exe",
-      "findByScanning": true,
-      "deletable": true
+      "findByScanning": true
     },
     {
       "name": "Orientation",
@@ -47,8 +46,7 @@
     {
       "name": "Google Earth",
       "minVersion": "7.1",
-      "findByScanning": true,
-      "deletable": true
+      "findByScanning": true
     },
     {
       "name": "Orientation",

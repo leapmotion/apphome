@@ -153,7 +153,14 @@ FsScanner.prototype = {
       return null;
     }
 
-    return new LocalLeapApp(attributes);
+    if (attributes.deletable !== false) {
+      attributes.deletable = true;
+    }
+
+    attributes.findByScanning = true;
+
+    var localLeapApp = new LocalLeapApp(attributes);
+    return localLeapApp.isValid() ? localLeapApp : null;
   },
 
   _getAllowedApp: function(appName) {
