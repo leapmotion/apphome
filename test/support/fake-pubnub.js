@@ -31,9 +31,14 @@ function triggerAppUpgrade(appId, version) {
   });
 }
 
-module.exports.init = function() {};
-module.exports.subscribe = subscribe;
-module.exports.unsubscribe = unsubscribe;
+var pubnub = {
+  subscribe: subscribe,
+  unsubscribe: unsubscribe
+}
+
+module.exports.init = function() {
+  return pubnub;
+};
 module.exports.triggerNewApp = triggerNewApp;
 module.exports.triggerAppUpgrade = triggerAppUpgrade;
 

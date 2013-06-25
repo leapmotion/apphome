@@ -2,7 +2,7 @@ var domain = require('domain');
 var http = require('http');
 var https = require('https');
 var os = require('os');
-var pubnub = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub'));
+var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
 
 var config = require('../../config/config.js');
@@ -23,6 +23,7 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
 
 var subscribe = (function() {
   var subscribed = {};
+  var pubnub;
   var pubnubDomain = domain.create();
   pubnubDomain.on('error', function(err) {
     Object.keys(subscribed).forEach(function(channel) {
@@ -37,7 +38,7 @@ var subscribe = (function() {
   });
 
   pubnubDomain.run(function() {
-    pubnub.init({
+    pubnub = pubnubInit({
       subscribe_key: config.PubnubSubscribeKey,
       ssl: true
     });
