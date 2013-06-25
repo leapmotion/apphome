@@ -18,11 +18,11 @@ integrationTest.runInApp(__filename, function() {
 
     it('should advance on click', function(done) {
       this.timeout(50000);
-      window.waitFor('tiles', '.tile:visible', done, { maxDuration: 20000 }).then(function() {
+      window.waitFor('page to load', '.slide:visible', done, { maxDuration: 20000 }, function() {
         $('.slide:eq(2)').click();
         window.waitFor('slide to transition', function() {
           return !$('.slide:eq(2)').hasClass('disabled');
-        }, done).then(function() {
+        }, done, function() {
           assert.ok($('.slide:eq(1)').hasClass('disabled'), 'first slide is disabled after transition');
           assert.ok($('.slide:eq(3)').hasClass('disabled'), 'third slide is also disabled');
           done();

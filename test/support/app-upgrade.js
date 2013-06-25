@@ -1,7 +1,7 @@
 var newApp = require('./new-app.js');
 
-function forAppId(appId, overrides) {
-  return newApp.withOverrides(_.extend({}, overrides, { app_id: appId }));
+function forAppIdAndVersion(appId, version, overrides) {
+  return newApp.withOverrides(_.extend({}, overrides || {}, { app_id: appId, version_number: version }));
 }
 
-module.exports.forAppId = forAppId;
+module.exports.forAppIdAndVersion = forAppIdAndVersion;

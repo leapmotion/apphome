@@ -16,49 +16,34 @@ cd "${_script_dir}"
 export LOCAL_BUILD=true
 export BUILD_PLAT=mac
 export BUILD_ARCH=x64
-export UPDATE_LIBRARIES=false
-export CLEAN_BUILD=false
-export BUILD_CONFIG=Release
-export BUILD_PRODUCT=Public_Installer
-export GIT_BRANCH="origin/master"
-export WORKSPACE="/Volumes/LEAPCODE/code/platform"
-export SHARE_ROOT="/Volumes/LEAPCODE/LeapMotion"
-export LIBRARY_DIR="/Volumes/LEAPCODE/code/Libraries"
-export LATEST_ROOT="/Volumes/LEAPCODE/LeapMotion"
-
-if [ "$(whoami)" = 'tnitz' ]; then
-    export LOCAL_BUILD=true
-    export BUILD_PLAT=mac
-    export BUILD_ARCH=x64
-    export UPDATE_LIBRARIES=false
-    export CLEAN_BUILD=false
-    export BUILD_CONFIG=Release
-    export BUILD_PRODUCT=Public_Installer
-    export GIT_BRANCH="airspace-integration"
-    export WORKSPACE="/Users/tnitz/Projects/platform/platform"
-    export SHARE_ROOT="/Users/tnitz/Projects/platform/LeapMotion"
-    export LIBRARY_DIR="/opt/local/Libraries"
-    export LATEST_ROOT="/Users/tnitz/Projects/platform/LeapMotion"
-fi
-
+export GIT_BRANCH="origin/production"
+export SHARE_ROOT=
+export WORKSPACE=
 
 export _num_cpus=$(sysctl hw.ncpu | awk '{print $2}')
 _num_cpus=$((_num_cpus*2 - 2))
 
-_steps="generate_projects build_platform generate_sdk generate_installer"
+_steps="package_installer_inputs"
+
+if [ "$(whoami)" = 'tnitz' ]; then
+    export GIT_BRANCH="production"
+fi
+
+if [ "$(whoami)" = 'keithmertens' ]; then
+  export GIT_BRANCH="production"
+  export WORKSPACE="/Users/keithmertens/Desktop/OhSweetCode/homebase"
+  export SHARE_ROOT="/Users/keithmertens/Desktop/OhSweetCode/LeapMotion"
+fi
 
 function runSteps() {
   for step in ${_steps}; do      
-    for crt in "libstdc++" "libc++"; do
-      export BUILD_CRT="${crt}"
-      echo "Running build step ${step}[${BUILD_CRT}]"
+      echo "Running build step ${step}"
       if ./${step}.sh; then
-        echo "build step ${step}[${BUILD_CRT}] succeeded."
+        echo "build step ${step} succeeded."
       else
-        1>&2 echo "buid step ${step}[${BUILD_CRT}] failed."
+        1>&2 echo "buid step ${step} failed."
         exit 1
-      fi    
-    done
+      fi
   done
 }
 

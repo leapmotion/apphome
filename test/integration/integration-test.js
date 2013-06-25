@@ -94,7 +94,6 @@ function setupLeapHomeTestApp(fileName) {
             if (!/}$/.test(datum)) {
               datum = datum + '}';
             }
-            console.log(datum);
             try {
               reportTestResult.call(testContext, JSON.parse(datum));
             } catch (err) {

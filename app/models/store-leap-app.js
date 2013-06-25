@@ -69,7 +69,7 @@ module.exports = LeapApp.extend({
               this.save();
               cb(null);
             }
-          });
+          }.bind(this));
         } else {
           this._abortInstallation(null, err);
           cb && cb(err);
