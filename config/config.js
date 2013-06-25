@@ -19,7 +19,7 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest.json',
+  NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v2.json',
 
   SentryDSN: 'https://03b4e3bdfc974421860ef1a2747540b6:97e879a1dd80479f86c9780a415b0f80@app.getsentry.com/9610',
 
