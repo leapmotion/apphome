@@ -74,8 +74,8 @@ if [ ! -n "${NODE}" ]; then
   export CMAKE=$(which node)
 fi
 
-if [ ! -n "${ZIP}" ]; then
-  export ZIP=$(which tar)
+if [ ! -n "${TAR}" ]; then
+  export TAR=$(which tar)
 fi
 
 #verified file copy
