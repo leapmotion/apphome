@@ -129,17 +129,17 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    if (this._isFirstRun() && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
-      iframeWindow.location = signUpUrl;
-      this._hasRedirectedToSignUp = true;
-    } else {
+    // if (this._isFirstRun() && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+    //   iframeWindow.location = signUpUrl;
+    //   this._hasRedirectedToSignUp = true;
+    // } else {
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
       $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
       this._showLoginForm();
       this._center();
-    }
+    // }
   },
 
   _allowOauthAuthorization: function() {
