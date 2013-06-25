@@ -15,7 +15,7 @@ if [ -f "${_zip_target}" ]; then
 fi
 
 if "${TAR}" czvf "${_zip_target}" build_products; then
-  if [ "${DISTRIBUTE_TO_SHARE}" = "true" ]; then
+  if [ "${LOCAL_BUILD}" != "true" ]; then
     if [ ! -d "${BUILD_SHARE}" ]; then
       mkdir -p "${BUILD_SHARE}"
     fi

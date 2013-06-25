@@ -27,4 +27,5 @@ echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt
 git rev-parse HEAD > build_products/head_sha.txt
 
 #does the actual archiving of build_products & copying to shared location.
+echo "Archiving build products..."
 source "${BUILD_SCRIPT_COMMON_DIR}/package_installer_inputs.sh"
