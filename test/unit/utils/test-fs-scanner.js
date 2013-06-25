@@ -5,6 +5,8 @@ var os = require('os');
 var path = require('path');
 var rewire = require('rewire');
 
+var LocalLeapApp = require('../../../app/models/local-leap-app.js');
+LocalLeapApp.prototype.isValid = function() { return true; };
 var allowedApps = require('../../support/local-apps.js');
 
 var mockExec = {

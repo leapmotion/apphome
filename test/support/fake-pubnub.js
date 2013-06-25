@@ -6,10 +6,12 @@ function subscribe(args) {
   if (callbacksByChannel[args.channel]) {
     throw new Error('Multiple subscriptions to the same channel are bad. No soup for you.');
   }
+  console.log('Subscribed to channel: ' + args.channel);
   callbacksByChannel[args.channel] = args.callback;
 }
 
 function unsubscribe(args) {
+  console.log('Unsubscribed from channel: ' + args.channel);
   delete callbacksByChannel[args.channel];
 }
 
@@ -31,13 +33,12 @@ function triggerAppUpgrade(appId, version) {
   });
 }
 
-var pubnub = {
-  subscribe: subscribe,
-  unsubscribe: unsubscribe
-}
 
 module.exports.init = function() {
-  return pubnub;
+  return {
+    subscribe: subscribe,
+    unsubscribe: unsubscribe
+  };
 };
 module.exports.triggerNewApp = triggerNewApp;
 module.exports.triggerAppUpgrade = triggerAppUpgrade;

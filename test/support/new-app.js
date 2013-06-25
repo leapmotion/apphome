@@ -10,7 +10,7 @@ function withOverrides(overrides) {
     id: randomValue.randomInt(4) + 100000,
     app_id: randomValue.randomInt(4) + 10000,
     name: randomValue.randomString(16),
-    platform: os.platform() === 'darwin' ? 'ox' : 'windows',
+    platform: os.platform() === 'darwin' ? 'osx' : 'windows',
     icon_url: randomValue.randomString(16),
     tile_url: randomValue.randomString(16),
     binary_url: randomValue.randomString(16),
