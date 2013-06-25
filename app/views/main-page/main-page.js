@@ -183,9 +183,8 @@ module.exports = BaseView.extend({
   },
 
   animateIn: function(){
-    //this.$("#header").delay(800).animate({top: 0}, 250, "easeInOutCirc");
-    this.$("#header").delay(800).switchClass("initial", "loaded", 250, "easeInOutCirc");
-    this.$(".footer.initial").delay(800).switchClass("initial", "loaded", 250, "easeInOutCirc");
+    this.$('#header').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutCirc');
+    this.$('.footer.initial').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutCirc');
   }
 
 });
