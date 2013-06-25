@@ -28,7 +28,9 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
-  client.captureError(err);
+  if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
+    client.captureError(err);
+  }
   console.error('Uncaught exception: ' + err.stack);
   $('body').empty();
   run();

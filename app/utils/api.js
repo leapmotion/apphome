@@ -2,6 +2,7 @@ var domain = require('domain');
 var http = require('http');
 var https = require('https');
 var os = require('os');
+var pubnub = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub'));
 var qs = require('querystring');
 
 var config = require('../../config/config.js');
@@ -35,9 +36,8 @@ var subscribe = (function() {
     reconnectAfterError(err);
   });
 
-  var pubnub;
   pubnubDomain.run(function() {
-    pubnub = require('pubnub').init({
+    pubnub.init({
       subscribe_key: config.PubnubSubscribeKey,
       ssl: true
     });
@@ -165,12 +165,12 @@ function getAuthURL(url, cb) {
 }
 
 var reconnectionTimeoutId;
-var hasEverConnected;
+module.exports.hasEverConnected; // exposed for tests
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
     reconnectionTimeoutId = setTimeout(function() {
-      connectToStoreServer(!hasEverConnected);
+      connectToStoreServer(!module.exports.hasEverConnected);
     }, config.ServerConnectRetryMs);
   }
 }
@@ -195,7 +195,7 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb && cb(new Error(messages.errors));
           cb = null;
         } else {
-          hasEverConnected = true;
+          module.exports.hasEverConnected = true;
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
