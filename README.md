@@ -29,15 +29,16 @@ the <code>lm-assets</code> S3 bucket (ask Josh Hull if you don't have them).
 
 Upload with:
 
-    s3cmd put -P config/non-store-app-manifest.json s3://lm-assets/airspace-desktop/
+    s3cmd put -P config/non-store-app-manifest.json s3://lm-assets/airspace-desktop/non-store-app-manifest-v2.json
 
-App Store and Leap Community tiles can be uploaded with:
+Builtin tiles can be uploaded with:
 
     s3cmd put -P static/images/icons/community-icon.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/icons/store-icon.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/community-tile.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/store-tile.png s3://lm-assets/airspace-desktop/
     s3cmd put -P static/images/tiles/gesture-tile.png s3://lm-assets/airspace-desktop/documentation-tile.png
+    s3cmd put -P static/images/tiles/magic-tile.png s3://lm-assets/airspace-desktop/orientation-tile.png
 
 ### Notes
 

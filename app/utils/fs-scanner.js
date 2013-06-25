@@ -15,7 +15,9 @@ function FsScanner(allowedApps) {
   if (Array.isArray(allowedApps)) {
     this._allowedApps = {};
     allowedApps.forEach(function(allowedApp) {
-      this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
+      if (allowedApp.findByScanning) {
+        this._allowedApps[allowedApp.name.toLowerCase()] = allowedApp;
+      }
     }.bind(this));
   }
 }
@@ -151,7 +153,14 @@ FsScanner.prototype = {
       return null;
     }
 
-    return new LocalLeapApp(attributes);
+    if (attributes.deletable !== false) {
+      attributes.deletable = true;
+    }
+
+    attributes.findByScanning = true;
+
+    var localLeapApp = new LocalLeapApp(attributes);
+    return localLeapApp.isValid() ? localLeapApp : null;
   },
 
   _getAllowedApp: function(appName) {

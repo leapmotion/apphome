@@ -8,6 +8,7 @@ var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var download = require('../utils/download.js');
 var enumerable = require('../utils/enumerable.js');
+var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
 
@@ -57,6 +58,16 @@ var LeapApp = BaseModel.extend({
       }
       this.save();
     }.bind(this));
+
+    if (!this.get('tilePath') && this.get('tileUrl')) {
+      this.downloadTile(false, function() {
+        if (!this.get('iconPath') && this.get('iconUrl')) {
+          this.downloadIcon();
+        }
+      }.bind(this));
+    } else if (!this.get('iconPath') && this.get('iconUrl')) {
+      this.downloadIcon();
+    }
   },
 
   save: function() {
@@ -66,7 +77,7 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    return 'b_' + (this.get('installedAt') || this.get('name'));
+    return (this.isBuiltinTile() ? 'a_' + this.get('name') : 'b_' + (this.get('installedAt') || this.get('name')));
   },
 
   isLocalApp: function() {
@@ -131,6 +142,12 @@ var LeapApp = BaseModel.extend({
     }
 
     nwGui.Shell.openItem(executable);
+
+    var eventToTrack = this.get('eventToTrack');
+    if (eventToTrack) {
+      var trackFn = mixpanel.getTrackFn(eventToTrack);
+      trackFn();
+    }
   },
 
   standardIconPath: function() {

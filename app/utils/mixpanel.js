@@ -11,6 +11,8 @@ function getTrackFn(eventName) {
       mixpanel.track(uiGlobals.appName + ' - ' + eventName, {
         version: uiGlobals.appVersion
       });
+    } else {
+      console.log('Would have tracked Mixpanel event in a release build: ' + eventName);
     }
   }
 }

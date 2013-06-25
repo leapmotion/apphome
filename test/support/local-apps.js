@@ -3,23 +3,27 @@ module.exports = {
     {
       "name": "Google Earth",
       "minVersion": "7.1",
-      "relativeExePath": "client\\googleearth.exe"
+      "relativeExePath": "client\\googleearth.exe",
+      "findByScanning": true
     },
     {
       "name": "Google Chrome",
       "minVersion": "20",
-      "relativeExePath": "chrome.exe"
+      "relativeExePath": "chrome.exe",
+      "findByScanning": true
     }
   ],
 
   "darwin": [
     {
       "name": "Google Earth",
-      "minVersion": "7.1"
+      "minVersion": "7.1",
+      "findByScanning": true
     },
     {
       "name": "GarageBand",
-      "minVersion": "6"
+      "minVersion": "6",
+      "findByScanning": true
     }
   ]
 }
