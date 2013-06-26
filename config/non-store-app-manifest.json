@@ -22,7 +22,8 @@
       "name": "Documentation",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/documentation-tile.png",
       "urlToLaunch": "http://docs.leapmotion.com",
-      "deletable": false
+      "deletable": false,
+      "eventToTrack": "Clicked Documentation Tile"
     }
   ],
 
@@ -37,7 +38,8 @@
       "name": "Orientation",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/orientation-tile.png",
       "relativeExePath": "Leap Motion\\Core Services\\Orientation\\Orientation.exe",
-      "deletable": false
+      "deletable": false,
+      "eventToTrack": "Clicked Orientation Tile"
     }
   ],
 
@@ -51,7 +53,8 @@
       "name": "Orientation",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/orientation-tile.png",
       "relativeExePath": "Leap Motion Orientation.app",
-      "deletable": false
+      "deletable": false,
+      "eventToTrack": "Clicked Orientation Tile"
     }
   ]
 }
