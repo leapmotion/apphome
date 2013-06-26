@@ -133,7 +133,15 @@ module.exports = BaseView.extend({
     //   iframeWindow.location = signUpUrl;
     //   this._hasRedirectedToSignUp = true;
     // } else {
-      $('.auth-links li:first', iframeWindow.document).remove(); // remove "create account" link
+
+      // TEMP BETA CODE FOR REMOVING SIGN UP
+      $('.auth-links li:first', iframeWindow.document).remove();
+      var $alertMsg = $('.alerts .alert', iframeWindow.document);
+      if (/You need to sign in or sign up before continuing/.test($alertMsg.text())) {
+        $alertMsg.text('You need to sign in before continuing.');
+      }
+      // END TEMP BETA CODE FOR REMOVING SIGN UP
+
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
