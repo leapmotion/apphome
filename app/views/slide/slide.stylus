@@ -5,7 +5,8 @@
     display none
     position absolute
     cursor pointer
-    width 100%
+    left -5%
+    width 110%
     height 100%
     z-index 9999
 
