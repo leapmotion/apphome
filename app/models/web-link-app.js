@@ -44,8 +44,7 @@ var WebLinkApp = LeapApp.extend({
 
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
-      var trackFn = mixpanel.getTrackFn(eventToTrack);
-      trackFn();
+      mixpanel.trackEvent(eventToTrack);
     }
   }
 

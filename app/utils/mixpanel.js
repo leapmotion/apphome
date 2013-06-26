@@ -22,5 +22,8 @@ module.exports = {
   trackClose: getTrackFn('Closed Airspace'),
   trackSignUp: getTrackFn('Signed Up'),
   trackSignIn: getTrackFn('Signed In'),
-  getTrackFn: getTrackFn
+  trackAppUpgrade: getTrackFn('Started App Update'),
+  trackEvent: function(eventName) {
+    (getTrackFn(eventName))();
+  }
 };
