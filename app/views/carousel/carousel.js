@@ -38,7 +38,7 @@ var CarouselView = BaseView.extend({
         this._lastMouseDownEvent = evt.originalEvent;
       }
     }.bind(this));
-    $('body').mouseup(this._handlePotentialSwipe.bind(this));
+    $('body').mousemove(this._handlePotentialSwipe.bind(this));
   },
 
   _initAddRemoveRepainting: function() {
@@ -203,6 +203,15 @@ var CarouselView = BaseView.extend({
     if (!this._lastMouseDownEvent || this._animating) {
       return;
     }
+
+    if (this._clearSwipeTimeoutId) {
+      window.clearTimeout(this._clearSwipeTimeoutId);
+    }
+
+    this._clearSwipeTimeoutId = window.setTimeout(function() {
+      this._lastMouseDownEvent = null;
+    }.bind(this), 200);
+
     var startPos = {
       x: this._lastMouseDownEvent.x,
       y: this._lastMouseDownEvent.y
@@ -213,8 +222,9 @@ var CarouselView = BaseView.extend({
     };
 
     var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
-    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 50 &&
+    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 100 &&
         Math.abs(Math.atan(slope)) < Math.PI / 4) {
+      this._lastMouseDownEvent = null;
       // Treat it as a swipe if the angle is less than 45 degrees from horizontal.
       if (endPos.x > startPos.x) {
         // swipe to the right

@@ -39,6 +39,11 @@ module.exports = BaseView.extend({
     this.listenTo(leapApp, 'change:iconPath', function() {
       this.$('.icon').attr('src', leapApp.get('iconPath'));
     }.bind(this));
+
+    // prevent swiping while modal is open
+    this.$el.bind('mousedown mousemove', function(evt) {
+      evt.stopPropagation();
+    });
   },
 
   show: function() {
