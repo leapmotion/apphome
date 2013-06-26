@@ -77,8 +77,7 @@ FsScanner.prototype = {
       var attributes = {
         name: parsedPlist.CFBundleDisplayName || parsedPlist.CFBundleName || parsedPlist.CFBundleExecutable,
         version: parsedPlist.CFBundleShortVersionString || parsedPlist.CFBundleVersion,
-        keyFile: keyFile,
-        relativeExePath: path.join('Contents', 'MacOS', parsedPlist.CFBundleExecutable)
+        keyFile: keyFile
       };
 
       var icon = parsedPlist.CFBundleIcon || parsedPlist.CFBundleIconFile;
