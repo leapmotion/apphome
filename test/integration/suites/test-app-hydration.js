@@ -11,7 +11,7 @@ if (global.isRunningTest()) {
     app_id: 1,
     name: 'PopCAD'
   }));
-  leapApps.push(leapAppFactory.localAppData());
+  leapApps.push(leapAppFactory.storeAppData());
   leapApps.push(leapAppFactory.storeAppData());
   db.setItem(config.DbKeys.InstalledApps, JSON.stringify(leapApps));
 }
