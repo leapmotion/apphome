@@ -7,7 +7,7 @@
       "urlToLaunch": "https://airspace.leapmotion.com/",
       "passAccessToken": true,
       "deletable": false,
-      "eventToTrack": "AirspaceStoreTileClick"
+      "eventToTrack": "Clicked Airspace Store Tile"
     },
     {
       "name": "Feedback",
@@ -16,14 +16,13 @@
       "urlToLaunch": "http://central.leapmotion.com/uservoice",
       "passAccessToken": true,
       "deletable": false,
-      "eventToTrack": "CommunityTileClick"
+      "eventToTrack": "Clicked Community Tile"
     },
     {
       "name": "Documentation",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/documentation-tile.png",
       "urlToLaunch": "http://docs.leapmotion.com",
-      "deletable": false,
-      "eventToTrack": "DocumentationTileClick"
+      "deletable": false
     }
   ],
 

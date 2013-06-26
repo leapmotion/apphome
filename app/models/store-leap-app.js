@@ -44,7 +44,7 @@ module.exports = LeapApp.extend({
   },
 
   _installAsUpgrade: function(cb) {
-    var trackFn = mixpanel.getTrackFn('Upgrade App: ' + this.get('name'));
+    var trackFn = mixpanel.getTrackFn('Started App Update');
     trackFn();
 
     var appToUpgrade = this.findAppToUpgrade();

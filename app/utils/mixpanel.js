@@ -18,9 +18,9 @@ function getTrackFn(eventName) {
 }
 
 module.exports = {
-  trackOpen: getTrackFn('Open'),
-  trackClose: getTrackFn('Close'),
-  trackSignUp: getTrackFn('Sign Up'),
-  trackSignIn: getTrackFn('Sign In'),
+  trackOpen: getTrackFn('Launched'),
+  trackClose: getTrackFn('Closed Airspace'),
+  trackSignUp: getTrackFn('Signed Up'),
+  trackSignIn: getTrackFn('Signed In'),
   getTrackFn: getTrackFn
 };
