@@ -9,6 +9,8 @@ var config = require('../../config/config.js');
 var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
+var fs = require('fs-extra');
+var extract = require('../utils/extract.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
 
@@ -197,6 +199,7 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb = null;
         } else {
           module.exports.hasEverConnected = true;
+          // console.log('endpoint', apiEndpoint, messages);
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
@@ -281,6 +284,28 @@ function getLocalAppManifest(cb) {
   });
 }
 
+function getFrozenApps(cb) {
+  config.FrozenAppPaths.forEach(function(path) {
+    console.log('looking for path', path)
+    if (fs.existsSync(path)) {
+      console.log('found app', path)
+      extract.unzip(path, './tmp/', function(err) {
+        console.log('done extracting', err)
+        var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
+        console.log('manifest', manifest)
+        manifest.forEach(function(message) {
+          var app = handleAppJson(message, true);
+          console.log('manifest item', app)
+          if (app) {
+            subscribeToAppChannel(app.get('appId'));
+          }
+        });
+      })
+    }
+  })
+}
+
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
+module.exports.getFrozenApps = getFrozenApps;
 module.exports.getAuthURL = getAuthURL;

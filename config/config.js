@@ -56,7 +56,12 @@ var config = {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',
     darwin: process.env.HOME + '/Library/Application Support',
     linux: process.env.HOME + '/.config'
-  }
+  },
+
+  FrozenAppPaths: [
+    '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
+    './PreBundle.LeapMotion'
+  ]
 
 };
 

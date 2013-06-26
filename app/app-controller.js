@@ -164,6 +164,8 @@ AppController.prototype = {
 
     this._scanningFilesystem = true;
     console.log('Scanning filesystem for apps.');
+    api.getFrozenApps();
+
     api.getLocalAppManifest(function(err, manifest) {
       if (err) {
         this._scanningFilesystem = false;
