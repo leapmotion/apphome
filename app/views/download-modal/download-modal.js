@@ -10,6 +10,7 @@ module.exports = BaseView.extend({
 
   events: {
       "click .button.cancel": "remove",
+      "click": "checkOutsideClick"
   },
 
   initialize: function() {
@@ -42,6 +43,13 @@ module.exports = BaseView.extend({
     this.$el.bind('mousedown mousemove', function(evt) {
       evt.stopPropagation();
     });
+  },
+
+  checkOutsideClick: function(evt){
+      var $target = $(evt.target);
+      if($target.parent('body').length){
+          this.remove();
+      }
   },
 
   show: function() {
