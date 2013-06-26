@@ -19,18 +19,6 @@ var WebLinkApp = LeapApp.extend({
     LeapApp.prototype.constructor.call(this, args);
   },
 
-  initialize: function() {
-    if (!this.get('iconPath')) {
-      this.downloadIcon();
-    }
-
-    if (!this.get('tilePath')) {
-      this.downloadTile();
-    }
-
-    LeapApp.prototype.initialize.apply(this, arguments);
-  },
-
   isBuiltinTile: function() {
     return !this.get('deletable');
   },

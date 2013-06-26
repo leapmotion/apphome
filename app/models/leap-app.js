@@ -59,6 +59,18 @@ var LeapApp = BaseModel.extend({
       this.save();
     }.bind(this));
 
+    this.on('change:iconUrl', function() {
+      if (this.get('iconUrl')) {
+        this.downloadIcon();
+      }
+    });
+
+    this.on('change:tileUrl', function() {
+      if (this.get('tileUrl')) {
+        this.downloadTile();
+      }
+    });
+
     if (!this.get('tilePath') && this.get('tileUrl')) {
       this.downloadTile(false, function() {
         if (!this.get('iconPath') && this.get('iconUrl')) {
@@ -172,19 +184,25 @@ var LeapApp = BaseModel.extend({
       this.save();
       cb && cb(null);
     } else {
-      download.get(this.get(urlAttrName), destPath, function(err) {
-        if (err && fs.existsSync(destPath)) {
-          try {
-            fs.unlinkSync(destPath);
-          } catch(err2) {
-            return cb && cb(err2);
+      var assetUrl = this.get(urlAttrName);
+      if (assetUrl) {
+        console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
+        download.get(assetUrl, destPath, function(err) {
+          if (err && fs.existsSync(destPath)) {
+            try {
+              fs.unlinkSync(destPath);
+            } catch(err2) {
+              return cb && cb(err2);
+            }
+          } else if (!err) {
+            this.set(pathAttrName, destPath);
+            this.save();
           }
-        } else if (!err) {
-          this.set(pathAttrName, destPath);
-          this.save();
-        }
-        cb && cb(err || null);
-      }.bind(this));
+          cb && cb(err || null);
+        }.bind(this));
+      } else {
+        cb && cb(new Error('Asset url is undefined.'));
+      }
     }
   },
 

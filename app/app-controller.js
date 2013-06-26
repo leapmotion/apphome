@@ -189,8 +189,11 @@ AppController.prototype = {
           var app = new LocalLeapApp(appToFind);
           if (app.isValid()) {
             var id = app.get('id');
-            if (existingExplicitPathLocalAppsById[id]) {
+            var existingApp = existingExplicitPathLocalAppsById[id];
+            if (existingApp) {
               delete existingExplicitPathLocalAppsById[id];
+              existingApp.set('iconUrl', app.get('iconUrl'));
+              existingApp.set('tileUrl', app.get('tileUrl'));
             } else {
               console.log('New local app: ' + app.get('name'));
               app.install();

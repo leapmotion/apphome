@@ -240,16 +240,6 @@ function createWebLinkApps(webAppData) {
     var id = webApp.get('id');
     var existingWebApp = existingWebAppsById[id];
     if (existingWebApp) {
-      if (existingWebApp.get('iconUrl') !== webApp.get('iconUrl')) {
-        existingWebApp.set('iconUrl', webApp.get('iconUrl'));
-        existingWebApp.downloadIcon();
-        console.info('icon updated for ' + existingWebApp.get('name'));
-      }
-      if (existingWebApp.get('tileUrl') !== webApp.get('tileUrl')) {
-        existingWebApp.set('tileUrl', webApp.get('tileUrl'));
-        existingWebApp.downloadTile();
-        console.info('tile updated for ' + existingWebApp.get('name'));
-      }
       existingWebApp.set(webAppDatum);
       console.log('Updating existing web link: ' + existingWebApp.get('name'));
       delete existingWebAppsById[id];
