@@ -133,6 +133,7 @@ module.exports = BaseView.extend({
     //   iframeWindow.location = signUpUrl;
     //   this._hasRedirectedToSignUp = true;
     // } else {
+      $('.auth-links li:first', iframeWindow.document).remove(); // remove "create account" link
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
