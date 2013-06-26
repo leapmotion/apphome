@@ -63,13 +63,13 @@ var LeapApp = BaseModel.extend({
       if (this.get('iconUrl')) {
         this.downloadIcon();
       }
-    });
+    }.bind(this));
 
     this.on('change:tileUrl', function() {
       if (this.get('tileUrl')) {
         this.downloadTile();
       }
-    });
+    }.bind(this));
 
     if (!this.get('tilePath') && this.get('tileUrl')) {
       this.downloadTile(false, function() {
