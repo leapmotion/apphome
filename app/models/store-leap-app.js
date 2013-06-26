@@ -8,6 +8,7 @@ var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
+var mixpanel = require('../utils/mixpanel.js');
 var shell = require('../utils/shell.js');
 
 var LeapApp = require('./leap-app.js');
@@ -43,6 +44,9 @@ module.exports = LeapApp.extend({
   },
 
   _installAsUpgrade: function(cb) {
+    var trackFn = mixpanel.getTrackFn('Upgrade App: ' + this.get('name'));
+    trackFn();
+
     var appToUpgrade = this.findAppToUpgrade();
     if (appToUpgrade && appToUpgrade.isUninstallable()) {
       appToUpgrade.uninstall(false, false, function(err) {
