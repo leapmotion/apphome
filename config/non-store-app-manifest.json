@@ -36,7 +36,7 @@
     {
       "name": "Orientation",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/orientation-tile.png",
-      "relativeExePath": "Leap Motion\\Leap Motion Software\\Orientation\\Orientation.exe",
+      "relativeExePath": "Leap Motion\\Core Services\\Orientation\\Orientation.exe",
       "deletable": false
     }
   ],
