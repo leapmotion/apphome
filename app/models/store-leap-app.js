@@ -119,21 +119,22 @@ module.exports = LeapApp.extend({
   _downloadBinary: function(cb) {
     this.set('state', LeapApp.States.Downloading);
     uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
-    api.connectToStoreServer(true, function() {
-      var binaryUrl = this.get('binaryUrl');
-      if (url.parse(binaryUrl).protocol == null) {
-        var tempFilename = './tmp/' + binaryUrl;
-        console.log('local binary detected, installing from ', tempFilename);
-        if (os.platform() === 'win32') {
-          extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
-        } else if (os.platform() === 'darwin') {
-          extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
-        } else {
-          return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-        }
-        cb && cb(null);
-        return;
+    var binaryUrl = this.get('binaryUrl');
+    console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
+    if (url.parse(binaryUrl).protocol == null) {
+      var tempFilename = './tmp/' + binaryUrl;
+      console.log('local binary detected, installing from ', tempFilename);
+      if (os.platform() === 'win32') {
+        extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
+      } else if (os.platform() === 'darwin') {
+        extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
+      } else {
+        return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
+      cb && cb(null);
+      return;
+    }
+    api.connectToStoreServer(true, function() {
       var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
         if (err) {
           return cb(err);
