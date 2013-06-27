@@ -10,6 +10,7 @@ var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
 var mixpanel = require('../utils/mixpanel.js');
 var shell = require('../utils/shell.js');
+var url = require('url');
 
 var LeapApp = require('./leap-app.js');
 
@@ -120,7 +121,7 @@ module.exports = LeapApp.extend({
     uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     api.connectToStoreServer(true, function() {
       var binaryUrl = this.get('binaryUrl');
-      if (binaryUrl.parse(assetUrl).protocol == null) {
+      if (url.parse(binaryUrl).protocol == null) {
         var tempFilename = './tmp/' + binaryUrl;
         console.log('local binary detected, installing from ', tempFilename);
         if (os.platform() === 'win32') {
