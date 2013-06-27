@@ -186,6 +186,12 @@ var LeapApp = BaseModel.extend({
       var assetUrl = this.get(urlAttrName);
       if (assetUrl) {
         console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
+        if (url.parse(assetUrl).protocol == null) {
+          console.log('local asset detected, copying from ', './tmp/' + assetUrl, 'to', destPath);
+          fs.renameSync('./tmp/' + assetUrl, destPath);
+          cp && cb(null);
+          return;
+        }
         download.get(assetUrl, destPath, function(err) {
           if (err && fs.existsSync(destPath)) {
             try {
