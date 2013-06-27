@@ -123,6 +123,12 @@ module.exports = LeapApp.extend({
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
     if (url.parse(binaryUrl).protocol == null) {
       var tempFilename = './tmp/' + binaryUrl;
+      var cleanupTempfile = function(err) {
+        if (fs.existsSync(tempFilename)) {
+          fs.deleteSync(tempFilename);
+        }
+        cb(err || null);
+      }
       console.log('local binary detected, installing from ', tempFilename);
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
