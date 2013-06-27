@@ -11,6 +11,7 @@ var enumerable = require('../utils/enumerable.js');
 var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
+var url = require('url');
 
 var BaseModel = require('./base-model.js');
 
