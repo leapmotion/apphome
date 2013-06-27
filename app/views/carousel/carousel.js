@@ -222,8 +222,8 @@ var CarouselView = BaseView.extend({
     };
 
     var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
-    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 100 &&
-        Math.abs(Math.atan(slope)) < Math.PI / 4) {
+    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 50 &&
+        Math.abs(Math.atan(slope)) < Math.PI / 3) {
       this._lastMouseDownEvent = null;
       // Treat it as a swipe if the angle is less than 45 degrees from horizontal.
       if (endPos.x > startPos.x) {
