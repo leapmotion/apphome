@@ -120,6 +120,19 @@ module.exports = LeapApp.extend({
     uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     api.connectToStoreServer(true, function() {
       var binaryUrl = this.get('binaryUrl');
+      if (binaryUrl.parse(assetUrl).protocol == null) {
+        var tempFilename = './tmp/' + binaryUrl;
+        console.log('local binary detected, installing from ', tempFilename);
+        if (os.platform() === 'win32') {
+          extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
+        } else if (os.platform() === 'darwin') {
+          extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
+        } else {
+          return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+        }
+        cb && cb(null);
+        return;
+      }
       var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
         if (err) {
           return cb(err);
