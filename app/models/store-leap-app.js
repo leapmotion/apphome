@@ -34,17 +34,17 @@ module.exports = LeapApp.extend({
     return true;
   },
 
-  install: function(cb) {
+  install: function(cb, skipnotifications) {
     this.trigger('installstart');
     console.log('Installing: ' + this.get('name'));
     if (this.isUpgrade()) {
-      this._installAsUpgrade(cb);
+      this._installAsUpgrade(cb, skipnotifications);
     } else {
-      this._installFromServer(cb);
+      this._installFromServer(cb, skipnotifications);
     }
   },
 
-  _installAsUpgrade: function(cb) {
+  _installAsUpgrade: function(cb, skipnotifications) {
     mixpanel.trackAppUpgrade();
 
     var appToUpgrade = this.findAppToUpgrade();
@@ -61,18 +61,18 @@ module.exports = LeapApp.extend({
               this.save();
               cb(null);
             }
-          }.bind(this));
+          }.bind(this), skipnotifications);
         } else {
           this._abortInstallation(null, err);
           cb && cb(err);
         }
       }.bind(this));
     } else {
-      this._installFromServer(cb);
+      this._installFromServer(cb, skipnotifications);
     }
   },
 
-  _installFromServer: function(cb) {
+  _installFromServer: function(cb, skipnotifications) {
     var startingCollection = (uiGlobals.uninstalledApps.get(this.get('id')) ? uiGlobals.uninstalledApps : uiGlobals.availableDownloads);
     startingCollection.remove(this);
     uiGlobals.installedApps.add(this);
@@ -95,7 +95,9 @@ module.exports = LeapApp.extend({
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
-        uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
+        if (! skipnotifications) {
+          uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
+        }
         this.set('state', LeapApp.States.Ready);
         return cb && cb(null);
       } else {

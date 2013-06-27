@@ -297,7 +297,9 @@ function getFrozenApps(cb) {
           var app = handleAppJson(message, true);
           console.log('manifest item', app)
           if (app) {
-            app.install();
+            app.install(function (err) {
+              if (err) console.log('failed to install app', err)
+            }, true);
             subscribeToAppChannel(app.get('appId'));
           }
         });
