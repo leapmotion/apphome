@@ -290,6 +290,7 @@ function getFrozenApps(cb) {
     if (fs.existsSync(path)) {
       console.log('found app', path)
       extract.unzipfile(path, './tmp/', function(err) {
+        if (err) return;
         console.log('done extracting', err)
         var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
         console.log('manifest', manifest)
