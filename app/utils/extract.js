@@ -9,6 +9,15 @@ var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 var shell = require('./shell.js');
 
 function extractZip(src, dest, cb) {
+  try {
+    if (fs.existsSync(dest)) {
+      fs.deleteSync(dest);
+    }
+    fs.mkdirSync(dest);
+  } catch (err) {
+    return cb(err);
+  }
+
   unzip(src, dest, function(err) {
     if (err) {
       return cb(err);
@@ -33,15 +42,6 @@ function extractZip(src, dest, cb) {
 }
 
 function unzip(src, dest, cb) {
-  try {
-    if (fs.existsSync(dest)) {
-      fs.deleteSync(dest);
-    }
-    fs.mkdirSync(dest);
-  } catch (err) {
-    return cb(err);
-  }
-
   exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest), function(err) {
     if (err) {
       return cb(err);
