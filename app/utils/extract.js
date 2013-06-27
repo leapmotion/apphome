@@ -47,7 +47,7 @@ function unzip(src, dest, cb) {
       return cb(err);
     } 
     cb(null);
-  }
+  });
 }
 
 function extractDmg(src, dest, cb) {
