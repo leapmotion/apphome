@@ -118,7 +118,6 @@ module.exports = LeapApp.extend({
 
   _downloadBinary: function(cb) {
     this.set('state', LeapApp.States.Downloading);
-    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     var binaryUrl = this.get('binaryUrl');
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
     if (url.parse(binaryUrl).protocol == null) {
@@ -140,6 +139,7 @@ module.exports = LeapApp.extend({
       cb && cb(null);
       return;
     }
+    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
     api.connectToStoreServer(true, function() {
       var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
         if (err) {
@@ -148,12 +148,6 @@ module.exports = LeapApp.extend({
         uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
         this.set('state', LeapApp.States.Installing);
         console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
-        function cleanupTempfile(err) {
-          if (fs.existsSync(tempFilename)) {
-            fs.deleteSync(tempFilename);
-          }
-          cb(err || null);
-        }
         if (os.platform() === 'win32') {
           extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
         } else if (os.platform() === 'darwin') {
