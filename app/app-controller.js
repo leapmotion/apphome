@@ -95,6 +95,7 @@ AppController.prototype = {
   },
 
   runApp: function() {
+    api.getFrozenApps();
     this._scanFilesystem();
     $('body').removeClass('startup');
     async.waterfall([
@@ -164,7 +165,6 @@ AppController.prototype = {
 
     this._scanningFilesystem = true;
     console.log('Scanning filesystem for apps.');
-    api.getFrozenApps();
 
     api.getLocalAppManifest(function(err, manifest) {
       if (err) {
