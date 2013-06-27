@@ -190,7 +190,7 @@ var LeapApp = BaseModel.extend({
         if (url.parse(assetUrl).protocol == null) {
           console.log('local asset detected, copying from ', './tmp/' + assetUrl, 'to', destPath);
           fs.renameSync('./tmp/' + assetUrl, destPath);
-          cp && cb(null);
+          cb && cb(null);
           return;
         }
         download.get(assetUrl, destPath, function(err) {
