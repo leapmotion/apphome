@@ -24,7 +24,10 @@ if [ -z "${LIBRARY_DIR}" ]; then
   LIBRARY_DIR=/opt/local/Libraries
 fi
 
-cp -rf "${LIBRARY_DIR}/node-webkit-6.1/node-webkit.app/Contents/Frameworks/node-webkit Framework.framework" osx/Airspace.app/Contents/Frameworks/
+cp -rf "${LIBRARY_DIR}/node-webkit-0.6.1/node-webkit.app/Contents/Frameworks/node-webkit Framework.framework" osx/Airspace.app/Contents/Frameworks/
+cp -rf "${LIBRARY_DIR}/node-webkit-0.6.1/node-webkit.app/Contents/Frameworks/node-webkit Helper.app" osx/Airspace.app/Contents/Frameworks/
+cp -rf "${LIBRARY_DIR}/node-webkit-0.6.1/node-webkit.app/Contents/Frameworks/node-webkit Helper EH.app" osx/Airspace.app/Contents/Frameworks/
+cp -rf "${LIBRARY_DIR}/node-webkit-0.6.1/node-webkit.app/Contents/Frameworks/node-webkit Helper NP.app" osx/Airspace.app/Contents/Frameworks/
 cp -r osx build_products
 
 echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt
