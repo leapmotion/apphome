@@ -36,6 +36,7 @@ var CarouselView = BaseView.extend({
     $('body').mousedown(function(evt) {
       if (this._isActive) {
         this._lastMouseDownEvent = evt.originalEvent;
+        this._setClearSwipeTimeout();
       }
     }.bind(this));
     $('body').mousemove(this._handlePotentialSwipe.bind(this));
@@ -210,10 +211,6 @@ var CarouselView = BaseView.extend({
       window.clearTimeout(this._clearSwipeTimeoutId);
     }
 
-    this._clearSwipeTimeoutId = window.setTimeout(function() {
-      this._lastMouseDownEvent = null;
-    }.bind(this), 200);
-
     var startPos = {
       x: this._lastMouseDownEvent.x,
       y: this._lastMouseDownEvent.y
@@ -227,7 +224,7 @@ var CarouselView = BaseView.extend({
     if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 50 &&
         Math.abs(Math.atan(slope)) < Math.PI / 3) {
       this._lastMouseDownEvent = null;
-      // Treat it as a swipe if the angle is less than 45 degrees from horizontal.
+      // Treat it as a swipe if the angle is less than 60 degrees from horizontal.
       if (endPos.x > startPos.x) {
         // swipe to the right
         this._switchToSlide(this._currentSlideIndex - 1);
@@ -235,7 +232,15 @@ var CarouselView = BaseView.extend({
         // swipe to the left
         this._switchToSlide(this._currentSlideIndex + 1);
       }
+    } else {
+      this._setClearSwipeTimeout();
     }
+  },
+
+  _setClearSwipeTimeout: function() {
+    this._clearSwipeTimeoutId = window.setTimeout(function() {
+      this._lastMouseDownEvent = null;
+    }.bind(this), 200);
   },
 
   rescale: function() {
