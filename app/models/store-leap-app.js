@@ -89,7 +89,7 @@ module.exports = LeapApp.extend({
 
       var userDataDir = this._userDataDir();
       if (!fs.existsSync(userDataDir)) {
-        fs.mkdirSync(userDataDir);
+        fs.mkdirpSync(userDataDir);
       }
 
       var executable = this._findExecutable();
@@ -150,6 +150,7 @@ module.exports = LeapApp.extend({
         uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
         this.set('state', LeapApp.States.Installing);
         console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
+
         function cleanupTempfile(err) {
           if (fs.existsSync(tempFilename)) {
             fs.deleteSync(tempFilename);
@@ -247,13 +248,7 @@ module.exports = LeapApp.extend({
         throw new Error('No app name specified.');
       }
       var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
-      if (!fs.existsSync(baseDir)) {
-        fs.mkdirSync(baseDir);
-      }
       dir = path.join(baseDir, this.cleanAppName() + suffix);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
       this[attributeName] = dir;
     }
     return dir;
