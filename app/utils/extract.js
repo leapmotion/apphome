@@ -13,10 +13,11 @@ function extractZip(src, dest, cb) {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
     }
-    fs.mkdirSync(dest);
   } catch (err) {
-    return cb(err);
+    console.warn('Error deleting directory "' + dest + '": ' + err.message);
   }
+
+  fs.mkdirpSync(dest);
 
   unzip(src, dest, function(err) {
     if (err) {
