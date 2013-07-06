@@ -31,7 +31,8 @@ module.exports = BaseView.extend({
 
     this.installedAppsCarousel = new Carousel({
       collection: uiGlobals.installedApps,
-      position: 1
+      position: 1,
+      autoTransition: true
     });
     this.installedAppsCarousel.hide();
     this.$('#my-apps').append(this.installedAppsCarousel.$el);
