@@ -9,10 +9,11 @@ function checkInternetConnection(cb) {
     cb && cb(lastIsConnected);
   } else {
     var domain = Math.round(Math.random() * 99999999999) + '.leapmotion.com';
+    console.log('Checking Internet connection...');
     dns.resolve(domain, function(err) {
       lastCheck = (new Date()).getTime();
-      lastIsConnected = !err || err.code === dns.NOTFOUND;
-      console.log(lastIsConnected ? 'Internet connection is up.' : ('Internet connection is down: ' + err.code));
+      lastIsConnected = !err || (err.code !== dns.CONNREFUSED && err.code !== dns.TIMEOUT);
+      console.log('Internet connection is ' + (lastIsConnected ? 'up' : 'down') + '.');
       cb && cb(lastIsConnected);
     });
   }
