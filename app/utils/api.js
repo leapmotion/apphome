@@ -150,7 +150,14 @@ function handleAppJson(appJson, noAutoInstall) {
 }
 
 function subscribeToUserChannel(userId) {
-  subscribe(userId + '.user.purchased', handleAppJson);
+  subscribe(userId + '.user.purchased', function() {
+    var win = nwGui.Window.get();
+    // steal focus
+    win.setAlwaysOnTop(true);
+    win.setAlwaysOnTop(false);
+
+    handleAppJson.apply(this, arguments);
+  });
 }
 
 function subscribeToAppChannel(appId) {
