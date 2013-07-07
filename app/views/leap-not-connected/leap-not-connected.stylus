@@ -1,5 +1,6 @@
 .leap-not-connected
   position absolute
+  z-index 1000
   width 100%
   height 100%
   background -webkit-radial-gradient(center center, circle cover, #f8faf8, #e8eae8)

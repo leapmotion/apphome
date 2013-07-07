@@ -98,8 +98,8 @@ AppController.prototype = {
     api.getFrozenApps();
     this._scanFilesystem();
     $('body').removeClass('startup');
+    this._checkLeapConnection();
     async.waterfall([
-      this._checkLeapConnection.bind(this),
       this._authorize.bind(this),
       this._afterAuthorize.bind(this)
     ], function(err) {
@@ -111,13 +111,13 @@ AppController.prototype = {
 
   _checkLeapConnection: function(cb) {
     if (this._noMoreLeapConnectionChecks) {
-      return cb(null);
+      return cb && cb(null);
     }
     var leapNotConnectedView = new LeapNotConnectedView();
     leapNotConnectedView.encourageConnectingLeap(function() {
       leapNotConnectedView.remove();
       this._noMoreLeapConnectionChecks = true;
-      cb(null);
+      cb && cb(null);
     }.bind(this));
   },
 
