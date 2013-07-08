@@ -8,6 +8,7 @@ var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
+var popupWindow = require('./utils/popup-window.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -60,26 +61,12 @@ AppController.prototype = {
       helpMenu.append(new nwGui.MenuItem({
         label: 'About ' + uiGlobals.appName,
         click: function() {
-          if (this._aboutWindow) {
-            this._aboutWindow.close(true);
-          }
-          this._aboutWindow = nwGui.Window.open('/static/about/about.html', {
-            'toolbar': false,
-            'frame': true,
-            'width': 300,
-            "height": 150,
-            'min_width': 300,
-            'min_height': 150,
-            'max_width': 300,
-            'max_height': 150,
-            'always-on-top': true
-          });
-          var appController = this;
-          this._aboutWindow.on('close', function() {
-            appController._aboutWindow = null;
-            this.close(true);
-          });
-        }.bind(this)
+           popupWindow.open('/static/popups/about.html', {
+              width: 300,
+              height: 150,
+              title: 'About ' + uiGlobals.appName
+           });
+        }
       }));
       mainMenu.append(new nwGui.MenuItem({
         label: 'Help',
