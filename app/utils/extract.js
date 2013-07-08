@@ -119,9 +119,17 @@ function extractDmg(src, dest, cb) {
       console.log('Installing app from ' + appPackage + ' to ' + dest);
 
       exec('cp -r ' + shell.escape(appPackage) + ' ' + shell.escape(dest), function(err) {
-        unmount(function(err2) {
-          cb(err || err2 || null);
-        });
+        if (err) {
+          unmount(function(err2) {
+            cb(err || err2 || null);
+          });
+        } else {
+          exec('xattr -d com.apple.quarantine ' + shell.escape(dest), function(err2) {
+            unmount(function(err3) {
+              cb(err2 || err3 || null);
+            });
+          });
+        }
       });
     }
   });
