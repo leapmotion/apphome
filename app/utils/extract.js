@@ -46,7 +46,7 @@ function unzip(src, dest, cb) {
   exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest), function(err) {
     if (err) {
       return cb(err);
-    } 
+    }
     cb(null);
   });
 }
@@ -113,6 +113,9 @@ function extractDmg(src, dest, cb) {
           cb(err2);
         });
       }
+
+      fs.mkdirpSync(path.dirname(dest));
+
       console.log('Installing app from ' + appPackage + ' to ' + dest);
 
       exec('cp -r ' + shell.escape(appPackage) + ' ' + shell.escape(dest), function(err) {
