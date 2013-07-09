@@ -1,5 +1,6 @@
 var async = require('async')
 var os = require('os');
+var path = require('path');
 
 var api = require('./utils/api.js');
 var config = require('../config/config.js');
@@ -34,6 +35,12 @@ AppController.prototype = {
 
     if (os.platform() === 'win32') {
       var fileMenu = new nwGui.Menu();
+      fileMenu.append(new nwGui.MenuItem({
+        label: 'Controller Settings',
+        click: function() {
+          nwGui.Shell.openItem(path.join(process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES, 'Leap Motion', 'Core Services', 'LeapControlPanel.exe'))
+        }
+      }));
       fileMenu.append(new nwGui.MenuItem({
         label: 'Exit',
         click: process.exit
