@@ -2,6 +2,7 @@ var os = require('os');
 var Spinner = require('spin');
 
 var config = require('../../../config/config.js');
+var installManager = require('../../utils/install-manager.js');
 
 var BaseView = require('../base-view.js');
 var DownloadModalView = require('../download-modal/download-modal.js');
@@ -21,7 +22,7 @@ module.exports = BaseView.extend({
 
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
-    if (leapApp.isUpgrade()) {
+    if (leapApp.isUpgradable()) {
       this.$el.addClass('upgrade');
     }
 
@@ -116,7 +117,7 @@ module.exports = BaseView.extend({
         leapApp: leapApp,
         onConfirm: function() {
           downloadModal.remove();
-          leapApp.install(this._setupDragging.bind(this));
+          installManager.enqueue(leapApp, this._setupDragging.bind(this));
         }.bind(this)
       });
       downloadModal.show();

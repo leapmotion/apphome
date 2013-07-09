@@ -15,9 +15,8 @@ uiGlobals.Event = enumerable.make([
   'DiskWriteError'
 ], 'UiGlobalEvent');
 
-uiGlobals.installedApps = new LeapAppCollection();
+uiGlobals.myApps = new LeapAppCollection();
 uiGlobals.uninstalledApps = new LeapAppCollection();
-uiGlobals.availableDownloads = new LeapAppCollection();
 
 uiGlobals.scaling = 1;
 

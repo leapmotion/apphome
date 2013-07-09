@@ -29,7 +29,7 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this.$('.button.confirm').hide().click(this.options.onConfirm);
-    if (leapApp.isUpgrade()) {
+    if (leapApp.isUpgradable()) {
       this.$('.button.confirm.upgrade').show();
     } else {
       this.$('.button.confirm.install').show();

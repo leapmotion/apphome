@@ -1,4 +1,5 @@
 var domain = require('domain');
+var fs = require('fs-extra');
 var http = require('http');
 var https = require('https');
 var os = require('os');
@@ -7,10 +8,10 @@ var qs = require('querystring');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
+var extract = require('../utils/extract.js');
+var installManager = require('../utils/install-manager.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
-var fs = require('fs-extra');
-var extract = require('../utils/extract.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
 
@@ -94,8 +95,9 @@ function getJson(url, cb) {
 
 function createAppModel(appJson) {
   var cleanAppJson = {
-    id: appJson.id,
+    id: appJson.app_id,
     appId: appJson.app_id,
+    versionId: appJson.id,
     name: appJson.name,
     platform: ServerPlatformToNodePlatform[appJson.platform] || appJson.platform,
     iconUrl: appJson.icon_url,
@@ -116,32 +118,28 @@ function createAppModel(appJson) {
 function handleAppJson(appJson, noAutoInstall) {
   var app = createAppModel(appJson);
   if (app) {
-    var availableDownloads = uiGlobals.availableDownloads;
-    var installedApps = uiGlobals.installedApps;
+    var myApps = uiGlobals.myApps;
     var uninstalledApps = uiGlobals.uninstalledApps;
-    var existingApp = availableDownloads.get(app.get('id')) || installedApps.get(app.get('id')) || uninstalledApps.get(app.get('id'));
-    var upgradableUninstalledApp = uninstalledApps.findWhere({ appId: app.get('appId') });
+    var existingApp = myApps.get(app.get('appId')) || uninstalledApps.get(app.get('appId'));
+    var upgradableUninstalledApp = uninstalledApps.get(app.get('appId'));
     if (existingApp) {
       existingApp.set('binaryUrl', app.get('binaryUrl'));
     } else if (upgradableUninstalledApp && semver.isFirstGreaterThanSecond(app.get('version'), upgradableUninstalledApp.get('version'))) {
       // upgrade to an uninstalled app
-      uninstalledApps.remove(upgradableUninstalledApp);
-      uninstalledApps.add(app);
-    } else if (noAutoInstall || app.isUpgrade()) {
-      var existingDownload = availableDownloads.findWhere({ appId: app.get('appId') });
-      if (existingDownload && semver.isFirstGreaterThanSecond(app.get('version'), existingDownload.get('version'))) {
-        // replace the older upgrade if a new one comes in
-        availableDownloads.remove(existingDownload);
-        availableDownloads.add(app);
-      } else if (!existingDownload) {
+      upgradableUninstalledApp.set(app.toJSON());
+    } else if (noAutoInstall || app.isUpgradable()) {
+      var appToUpgrade = myApps.get(app.get('appId'));
+      if (appToUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), appToUpgrade.get('version'))) {
+        appToUpgrade.set('availableUpgrade', app.toJSON());
+      } else if (!appToUpgrade) {
         // add a new download
-        availableDownloads.add(app);
+        myApps.add(app);
       }
     } else {
       // new app to install
       console.log('Installing app: ' + app.get('name'));
-      installedApps.add(app);
-      app.install(function(err) {
+      myApps.add(app);
+      installManager.enqueue(app, function(err) {
         err && console.log('Failed to install app', app.get('name'), err.message);
       });
     }
@@ -206,7 +204,6 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb = null;
         } else {
           module.exports.hasEverConnected = true;
-          // console.log('endpoint', apiEndpoint, messages);
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
@@ -239,7 +236,7 @@ function connectToStoreServer(noAutoInstall, cb) {
 function createWebLinkApps(webAppData) {
   webAppData = webAppData || [];
   var existingWebAppsById = {};
-  var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
+  var allApps = uiGlobals.myApps.models.concat(uiGlobals.uninstalledApps.models);
   allApps.forEach(function(app) {
     if (app.isWebLinkApp()) {
       existingWebAppsById[app.get('id')] = app;
@@ -255,7 +252,7 @@ function createWebLinkApps(webAppData) {
       delete existingWebAppsById[id];
       existingWebApp.save();
     } else {
-      uiGlobals.installedApps.add(webApp);
+      uiGlobals.myApps.add(webApp);
       console.log('Added web link: ', webApp.get('urlToLaunch'));
       webApp.save();
     }
@@ -265,7 +262,7 @@ function createWebLinkApps(webAppData) {
     var oldWebApp = existingWebAppsById[id];
     if (oldWebApp.isBuiltinTile()) {
       console.log('Deleting old builtin web link: ' + oldWebApp.get('name'));
-      uiGlobals.installedApps.remove(oldWebApp);
+      uiGlobals.myApps.remove(oldWebApp);
       oldWebApp.save();
     }
   });

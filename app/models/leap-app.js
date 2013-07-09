@@ -17,8 +17,10 @@ var BaseModel = require('./base-model.js');
 
 var LeapAppStates = enumerable.make([
   'NotYetInstalled',
+  'Waiting',
   'Downloading',
   'Installing',
+  'InstallFailed',
   'Ready',
   'Uninstalling',
   'Uninstalled'
@@ -31,30 +33,19 @@ var LeapApp = BaseModel.extend({
       this.set('state', LeapApp.States.NotYetInstalled);
     } else if (this.get('state') === LeapApp.States.Installing ||
                this.get('state') === LeapApp.States.Downloading) {
-      this.set('state', LeapApp.States.NotYetInstalled);
-      process.nextTick(function() {
-        uiGlobals.installedApps.remove(this);
-        uiGlobals.availableDownloads.add(this);
-      }.bind(this));
+      this.set('state', LeapApp.States.InstallFailed);
     } else if (this.get('state') === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }
 
     this.on('change:state', function() {
       if (!this.get('installedAt') &&
-          this.get('state') === LeapApp.States.Installing) {
+          this.get('state') === LeapApp.States.Ready) {
         this.set('installedAt', (new Date()).getTime());
-        uiGlobals.installedApps.sort();
+        uiGlobals.myApps.sort();
       }
       if (this.get('state') === LeapApp.States.Uninstalled) {
-        var appId = this.get('appId');
-        if (appId) {
-          var availableUpgrade = uiGlobals.availableDownloads.findWhere({ appId: appId });
-          if (availableUpgrade) {
-            uiGlobals.availableDownloads.remove(availableUpgrade);
-          }
-        }
-        uiGlobals.installedApps.remove(this);
+        uiGlobals.myApps.remove(this);
         uiGlobals.uninstalledApps.add(this);
       }
       this.save();
@@ -85,7 +76,7 @@ var LeapApp = BaseModel.extend({
 
   save: function() {
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
-    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(uiGlobals.installedApps.toJSON()));
+    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(uiGlobals.myApps.toJSON()));
     db.setItem(config.DbKeys.UninstalledApps, JSON.stringify(uiGlobals.uninstalledApps.toJSON()))
   },
 
@@ -118,24 +109,17 @@ var LeapApp = BaseModel.extend({
   },
 
   isInstallable: function() {
-    return this.get('state') === LeapApp.States.NotYetInstalled || this.isUninstalled();
+    return this.get('state') === LeapApp.States.NotYetInstalled ||
+           this.get('state') === LeapApp.States.InstallFailed ||
+           this.isUninstalled();
   },
 
   isRunnable: function() {
     return this.get('state') === LeapApp.States.Ready;
   },
 
-  isUpgrade: function() {
-    return this.isStoreApp() && !!this.findAppToUpgrade();
-  },
-
-  findAppToUpgrade: function() {
-    var appToUpgrade = uiGlobals.installedApps.findWhere({ appId: this.get('appId') });
-    if (appToUpgrade && semver.isFirstGreaterThanSecond(this.get('version'), appToUpgrade.get('version'))) {
-      return appToUpgrade;
-    } else {
-      return null;
-    }
+  isUpgradable: function() {
+    return !!this.get('availableUpgrade');
   },
 
   install: function() {
@@ -236,7 +220,7 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
-  uiGlobals.installedApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
+  uiGlobals.myApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
   uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(config.DbKeys.UninstalledApps) || '[]'));
 };
 

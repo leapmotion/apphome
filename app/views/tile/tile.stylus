@@ -6,7 +6,6 @@ $tileH = 176px
 $tileW = 320px
 
 .tile
-  //border $borderWidth solid transparent
   border-radius $borderRadius
   float left
   height $tileH
@@ -17,10 +16,7 @@ $tileW = 320px
   width $tileW
 
   &:hover
-    //border $borderWidth solid $borderColor
     background-clip padding-box
-    //background-color $borderColor
-    //background-image linear-gradient(bottom, #99c947 0%, #fff 100%) // gradient overlay
     box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
 
 
@@ -89,7 +85,7 @@ $tileW = 320px
     overflow hidden
     -webkit-user-drag none
 
-  .message .installing, .message .downloading, .message .spinner
+  .message .waiting, .message .installing, .message .downloading, .message .spinner
     display none
     width 100%
 
@@ -128,12 +124,15 @@ $tileW = 320px
       background-color $progressBarColor
       border-radius 16px
 
-  &.ready, &.notyetinstalled, &.uninstalled
+  &.ready, &.notyetinstalled, &.installfailed, &.uninstalled
     cursor pointer
 
-  &.notyetinstalled .name
-    color #b2b2b2
-    width auto
+  &.notyetinstalled
+    .name
+      color #b2b2b2
+      width auto
+    .dot
+      display block
 
   &.upgrade .dot
     background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
@@ -144,14 +143,8 @@ $tileW = 320px
     background transparent
     box-shadow none
 
-    /*.tile-bg, .icon
-      -webkit-animation-duration 2s
-      -webkit-animation-iteration-count 1
-      -webkit-animation-name pulse
-      z-index: 1000*/
-
-  &.installing
-    .message .installing, .message .spinner
+  &.waiting
+    .message .waiting
       display block
     .name
       display none
@@ -162,14 +155,18 @@ $tileW = 320px
     .name
       display none
 
+  &.installing
+    .message .installing, .message .spinner
+      display block
+    .name
+      display none
+
+  &.installfailed
+    .name
+      color red
+
   &.uninstalled
     opacity 0.75
-
-#downloads .tile 
-  .dot
-    display block
-  .name
-    visibility visible
 
 vendors = webkit
 @keyframes pulse

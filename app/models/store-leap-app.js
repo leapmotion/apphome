@@ -30,56 +30,36 @@ var PlatformUserDataDirs = {
 
 module.exports = LeapApp.extend({
 
+  idAttribute: 'appId',
+
   isStoreApp: function() {
     return true;
   },
 
-  install: function(cb, skipnotifications) {
+  install: function(cb, skipNotifications) {
     this.trigger('installstart');
-    console.log('Installing: ' + this.get('name'));
-    if (this.isUpgrade()) {
-      this._installAsUpgrade(cb, skipnotifications);
-    } else {
-      this._installFromServer(cb, skipnotifications);
-    }
-  },
-
-  _installAsUpgrade: function(cb, skipnotifications) {
-    mixpanel.trackAppUpgrade();
-
-    var appToUpgrade = this.findAppToUpgrade();
-    if (appToUpgrade && appToUpgrade.isUninstallable()) {
-      appToUpgrade.uninstall(false, false, function(err) {
+    if (this.isUpgradable()) {
+      mixpanel.trackAppUpgrade();
+      this.set(this.get('availableUpgrade'));
+      console.log('Upgrading: ' + this.get('name'));
+      this._installFromServer(function(err) {
         if (!err) {
-          this._installFromServer(function(err2) {
-            if (err2) {
-              appToUpgrade._installFromServer(function(err3) {
-                cb(err3 || err2);
-              });
-            } else {
-              uiGlobals.uninstalledApps.remove(appToUpgrade);
-              this.save();
-              cb(null);
-            }
-          }.bind(this), skipnotifications);
-        } else {
-          this._abortInstallation(null, err);
-          cb && cb(err);
+          this.set('availableUpgrade', null);
         }
-      }.bind(this));
+        cb && cb(err);
+      }, skipNotifications)
     } else {
-      this._installFromServer(cb, skipnotifications);
+      console.log('Installing: ' + this.get('name'));
+      this._installFromServer(cb, skipNotifications);
     }
   },
 
-  _installFromServer: function(cb, skipnotifications) {
-    var startingCollection = (uiGlobals.uninstalledApps.get(this.get('id')) ? uiGlobals.uninstalledApps : uiGlobals.availableDownloads);
-    startingCollection.remove(this);
-    uiGlobals.installedApps.add(this);
+  _installFromServer: function(cb, skipNotifications) {
+    uiGlobals.myApps.add(this);
 
     this._downloadBinary(function(err) {
       if (err) {
-        this._abortInstallation(startingCollection, err);
+        this._abortInstallation(err);
         return cb && cb(err);
       }
       var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
@@ -95,27 +75,22 @@ module.exports = LeapApp.extend({
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
-        if (! skipnotifications) {
+        if (! skipNotifications) {
           uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
         }
         this.set('state', LeapApp.States.Ready);
         return cb && cb(null);
       } else {
         var exeNotFoundError = new Error('Could not find executable for app: ' + this.get('name'));
-        this._abortInstallation(startingCollection, exeNotFoundError);
+        this._abortInstallation(exeNotFoundError);
         return cb && cb(exeNotFoundError);
       }
     }.bind(this));
   },
 
-  _abortInstallation: function(previousCollection, err) {
+  _abortInstallation: function(err) {
     console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-    uiGlobals.installedApps.remove(this);
-    this.set('state', LeapApp.States.NotYetInstalled);
-    if (previousCollection) {
-      previousCollection.add(this);
-    }
-    uiGlobals.sendNotification('Installation of ' + this.get('name') + ' failed.', 'Try again in a few moments.');
+    this.set('state', LeapApp.States.InstallFailed);
   },
 
   _downloadBinary: function(cb) {
@@ -221,7 +196,7 @@ module.exports = LeapApp.extend({
     } catch (err) {
       return this._failUninstallation(err, cb);
     } finally {
-      uiGlobals.installedApps.remove(this);
+      uiGlobals.myApps.remove(this);
       uiGlobals.uninstalledApps.add(this);
       this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
@@ -239,6 +214,7 @@ module.exports = LeapApp.extend({
 
   _getDir: function(dirsByPlatform, attributeName, suffix) {
     suffix = suffix || '';
+    console.log('Getting dir: ' + attributeName);
     var dir = this[attributeName];
     if (!dir) {
       if (!dirsByPlatform[os.platform()]) {

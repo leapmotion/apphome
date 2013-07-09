@@ -29,7 +29,7 @@
       if (preloadScriptPath) {
         require(preloadScriptPath); // a hook primarily used for testing
       };
-      var airspace = require('./app/airspace.js')
+      var airspace = require('./app/airspace.js');
       window.onload = function() {
         airspace.run(true);
       };

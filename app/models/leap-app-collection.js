@@ -9,7 +9,10 @@ module.exports = window.Backbone.Collection.extend({
     if (attrs.urlToLaunch) {
       return new WebLinkApp(attrs, options);
     } else if (attrs.appId) {
-      return new StoreLeapApp(attrs, options);
+      console.log('store leap app');
+      var app = new StoreLeapApp(attrs, options);
+      console.log('created successfully');
+      return app;
     } else if (attrs.name) {
       return new LocalLeapApp(attrs, options);
     } else {
