@@ -30,7 +30,7 @@
     margin-top -2%
     position absolute
     overflow hidden
-    width 362px
+    width 390px
 
 
   .waiting
