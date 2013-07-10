@@ -123,7 +123,7 @@ module.exports = BaseView.extend({
         leapApp: leapApp,
         onConfirm: function() {
           downloadModal.remove();
-          installManager.enqueue(leapApp, this._setupDragging.bind(this));
+          installManager.enqueue(leapApp, this._setupDragging.bind(this), true);
         }.bind(this)
       });
       downloadModal.show();

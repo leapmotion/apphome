@@ -21,7 +21,6 @@ var LeapAppStates = enumerable.make([
   'Connecting',
   'Downloading',
   'Installing',
-  'InstallFailed',
   'Ready',
   'Uninstalling',
   'Uninstalled'
@@ -115,7 +114,6 @@ var LeapApp = BaseModel.extend({
 
   isInstallable: function() {
     return this.get('state') === LeapApp.States.NotYetInstalled ||
-           this.get('state') === LeapApp.States.InstallFailed ||
            this.isUninstalled();
   },
 

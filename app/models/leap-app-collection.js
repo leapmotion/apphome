@@ -9,8 +9,10 @@ module.exports = window.Backbone.Collection.extend({
 
   initialize: function() {
     this.on('add', function(app) {
-      if (app.isStoreApp() && app.get('state') === LeapApp.States.NotYetInstalled) {
-        //installManager.enqueue(app);
+      if (app.isStoreApp() &&
+          app.get('state') === LeapApp.States.NotYetInstalled &&
+          !app.get('noAutoInstall')) {
+        installManager.enqueue(app);
       }
     });
   },

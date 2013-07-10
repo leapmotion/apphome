@@ -196,10 +196,6 @@ $tileW = 320px
     .name
       display none
 
-  &.installfailed
-    .name
-      color red
-
   &.uninstalled
     opacity 0.75
 

@@ -86,11 +86,10 @@ module.exports = LeapApp.extend({
   _abortInstallation: function(err) {
     if (err && err.cancelled) {
       console.info('Installation of ' + this.get('name') + ' was cancelled.');
-      this.set('state', LeapApp.States.NotYetInstalled);
     } else {
       console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-      this.set('state', LeapApp.States.InstallFailed);
     }
+    this.set('state', LeapApp.States.NotYetInstalled);
   },
 
   _downloadBinary: function(cb) {
@@ -143,11 +142,11 @@ module.exports = LeapApp.extend({
       }.bind(this));
 
       function cancelDownload() {
-        console.log('TRYING TO CANCEL DOWNLOAD OF ' + this.get('name'));
         if (downloadProgress) {
           var cancelled = downloadProgress.cancel();
           if (cancelled) {
             downloadProgress = null;
+            this.set('noAutoInstall', true);
             this.off('cancel-download', cancelDownload);
           }
         } else {
