@@ -206,7 +206,6 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb = null;
         } else {
           module.exports.hasEverConnected = true;
-          // console.log('endpoint', apiEndpoint, messages);
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
@@ -214,7 +213,10 @@ function connectToStoreServer(noAutoInstall, cb) {
             }
 
             if (message.user_id) {
+              uiGlobals.username = message.username;
+              uiGlobals.email = message.email;
               subscribeToUserChannel(message.user_id);
+              uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {
               var app = handleAppJson(message, noAutoInstall);
               if (app) {

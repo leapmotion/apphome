@@ -30,6 +30,9 @@ var PlatformOrientationCommands = {
 };
 
 function AppController() {
+  uiGlobals.on(uiGlobals.Event.SignIn, function() {
+    this._createMenu(true);
+  }.bind(this));
 }
 
 AppController.prototype = {
@@ -48,7 +51,7 @@ AppController.prototype = {
       this._setupWindow();
     }
 
-    this._createMenu();
+    this._createMenu(false);
     api.getFrozenApps();
     this._scanFilesystem();
     $('body').removeClass('startup');
@@ -114,7 +117,7 @@ AppController.prototype = {
 
     var accountMenu = new nwGui.Menu();
     accountMenu.append(new nwGui.MenuItem({
-      label: 'Sign Out',
+      label: 'Sign Out' + (enableLogOut ? ' ' + (uiGlobals.username || uiGlobals.email) : ''),
       click: this._logOut.bind(this),
       enabled: !!enableLogOut
     }));
@@ -188,7 +191,6 @@ AppController.prototype = {
   },
 
   _paintMainApp: function() {
-    this._createMenu(true);
     this._mainPage = new MainPage();
     $('body').append(this._mainPage.$el);
   },

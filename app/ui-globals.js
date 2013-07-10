@@ -10,11 +10,7 @@ var LeapAppCollection = require('./models/leap-app-collection.js');
 var uiGlobals = _.extend({}, window.Backbone.Events);
 
 uiGlobals.Event = enumerable.make([
-  'SplashWelcomeClosed',
-  'GotoInstalledAppsCarousel',
-  'GotoUpgradeCarousel',
-  'GotoTrashCarousel',
-  'DiskWriteError'
+  'SignIn'
 ], 'UiGlobalEvent');
 
 uiGlobals.installedApps = new LeapAppCollection();
