@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/fonts.css"/>
+    <style>
+      body {
+        font-family: "freightsans_probook";
+        text-align: center;
+        padding: 50px;
+      }
+
+      #container {
+        margin: 0 auto;
+        width: 972px;
+        overflow: hidden;
+      }
+
+      #logo {
+        width: 153px;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 18px;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 15px;
+        margin-bottom: 40px;
+      }
+
+      #embedded-graphics {
+        display: none;
+      }
+
+      body.embedded #embedded-graphics {
+        display: block;
+      }
+      body.embedded #peripheral-graphics {
+        display: none;
+      }
+
+      .graphic {
+        width: 304px;
+        height: 234px;
+        float: left;
+        margin-left: 30px;
+      }
+
+      .graphic:first-child {
+        margin-left: 0;
+      }
+
+      #continue {
+        float: right;
+        height: 40px;
+        width: 180px;
+        font-size: 15px;
+        margin-top: 40px;
+        border-radius: 40px;
+        line-height: 40px;
+        color: white;
+        background-color: rgb(153, 185, 96);
+        cursor: pointer;
+      }
+
+      #continue:hover {
+        background-color: rgb(173, 205, 116);
+      }
+    </style>
+  </head>
+  <body class="embedded">
+    <div id="container">
+      <img id="logo" src="../images/leap-logo.png"/>
+      <h1>Welcome to a whole new world</h1>
+      <h2>Here are a few reminders to get you started with Leap Motion</h2>
+
+      <div id="embedded-graphics">
+        <img class="graphic" id="graphic1" src="../images/first-run/embedded1.png"/>
+        <img class="graphic" id="graphic2" src="../images/first-run/embedded2.png"/>
+        <img class="graphic" id="graphic3" src="../images/first-run/embedded3.png"/>
+      </div>
+      <div id="peripheral-graphics">
+        <img class="graphic" id="graphic1" src="../images/first-run/peripheral1.png"/>
+        <img class="graphic" id="graphic2" src="../images/first-run/peripheral2.png"/>
+        <img class="graphic" id="graphic3" src="../images/first-run/peripheral3.png"/>
+      </div>
+
+      <div id="continue" onclick="require('nw.gui').Window.get().close()">Continue</div>
+    </div>
+  </body>
+</html>

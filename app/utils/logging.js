@@ -32,8 +32,8 @@ function getLogger(level) {
   }
 }
 
-console.log = getLogger('log');
-console.debug = getLogger('debug');
-console.info = getLogger('info');
-console.warn = getLogger('warn');
-console.error = getLogger('error');
+console.log = window.console.log = getLogger('log');
+console.debug = window.console.debug = getLogger('debug');
+console.info = window.console.info = getLogger('info');
+console.warn = window.console.warn = getLogger('warn');
+console.error =window.console.error =  getLogger('error');

@@ -1,4 +1,5 @@
-var async = require('async')
+var async = require('async');
+var exec = require('child_process').exec;
 var os = require('os');
 var path = require('path');
 
@@ -10,6 +11,7 @@ var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
+var shell = require('./utils/shell.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -18,14 +20,73 @@ var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 
+var PlatformControlPanelPaths = {
+  win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\LeapControlPanel.exe'
+};
+
+var PlatformOrientationCommands = {
+  win32: shell.escape((process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe'),
+  darwin: 'open ' + shell.escape('/Applications/Leap Motion Orientation.app')
+};
+
 function AppController() {
 }
 
 AppController.prototype = {
 
-  setupWindow: function() {
-    var win = nwGui.Window.get();
+  restoreModels: function() {
+    LeapApp.hydrateCachedModels();
+  },
+
+  runApp: function() {
+    if (uiGlobals.isFirstRun) {
+      async.waterfall([
+        this._showFirstRunSplash.bind(this),
+        this._launchOrientation.bind(this)
+      ], this._setupWindow.bind(this));
+    } else {
+      this._setupWindow();
+    }
+
     this._createMenu();
+    api.getFrozenApps();
+    this._scanFilesystem();
+    $('body').removeClass('startup');
+    this._checkLeapConnection();
+    async.waterfall([
+      this._authorize.bind(this),
+      this._afterAuthorize.bind(this)
+    ], function(err) {
+      if (err) {
+        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
+      }
+    }.bind(this));
+  },
+
+  _showFirstRunSplash: function(cb) {
+    var firstRun = popupWindow.open('/static/popups/first-run.html', {
+      width: 1080,
+      height: 638,
+      frame: false,
+      resizable: false
+    });
+    firstRun.on('close', function() {
+      this.close(true);
+      cb && cb();
+    });
+  },
+
+  _launchOrientation: function(cb) {
+    var orientationCommand = PlatformOrientationCommands[os.platform()];
+    if (orientationCommand) {
+      exec(orientationCommand).on('exit', cb);
+    } else {
+      cb && cb(null);
+    }
+  },
+
+  _setupWindow: function() {
+    var win = nwGui.Window.get();
     win.show();
     win.maximize();
   },
@@ -38,7 +99,7 @@ AppController.prototype = {
       fileMenu.append(new nwGui.MenuItem({
         label: 'Controller Settings',
         click: function() {
-          nwGui.Shell.openItem(path.join(process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES, 'Leap Motion', 'Core Services', 'LeapControlPanel.exe'))
+          nwGui.Shell.openItem(PlatformControlPanelPaths.win32);
         }
       }));
       fileMenu.append(new nwGui.MenuItem({
@@ -84,25 +145,6 @@ AppController.prototype = {
     nwGui.Window.get().menu = mainMenu;
   },
 
-  restoreModels: function() {
-    LeapApp.hydrateCachedModels();
-  },
-
-  runApp: function() {
-    api.getFrozenApps();
-    this._scanFilesystem();
-    $('body').removeClass('startup');
-    this._checkLeapConnection();
-    async.waterfall([
-      this._authorize.bind(this),
-      this._afterAuthorize.bind(this)
-    ], function(err) {
-      if (err) {
-        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
-      }
-    }.bind(this));
-  },
-
   _checkLeapConnection: function(cb) {
     if (this._noMoreLeapConnectionChecks) {
       return cb && cb(null);
@@ -124,8 +166,7 @@ AppController.prototype = {
   },
 
   _afterAuthorize: function() {
-    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
-
+    uiGlobals.isFirstRun = false;
     this._paintMainApp();
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);

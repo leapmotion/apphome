@@ -3,7 +3,6 @@ var urlParse = require('url').parse;
 
 var config = require('../../../config/config.js');
 var connection = require('../../utils/connection.js');
-var db = require('../../utils/db.js');
 var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
 
@@ -29,7 +28,7 @@ module.exports = BaseView.extend({
   authorize: function(cb) {
     this.$el.appendTo('body');
     this._center();
-    this.$el.toggleClass('first-run', this._isFirstRun());
+    this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
     connection.check(function(isConnected) {
       if (isConnected) {
@@ -85,10 +84,6 @@ module.exports = BaseView.extend({
     }.bind(this));
   },
 
-  _isFirstRun: function() {
-    return !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-  },
-
   _waitForInternetConnection: function(cb) {
     connection.check(function(isConnected) {
       if (isConnected) {
@@ -129,7 +124,7 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    // if (this._isFirstRun() && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+    // if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
     //   iframeWindow.location = signUpUrl;
     //   this._hasRedirectedToSignUp = true;
     // } else {
