@@ -7,11 +7,10 @@ var mixpanel = require('./utils/mixpanel.js');
 
 mixpanel.trackOpen();
 
-function run(firstRun) {
+function run(recoveringFromError) {
   var appController = new AppController();
-  if (firstRun) {
+  if (!recoveringFromError) {
     appController.restoreModels();
-    appController.setupWindow();
   }
   appController.runApp();
 }
@@ -33,7 +32,7 @@ process.on('uncaughtException', function(err) {
   }
   console.error('Uncaught exception: ' + err.stack);
   $('body').empty();
-  run();
+  run(true);
 });
 
 nwGui.Window.get().on('close', function() {

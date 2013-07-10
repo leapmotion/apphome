@@ -1,4 +1,5 @@
-var async = require('async')
+var async = require('async');
+var exec = require('child_process').exec;
 var os = require('os');
 var path = require('path');
 
@@ -10,6 +11,7 @@ var FsScanner = require('./utils/fs-scanner.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
+var shell = require('./utils/shell.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -18,16 +20,112 @@ var AuthorizationView = require('./views/authorization/authorization.js');
 var MainPage = require('./views/main-page/main-page.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 
+var PlatformControlPanelPaths = {
+  win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\LeapControlPanel.exe'
+};
+
+var PlatformOrientationCommands = {
+  win32: shell.escape((process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe'),
+  darwin: 'open ' + shell.escape('/Applications/Leap Motion Orientation.app')
+};
+
 function AppController() {
+  uiGlobals.on(uiGlobals.Event.SignIn, function() {
+    this._createMenu(true);
+  }.bind(this));
 }
 
 AppController.prototype = {
 
-  setupWindow: function() {
+  restoreModels: function() {
+    LeapApp.hydrateCachedModels();
+  },
+
+  runApp: function() {
+    if (uiGlobals.isFirstRun) {
+      async.waterfall([
+        this._checkIfEmbedded.bind(this),
+        this._showFirstRunSplash.bind(this),
+        this._launchOrientation.bind(this)
+      ], this._setupWindow.bind(this));
+    } else {
+      this._setupWindow();
+    }
+
+    this._createMenu(false);
+    api.getFrozenApps();
+    this._scanFilesystem();
+    $('body').removeClass('startup');
+    this._checkLeapConnection();
+    async.waterfall([
+      this._authorize.bind(this),
+      this._afterAuthorize.bind(this)
+    ], function(err) {
+      if (err) {
+        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
+      }
+    }.bind(this));
+  },
+
+  _checkIfEmbedded: function(cb) {
+    if (os.platform() === 'win32') {
+      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdout) {
+        if (err) {
+          this._isEmbedded = false;
+        } else {
+          var output = stdout.toString();
+          // this is to detect HP pre-installed builds
+          this._isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
+                             /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
+        }
+        cb && cb(null);
+      }.bind(this));
+    } else {
+      this._isEmbedded = false;
+      cb && cb(null);
+    }
+  },
+
+  _showFirstRunSplash: function(cb) {
+    var isEmbedded = this._isEmbedded;
+    var firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
+      width: 1080,
+      height: 638,
+      frame: false,
+      resizable: false,
+      show: false
+    });
+
+    firstRunSplash.on('loaded', function() {
+      var splashWindow = firstRunSplash.window;
+      $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+      splashWindow.setTimeout(function() {
+        firstRunSplash.show();
+      }, 0);
+    });
+
+    firstRunSplash.on('close', function() {
+      this.close(true);
+      cb && cb(null);
+    });
+  },
+
+  _launchOrientation: function(cb) {
+    var orientationCommand = PlatformOrientationCommands[os.platform()];
+    if (orientationCommand) {
+      exec(orientationCommand).on('exit', cb);
+    } else {
+      cb && cb(null);
+    }
+  },
+
+  _setupWindow: function() {
     var win = nwGui.Window.get();
-    this._createMenu();
     win.show();
+    win.blur();
     win.maximize();
+    win.setAlwaysOnTop(true);
+    win.setAlwaysOnTop(false);
   },
 
   _createMenu: function(enableLogOut) {
@@ -38,7 +136,7 @@ AppController.prototype = {
       fileMenu.append(new nwGui.MenuItem({
         label: 'Controller Settings',
         click: function() {
-          nwGui.Shell.openItem(path.join(process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES, 'Leap Motion', 'Core Services', 'LeapControlPanel.exe'))
+          nwGui.Shell.openItem(PlatformControlPanelPaths.win32);
         }
       }));
       fileMenu.append(new nwGui.MenuItem({
@@ -53,7 +151,7 @@ AppController.prototype = {
 
     var accountMenu = new nwGui.Menu();
     accountMenu.append(new nwGui.MenuItem({
-      label: 'Sign Out',
+      label: 'Sign Out' + (enableLogOut ? ' ' + (uiGlobals.username || uiGlobals.email) : ''),
       click: this._logOut.bind(this),
       enabled: !!enableLogOut
     }));
@@ -84,25 +182,6 @@ AppController.prototype = {
     nwGui.Window.get().menu = mainMenu;
   },
 
-  restoreModels: function() {
-    LeapApp.hydrateCachedModels();
-  },
-
-  runApp: function() {
-    api.getFrozenApps();
-    this._scanFilesystem();
-    $('body').removeClass('startup');
-    this._checkLeapConnection();
-    async.waterfall([
-      this._authorize.bind(this),
-      this._afterAuthorize.bind(this)
-    ], function(err) {
-      if (err) {
-        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
-      }
-    }.bind(this));
-  },
-
   _checkLeapConnection: function(cb) {
     if (this._noMoreLeapConnectionChecks) {
       return cb && cb(null);
@@ -124,8 +203,7 @@ AppController.prototype = {
   },
 
   _afterAuthorize: function() {
-    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
-
+    uiGlobals.isFirstRun = false;
     this._paintMainApp();
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
@@ -147,7 +225,6 @@ AppController.prototype = {
   },
 
   _paintMainApp: function() {
-    this._createMenu(true);
     this._mainPage = new MainPage();
     $('body').append(this._mainPage.$el);
   },
@@ -245,4 +322,3 @@ AppController.prototype = {
 };
 
 module.exports = AppController;
-

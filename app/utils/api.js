@@ -211,7 +211,10 @@ function connectToStoreServer(noAutoInstall, cb) {
             }
 
             if (message.user_id) {
+              uiGlobals.username = message.username;
+              uiGlobals.email = message.email;
               subscribeToUserChannel(message.user_id);
+              uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {
               var app = handleAppJson(message, noAutoInstall);
               if (app) {
