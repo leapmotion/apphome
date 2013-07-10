@@ -36,7 +36,7 @@
   .waiting
     height 300px
     position absolute
-    width 350px
+    width 390px
 
     .leap-logo-box
       margin-top 0
