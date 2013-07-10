@@ -30,13 +30,13 @@
     margin-top -2%
     position absolute
     overflow hidden
-    width 390px
+    width 402px
 
 
   .waiting
     height 300px
     position absolute
-    width 390px
+    width 402px
 
     .leap-logo-box
       margin-top 0
