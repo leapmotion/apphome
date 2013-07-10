@@ -44,6 +44,7 @@ AppController.prototype = {
   runApp: function() {
     if (uiGlobals.isFirstRun) {
       async.waterfall([
+        this._checkIfEmbedded.bind(this),
         this._showFirstRunSplash.bind(this),
         this._launchOrientation.bind(this)
       ], this._setupWindow.bind(this));
@@ -66,16 +67,46 @@ AppController.prototype = {
     }.bind(this));
   },
 
+  _checkIfEmbedded: function(cb) {
+    if (os.platform() === 'win32') {
+      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdout) {
+        if (err) {
+          this._isEmbedded = false;
+        } else {
+          var output = stdout.toString();
+          // this is to detect HP pre-installed builds
+          this._isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
+                             /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
+        }
+        cb && cb(null);
+      }.bind(this));
+    } else {
+      this._isEmbedded = false;
+      cb && cb(null);
+    }
+  },
+
   _showFirstRunSplash: function(cb) {
-    var firstRun = popupWindow.open('/static/popups/first-run.html', {
+    var isEmbedded = this._isEmbedded;
+    var firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
       width: 1080,
       height: 638,
       frame: false,
-      resizable: false
+      resizable: false,
+      show: false
     });
-    firstRun.on('close', function() {
+
+    firstRunSplash.on('loaded', function() {
+      var splashWindow = firstRunSplash.window;
+      $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+      splashWindow.setTimeout(function() {
+        firstRunSplash.show();
+      }, 0);
+    });
+
+    firstRunSplash.on('close', function() {
       this.close(true);
-      cb && cb();
+      cb && cb(null);
     });
   },
 
@@ -91,7 +122,10 @@ AppController.prototype = {
   _setupWindow: function() {
     var win = nwGui.Window.get();
     win.show();
+    win.blur();
     win.maximize();
+    win.setAlwaysOnTop(true);
+    win.setAlwaysOnTop(false);
   },
 
   _createMenu: function(enableLogOut) {
