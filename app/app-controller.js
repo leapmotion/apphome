@@ -208,7 +208,7 @@ AppController.prototype = {
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    api.connectToStoreServer(true);
+    api.connectToStoreServer();
   },
 
   _logOut: function() {
@@ -281,15 +281,13 @@ AppController.prototype = {
     // remove old apps
     _(existingExplicitPathLocalAppsById).forEach(function (oldApp) {
       uiGlobals.myApps.remove(oldApp);
-      uiGlobals.uninstalledApps.remove(oldApp);
       oldApp.save();
     });
   },
 
   _handleScannedLocalApps: function(manifest) {
     var existingScannedLocalAppsById = {};
-    var allApps = uiGlobals.myApps.models.concat(uiGlobals.uninstalledApps.models);
-    allApps.forEach(function(app) {
+    uiGlobals.myApps.forEach(function(app) {
       if (app.isLocalApp() && app.get('findByScanning')) {
         existingScannedLocalAppsById[app.get('id')] = app;
       }
@@ -312,7 +310,6 @@ AppController.prototype = {
         // remove old apps
         _(existingScannedLocalAppsById).forEach(function(oldApp){
           uiGlobals.myApps.remove(oldApp);
-          uiGlobals.uninstalledApps.remove(oldApp);
           oldApp.save();
         });
       }

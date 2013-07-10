@@ -24,14 +24,26 @@ DownloadProgressStream.prototype.setTotalBytes = function(totalBytes) {
 }
 
 DownloadProgressStream.prototype.listenTo = function(res) {
-  res.on('data', function(chunk) {
+  this._res = res;
+
+  this._res.on('data', function(chunk) {
     this._bytesSoFar += chunk.length;
     this.emit('progress', this._bytesSoFar / this._totalBytes);
   }.bind(this));
 
-  res.on('end', function() {
+  this._res.on('end', function() {
     this.emit('end');
   }.bind(this));
+}
+
+DownloadProgressStream.prototype.cancel = function() {
+  if (this._res) {
+    this._res.emit('cancel');
+    this._res = null;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function newTempFilePath(extension) {
@@ -89,6 +101,20 @@ function getFile(sourceUrl, destPath, cb) {
     progressStream.listenTo(res);
 
     res.on('error', function(err) {
+      cb && cb(err);
+      cb = null;
+    });
+
+    res.on('cancel', function() {
+      res.removeAllListeners();
+      req.removeAllListeners();
+      destStream.removeAllListeners();
+      destStream.close();
+      if (fs.existsSync(destPath)) {
+        fs.unlinkSync(destPath);
+      }
+      var err = new Error('Download cancelled.');
+      err.cancelled = true;
       cb && cb(err);
       cb = null;
     });

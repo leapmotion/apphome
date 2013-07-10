@@ -34,7 +34,7 @@ var CarouselView = BaseView.extend({
     this._initAddRemoveRepainting();
 
     $('body').mousedown(function(evt) {
-      if (this._isActive) {
+      if (this._isActive && !$(evt.target).parent('.tile').length) {
         this._lastMouseDownEvent = evt.originalEvent;
         this._setClearSwipeTimeout();
       }

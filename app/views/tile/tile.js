@@ -65,6 +65,12 @@ module.exports = BaseView.extend({
       }
     }.bind(this));
 
+    this.$('.cancel').click(function(evt) {
+      leapApp.trigger('cancel-download');
+      this.$('.progress .bar').css('width', 0);
+      evt.stopPropagation();
+    }.bind(this));
+
     this.$el.attr('tile_id', leapApp.id);
 
     new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -32, top: 4 }).spin(this.$('.message')[0]);

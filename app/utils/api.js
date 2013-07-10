@@ -105,7 +105,8 @@ function createAppModel(appJson) {
     binaryUrl: appJson.binary_url,
     version: appJson.version_number,
     changelog: appJson.changelog,
-    releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString()
+    releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString(),
+    firstSeenAt: (new Date()).getTime()
   };
   if (cleanAppJson.platform === os.platform()) {
     var StoreLeapApp = require('../models/store-leap-app.js');
@@ -119,29 +120,17 @@ function handleAppJson(appJson, noAutoInstall) {
   var app = createAppModel(appJson);
   if (app) {
     var myApps = uiGlobals.myApps;
-    var uninstalledApps = uiGlobals.uninstalledApps;
-    var existingApp = myApps.get(app.get('appId')) || uninstalledApps.get(app.get('appId'));
-    var upgradableUninstalledApp = uninstalledApps.get(app.get('appId'));
+    var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
-      existingApp.set('binaryUrl', app.get('binaryUrl'));
-    } else if (upgradableUninstalledApp && semver.isFirstGreaterThanSecond(app.get('version'), upgradableUninstalledApp.get('version'))) {
-      // upgrade to an uninstalled app
-      upgradableUninstalledApp.set(app.toJSON());
-    } else if (noAutoInstall || app.isUpgradable()) {
-      var appToUpgrade = myApps.get(app.get('appId'));
-      if (appToUpgrade && semver.isFirstGreaterThanSecond(app.get('version'), appToUpgrade.get('version'))) {
+      if (existingApp.isUninstalled()) {
+        existingApp.set(app.toJSON());
+      } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
         appToUpgrade.set('availableUpgrade', app.toJSON());
-      } else if (!appToUpgrade) {
-        // add a new download
-        myApps.add(app);
+      } else {
+        existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
-      // new app to install
-      console.log('Installing app: ' + app.get('name'));
       myApps.add(app);
-      installManager.enqueue(app, function(err) {
-        err && console.log('Failed to install app', app.get('name'), err.message);
-      });
     }
   }
   return app;
@@ -239,8 +228,7 @@ function connectToStoreServer(noAutoInstall, cb) {
 function createWebLinkApps(webAppData) {
   webAppData = webAppData || [];
   var existingWebAppsById = {};
-  var allApps = uiGlobals.myApps.models.concat(uiGlobals.uninstalledApps.models);
-  allApps.forEach(function(app) {
+  uiGlobals.myApps.forEach(function(app) {
     if (app.isWebLinkApp()) {
       existingWebAppsById[app.get('id')] = app;
     }

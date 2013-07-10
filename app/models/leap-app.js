@@ -18,6 +18,7 @@ var BaseModel = require('./base-model.js');
 var LeapAppStates = enumerable.make([
   'NotYetInstalled',
   'Waiting',
+  'Connecting',
   'Downloading',
   'Installing',
   'InstallFailed',
@@ -29,24 +30,25 @@ var LeapAppStates = enumerable.make([
 var LeapApp = BaseModel.extend({
 
   initialize: function() {
-    if (!this.get('state')) {
+    var state = this.get('state');
+    if (!state ||
+        state === LeapApp.States.NotYetInstalled ||
+        state === LeapApp.States.Waiting ||
+        state === LeapApp.States.Connecting ||
+        state === LeapApp.States.Downloading ||
+        state === LeapApp.States.Installing) {
       this.set('state', LeapApp.States.NotYetInstalled);
-    } else if (this.get('state') === LeapApp.States.Installing ||
-               this.get('state') === LeapApp.States.Downloading) {
-      this.set('state', LeapApp.States.InstallFailed);
     } else if (this.get('state') === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }
 
     this.on('change:state', function() {
-      if (!this.get('installedAt') &&
-          this.get('state') === LeapApp.States.Ready) {
+      var state = this.get('state');
+      if (!this.get('installedAt') && state === LeapApp.States.Ready) {
         this.set('installedAt', (new Date()).getTime());
-        uiGlobals.myApps.sort();
       }
-      if (this.get('state') === LeapApp.States.Uninstalled) {
-        uiGlobals.myApps.remove(this);
-        uiGlobals.uninstalledApps.add(this);
+      if (state === LeapApp.States.Ready || state === LeapApp.States.Uninstalled) {
+        uiGlobals.myApps.sort();
       }
       this.save();
     }.bind(this));
@@ -77,11 +79,14 @@ var LeapApp = BaseModel.extend({
   save: function() {
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
     db.setItem(config.DbKeys.InstalledApps, JSON.stringify(uiGlobals.myApps.toJSON()));
-    db.setItem(config.DbKeys.UninstalledApps, JSON.stringify(uiGlobals.uninstalledApps.toJSON()))
   },
 
   sortScore: function() {
-    return (this.isBuiltinTile() ? 'a_' + this.get('name') : 'b_' + (this.get('installedAt') || this.get('name')));
+    return (this.isBuiltinTile() ?
+              'a_' + this.get('name') :
+              (this.get('installedAt') ?
+                'b_' + this.get('installedAt') :
+                (!this.isUninstalled() ? 'c_' : 'd_') + this.get('firstSeenAt')));
   },
 
   isLocalApp: function() {
@@ -221,7 +226,6 @@ LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
   uiGlobals.myApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
-  uiGlobals.uninstalledApps.add(JSON.parse(db.getItem(config.DbKeys.UninstalledApps) || '[]'));
 };
 
 module.exports = LeapApp;

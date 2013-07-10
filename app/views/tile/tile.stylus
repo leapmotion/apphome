@@ -15,36 +15,39 @@ $tileW = 320px
   -webkit-user-drag element
   width $tileW
 
-  &:hover
-    background-clip padding-box
-    box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
 
+  &.ready, &.notyetinstalled, &.installfailed, &.uninstalled
+    cursor pointer
 
-    &:before, &:after
-      background -webkit-linear-gradient(top,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* Chrome10+,Safari5.1+ */
-      background linear-gradient(to bottom,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* W3C */
+    &:hover
       background-clip padding-box
-      border-radius $borderRadius+1
-      content ""
-      display block
-      height $tileH+2
-      left -1px
-      position absolute
-      top -1px
-      width $tileW+2
-      z-index -1
-    &:after
-      background -webkit-linear-gradient(top, #dcdcdc 0%, #a7a7a7 100%) /* Chrome10+,Safari5.1+ */
-      background linear-gradient(to bottom, #dcdcdc 0%, #a7a7a7 100%) /* W3C */      
-      border-radius 7px
-      height $tileH+6
-      left -3px
-      top -3px
-      width $tileW+6
-      z-index -2
+      box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
 
-    h3
-      color #fff
+      &:before, &:after
+        background -webkit-linear-gradient(top,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* Chrome10+,Safari5.1+ */
+        background linear-gradient(to bottom,  #ebebeb 0%,#a1a1a1 91%,#7d7d7d 100%) /* W3C */
+        background-clip padding-box
+        border-radius $borderRadius+1
+        content ""
+        display block
+        height $tileH+2
+        left -1px
+        position absolute
+        top -1px
+        width $tileW+2
+        z-index -1
+      &:after
+        background -webkit-linear-gradient(top, #dcdcdc 0%, #a7a7a7 100%) /* Chrome10+,Safari5.1+ */
+        background linear-gradient(to bottom, #dcdcdc 0%, #a7a7a7 100%) /* W3C */
+        border-radius 7px
+        height $tileH+6
+        left -3px
+        top -3px
+        width $tileW+6
+        z-index -2
+
+      h3
+        color #fff
 
   .name-outer
     float right
@@ -85,7 +88,7 @@ $tileW = 320px
     overflow hidden
     -webkit-user-drag none
 
-  .message .waiting, .message .installing, .message .downloading, .message .spinner
+  .message .waiting, .message .installing, .message .downloading, .message .connecting, .message .spinner
     display none
     width 100%
 
@@ -110,7 +113,7 @@ $tileW = 320px
     width 70%
     position absolute
     border 2px solid $progressBarColor
-    border-radius 16px
+    border-radius 10px
     padding 2px
     background-color rgba(37,37,37,.5)
     top 50%
@@ -124,8 +127,26 @@ $tileW = 320px
       background-color $progressBarColor
       border-radius 16px
 
-  &.ready, &.notyetinstalled, &.installfailed, &.uninstalled
+  .cancel
+    background-color #ccc
+    border-radius 10px
+    color black
     cursor pointer
+    display none
+    height 18px
+    left 24px
+    margin-top -5px
+    position absolute
+    top 50%
+    width 18px
+    .x
+      font-size 22px
+      font-weight bold
+      text-align center
+      margin-top -8px
+
+    &:hover
+      background-color white
 
   &.notyetinstalled
     .name
@@ -144,18 +165,32 @@ $tileW = 320px
     box-shadow none
 
   &.waiting
+    .tile-bg
+      opacity 0.3
     .message .waiting
       display block
     .name
       display none
 
+  &.connecting
+    .tile-bg
+      opacity 0.3
+    .message .connecting, .message .spinner
+      display block
+    .name
+      display none
+
   &.downloading
-    .progress, .message .downloading, .message .spinner
+    .tile-bg
+      opacity 0.3
+    .progress, .message .downloading, .message .spinner, .cancel
       display block
     .name
       display none
 
   &.installing
+    .tile-bg
+      opacity 0.7
     .message .installing, .message .spinner
       display block
     .name

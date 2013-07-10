@@ -36,7 +36,7 @@ module.exports = LeapApp.extend({
     return true;
   },
 
-  install: function(cb, skipNotifications) {
+  install: function(cb) {
     this.trigger('installstart');
     if (this.isUpgradable()) {
       mixpanel.trackAppUpgrade();
@@ -47,16 +47,14 @@ module.exports = LeapApp.extend({
           this.set('availableUpgrade', null);
         }
         cb && cb(err);
-      }, skipNotifications)
+      })
     } else {
       console.log('Installing: ' + this.get('name'));
-      this._installFromServer(cb, skipNotifications);
+      this._installFromServer(cb);
     }
   },
 
-  _installFromServer: function(cb, skipNotifications) {
-    uiGlobals.myApps.add(this);
-
+  _installFromServer: function(cb) {
     this._downloadBinary(function(err) {
       if (err) {
         this._abortInstallation(err);
@@ -75,9 +73,6 @@ module.exports = LeapApp.extend({
       var executable = this._findExecutable();
       if (executable) {
         this.set('executable', executable);
-        if (! skipNotifications) {
-          uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
-        }
         this.set('state', LeapApp.States.Ready);
         return cb && cb(null);
       } else {
@@ -89,12 +84,17 @@ module.exports = LeapApp.extend({
   },
 
   _abortInstallation: function(err) {
-    console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-    this.set('state', LeapApp.States.InstallFailed);
+    if (err && err.cancelled) {
+      console.info('Installation of ' + this.get('name') + ' was cancelled.');
+      this.set('state', LeapApp.States.NotYetInstalled);
+    } else {
+      console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
+      this.set('state', LeapApp.States.InstallFailed);
+    }
   },
 
   _downloadBinary: function(cb) {
-    this.set('state', LeapApp.States.Downloading);
+    this.set('state', LeapApp.States.Connecting);
     var binaryUrl = this.get('binaryUrl');
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
     if (url.parse(binaryUrl).protocol == null) {
@@ -116,13 +116,14 @@ module.exports = LeapApp.extend({
       cb && cb(null);
       return;
     }
-    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
-    api.connectToStoreServer(true, function() {
+    api.connectToStoreServer(true, function(err) {
+      if (err) {
+        return cb(err);
+      }
       var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
         if (err) {
           return cb(err);
         }
-        uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
         this.set('state', LeapApp.States.Installing);
         console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
@@ -141,7 +142,23 @@ module.exports = LeapApp.extend({
         }
       }.bind(this));
 
+      function cancelDownload() {
+        console.log('TRYING TO CANCEL DOWNLOAD OF ' + this.get('name'));
+        if (downloadProgress) {
+          var cancelled = downloadProgress.cancel();
+          if (cancelled) {
+            downloadProgress = null;
+            this.off('cancel-download', cancelDownload);
+          }
+        } else {
+          this.off('cancel-download', cancelDownload);
+        }
+      }
+
+      this.on('cancel-download', cancelDownload, this);
+
       downloadProgress.on('progress', function(progress) {
+        this.set('state', LeapApp.States.Downloading);
         this.trigger('progress', progress);
       }.bind(this));
     }.bind(this));
@@ -196,8 +213,6 @@ module.exports = LeapApp.extend({
     } catch (err) {
       return this._failUninstallation(err, cb);
     } finally {
-      uiGlobals.myApps.remove(this);
-      uiGlobals.uninstalledApps.add(this);
       this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
     }
@@ -214,7 +229,6 @@ module.exports = LeapApp.extend({
 
   _getDir: function(dirsByPlatform, attributeName, suffix) {
     suffix = suffix || '';
-    console.log('Getting dir: ' + attributeName);
     var dir = this[attributeName];
     if (!dir) {
       if (!dirsByPlatform[os.platform()]) {

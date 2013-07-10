@@ -28,16 +28,6 @@ module.exports = BaseView.extend({
     this.$('#my-apps').append(this.myAppsCarousel.$el);
     this._linkMapping['#my-apps-link'] = this.myAppsCarousel;
 
-    this.uninstalledAppsCarousel = new Carousel({
-      collection: uiGlobals.uninstalledApps,
-      emptyMessage: 'Uninstalled apps will appear here.',
-      position: 2
-    });
-    this.uninstalledAppsCarousel.hide();
-    this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el);
-    this._linkMapping['#uninstalled-link'] = this.uninstalledAppsCarousel;
-
-    this._initInstallBindings();
     this._initCarouselLinks();
     this._initDraggingToTrash();
 
@@ -97,12 +87,6 @@ module.exports = BaseView.extend({
     }
   },
 
-  _initInstallBindings: function() {
-    uiGlobals.uninstalledApps.on('installstart', function() {
-      this._switchToCarousel(this.myAppsCarousel);
-    }.bind(this));
-  },
-
   _initCarouselLinks: function() {
     _(this._linkMapping).each(function(carousel, selector) {
       this.$(selector).click(function() {
@@ -149,7 +133,6 @@ module.exports = BaseView.extend({
       var heightRatio = ($win.height() - config.Layout.minSlidePadding) / config.Layout.slideHeight;
       uiGlobals.scaling = Math.min(1, widthRatio, heightRatio);
       this.myAppsCarousel.rescale();
-      this.uninstalledAppsCarousel.rescale();
     }.bind(this));
   },
 
