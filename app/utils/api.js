@@ -94,7 +94,7 @@ function getJson(url, cb) {
 
 function cleanUpAppJson(appJson) {
   appJson = appJson || {};
-  return {
+  var cleanAppJson = {
     id: appJson.app_id,
     appId: appJson.app_id,
     versionId: appJson.id,
@@ -109,6 +109,12 @@ function cleanUpAppJson(appJson) {
     releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString(),
     firstSeenAt: (new Date()).getTime()
   };
+  Object.keys(cleanAppJson).forEach(function(key) {
+    if (!cleanAppJson[key]) {
+      delete cleanAppJson[key];
+    }
+  });
+  return cleanAppJson;
 }
 
 function createAppModel(appJson) {
