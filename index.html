@@ -29,6 +29,7 @@
       if (preloadScriptPath) {
         require(preloadScriptPath); // a hook primarily used for testing
       };
+      console.log('Using node-webkit version ' + process.versions['node-webkit']);
       window.onload = function() {
         require('./app/airspace.js').run();
       };
