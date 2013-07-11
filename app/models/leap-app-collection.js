@@ -12,6 +12,7 @@ module.exports = window.Backbone.Collection.extend({
       if (app.isStoreApp() &&
           app.get('state') === LeapApp.States.NotYetInstalled &&
           !app.get('noAutoInstall')) {
+        app.set('noAutoInstall', true);
         installManager.enqueue(app);
       }
     });
