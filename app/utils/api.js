@@ -337,11 +337,13 @@ function sendDeviceData() {
   var baseDir = path.join.apply(path, dirs);
   if (!fs.existsSync(baseDir)) {
     console.error('App data not found: ' + baseDir);
+    return;
   }
 
   var authdata = fs.readFileSync(baseDir).toString();
   if (! authdata) {
     console.error('Missing auth data' + authdata);
+    return;
   }
 
   oauth.getAccessToken(function(err, accessToken) {
