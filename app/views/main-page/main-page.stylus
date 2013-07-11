@@ -124,6 +124,7 @@
     color #4a4f59
     height 46px
     font-size 24px
+    line-height 40px
     position absolute
     width 100px
     cursor pointer
