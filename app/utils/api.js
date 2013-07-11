@@ -318,27 +318,23 @@ function getLocalAppManifest(cb) {
   });
 }
 
-function getFrozenApps() {
+function getFrozenApps(cb) {
   config.FrozenAppPaths.forEach(function(path) {
-    console.log('Looking for path: ' + path);
+    console.log('looking for path', path)
     if (fs.existsSync(path)) {
-      console.log('Found app: ' + path);
-      var dest = path.join(config.PlatformTempDirs[os.platform()], 'frozen_apps');
-      extract.unzipfile(path, dest, function(err) {
-        if (err) {
-          return;
-        }
-        var manifest = JSON.parse(fs.readFileSync(path.join(dest, 'myapps.json'), { encoding: 'utf8' }));
-        console.log('Manifest: ' + manifest);
+      console.log('found app', path)
+      extract.unzipfile(path, './tmp/', function(err) {
+        if (err) return;
+        console.log('done extracting', err)
+        var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
+        console.log('manifest', manifest)
         manifest.forEach(function(message) {
-          var app = handleAppJson(message);
-          console.log('Manifest item: ' + app);
+          var app = handleAppJson(message, true);
+          console.log('manifest item', app)
           if (app) {
             app.install(function (err) {
-              if (err) {
-                console.log('Failed to install app: ' + (err.stack || err));
-              }
-            });
+              if (err) console.log('failed to install app', err)
+            }, true);
             subscribeToAppChannel(app.get('appId'));
           }
         });
