@@ -133,6 +133,9 @@
       color #a1abc9
       cursor default
 
+  #uninstalled-link.empty
+    cursor default
+
   .app-list
     list-style none
 

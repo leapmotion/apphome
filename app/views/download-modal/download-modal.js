@@ -20,7 +20,10 @@ module.exports = BaseView.extend({
     this.injectCss();
 
     if (leapApp.isUpgradable()) {
-      appToInstall = leapApp.get('availableUpgrade');
+      var upgradeApp = leapApp.get('availableUpgrade');
+      if (_.isFunction(upgradeApp.toJSON)) {
+        appToInstall = upgradeApp;
+      }
     }
     var appJson = appToInstall.toJSON();
     appJson.changelog = appToInstall.getMarkdown('changelog');

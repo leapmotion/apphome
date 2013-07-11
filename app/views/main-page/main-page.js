@@ -29,7 +29,7 @@ module.exports = BaseView.extend({
     this._linkMapping['#my-apps-link'] = this.myAppsCarousel;
 
     this._initCarouselLinks();
-    this._initDraggingToTrash();
+    this._initTrash();
 
     this._switchToCarousel(this.myAppsCarousel);
   },
@@ -97,7 +97,7 @@ module.exports = BaseView.extend({
      }.bind(this));
    },
 
-  _initDraggingToTrash: function() {
+  _initTrash: function() {
     var $trashCan = this.$('#uninstalled-link');
     $trashCan.on('dragover', function(evt) {
       if (this._currentCarousel === this.myAppsCarousel) {
@@ -119,8 +119,17 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     $trashCan.on('click', function() {
-      this.myAppsCarousel.switchToSlide(Infinity);
+      if (!$trashCan.hasClass('empty')) {
+        this.myAppsCarousel.switchToSlide(Infinity);
+      }
     }.bind(this));
+
+    if (uiGlobals.myApps.numUninstalled() > 0) {
+      $trashCan.removeClass('empty');
+    }
+
+    uiGlobals.myApps.on('install', this._updateTrashState.bind(this));
+    uiGlobals.myApps.on('uninstall', this._updateTrashState.bind(this))
 
     uiGlobals.myApps.on('dragstart', function() {
       this.$('#uninstalled-link').addClass('highlight');
@@ -129,6 +138,10 @@ module.exports = BaseView.extend({
     uiGlobals.myApps.on('dragend', function() {
       this.$('#uninstalled-link').removeClass('highlight');
     }.bind(this));
+  },
+
+  _updateTrashState: function() {
+    this.$('#uninstalled-link').toggleClass('empty', uiGlobals.myApps.numUninstalled() === 0);
   },
 
   _setupResizeBehavior: function() {

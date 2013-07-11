@@ -137,7 +137,9 @@ function handleAppJson(appJson) {
     var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
       if (!existingApp.isInstalled()) {
-        existingApp.set(app.toJSON());
+        var appJson = app.toJSON();
+        delete appJson.state;
+        existingApp.set(appJson);
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpgrade', app);
@@ -256,6 +258,7 @@ function refreshAppDetails(app, cb) {
           return cb && cb(err);
         }
         app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+        app.set('gotDetails', true);
         cb && cb(null);
       });
     });

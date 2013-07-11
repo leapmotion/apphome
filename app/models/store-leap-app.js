@@ -33,7 +33,7 @@ module.exports = LeapApp.extend({
   idAttribute: 'appId',
 
   initialize: function() {
-    if (!this.get('description')) {
+    if (!this.get('gotDetails')) {
       api.refreshAppDetails(this, function() {
         this.save();
       }.bind(this));
@@ -71,21 +71,6 @@ module.exports = LeapApp.extend({
     ], function(err) {
       this._installationComplete(err, cb);
     }.bind(this));
-  },
-
-  _installationComplete: function(err, cb) {
-    if (err) {
-      if (err.cancelled) {
-        console.info('Installation of ' + this.get('name') + ' was cancelled.');
-      } else {
-        console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-      }
-      this.set('state', LeapApp.States.NotYetInstalled);
-    } else {
-      console.info('Installation of ' + this.get('name') + ' complete');
-      this.set('state', LeapApp.States.Ready);
-    }
-    cb && cb(err);
   },
 
   _downloadBinary: function(cb) {
@@ -193,6 +178,22 @@ module.exports = LeapApp.extend({
     cb && cb(null);
   },
 
+  _installationComplete: function(err, cb) {
+    if (err) {
+      if (err.cancelled) {
+        console.info('Installation of ' + this.get('name') + ' was cancelled.');
+      } else {
+        console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
+      }
+      this.set('state', LeapApp.States.NotYetInstalled);
+    } else {
+      console.info('Installation of ' + this.get('name') + ' complete');
+      this.set('state', LeapApp.States.Ready);
+      this.trigger('install');
+    }
+    cb && cb(err);
+  },
+
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
@@ -245,6 +246,7 @@ module.exports = LeapApp.extend({
     } finally {
       this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
+      this.trigger('uninstall');
     }
   },
 
