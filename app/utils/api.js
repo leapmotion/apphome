@@ -2,6 +2,7 @@ var domain = require('domain');
 var http = require('http');
 var https = require('https');
 var os = require('os');
+var path = require('path');
 var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
 
@@ -319,7 +320,48 @@ function getFrozenApps(cb) {
   })
 }
 
+var LeapDataDir = 'Leap Motion';
+var appDataFile = 'lastauth';
+var PlatformUserDataDirs = {
+  win32:  [ process.env.APPDATA, LeapDataDir, appDataFile],
+  darwin: [ process.env.HOME, 'Library', 'Application Support', LeapDataDir, appDataFile ],
+  linux:  [ process.env.HOME, appDataFile]
+};
+
+function sendDeviceData() {
+  var dirs = PlatformUserDataDirs[os.platform()];
+  if (! dirs) {
+    throw new Error('Unknown operating system: ' + os.platform());
+  }
+  
+  var baseDir = path.join.apply(path, dirs);
+  if (!fs.existsSync(baseDir)) {
+    console.error('App data not found: ' + baseDir);
+  }
+
+  var authdata = fs.readFileSync(baseDir).toString();
+  if (! authdata) {
+    console.error('Missing auth data' + authdata);
+  }
+
+  oauth.getAccessToken(function(err, accessToken) {
+    if (err) {
+      console.error('Failed to get an access token: ' + err && err.stack);
+    } else {
+      var url = config.DeviceDataEndpoint + '?' + qs.stringify({ access_token: accessToken, data: authdata });
+      getJson(url, function(err, manifest) {
+        if (err) {
+          console.error('Failed to send device data: ' + err && err.stack);
+        } else {
+          console.log('Sent device data. ');
+        }
+      })
+    }
+  });
+}
+
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.getFrozenApps = getFrozenApps;
+module.exports.sendDeviceData = sendDeviceData;
 module.exports.getAuthURL = getAuthURL;
