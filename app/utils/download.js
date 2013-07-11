@@ -70,14 +70,16 @@ function getFile(sourceUrl, destPath, cb) {
   var progressStream = new DownloadProgressStream();
 
   destStream.on('error', function(err) {
+    cleanup();
     cb && cb(err);
     cb = null;
   });
 
   destStream.on('close', function() {
     try {
+      cleanup();
       var fileSize = fs.statSync(destPath).size;
-      if (fileSize === totalBytes) {
+      if (isNaN(totalBytes) || fileSize === totalBytes) {
         cb && cb(null, destPath);
       } else {
         cb && cb(new Error('Expected: ' + totalBytes + ' bytes, but got: ' + fileSize + ' bytes.'));
@@ -96,20 +98,24 @@ function getFile(sourceUrl, destPath, cb) {
   }
 
   var req = protocolModule.get(sourceUrl, function(res) {
+    if (res.statusCode >= 301 && res.statusCode <= 303 && res.headers['location']) {
+      // handle redirect
+      cleanup(res);
+      return getFile(res.headers['location'], destPath, cb);
+    }
+
     totalBytes = Number(res.headers['content-length']);
     progressStream.setTotalBytes(totalBytes);
     progressStream.listenTo(res);
 
     res.on('error', function(err) {
+      cleanup(res);
       cb && cb(err);
       cb = null;
     });
 
     res.on('cancel', function() {
-      res.removeAllListeners();
-      req.removeAllListeners();
-      destStream.removeAllListeners();
-      destStream.close();
+      cleanup(res);
       if (fs.existsSync(destPath)) {
         fs.unlinkSync(destPath);
       }
@@ -119,10 +125,22 @@ function getFile(sourceUrl, destPath, cb) {
       cb = null;
     });
 
+    res.on('close', function() {
+      res.removeAllListeners();
+    });
+
     res.pipe(destStream);
   });
 
+  function cleanup(res) {
+    res && res.removeAllListeners();
+    req.removeAllListeners();
+    destStream.removeAllListeners();
+    destStream.close();
+  }
+
   req.on('error', function(err) {
+    cleanup();
     cb && cb(err);
     cb = null;
   });

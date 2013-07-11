@@ -16,6 +16,7 @@ var config = {
   MixpanelToken: '77d363605f0470115eb82352f14b2981',
 
   AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
+  AppDetailsEndpoint: 'https://warehouse.leapmotion.com/api/apps/:id/homebase/:platform',
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 

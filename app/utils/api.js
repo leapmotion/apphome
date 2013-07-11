@@ -92,8 +92,9 @@ function getJson(url, cb) {
   });
 }
 
-function createAppModel(appJson) {
-  var cleanAppJson = {
+function cleanUpAppJson(appJson) {
+  appJson = appJson || {};
+  return {
     id: appJson.app_id,
     appId: appJson.app_id,
     versionId: appJson.id,
@@ -104,9 +105,14 @@ function createAppModel(appJson) {
     binaryUrl: appJson.binary_url,
     version: appJson.version_number,
     changelog: appJson.changelog,
+    description: appJson.description,
     releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString(),
     firstSeenAt: (new Date()).getTime()
   };
+}
+
+function createAppModel(appJson) {
+  var cleanAppJson = cleanUpAppJson(appJson);
   if (cleanAppJson.platform === os.platform()) {
     var StoreLeapApp = require('../models/store-leap-app.js');
     return new StoreLeapApp(cleanAppJson);
@@ -115,7 +121,7 @@ function createAppModel(appJson) {
   }
 }
 
-function handleAppJson(appJson, noAutoInstall) {
+function handleAppJson(appJson) {
   var app = createAppModel(appJson);
   if (app) {
     var myApps = uiGlobals.myApps;
@@ -161,17 +167,16 @@ function getAuthURL(url, cb) {
 }
 
 var reconnectionTimeoutId;
-module.exports.hasEverConnected; // exposed for tests
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
     reconnectionTimeoutId = setTimeout(function() {
-      connectToStoreServer(!module.exports.hasEverConnected);
+      connectToStoreServer();
     }, config.ServerConnectRetryMs);
   }
 }
 
-function connectToStoreServer(noAutoInstall, cb) {
+function connectToStoreServer(cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -191,7 +196,6 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb && cb(new Error(messages.errors));
           cb = null;
         } else {
-          module.exports.hasEverConnected = true;
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
@@ -204,7 +208,7 @@ function connectToStoreServer(noAutoInstall, cb) {
               subscribeToUserChannel(message.user_id);
               uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {
-              var app = handleAppJson(message, noAutoInstall);
+              var app = handleAppJson(message);
               if (app) {
                 subscribeToAppChannel(app.get('appId'));
               }
@@ -222,6 +226,32 @@ function connectToStoreServer(noAutoInstall, cb) {
       });
     }
   });
+}
+
+function refreshAppDetails(app, cb) {
+  var appId = app.get('appId');
+  var platform = NodePlatformToServerPlatform[os.platform()];
+  if (appId && platform) {
+    oauth.getAccessToken(function(err, accessToken) {
+      if (err) {
+        return cb && cb(err);
+      }
+      var url = config.AppDetailsEndpoint;
+      url = url.replace(':id', appId);
+      url = url.replace(':platform', platform);
+      url += '?access_token=' + accessToken;
+      console.log('Refreshing app via url: ' + url);
+      getJson(url, function(err, appDetails) {
+        if (err) {
+          return cb && cb(err);
+        }
+        app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+        cb && cb(null);
+      });
+    });
+  } else {
+    cb && cb(new Error('appId and platform must be valid'));
+  }
 }
 
 function createWebLinkApps(webAppData) {
@@ -305,5 +335,6 @@ function getFrozenApps(cb) {
 
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
+module.exports.refreshAppDetails = refreshAppDetails;
 module.exports.getFrozenApps = getFrozenApps;
 module.exports.getAuthURL = getAuthURL;
