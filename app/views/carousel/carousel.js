@@ -52,14 +52,11 @@ var CarouselView = BaseView.extend({
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
-
     this.listenTo(collection, 'add', function(tileModel) {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-      if (this.options.autoTransition) {
-        this.switchToSlide(Infinity);
-      }
+      this.switchToSlide(collection.whichPage(tileModel, this._tilesPerSlide));
     }, this);
 
     this.listenTo(collection, 'remove', function(tileModel) {
