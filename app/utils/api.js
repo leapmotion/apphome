@@ -319,16 +319,16 @@ function getLocalAppManifest(cb) {
 }
 
 function getFrozenApps() {
-  config.FrozenAppPaths.forEach(function(appPath) {
-    console.log('Looking for path: ' + appPath);
-    if (fs.existsSync(appPath)) {
-      console.log('Found app: ' + appPath);
+  config.FrozenAppPaths.forEach(function(path) {
+    console.log('Looking for path: ' + path);
+    if (fs.existsSync(path)) {
+      console.log('Found app: ' + path);
       var dest = path.join(config.PlatformTempDirs[os.platform()], 'frozen_apps');
-      extract.unzipfile(appPath, dest, function(err) {
+      extract.unzipfile(path, dest, function(err) {
         if (err) {
           return;
         }
-        var manifest = JSON.parse(fs.readFileSync(appPath.join(dest, 'myapps.json'), { encoding: 'utf8' }));
+        var manifest = JSON.parse(fs.readFileSync(path.join(dest, 'myapps.json'), { encoding: 'utf8' }));
         console.log('Manifest: ' + manifest);
         manifest.forEach(function(message) {
           var app = handleAppJson(message);
