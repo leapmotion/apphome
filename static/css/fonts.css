@@ -145,3 +145,25 @@
     font-style: normal;
 
 }
+
+
+
+
+@font-face {
+    font-family: 'myriad-pro';
+    src: font-url('../fonts/myriadpro-regular.eot');
+    src: url('../fonts/myriadpro-regular.woff') format('woff'), url('../fonts/myriadpro-regular.ttf') format('truetype'), url('../fonts/myriadpro-regular.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'myriad-pro-semibold';
+    src: url('../fonts/myriadpro-semibold.eot');
+    src: url('../fonts/myriadpro-semibold.eot') format('embedded-opentype'),
+    url('../fonts/myriadpro-semibold.woff') format('woff'),
+    url('../fonts/myriadpro-semibold.ttf') format('truetype'),
+    url('../fonts/myriadpro-semibold.svg#MyriadProSemibold') format('svg');
+}
