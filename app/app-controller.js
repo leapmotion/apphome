@@ -208,6 +208,7 @@ AppController.prototype = {
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
+    api.sendDeviceData();
     api.connectToStoreServer(true);
   },
 
