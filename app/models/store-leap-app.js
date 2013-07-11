@@ -206,7 +206,8 @@ module.exports = LeapApp.extend({
         }.bind(this));
         return;
       } else {
-        return this._failUninstallation(err, cb);
+        // well, we're just gonna pretend we did
+        console.warn('Uninstall failed with error: ' + (err.stack || err) + ' but marking as uninstalled anyway.');
       }
     }
 

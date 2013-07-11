@@ -14,7 +14,7 @@ function extractZip(src, dest, cb) {
       fs.deleteSync(dest);
     }
   } catch (err) {
-    console.warn('Error deleting directory "' + dest + '": ' + err.message);
+    console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
   }
 
   fs.mkdirpSync(dest);
