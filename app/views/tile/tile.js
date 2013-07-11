@@ -140,7 +140,7 @@ module.exports = BaseView.extend({
     this._currentlyLaunching = true;
     this.$el.addClass('launching');
     this.options.leapApp.launch();
-    setTimeout(this._markLaunchComplete.bind(this), 5000);
+    setTimeout(this._markLaunchComplete.bind(this), 12000);
   },
 
   _markLaunchComplete: function() {

@@ -1,9 +1,24 @@
+
 $borderWidth = 4px
 $borderColor = #bbb
 $borderRadius = 4px
 $progressBarColor = #e1e1e1
 $tileH = 176px
 $tileW = 320px
+
+messageState(state, showSpinner = false, tileOpacity = .7)
+  &.{state}
+    .message .{state}
+      display block
+    .message .spinner
+      if showSpinner
+        display block
+      else
+        display none
+    .tile-bg
+      opacity tileOpacity
+    .name
+      display none
 
 .tile
   border-radius $borderRadius
@@ -14,6 +29,17 @@ $tileW = 320px
   position relative
   -webkit-user-drag element
   width $tileW
+
+
+  messageState(waiting, false, .3)
+  messageState(connecting, true, .3)
+  messageState(downloading, true, .3)
+  messageState(installing, true, .7)
+  messageState(launching, true, .7)
+
+  &.downloading
+    .progress, .message .spinner, .cancel
+      display block
 
 
   &.ready, &.notyetinstalled, &.installfailed, &.uninstalled
@@ -88,9 +114,10 @@ $tileW = 320px
     overflow hidden
     -webkit-user-drag none
 
-  .message .waiting, .message .installing, .message .downloading, .message .connecting, .message .spinner
-    display none
-    width 100%
+  .message
+    .waiting, .installing, .downloading, .connecting, .launching, .spinner
+      display none
+      width 100%
 
   .dot
     background -webkit-linear-gradient(top, #c5e171 0%, #bee267 50%, #95bf48 100%)
@@ -177,42 +204,6 @@ $tileW = 320px
     background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
     box-shadow 0 0 10px rgba(67,131,181,1)
 
-  &.launching
-    border-color transparent
-    background transparent
-    box-shadow none
-
-  &.waiting
-    .tile-bg
-      opacity 0.3
-    .message .waiting
-      display block
-    .name
-      display none
-
-  &.connecting
-    .tile-bg
-      opacity 0.3
-    .message .connecting, .message .spinner
-      display block
-    .name
-      display none
-
-  &.downloading
-    .tile-bg
-      opacity 0.3
-    .progress, .message .downloading, .message .spinner, .cancel
-      display block
-    .name
-      display none
-
-  &.installing
-    .tile-bg
-      opacity 0.7
-    .message .installing, .message .spinner
-      display block
-    .name
-      display none
 
   &.uninstalled
     opacity 0.4

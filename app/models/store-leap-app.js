@@ -87,7 +87,6 @@ module.exports = LeapApp.extend({
 
     var tempFilename;
     var cleanupTempfileAndContinue = function(err) {
-      console.log('tmp - cleanupTempfileAndContinue');
       if (tempFilename && fs.existsSync(tempFilename)) {
         try {
           fs.deleteSync(tempFilename);
@@ -176,20 +175,12 @@ module.exports = LeapApp.extend({
   },
 
   _authenticateBinary: function(cb) {
-    console.info('Authenticating binary of ' + this.get('name'));
-
-    // tmp - del! placeholder
-    window.setTimeout(function() {
-      console.log('tmp -- hello ready app');
-      cb && cb(null);
-    }.bind(this), 2000);
-
-    if (os.platform() === 'win32') {
-      // TODO: pre-auth here
-    } else {
-      // TODO: this.set('state', LeapApp.States.Ready); // until mac pre-auth is available
-    }
-
+    // TODO:
+//    console.info('Authenticating binary of ' + this.get('name'));
+//    if (os.platform() === 'win32') {
+//      console.log('tmp - app dir: ' + this._appDir());
+//    }
+    cb && cb(null);
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
