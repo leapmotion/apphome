@@ -351,13 +351,25 @@ function sendDeviceData() {
       console.error('Failed to get an access token: ' + err && err.stack);
     } else {
       var url = config.DeviceDataEndpoint + '?' + qs.stringify({ access_token: accessToken, data: authdata });
-      getJson(url, function(err, manifest) {
-        if (err) {
+      protocolModule = (/^https:/.test(url) ? https : http);
+      var responseParts = [];
+      res = protocolModule.get(url, function(resp) {
+        resp.on('data', function(chunk) {
+          responseParts.push(chunk);
+        });
+        resp.on('end', function() {
+          try {
+            var response = responseParts.join('');
+            console.log('Sent device data. ' + url);
+          } catch(err) {
+            console.error('Failed to send device data: ' + err && err.stack);
+          }
+        });
+
+        resp.on('error', function(err) {
           console.error('Failed to send device data: ' + err && err.stack);
-        } else {
-          console.log('Sent device data. ');
-        }
-      })
+        });
+      });
     }
   });
 }
