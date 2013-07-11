@@ -8,6 +8,7 @@ var config = require('../config/config.js');
 var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
+var installManager = require('./utils/install-manager.js');
 var leap = require('./utils/leap.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
@@ -213,6 +214,7 @@ AppController.prototype = {
   },
 
   _logOut: function() {
+    installManager.cancelAll();
     this._createMenu(false);
     if (this._mainPage) {
       this._mainPage.$el.remove();

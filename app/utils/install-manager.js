@@ -33,4 +33,13 @@ function dequeue() {
   }
 }
 
+function cancelAll() {
+  var currentInstall = installQueue[0];
+  installQueue = [];
+  if (currentInstall) {
+    currentInstall.app.trigger('cancel-download');
+  }
+}
+
 module.exports.enqueue = enqueue;
+module.exports.cancelAll = cancelAll;
