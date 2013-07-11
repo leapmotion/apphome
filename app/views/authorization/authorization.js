@@ -124,26 +124,17 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    // if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
-    //   iframeWindow.location = signUpUrl;
-    //   this._hasRedirectedToSignUp = true;
-    // } else {
-
-      // TEMP BETA CODE FOR REMOVING SIGN UP
-      $('.auth-links li:first', iframeWindow.document).remove();
-      var $alertMsg = $('.alerts .alert', iframeWindow.document);
-      if (/You need to sign in or sign up before continuing/.test($alertMsg.text())) {
-        $alertMsg.text('You need to sign in before continuing.');
-      }
-      // END TEMP BETA CODE FOR REMOVING SIGN UP
-
+     if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+       iframeWindow.location = signUpUrl;
+       this._hasRedirectedToSignUp = true;
+     } else {
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
       $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
       this._showLoginForm();
       this._center();
-    // }
+     }
   },
 
   _allowOauthAuthorization: function() {
