@@ -135,21 +135,21 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     width 14px
 
   .install-overlay
-    background -webkit-linear-gradient(top, #444 0%, #222 100%)
-    border 1px solid $borderColor
-    border-radius 16px
+    background -webkit-linear-gradient(top, #272c31 0%, #141719 100%)
+    border 1px solid #424242
+    border-radius 18px
     box-shadow 0 0 10px rgba(0, 0, 0, 0.5)
     color white
     display none
-    height 32px
-    left 15%
+    height 36px
     font-size 18px
+    left 20%
     line-height 36px
     margin-top -17px
     position absolute
     text-align center
     top 50%
-    width 70%
+    width 60%
 
   .progress
     background-color rgba(37,37,37,.5)
