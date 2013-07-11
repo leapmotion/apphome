@@ -81,20 +81,20 @@ module.exports = LeapApp.extend({
 
     var tempFilename;
     var cleanupTempfileAndContinue = function(err) {
-      if (tempFilename && fs.existsSync(tempFilename)) {
-        try {
+      try {
+        if (tempFilename && fs.existsSync(tempFilename)) {
           fs.deleteSync(tempFilename);
-        } catch (e) {
-          err = e;
         }
+      } catch (e) {
+        console.error('Failed to cleanup StoreLeapApp temp binary' + (e.stack || e));
+        err = e;
       }
       cb && cb(err || null);
     };
 
-
     if (url.parse(binaryUrl).protocol == null) {
       var tempFilename = './tmp/' + binaryUrl;
-      console.log('Local binary detected. Installing from: ' + tempFilename);
+      console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else if (os.platform() === 'darwin') {
@@ -150,21 +150,26 @@ module.exports = LeapApp.extend({
 
   _configureBinary: function(cb) {
     console.info('Configuring binary of ' + this.get('name'));
-    var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
-    if (fs.existsSync(dependenciesReadmePath)) {
-      nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
-    }
+    try {
+      var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
+      if (fs.existsSync(dependenciesReadmePath)) {
+        nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
+      }
 
-    var userDataDir = this._userDataDir();
-    if (!fs.existsSync(userDataDir)) {
-      fs.mkdirpSync(userDataDir);
-    }
-    var err = null;
-    var executable = this._findExecutable();
-    if (executable) {
-      this.set('executable', executable);
-    } else {
-      err = new Error('Could not find executable for app: ' + this.get('name'));
+      var userDataDir = this._userDataDir();
+      if (!fs.existsSync(userDataDir)) {
+        fs.mkdirpSync(userDataDir);
+      }
+      var err = null;
+      var executable = this._findExecutable();
+      if (executable) {
+        this.set('executable', executable);
+      } else {
+        err = new Error('Could not find executable for app: ' + this.get('name'));
+      }
+    } catch (e) {
+      err = e;
+      console.error('StoreLeapApp#_configureBinary. Unknown failure. ' + (err.stack || err));
     }
     cb && cb(err);
   },
@@ -210,6 +215,7 @@ module.exports = LeapApp.extend({
             try {
               fs.removeSync(this._appDir());
             } catch(err2) {
+              console.error('Failed to uninstall StoreLeapApp binary ' + (err.stack || err));
               return this._failUninstallation(err2, cb);
             }
             this._finishUninstallation(deleteIconAndTile, deleteUserData, cb);

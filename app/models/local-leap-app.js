@@ -40,8 +40,8 @@ module.exports = LeapApp.extend({
         if (!args.executable) {
           args.executable = args.keyFile;
         }
-      } catch(e) {
-        console.warn(e.stack);
+      } catch(err) {
+        console.error('LocalLeapApp#constructor failed. ' + (err.stack || err));
       }
     }
 

@@ -169,38 +169,49 @@ var LeapApp = BaseModel.extend({
   },
 
   _downloadAsset: function(force, urlAttrName, pathAttrName, destPath, cb) {
-    if (!force && fs.existsSync(destPath)) {
-      this.set(pathAttrName, destPath);
-      this.save();
-      cb && cb(null);
-    } else {
-      var assetUrl = this.get(urlAttrName);
-      if (assetUrl) {
-        console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
-        if (url.parse(assetUrl).protocol == null) {
-          console.log('local asset detected, copying from ', './tmp/' + assetUrl, 'to', destPath);
-          fs.renameSync('./tmp/' + assetUrl, destPath);
-          this.set(pathAttrName, destPath);
-          this.save();
-          cb && cb(null);
-          return;
-        }
-        download.get(assetUrl, destPath, function(err) {
-          if (err && fs.existsSync(destPath)) {
-            try {
-              fs.unlinkSync(destPath);
-            } catch(err2) {
-              return cb && cb(err2);
-            }
-          } else if (!err) {
+    try {
+      if (!force && fs.existsSync(destPath)) {
+        this.set(pathAttrName, destPath);
+        this.save();
+        cb && cb(null);
+      } else {
+        var assetUrl = this.get(urlAttrName);
+        if (assetUrl) {
+          console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
+          if (url.parse(assetUrl).protocol == null) {
+            console.log('local asset detected, copying from ', './tmp/' + assetUrl, 'to', destPath);
+            fs.renameSync('./tmp/' + assetUrl, destPath);
             this.set(pathAttrName, destPath);
             this.save();
+            cb && cb(null);
+            return;
           }
-          cb && cb(err || null);
-        }.bind(this));
-      } else {
-        cb && cb(new Error('Asset url is undefined.'));
+          download.get(assetUrl, destPath, function (err) {
+            try {
+              if (err && fs.existsSync(destPath)) {
+                try {
+                  fs.unlinkSync(destPath);
+                } catch (err2) {
+                  console.error('leap-app.js#_downloadAsset. unlinkSync failed. ' + (err2.stack || err2));
+                  return cb && cb(err2);
+                }
+              } else if (!err) {
+                this.set(pathAttrName, destPath);
+                this.save();
+              }
+            } catch (err3) { // todo: improve nested error catching.. in a hurry
+              console.error('leap-app.js#_downloadAsset failed during download ' + (err3.stack || err3));
+              err = err3;
+            }
+            cb && cb(err || null);
+          }.bind(this));
+        } else {
+          cb && cb(new Error('Asset url is undefined.'));
+        }
       }
+    } catch (err) {
+      console.error('leap-app.js#_downloadAsset. Unknown error. ' + (err.stack || err));
+      cb && cb(err);
     }
   },
 
@@ -216,7 +227,8 @@ var LeapApp = BaseModel.extend({
     try {
       var rawMarkdown = (this.get(attrName) || '').replace(/<\s*br[\s\/]*>/g, ''); // strip <br> tags
       return markdown.renderJsonML(markdown.toHTMLTree(markdown.parse(rawMarkdown)));
-    } catch (e) {
+    } catch (err) {
+      console.error('LeapApp#getMarkdown failed.' + (err.stack || err));
       return this.get(attrName) || '';
     }
   }
