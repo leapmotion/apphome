@@ -4,7 +4,7 @@ function parseVersionString(versionString) {
   if (Array.isArray(versionString)) {
     return versionString;
   } else {
-    var versionParts = (versionString || '').split('.').slice(0, NumVersionParts);
+    var versionParts = String(versionString).split('.').slice(0, NumVersionParts);
     for (var i = 0; i < NumVersionParts; i++) {
       versionParts[i] = parseInt(versionParts[i], 10) || 0;
     }

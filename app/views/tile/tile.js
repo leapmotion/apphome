@@ -53,6 +53,10 @@ module.exports = BaseView.extend({
       this.$('.name').text(leapApp.get('name'));
     }, this);
 
+    this.listenTo(leapApp, 'change:availableUpgrade', function() {
+      this.$el.toggleClass('upgrade', leapApp.isUpgradable());
+    })
+
     this.listenTo(leapApp, 'progress', function(progress) {
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
     }, this);
@@ -60,6 +64,8 @@ module.exports = BaseView.extend({
     this.$el.click(function() {
       if (leapApp.isInstallable()) {
         this._promptForInstall();
+      } else if (leapApp.isUpgradable()) {
+        this._promptForUpgrade();
       } else if (leapApp.isRunnable()) {
         this._launchApp();
       }
@@ -130,6 +136,24 @@ module.exports = BaseView.extend({
     } else {
       leapApp.install(this._setupDragging.bind(this));
     }
+  },
+
+  _promptForUpgrade: function() {
+    var leapApp = this.options.leapApp;
+
+    var downloadModal = new DownloadModalView({
+      leapApp: leapApp,
+      onConfirm: function() {
+        this.$el.removeClass('upgrade');
+        downloadModal.remove();
+        installManager.enqueue(leapApp, null, true);
+      }.bind(this),
+      onLaunch: function() {
+        downloadModal.remove();
+        this._launchApp();
+      }.bind(this)
+    });
+    downloadModal.show();
   },
 
   _launchApp: function() {

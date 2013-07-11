@@ -96,6 +96,7 @@ function getJson(url, cb) {
 
 function cleanUpAppJson(appJson) {
   appJson = appJson || {};
+  var releaseDate = appJson.certified_at || appJson.created_at;
   var cleanAppJson = {
     id: appJson.app_id,
     appId: appJson.app_id,
@@ -108,7 +109,7 @@ function cleanUpAppJson(appJson) {
     version: appJson.version_number,
     changelog: appJson.changelog,
     description: appJson.description,
-    releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString(),
+    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null,
     firstSeenAt: (new Date()).getTime()
   };
   Object.keys(cleanAppJson).forEach(function(key) {
@@ -135,10 +136,11 @@ function handleAppJson(appJson) {
     var myApps = uiGlobals.myApps;
     var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
-      if (existingApp.isUninstalled()) {
+      if (!existingApp.isInstalled()) {
         existingApp.set(app.toJSON());
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
-        existingApp.set('availableUpgrade', app.toJSON());
+        console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
+        existingApp.set('availableUpgrade', app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }

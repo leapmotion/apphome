@@ -32,6 +32,15 @@ module.exports = LeapApp.extend({
 
   idAttribute: 'appId',
 
+  initialize: function() {
+    if (!this.get('description')) {
+      api.refreshAppDetails(this, function() {
+        this.save();
+      }.bind(this));
+    }
+    LeapApp.prototype.initialize.apply(this, arguments);
+  },
+
   isStoreApp: function() {
     return true;
   },
@@ -40,14 +49,14 @@ module.exports = LeapApp.extend({
     this.trigger('installstart');
     if (this.isUpgradable()) {
       mixpanel.trackAppUpgrade();
-      this.set(this.get('availableUpgrade'));
+      this.set(this.get('availableUpgrade').toJSON());
       console.log('Upgrading: ' + this.get('name'));
       this._installFromServer(function(err) {
         if (!err) {
           this.set('availableUpgrade', null);
         }
         cb && cb(err);
-      })
+      }.bind(this));
     } else {
       console.log('Installing: ' + this.get('name'));
       this._installFromServer(cb);

@@ -82,13 +82,19 @@ $borderColor = #3a3e48
         padding 12px 21px 16px
         text-shadow 0 -1px 0 rgba(0,0,0,.55)
 
-        &.cancel
-          float left
+        &.cancel, &.launch
           background-color gray
           background-image -webkit-linear-gradient(top, #cfd3d6 0%, #83868a 100%)
           background-image linear-gradient(top, #cfd3d6 0%, #83868a 100%)
           padding-left 40px
           padding-right 40px
+
+        &.cancel
+          float left
+
+        &.launch
+          float right
+          margin-right 10px
 
         &.confirm
           background-clip padding-box

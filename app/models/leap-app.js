@@ -116,6 +116,10 @@ var LeapApp = BaseModel.extend({
            this.isUninstalled();
   },
 
+  isInstalled: function() {
+    return this.get('state') === LeapApp.States.Ready;
+  },
+
   isRunnable: function() {
     return this.get('state') === LeapApp.States.Ready;
   },

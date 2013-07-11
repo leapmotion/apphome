@@ -15,11 +15,16 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     var leapApp = this.options.leapApp;
+    var appToInstall = leapApp;
 
     this.injectCss();
-    var appJson = leapApp.toJSON();
-    appJson.changelog = leapApp.getMarkdown('changelog');
-    appJson.description = leapApp.getMarkdown('description');
+
+    if (leapApp.isUpgradable()) {
+      appToInstall = leapApp.get('availableUpgrade');
+    }
+    var appJson = appToInstall.toJSON();
+    appJson.changelog = appToInstall.getMarkdown('changelog');
+    appJson.description = appToInstall.getMarkdown('description');
     this.$el.append($(this.templateHtml({ app: appJson })));
 
     this.$('img').on('load error', function() {
@@ -30,7 +35,9 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this.$('.button.confirm').hide().click(this.options.onConfirm);
+    this.$('.button.launch').hide().click(this.options.onLaunch);
     if (leapApp.isUpgradable()) {
+      this.$('.button.launch').show();
       this.$('.button.confirm.upgrade').show();
     } else {
       this.$('.button.confirm.install').show();
