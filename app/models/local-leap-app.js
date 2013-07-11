@@ -92,8 +92,7 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
-    uiGlobals.uninstalledApps.remove(this);
-    uiGlobals.installedApps.add(this);
+    uiGlobals.myApps.add(this);
     this.set('state', LeapApp.States.Installing);
     var rawIconFile = this.get('rawIconFile');
     if (rawIconFile) {
@@ -127,8 +126,6 @@ module.exports = LeapApp.extend({
   },
 
   uninstall: function(deleteData, cb) {
-    uiGlobals.installedApps.remove(this);
-    uiGlobals.uninstalledApps.add(this);
     this.set('installedAt', null);
     this.set('state', LeapApp.States.Uninstalled);
     cb && cb(null);

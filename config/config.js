@@ -16,6 +16,7 @@ var config = {
   MixpanelToken: '77d363605f0470115eb82352f14b2981',
 
   AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
+  AppDetailsEndpoint: 'https://warehouse.leapmotion.com/api/apps/:id/homebase/:platform',
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
@@ -38,7 +39,9 @@ var config = {
     rowsPerSlide: 3,
     slideWidth: 1410,
     slideHeight: 702,
-    slidePeekDistance: 50,
+    slidePeekDistance: 0,
+    nextSlideHeight: 624,
+    nextSlideOffset: 16,
     minSlidePadding: 200,
     emptyMessageHeight: 32
   },

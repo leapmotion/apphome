@@ -6,71 +6,18 @@
     .empty-message
       display none !important
 
-  #header
-    background #222225
-    border-bottom 1px solid #353639
-    height 60px
+  #airspace-logo-holder
+    height 28px
+    margin-top 60px
     position absolute
     width 100%
 
-    &.initial
-      top -60px
-    &.loaded
-      top 0
+    #airspace-logo
+      background-image url(static/images/airspace-logo.png)
+      height 28px
+      width 407px
+      margin 0 auto
 
-    #my-apps-link
-
-      &.current
-        .divot
-          left -22px
-        &:after
-          background -webkit-linear-gradient(left,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
-          background linear-gradient(to right,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
-
-    #downloads-link
-      left auto
-      right 0
-      width 147px
-
-      &.current
-
-        &:after
-          background -webkit-linear-gradient(left, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
-          background linear-gradient(to right, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
-        .icon
-          background url(static/images/downloads-icon-current.png)
-        .divot
-          bottom -53px
-
-      .label
-        float left
-      .jewel
-        -webkit-background-clip padding-box
-        background-clip padding-box /* prevents bg color from leaking outside the border */
-        background-color #d12e2e /* layer fill content */
-        background-image -webkit-linear-gradient(bottom, rgba(208,56,56,0) 0%, #f75c5c 100%) /* gradient overlay */
-        background-image linear-gradient(bottom, rgba(208,56,56,0) 0%, #f75c5c 100%) /* gradient overlay */
-        -webkit-border-radius 3px
-        border-radius 3px /* border radius */
-        -webkit-box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
-        box-shadow 0 1px 2px rgba(0,0,0,.45) /* drop shadow */
-        box-sizing border-box
-        color white
-        font-size 13px
-        font-weight bold
-        min-width 18px
-        padding 2px 4px 3px
-        position absolute
-        right 8px
-        text-align center
-        text-shadow 0 1px 0 rgba(0,0,0,.6) /* drop shadow */
-        top -5px
-        width auto
-      .icon
-        background url(static/images/downloads-icon.png)
-        float right
-        height 33px
-        width 25px
 
   .carousel-link
       left 0

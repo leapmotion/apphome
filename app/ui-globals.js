@@ -13,9 +13,7 @@ uiGlobals.Event = enumerable.make([
   'SignIn'
 ], 'UiGlobalEvent');
 
-uiGlobals.installedApps = new LeapAppCollection();
-uiGlobals.uninstalledApps = new LeapAppCollection();
-uiGlobals.availableDownloads = new LeapAppCollection();
+uiGlobals.myApps = new LeapAppCollection();
 
 uiGlobals.scaling = 1;
 

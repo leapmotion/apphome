@@ -21,8 +21,8 @@ integrationTest.runInApp(__filename, function() {
 
   describe('apps hydrated', function() {
     it('should create leapApp models from persisted data', function() {
-      assert.ok(uiGlobals.installedApps.length >= 3, 'should add models to central leapApp collection');
-      var expected = uiGlobals.installedApps.find(function(leapApp) {
+      assert.ok(uiGlobals.myApps.length >= 3, 'should add models to central leapApp collection');
+      var expected = uiGlobals.myApps.find(function(leapApp) {
         return leapApp.get('name') === 'PopCAD';
       });
       assert.equal(expected.id, 'x500', 'should load existing app');

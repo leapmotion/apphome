@@ -16,7 +16,7 @@ You can create some fake apps by pasting something like this into the console:
 
 
     var leapAppFactory = require('./test/support/leap-app-factory.js');
-    var leapApps = global.uiGlobals.installedApps;
+    var leapApps = global.uiGlobals.myApps;
     for (var i = 0; i < 4; i++) {
       leapApps.add(leapAppFactory.storeAppData());
       leapApps.add(leapAppFactory.localAppData());

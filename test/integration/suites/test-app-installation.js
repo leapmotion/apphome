@@ -11,11 +11,11 @@ integrationTest.runInApp(__filename, function() {
       this.timeout(50000);
       window.waitFor('auth', function() { return api.hasEverConnected; }, done, { maxDuration: 20000 }, function() {
         var numDownloads = uiGlobals.availableDownloads.length;
-        var numApps = uiGlobals.installedApps.length;
+        var numApps = uiGlobals.myApps.length;
         fakePubnub.triggerNewApp(10);
-        assert.equal(uiGlobals.installedApps.length, numApps + 1, 'new app is added to installed apps');
+        assert.equal(uiGlobals.myApps.length, numApps + 1, 'new app is added to installed apps');
         window.waitFor('install to fail', '! .tile.installing, .tile.downloading', done, { maxDuration: 10000 }, function() {
-          assert.equal(uiGlobals.installedApps.length, numApps, 'app gets removed from installed apps after install fails');
+          assert.equal(uiGlobals.myApps.length, numApps, 'app gets removed from installed apps after install fails');
           assert.equal(uiGlobals.availableDownloads.length, numDownloads + 1, 'app gets added to available downloads after install fails');
           done();
         });
@@ -25,14 +25,12 @@ integrationTest.runInApp(__filename, function() {
     it('should show upgrades', function(done) {
       this.timeout(60000);
       window.waitFor('auth', function() { return api.hasEverConnected; }, done, { maxDuration: 20000 }, function() {
-        $('#downloads-link').click();
-        var app = uiGlobals.availableDownloads.findWhere({ appId : 1});
-        uiGlobals.availableDownloads.remove(app);
+        var app = uiGlobals.myApps.findWhere({ id : 1});
         app.set('version', '0.0.0');
         app.set('state', LeapApp.States.Ready);
-        uiGlobals.installedApps.add(app);
+        uiGlobals.myApps.add(app);
         var numDownloads = uiGlobals.availableDownloads.length;
-        var numApps = uiGlobals.installedApps.length;
+        var numApps = uiGlobals.myApps.length;
         var numTrashed = uiGlobals.uninstalledApps.length;
         fakePubnub.triggerAppUpgrade(1, '1.0.0');
         assert.equal(uiGlobals.availableDownloads.length, numDownloads + 1, 'upgrade is added to available downloads');
@@ -45,7 +43,7 @@ integrationTest.runInApp(__filename, function() {
         assert.equal(uiGlobals.availableDownloads.length, numDownloads, 'upgrade is added to installed apps');
         window.waitFor('install to fail', '! .tile.installing, .tile.downloading', done, { maxDuration: 30000 }, function() {
           assert.equal(uiGlobals.availableDownloads.length, numDownloads + 1, 'upgrade is listed as an installable app');
-          assert.equal(uiGlobals.installedApps.length, numApps - 1, 'the app was removed from the installed apps');
+          assert.equal(uiGlobals.myApps.length, numApps - 1, 'the app was removed from the installed apps');
           assert.equal(uiGlobals.uninstalledApps.length, numTrashed + 1, 'old version is still in the trash, because reinstall failed too');
           done();
         });

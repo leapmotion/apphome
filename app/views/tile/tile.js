@@ -2,6 +2,7 @@ var os = require('os');
 var Spinner = require('spin');
 
 var config = require('../../../config/config.js');
+var installManager = require('../../utils/install-manager.js');
 
 var BaseView = require('../base-view.js');
 var DownloadModalView = require('../download-modal/download-modal.js');
@@ -21,7 +22,7 @@ module.exports = BaseView.extend({
 
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
-    if (leapApp.isUpgrade()) {
+    if (leapApp.isUpgradable()) {
       this.$el.addClass('upgrade');
     }
 
@@ -62,6 +63,12 @@ module.exports = BaseView.extend({
       } else if (leapApp.isRunnable()) {
         this._launchApp();
       }
+    }.bind(this));
+
+    this.$('.cancel').click(function(evt) {
+      leapApp.trigger('cancel-download');
+      this.$('.progress .bar').css('width', 0);
+      evt.stopPropagation();
     }.bind(this));
 
     this.$el.attr('tile_id', leapApp.id);
@@ -116,7 +123,7 @@ module.exports = BaseView.extend({
         leapApp: leapApp,
         onConfirm: function() {
           downloadModal.remove();
-          leapApp.install(this._setupDragging.bind(this));
+          installManager.enqueue(leapApp, this._setupDragging.bind(this), true);
         }.bind(this)
       });
       downloadModal.show();
@@ -133,7 +140,7 @@ module.exports = BaseView.extend({
     this._currentlyLaunching = true;
     this.$el.addClass('launching');
     this.options.leapApp.launch();
-    setTimeout(this._markLaunchComplete.bind(this), 5000);
+    setTimeout(this._markLaunchComplete.bind(this), 12000);
   },
 
   _markLaunchComplete: function() {

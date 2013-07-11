@@ -20,42 +20,18 @@ module.exports = BaseView.extend({
   },
 
   _initCarousels: function() {
-    this.downloadsCarousel = new Carousel({
-      collection: uiGlobals.availableDownloads,
-      emptyMessage: 'New downloads and upgrades will appear here.',
-      position: 0
+    this.myAppsCarousel = new Carousel({
+      collection: uiGlobals.myApps,
+      position: 1
     });
-    this.downloadsCarousel.hide();
-    this.$('#downloads').append(this.downloadsCarousel.$el);
-    this._linkMapping['#downloads-link'] = this.downloadsCarousel;
+    this.myAppsCarousel.hide();
+    this.$('#my-apps').append(this.myAppsCarousel.$el);
+    this._linkMapping['#my-apps-link'] = this.myAppsCarousel;
 
-    this.installedAppsCarousel = new Carousel({
-      collection: uiGlobals.installedApps,
-      position: 1,
-      autoTransition: true
-    });
-    this.installedAppsCarousel.hide();
-    this.$('#my-apps').append(this.installedAppsCarousel.$el);
-    this._linkMapping['#my-apps-link'] = this.installedAppsCarousel;
-
-    this.uninstalledAppsCarousel = new Carousel({
-      collection: uiGlobals.uninstalledApps,
-      emptyMessage: 'Uninstalled apps will appear here.',
-      position: 2
-    });
-    this.uninstalledAppsCarousel.hide();
-    this.$('#uninstalled').append(this.uninstalledAppsCarousel.$el);
-    this._linkMapping['#uninstalled-link'] = this.uninstalledAppsCarousel;
-
-    this.listenTo(uiGlobals.availableDownloads, 'add remove', function() {
-      this._updateDownloadsJewel();
-    }, this);
-
-    this._initInstallBindings();
     this._initCarouselLinks();
     this._initDraggingToTrash();
 
-    this._switchToCarousel(this.installedAppsCarousel);
+    this._switchToCarousel(this.myAppsCarousel);
   },
 
   _switchToCarousel: function(newCarousel) {
@@ -111,16 +87,6 @@ module.exports = BaseView.extend({
     }
   },
 
-  _initInstallBindings: function() {
-    uiGlobals.availableDownloads.on('installstart', function() {
-      this._switchToCarousel(this.installedAppsCarousel);
-    }.bind(this));
-
-    uiGlobals.uninstalledApps.on('installstart', function() {
-      this._switchToCarousel(this.installedAppsCarousel);
-    }.bind(this));
-  },
-
   _initCarouselLinks: function() {
     _(this._linkMapping).each(function(carousel, selector) {
       this.$(selector).click(function() {
@@ -129,46 +95,40 @@ module.exports = BaseView.extend({
         }
       }.bind(this));
      }.bind(this));
-    this._updateDownloadsJewel();
    },
 
   _initDraggingToTrash: function() {
     var $trashCan = this.$('#uninstalled-link');
     $trashCan.on('dragover', function(evt) {
-      if (this._currentCarousel === this.installedAppsCarousel) {
+      if (this._currentCarousel === this.myAppsCarousel) {
         evt.preventDefault();
       }
     }.bind(this));
+
     $trashCan.on('drop', function(evt) {
       evt.stopPropagation();
 
       this.$('#uninstalled-link').removeClass('highlight');
 
       var id = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json')).id;
-      var leapApp = uiGlobals.installedApps.get(id);
+      var leapApp = uiGlobals.myApps.get(id);
 
       if (leapApp) {
         leapApp.uninstall();
       }
     }.bind(this));
 
-    uiGlobals.installedApps.on('dragstart', function() {
+    $trashCan.on('click', function() {
+      this.myAppsCarousel.switchToSlide(Infinity);
+    }.bind(this));
+
+    uiGlobals.myApps.on('dragstart', function() {
       this.$('#uninstalled-link').addClass('highlight');
     }.bind(this));
 
-    uiGlobals.installedApps.on('dragend', function() {
+    uiGlobals.myApps.on('dragend', function() {
       this.$('#uninstalled-link').removeClass('highlight');
     }.bind(this));
-  },
-
-  _updateDownloadsJewel: function() {
-    var numDownloads = uiGlobals.availableDownloads.length;
-    var $jewel = this.$('#downloads-link .jewel');
-    if (numDownloads > 0) {
-      $jewel.show().text(numDownloads);
-    } else {
-      $jewel.hide();
-    }
   },
 
   _setupResizeBehavior: function() {
@@ -177,9 +137,7 @@ module.exports = BaseView.extend({
       var widthRatio = ($win.width() - config.Layout.minSlidePadding) / config.Layout.slideWidth;
       var heightRatio = ($win.height() - config.Layout.minSlidePadding) / config.Layout.slideHeight;
       uiGlobals.scaling = Math.min(1, widthRatio, heightRatio);
-      this.downloadsCarousel.rescale();
-      this.installedAppsCarousel.rescale();
-      this.uninstalledAppsCarousel.rescale();
+      this.myAppsCarousel.rescale();
     }.bind(this));
   },
 

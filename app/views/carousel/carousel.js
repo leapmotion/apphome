@@ -33,13 +33,21 @@ var CarouselView = BaseView.extend({
     this._updateSlideIndicator();
     this._initAddRemoveRepainting();
 
-    $('body').mousedown(function(evt) {
-      if (this._isActive) {
+    this.$('.next-slide.left').click(function(evt) {
+      this.switchToSlide(this._currentSlideIndex - 1);
+    }.bind(this));
+
+    this.$('.next-slide.right').click(function(evt) {
+      this.switchToSlide(this._currentSlideIndex + 1);
+    }.bind(this));
+
+    /*$('body').mousedown(function(evt) {
+      if (this._isActive && !$(evt.target).parent('.tile').length) {
         this._lastMouseDownEvent = evt.originalEvent;
         this._setClearSwipeTimeout();
       }
     }.bind(this));
-    $('body').mousemove(this._handlePotentialSwipe.bind(this));
+    $('body').mousemove(this._handlePotentialSwipe.bind(this));*/
   },
 
   _initAddRemoveRepainting: function() {
@@ -50,7 +58,7 @@ var CarouselView = BaseView.extend({
       this._updateEmptyState();
       this._updateSlideIndicator();
       if (this.options.autoTransition) {
-        this._switchToSlide(Infinity);
+        this.switchToSlide(Infinity);
       }
     }, this);
 
@@ -60,7 +68,7 @@ var CarouselView = BaseView.extend({
       this._updateEmptyState();
       this._updateSlideIndicator();
       if (this._currentSlideIndex >= slideCount) {
-        this._switchToSlide(this._currentSlideIndex - 1);
+        this.switchToSlide(this._currentSlideIndex - 1);
       }
     }, this);
 
@@ -85,12 +93,14 @@ var CarouselView = BaseView.extend({
         }
         $dot.click(function(evt) {
           if (!this._animating && !$dot.hasClass('current')) {
-            this._switchToSlide(Number($dot.attr('slide_index')));
+            this.switchToSlide(Number($dot.attr('slide_index')));
           }
         }.bind(this));
         this.$('.slide-indicator').append($dot);
       }.bind(this)());
     }
+
+    this._positionSlidesIndicator();
   },
 
   _updateEmptyState: function() {
@@ -106,13 +116,13 @@ var CarouselView = BaseView.extend({
 
     this._slides = [];
 
-    this.$('.slides-holder').empty();
+    this.$('.slides-holder .slide').remove();
 
     for (var i = 0; i < slideCount; i++) {
       var slideView = new Slide({
         slideNum: i,
         onDisabledClick: function(slideNum) {
-          this._switchToSlide(slideNum);
+          this.switchToSlide(slideNum);
         }.bind(this)
       });
 
@@ -130,6 +140,7 @@ var CarouselView = BaseView.extend({
     }
 
     this._positionSlides();
+    this._updateNextSlideControls();
   },
 
   _positionSlides: function() {
@@ -151,6 +162,30 @@ var CarouselView = BaseView.extend({
 
     this._currentPosition = this._slideSpacing * (-this._currentSlideIndex);
     $slidesHolder.css('left', this._currentPosition * uiGlobals.scaling);
+
+    this.$('.next-slide').css({
+      height: config.Layout.nextSlideHeight * uiGlobals.scaling,
+      top: (slideTop + config.Layout.nextSlideOffset) * uiGlobals.scaling
+    });
+
+    this._positionSlidesIndicator();
+  },
+
+  _positionSlidesIndicator: function() {
+    var $slidesIndicator = this.$('.slide-indicator');
+    $slidesIndicator.css('left', ($(window).width() - $slidesIndicator.width()) / 2);
+  },
+
+  _updateNextSlideControls: function() {
+    this.$('.next-slide').hide();
+    if (!this._animating) {
+      if (this._currentSlideIndex > 0) {
+        this.$('.next-slide.left').css('display', '');
+      }
+      if (this._currentSlideIndex < this._slides.length - 1) {
+        this.$('.next-slide.right').css('display', '');
+      }
+    }
   },
 
   _validSlideNum: function(slideNum) {
@@ -163,7 +198,7 @@ var CarouselView = BaseView.extend({
     }
   },
 
-  _switchToSlide: function(slideNum) {
+  switchToSlide: function(slideNum) {
     slideNum = this._validSlideNum(slideNum);
 
     if (slideNum === this._currentSlideIndex || this._animating) {
@@ -177,6 +212,8 @@ var CarouselView = BaseView.extend({
     var currentPosition = this._currentPosition * uiGlobals.scaling; // scaled coordinates
     var distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled (scaled below)
     var animating = this._animating = true;
+    this._updateNextSlideControls();
+
     new window.TWEEN.Tween({ x: 0, y: 0 }, 350)
         .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
         .easing(window.TWEEN.Easing.Quartic.Out)
@@ -188,6 +225,7 @@ var CarouselView = BaseView.extend({
           distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled
           this._currentSlideIndex = slideNum;
           this._updateSlideIndicator();
+          this._updateNextSlideControls();
           this._slides[slideNum].enable();
           this._currentPosition += distanceToSlide;
           this._positionSlides();
@@ -227,10 +265,10 @@ var CarouselView = BaseView.extend({
       // Treat it as a swipe if the angle is less than 60 degrees from horizontal.
       if (endPos.x > startPos.x) {
         // swipe to the right
-        this._switchToSlide(this._currentSlideIndex - 1);
+        this.switchToSlide(this._currentSlideIndex - 1);
       } else {
         // swipe to the left
-        this._switchToSlide(this._currentSlideIndex + 1);
+        this.switchToSlide(this._currentSlideIndex + 1);
       }
     } else {
       this._setClearSwipeTimeout();

@@ -30,146 +30,158 @@ var PlatformUserDataDirs = {
 
 module.exports = LeapApp.extend({
 
+  idAttribute: 'appId',
+
   isStoreApp: function() {
     return true;
   },
 
-  install: function(cb, skipnotifications) {
+  install: function(cb) {
     this.trigger('installstart');
-    console.log('Installing: ' + this.get('name'));
-    if (this.isUpgrade()) {
-      this._installAsUpgrade(cb, skipnotifications);
-    } else {
-      this._installFromServer(cb, skipnotifications);
-    }
-  },
-
-  _installAsUpgrade: function(cb, skipnotifications) {
-    mixpanel.trackAppUpgrade();
-
-    var appToUpgrade = this.findAppToUpgrade();
-    if (appToUpgrade && appToUpgrade.isUninstallable()) {
-      appToUpgrade.uninstall(false, false, function(err) {
+    if (this.isUpgradable()) {
+      mixpanel.trackAppUpgrade();
+      this.set(this.get('availableUpgrade'));
+      console.log('Upgrading: ' + this.get('name'));
+      this._installFromServer(function(err) {
         if (!err) {
-          this._installFromServer(function(err2) {
-            if (err2) {
-              appToUpgrade._installFromServer(function(err3) {
-                cb(err3 || err2);
-              });
-            } else {
-              uiGlobals.uninstalledApps.remove(appToUpgrade);
-              this.save();
-              cb(null);
-            }
-          }.bind(this), skipnotifications);
-        } else {
-          this._abortInstallation(null, err);
-          cb && cb(err);
+          this.set('availableUpgrade', null);
         }
-      }.bind(this));
+        cb && cb(err);
+      })
     } else {
-      this._installFromServer(cb, skipnotifications);
+      console.log('Installing: ' + this.get('name'));
+      this._installFromServer(cb);
     }
   },
 
-  _installFromServer: function(cb, skipnotifications) {
-    var startingCollection = (uiGlobals.uninstalledApps.get(this.get('id')) ? uiGlobals.uninstalledApps : uiGlobals.availableDownloads);
-    startingCollection.remove(this);
-    uiGlobals.installedApps.add(this);
-
-    this._downloadBinary(function(err) {
-      if (err) {
-        this._abortInstallation(startingCollection, err);
-        return cb && cb(err);
-      }
-      var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
-      if (fs.existsSync(dependenciesReadmePath)) {
-        nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
-      }
-
-      var userDataDir = this._userDataDir();
-      if (!fs.existsSync(userDataDir)) {
-        fs.mkdirpSync(userDataDir);
-      }
-
-      var executable = this._findExecutable();
-      if (executable) {
-        this.set('executable', executable);
-        if (! skipnotifications) {
-          uiGlobals.sendNotification('Done installing ' + this.get('name'), 'to the Airspace launcher.');
-        }
-        this.set('state', LeapApp.States.Ready);
-        return cb && cb(null);
-      } else {
-        var exeNotFoundError = new Error('Could not find executable for app: ' + this.get('name'));
-        this._abortInstallation(startingCollection, exeNotFoundError);
-        return cb && cb(exeNotFoundError);
-      }
+  _installFromServer: function(cb) {
+    async.series([
+      this._downloadBinary.bind(this),
+      this._configureBinary.bind(this),
+      this._authenticateBinary.bind(this)
+    ], function(err) {
+      this._installationComplete(err, cb);
     }.bind(this));
   },
 
-  _abortInstallation: function(previousCollection, err) {
-    console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-    uiGlobals.installedApps.remove(this);
-    this.set('state', LeapApp.States.NotYetInstalled);
-    if (previousCollection) {
-      previousCollection.add(this);
+  _installationComplete: function(err, cb) {
+    if (err) {
+      if (err.cancelled) {
+        console.info('Installation of ' + this.get('name') + ' was cancelled.');
+      } else {
+        console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
+      }
+      this.set('state', LeapApp.States.NotYetInstalled);
+    } else {
+      console.info('Installation of ' + this.get('name') + ' complete');
+      this.set('state', LeapApp.States.Ready);
     }
-    uiGlobals.sendNotification('Installation of ' + this.get('name') + ' failed.', 'Try again in a few moments.');
+    cb && cb(err);
   },
 
   _downloadBinary: function(cb) {
-    this.set('state', LeapApp.States.Downloading);
+    console.info('Downloading binary of ' + this.get('name'));
+    this.set('state', LeapApp.States.Connecting);
     var binaryUrl = this.get('binaryUrl');
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
+
+    var tempFilename;
+    var cleanupTempfileAndContinue = function(err) {
+      if (tempFilename && fs.existsSync(tempFilename)) {
+        try {
+          fs.deleteSync(tempFilename);
+        } catch (e) {
+          err = e;
+        }
+      }
+      cb && cb(err || null);
+    };
+
+
     if (url.parse(binaryUrl).protocol == null) {
       var tempFilename = './tmp/' + binaryUrl;
-      var cleanupTempfile = function(err) {
-        if (fs.existsSync(tempFilename)) {
-          fs.deleteSync(tempFilename);
-        }
-        cb(err || null);
-      }
-      console.log('local binary detected, installing from ', tempFilename);
+      console.log('Local binary detected. Installing from: ' + tempFilename);
       if (os.platform() === 'win32') {
-        extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
+        extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else if (os.platform() === 'darwin') {
-        extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
+        extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else {
-        return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+        return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
       cb && cb(null);
-      return;
-    }
-    uiGlobals.sendNotification('Downloading ' + this.get('name'), 'to the Airspace launcher.');
-    api.connectToStoreServer(true, function() {
-      var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
+    } else {
+      api.refreshAppDetails(this, function(err) {
         if (err) {
           return cb(err);
         }
-        uiGlobals.sendNotification('Installing ' + this.get('name'), 'to the Airspace launcher.');
-        this.set('state', LeapApp.States.Installing);
-        console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
-
-        function cleanupTempfile(err) {
-          if (fs.existsSync(tempFilename)) {
-            fs.deleteSync(tempFilename);
+        binaryUrl = this.get('binaryUrl');
+        var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
+          if (err) {
+            return cb(err);
           }
-          cb(err || null);
-        }
-        if (os.platform() === 'win32') {
-          extract.unzip(tempFilename, this._appDir(), cleanupTempfile);
-        } else if (os.platform() === 'darwin') {
-          extract.undmg(tempFilename, this._appDir(), cleanupTempfile);
-        } else {
-          return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-        }
-      }.bind(this));
+          this.set('state', LeapApp.States.Installing);
+          console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
-      downloadProgress.on('progress', function(progress) {
-        this.trigger('progress', progress);
+          if (os.platform() === 'win32') {
+            extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+          } else if (os.platform() === 'darwin') {
+            extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+          } else {
+            return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+          }
+        }.bind(this));
+
+        function cancelDownload() {
+          if (downloadProgress) {
+            var cancelled = downloadProgress.cancel();
+            if (cancelled) {
+              downloadProgress = null;
+              this.set('noAutoInstall', true);
+              this.off('cancel-download', cancelDownload);
+            }
+          } else {
+            this.off('cancel-download', cancelDownload);
+          }
+        }
+
+        this.on('cancel-download', cancelDownload, this);
+
+        downloadProgress.on('progress', function(progress) {
+          this.set('state', LeapApp.States.Downloading);
+          this.trigger('progress', progress);
+        }.bind(this));
       }.bind(this));
-    }.bind(this));
+    }
+  },
+
+  _configureBinary: function(cb) {
+    console.info('Configuring binary of ' + this.get('name'));
+    var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
+    if (fs.existsSync(dependenciesReadmePath)) {
+      nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
+    }
+
+    var userDataDir = this._userDataDir();
+    if (!fs.existsSync(userDataDir)) {
+      fs.mkdirpSync(userDataDir);
+    }
+    var err = null;
+    var executable = this._findExecutable();
+    if (executable) {
+      this.set('executable', executable);
+    } else {
+      err = new Error('Could not find executable for app: ' + this.get('name'));
+    }
+    cb && cb(err);
+  },
+
+  _authenticateBinary: function(cb) {
+    // TODO:
+//    console.info('Authenticating binary of ' + this.get('name'));
+//    if (os.platform() === 'win32') {
+//      console.log('tmp - app dir: ' + this._appDir());
+//    }
+    cb && cb(null);
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
@@ -221,8 +233,6 @@ module.exports = LeapApp.extend({
     } catch (err) {
       return this._failUninstallation(err, cb);
     } finally {
-      uiGlobals.installedApps.remove(this);
-      uiGlobals.uninstalledApps.add(this);
       this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
     }

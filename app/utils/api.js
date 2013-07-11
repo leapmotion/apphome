@@ -1,4 +1,5 @@
 var domain = require('domain');
+var fs = require('fs-extra');
 var http = require('http');
 var https = require('https');
 var os = require('os');
@@ -8,10 +9,9 @@ var qs = require('querystring');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
+var extract = require('../utils/extract.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
-var fs = require('fs-extra');
-var extract = require('../utils/extract.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
 
@@ -94,10 +94,12 @@ function getJson(url, cb) {
   });
 }
 
-function createAppModel(appJson) {
+function cleanUpAppJson(appJson) {
+  appJson = appJson || {};
   var cleanAppJson = {
-    id: appJson.id,
+    id: appJson.app_id,
     appId: appJson.app_id,
+    versionId: appJson.id,
     name: appJson.name,
     platform: ServerPlatformToNodePlatform[appJson.platform] || appJson.platform,
     iconUrl: appJson.icon_url,
@@ -105,8 +107,20 @@ function createAppModel(appJson) {
     binaryUrl: appJson.binary_url,
     version: appJson.version_number,
     changelog: appJson.changelog,
-    releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString()
+    description: appJson.description,
+    releaseDate: new Date(appJson.certified_at || appJson.created_at).toLocaleDateString(),
+    firstSeenAt: (new Date()).getTime()
   };
+  Object.keys(cleanAppJson).forEach(function(key) {
+    if (!cleanAppJson[key]) {
+      delete cleanAppJson[key];
+    }
+  });
+  return cleanAppJson;
+}
+
+function createAppModel(appJson) {
+  var cleanAppJson = cleanUpAppJson(appJson);
   if (cleanAppJson.platform === os.platform()) {
     var StoreLeapApp = require('../models/store-leap-app.js');
     return new StoreLeapApp(cleanAppJson);
@@ -115,37 +129,21 @@ function createAppModel(appJson) {
   }
 }
 
-function handleAppJson(appJson, noAutoInstall) {
+function handleAppJson(appJson) {
   var app = createAppModel(appJson);
   if (app) {
-    var availableDownloads = uiGlobals.availableDownloads;
-    var installedApps = uiGlobals.installedApps;
-    var uninstalledApps = uiGlobals.uninstalledApps;
-    var existingApp = availableDownloads.get(app.get('id')) || installedApps.get(app.get('id')) || uninstalledApps.get(app.get('id'));
-    var upgradableUninstalledApp = uninstalledApps.findWhere({ appId: app.get('appId') });
+    var myApps = uiGlobals.myApps;
+    var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
-      existingApp.set('binaryUrl', app.get('binaryUrl'));
-    } else if (upgradableUninstalledApp && semver.isFirstGreaterThanSecond(app.get('version'), upgradableUninstalledApp.get('version'))) {
-      // upgrade to an uninstalled app
-      uninstalledApps.remove(upgradableUninstalledApp);
-      uninstalledApps.add(app);
-    } else if (noAutoInstall || app.isUpgrade()) {
-      var existingDownload = availableDownloads.findWhere({ appId: app.get('appId') });
-      if (existingDownload && semver.isFirstGreaterThanSecond(app.get('version'), existingDownload.get('version'))) {
-        // replace the older upgrade if a new one comes in
-        availableDownloads.remove(existingDownload);
-        availableDownloads.add(app);
-      } else if (!existingDownload) {
-        // add a new download
-        availableDownloads.add(app);
+      if (existingApp.isUninstalled()) {
+        existingApp.set(app.toJSON());
+      } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
+        existingApp.set('availableUpgrade', app.toJSON());
+      } else {
+        existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
-      // new app to install
-      console.log('Installing app: ' + app.get('name'));
-      installedApps.add(app);
-      app.install(function(err) {
-        err && console.log('Failed to install app', app.get('name'), err.message);
-      });
+      myApps.add(app);
     }
   }
   return app;
@@ -177,17 +175,16 @@ function getAuthURL(url, cb) {
 }
 
 var reconnectionTimeoutId;
-module.exports.hasEverConnected; // exposed for tests
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
   if (!reconnectionTimeoutId) {
     reconnectionTimeoutId = setTimeout(function() {
-      connectToStoreServer(!module.exports.hasEverConnected);
+      connectToStoreServer();
     }, config.ServerConnectRetryMs);
   }
 }
 
-function connectToStoreServer(noAutoInstall, cb) {
+function connectToStoreServer(cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -207,7 +204,6 @@ function connectToStoreServer(noAutoInstall, cb) {
           cb && cb(new Error(messages.errors));
           cb = null;
         } else {
-          module.exports.hasEverConnected = true;
           console.log('Connected to store server.');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
@@ -220,7 +216,7 @@ function connectToStoreServer(noAutoInstall, cb) {
               subscribeToUserChannel(message.user_id);
               uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {
-              var app = handleAppJson(message, noAutoInstall);
+              var app = handleAppJson(message);
               if (app) {
                 subscribeToAppChannel(app.get('appId'));
               }
@@ -240,11 +236,36 @@ function connectToStoreServer(noAutoInstall, cb) {
   });
 }
 
+function refreshAppDetails(app, cb) {
+  var appId = app.get('appId');
+  var platform = NodePlatformToServerPlatform[os.platform()];
+  if (appId && platform) {
+    oauth.getAccessToken(function(err, accessToken) {
+      if (err) {
+        return cb && cb(err);
+      }
+      var url = config.AppDetailsEndpoint;
+      url = url.replace(':id', appId);
+      url = url.replace(':platform', platform);
+      url += '?access_token=' + accessToken;
+      console.log('Refreshing app via url: ' + url);
+      getJson(url, function(err, appDetails) {
+        if (err) {
+          return cb && cb(err);
+        }
+        app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+        cb && cb(null);
+      });
+    });
+  } else {
+    cb && cb(new Error('appId and platform must be valid'));
+  }
+}
+
 function createWebLinkApps(webAppData) {
   webAppData = webAppData || [];
   var existingWebAppsById = {};
-  var allApps = uiGlobals.installedApps.models.concat(uiGlobals.uninstalledApps.models);
-  allApps.forEach(function(app) {
+  uiGlobals.myApps.forEach(function(app) {
     if (app.isWebLinkApp()) {
       existingWebAppsById[app.get('id')] = app;
     }
@@ -259,7 +280,7 @@ function createWebLinkApps(webAppData) {
       delete existingWebAppsById[id];
       existingWebApp.save();
     } else {
-      uiGlobals.installedApps.add(webApp);
+      uiGlobals.myApps.add(webApp);
       console.log('Added web link: ', webApp.get('urlToLaunch'));
       webApp.save();
     }
@@ -269,7 +290,7 @@ function createWebLinkApps(webAppData) {
     var oldWebApp = existingWebAppsById[id];
     if (oldWebApp.isBuiltinTile()) {
       console.log('Deleting old builtin web link: ' + oldWebApp.get('name'));
-      uiGlobals.installedApps.remove(oldWebApp);
+      uiGlobals.myApps.remove(oldWebApp);
       oldWebApp.save();
     }
   });
@@ -364,6 +385,7 @@ function sendDeviceData() {
 
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
+module.exports.refreshAppDetails = refreshAppDetails;
 module.exports.getFrozenApps = getFrozenApps;
 module.exports.sendDeviceData = sendDeviceData;
 module.exports.getAuthURL = getAuthURL;
