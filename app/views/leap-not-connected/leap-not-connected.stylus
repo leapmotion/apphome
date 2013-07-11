@@ -37,7 +37,7 @@
       font-size 21px
       margin 80px auto 0
       padding-top 16px
-      padding-bottom 18px
+      padding-bottom 14px
       //transition all ease-out 200ms
       text-align center
       width 284px
