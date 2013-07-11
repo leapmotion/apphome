@@ -104,6 +104,7 @@ module.exports = BaseView.extend({
         evt.preventDefault();
       }
     }.bind(this));
+
     $trashCan.on('drop', function(evt) {
       evt.stopPropagation();
 
@@ -115,6 +116,10 @@ module.exports = BaseView.extend({
       if (leapApp) {
         leapApp.uninstall();
       }
+    }.bind(this));
+
+    $trashCan.on('click', function() {
+      this.myAppsCarousel.switchToSlide(Infinity);
     }.bind(this));
 
     uiGlobals.myApps.on('dragstart', function() {

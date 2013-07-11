@@ -107,19 +107,35 @@ $tileW = 320px
     margin-right 12px
     width 14px
 
-  .progress
+  .install-overlay
+    background -webkit-linear-gradient(top, #444 0%, #222 100%)
+    border 1px solid $borderColor
+    border-radius 16px
+    box-shadow 0 0 10px rgba(0, 0, 0, 0.5)
+    color white
     display none
-    height 12px
-    width 70%
+    height 32px
+    font-size 22px
+    left 15%
+    line-height 32px
+    margin-top -17px
     position absolute
+    text-align center
+    top 50%
+    width 70%
+
+  .progress
+    background-color rgba(37,37,37,.5)
     border 2px solid $progressBarColor
     border-radius 10px
-    padding 2px
-    background-color rgba(37,37,37,.5)
-    top 50%
+    display none
+    height 12px
+    left 15%
     margin-top -6px
-    left 50%
-    margin-left -35%
+    padding 2px
+    position absolute
+    top 50%
+    width 70%
 
     .bar
       width 0
@@ -152,8 +168,10 @@ $tileW = 320px
     .name
       color #b2b2b2
       width auto
-    .dot
-      display block
+
+    &:hover
+      .install-overlay
+        display block
 
   &.upgrade .dot
     background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
@@ -197,7 +215,7 @@ $tileW = 320px
       display none
 
   &.uninstalled
-    opacity 0.75
+    opacity 0.4
 
 vendors = webkit
 @keyframes pulse

@@ -2,12 +2,11 @@
   position absolute
 
   .slide-blocker
-    display none
-    position absolute
     cursor pointer
-    left -5%
-    width 110%
+    display none
     height 100%
+    position absolute
+    width 100%
     z-index 9999
 
   &.disabled

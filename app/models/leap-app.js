@@ -31,7 +31,6 @@ var LeapApp = BaseModel.extend({
   initialize: function() {
     var state = this.get('state');
     if (!state ||
-        state === LeapApp.States.NotYetInstalled ||
         state === LeapApp.States.Waiting ||
         state === LeapApp.States.Connecting ||
         state === LeapApp.States.Downloading ||

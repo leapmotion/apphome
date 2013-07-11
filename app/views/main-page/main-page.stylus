@@ -6,26 +6,18 @@
     .empty-message
       display none !important
 
-  #header
-    background #222225
-    border-bottom 1px solid #353639
-    height 60px
+  #airspace-logo-holder
+    height 28px
+    margin-top 60px
     position absolute
     width 100%
 
-    &.initial
-      top -60px
-    &.loaded
-      top 0
+    #airspace-logo
+      background-image url(static/images/airspace-logo.png)
+      height 28px
+      width 407px
+      margin 0 auto
 
-    #my-apps-link
-
-      &.current
-        .divot
-          left -22px
-        &:after
-          background -webkit-linear-gradient(left,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
-          background linear-gradient(to right,  #5d5f69 0%,#5d5f69 70%,#38393c 100%)
 
   .carousel-link
       left 0
