@@ -6,13 +6,15 @@
     position absolute
 
   .next-slide
-    background-color rgba(255, 255, 255, 0.07)
     border-radius 4px
     cursor pointer
     display table
     height 100%
     position absolute
     width 50px
+
+    &:hover
+        background-color rgba(255, 255, 255, 0.1)
 
     .arrow-holder
       display table-cell
