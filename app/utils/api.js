@@ -9,7 +9,6 @@ var qs = require('querystring');
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
 var extract = require('../utils/extract.js');
-var installManager = require('../utils/install-manager.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
@@ -125,7 +124,7 @@ function handleAppJson(appJson, noAutoInstall) {
       if (existingApp.isUninstalled()) {
         existingApp.set(app.toJSON());
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
-        appToUpgrade.set('availableUpgrade', app.toJSON());
+        existingApp.set('availableUpgrade', app.toJSON());
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
