@@ -8,7 +8,7 @@
 
   #airspace-logo-holder
     height 28px
-    margin-top 60px
+    margin-top 40px
     position absolute
     width 100%
 
