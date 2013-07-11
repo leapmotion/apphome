@@ -42,7 +42,8 @@ var subscribe = (function() {
   pubnubDomain.run(function() {
     pubnub = pubnubInit({
       subscribe_key: config.PubnubSubscribeKey,
-      ssl: true
+      ssl: true,
+      jsonp: true // force http transport to work better with http proxies
     });
   });
 
