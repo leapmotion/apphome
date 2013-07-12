@@ -349,7 +349,6 @@ function getFrozenApps() {
         console.log('manifest', manifest);
         manifest.forEach(function(message) {
           var app = handleAppJson(message);
-          console.log('manifest item', appPath);
           if (app && !uiGlobals.myApps.get(app.get('appId'))) {
             app.install(function (err) {
               if (err) {
