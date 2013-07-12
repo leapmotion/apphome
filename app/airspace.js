@@ -1,5 +1,6 @@
 raven = require('raven');
 var config = require('../config/config.js');
+var installManager = require('./utils/install-manager.js');
 var client = new raven.Client(config.SentryDSN);
 
 var AppController = require('./app-controller.js');
@@ -27,6 +28,7 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
+  installManager.cancelAll();
   if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
     client.captureError(err);
   }

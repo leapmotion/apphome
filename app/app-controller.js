@@ -123,7 +123,6 @@ AppController.prototype = {
   _setupWindow: function() {
     var win = nwGui.Window.get();
     win.show();
-    win.blur();
     win.maximize();
     win.setAlwaysOnTop(true);
     win.setAlwaysOnTop(false);

@@ -186,6 +186,7 @@ module.exports = LeapApp.extend({
         console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
       }
       this.set('state', LeapApp.States.NotYetInstalled);
+      mixpanel.trackEvent('Install Failed', { appName: this.get('name'), appVersion: this.get('version'), error: err && err.stack });
     } else {
       console.info('Installation of ' + this.get('name') + ' complete');
       this.set('state', LeapApp.States.Ready);
