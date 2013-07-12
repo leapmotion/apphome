@@ -32,14 +32,23 @@ var CarouselView = BaseView.extend({
     this._updateSlides();
     this._updateEmptyState();
     this._updateSlideIndicator();
+
+    uiGlobals.on('swipeleft', _.debounce(function() {
+      this.prev();
+    }.bind(this)))
+
+    uiGlobals.on('swiperight', _.debounce(function() {
+      this.next();
+    }.bind(this)))
+
     this._initAddRemoveRepainting();
 
     this.$('.next-slide.left').click(function(evt) {
-      this.switchToSlide(this._currentSlideIndex - 1);
+      this.prev();
     }.bind(this));
 
     this.$('.next-slide.right').click(function(evt) {
-      this.switchToSlide(this._currentSlideIndex + 1);
+      this.next();
     }.bind(this));
 
     /*$('body').mousedown(function(evt) {
@@ -49,6 +58,14 @@ var CarouselView = BaseView.extend({
       }
     }.bind(this));
     $('body').mousemove(this._handlePotentialSwipe.bind(this));*/
+  },
+
+  next: function() {
+    this.switchToSlide(this._currentSlideIndex - 1);
+  },
+
+  prev: function() {
+    this.switchToSlide(this._currentSlideIndex + 1);
   },
 
   _initAddRemoveRepainting: function() {

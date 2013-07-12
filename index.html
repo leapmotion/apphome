@@ -11,8 +11,11 @@
   <script src="./node_modules/backbone/backbone.js"></script>
   <script src="./static/js/Tween.js"></script>
   <script src="./static/notifications/nw-desktop-notifications.js"></script>
+  <script src="./static/js/leap.min.js"></script>
 </head>
 <body class="startup">
+
+
   <script>
     (function() {
       process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'production';
@@ -34,6 +37,31 @@
         require('./app/airspace.js').run();
       };
     })();
+  </script>
+
+    <script>
+
+    (function() {
+
+    var ctl = new Leap.Controller({enableGestures: true});
+
+  var swiper = ctl.gesture('swipe');
+
+  swiper.start(function(g) {
+    swiper.currentSwipe = g;
+  });
+
+  swiper.update(function(g) {
+    if (swiper.currentSwipe === true) return;
+    var pos = g.translation()[0];
+    if (Math.abs(pos) > 100) {
+      var isLeft = pos > 0;
+      global.uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+    }
+  });
+
+  ctl.connect()
+  })();
   </script>
 </body>
 </html>
