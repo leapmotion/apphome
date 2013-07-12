@@ -30,7 +30,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
   -webkit-user-drag element
   width $tileW
 
-  //messageState(notyetinstalled, false, .7)
+
   messageState(waiting, false, .3)
   messageState(connecting, true, .3)
   messageState(downloading, true, 1)
@@ -130,7 +130,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     left -26px
     float left
     height 14px
-    margin-top 2px
+    margin-top 6px
     margin-right 12px
     width 14px
 
