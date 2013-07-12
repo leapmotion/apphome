@@ -14,12 +14,13 @@ mixpanelDomain.run(function() {
   mixpanel = Mixpanel.init(config.MixpanelToken);
 });
 
-function getTrackFn(eventName) {
+function getTrackFn(eventName, namespace) {
   return function(args) {
     if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
       console.log('Tracking Mixpanel event: ' + eventName);
       mixpanelDomain.run(function() {
-        mixpanel.track(uiGlobals.appName + ' - ' + eventName, _.extend({
+        namespace = namespace || uiGlobals.appName;
+        mixpanel.track(namespace + ' - ' + eventName, _.extend({
           version: uiGlobals.appVersion
         }, args));
       });
@@ -35,7 +36,7 @@ module.exports = {
   trackSignUp: getTrackFn('Signed Up'),
   trackSignIn: getTrackFn('Signed In'),
   trackAppUpgrade: getTrackFn('Started App Update'),
-  trackEvent: function(eventName, args) {
-    (getTrackFn(eventName))(args);
+  trackEvent: function(eventName, args, namespace) {
+    (getTrackFn(eventName, namespace))(args);
   }
 };

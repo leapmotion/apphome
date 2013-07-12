@@ -93,5 +93,12 @@
 
       <div id="continue" onclick="require('nw.gui').Window.get().close()">Continue</div>
     </div>
+
+    <script>
+      (function() {
+        var mixpanel = require('./app/utils/mixpanel.js');
+        mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
+      })();
+    </script>
   </body>
 </html>

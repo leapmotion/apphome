@@ -10,6 +10,7 @@ var enumerable = require('./utils/enumerable.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var installManager = require('./utils/install-manager.js');
 var leap = require('./utils/leap.js');
+var mixpanel = require('./utils/mixpanel.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
 var shell = require('./utils/shell.js');
@@ -114,7 +115,12 @@ AppController.prototype = {
   _launchOrientation: function(cb) {
     var orientationCommand = PlatformOrientationCommands[os.platform()];
     if (orientationCommand) {
-      exec(orientationCommand).on('exit', cb);
+      mixpanel.trackEvent('Started Orientation', null, 'OOBE');
+      exec(orientationCommand).on('exit', function() {
+        mixpanel.trackEvent('Completed Orientation', null, 'OOBE');
+        mixpanel.trackEvent('Airspace Auto-Launched', null, 'OOBE');
+        cb && cb.apply(this, arguments);
+      });
     } else {
       cb && cb(null);
     }

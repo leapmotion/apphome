@@ -350,14 +350,14 @@ function getFrozenApps(cb) {
 var LeapDataDir = 'Leap Motion';
 var appDataFile = 'lastauth';
 var PlatformUserDataDirs = {
-  win32:  [ process.env.APPDATA, LeapDataDir, appDataFile],
+  win32:  [ process.env.APPDATA, LeapDataDir, appDataFile ],
   darwin: [ process.env.HOME, 'Library', 'Application Support', LeapDataDir, appDataFile ],
-  linux:  [ process.env.HOME, appDataFile]
+  linux:  [ process.env.HOME, appDataFile ]
 };
 
 function sendDeviceData() {
   var dirs = PlatformUserDataDirs[os.platform()];
-  if (! dirs) {
+  if (!dirs) {
     throw new Error('Unknown operating system: ' + os.platform());
   }
   
@@ -368,7 +368,7 @@ function sendDeviceData() {
   }
 
   var authdata = fs.readFileSync(baseDir).toString();
-  if (! authdata) {
+  if (!authdata) {
     console.error('Missing auth data' + authdata);
     return;
   }
