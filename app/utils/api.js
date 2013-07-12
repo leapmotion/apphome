@@ -7,6 +7,9 @@ var path = require('path');
 var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
 var url = require('url');
+var db = require('./db.js');
+var enumerable = require('./enumerable.js');
+var async = require('async');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
@@ -15,6 +18,11 @@ var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
+
+var PreBundle = enumerable.make([
+  'PreBundlingComplete',
+  'OriginalManifest'
+], 'PreBundle');
 
 var NodePlatformToServerPlatform = {
   'darwin': 'osx',
@@ -324,29 +332,86 @@ function getLocalAppManifest(cb) {
 }
 
 function getFrozenApps(cb) {
-  config.FrozenAppPaths.forEach(function(path) {
-    console.log('looking for path', path)
-    if (fs.existsSync(path)) {
-      console.log('found app', path)
-      extract.unzipfile(path, './tmp/', function(err) {
-        if (err) return;
-        console.log('done extracting', err)
-        var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
-        console.log('manifest', manifest)
-        manifest.forEach(function(message) {
-          var app = handleAppJson(message);
-          console.log('manifest item', app)
-          if (app && !uiGlobals.myApps.get(app.get('appId'))) {
-            app.install(function (err) {
-              if (err) console.log('failed to install app', err)
-            }, true);
-            subscribeToAppChannel(app.get('appId'));
-          }
-        });
-      })
+  if (db.getItem(PreBundle.PreBundlingComplete)) {
+    console.log('PreBundling Complete');
+    return;
+  }
+
+  var freezeDriedBundlePath = _(config.FrozenAppPaths).find(function(bundlePath) {
+    try {
+      console.log('Looking for prebundled path in: ' + bundlePath);
+      return fs.existsSync(bundlePath);
+    } catch (err) {
+      console.log('Prebundle path does not exist: ' + bundlePath);
+      return false;
     }
-  })
+  });
+  if (freezeDriedBundlePath) {
+    console.log('\n\n\nFound freeze-dried preBundle: ' + freezeDriedBundlePath);
+    _expandFreezeDriedApps(freezeDriedBundlePath, function(err, manifest) {
+      if (err) {
+        console.error('Failed to expand prebundle. ' + (err.stack || err));
+      } else if (manifest) {
+        try {
+          _parsePrebundledManifest(manifest);
+        } catch (installErr) {
+          // TODO: handle err
+        }
+      } else {
+        console.error('Found prebundle but manifest is missing.');
+      }
+    });
+  } else {
+    console.log('tmp - no prebundle path');
+  }
 }
+
+function _expandFreezeDriedApps(bundlePath, cb) {
+  var dest = path.join(config.PlatformTempDirs[os.platform()], 'frozen');
+  var manifest;
+
+  extract.unzipfile(bundlePath, dest, function(err) {
+    console.log('\n\n\ntmp - unzipped to ' + dest);
+    if (err) {
+      console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
+    } else {
+      console.info('Unzipped prebundled apps at ' + bundlePath + ' to ' + dest);
+      try {
+        console.log('tmp - looking for manifest at ' + path.join(dest, 'myapps.json'));
+        manifest = JSON.parse(fs.readFileSync(path.join(dest, 'myapps.json'), { encoding: 'utf8' }));
+        if (manifest) {
+          console.log('Caching prebundled manifest ' + JSON.stringify(manifest));
+          db.setItem(PreBundle.OriginalManifest, manifest);
+          cb && cb(null, manifest);
+        }
+      } catch (err) {
+        console.error('Corrupt myapps.json prebundled manifest: ' + (err.stack || err));
+        cb(err);
+      }
+    }
+  });
+}
+
+function _parsePrebundledManifest(manifest) {
+  console.log('Examining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 3));
+
+  manifest.forEach(function (appJson) {
+    console.log('\n\ntmp - looking at appJson ', JSON.stringify(appJson));
+    var app = handleAppJson(appJson);
+    if (app && !uiGlobals.myApps.get(app.get('appId'))) {
+      console.log('tmp --- installing app ' + app.get('name'));
+      app.install(function (err) {
+        if (err) {
+          console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
+        }
+      });
+      subscribeToAppChannel(app.get('appId'));
+    }
+  });
+
+  db.setItem(PreBundle.PreBundlingComplete, true);
+}
+
 
 var LeapDataDir = 'Leap Motion';
 var appDataFile = 'lastauth';
@@ -393,8 +458,8 @@ function sendDeviceData() {
       };
 
       var responseParts = [];
-      protocolModule = (/^https:/.test(devicedataurl) ? https : http);
-      req = protocolModule.request(options, function(resp) {
+      var protocolModule = (/^https:/.test(devicedataurl) ? https : http);
+      var req = protocolModule.request(options, function(resp) {
         resp.on('data', function(chunk) {
           responseParts.push(chunk);
         });

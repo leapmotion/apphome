@@ -23,9 +23,8 @@ module.exports = window.Backbone.Collection.extend({
     if (attrs.urlToLaunch) {
       return new WebLinkApp(attrs, options);
     } else if (attrs.appId) {
-      console.log('store leap app');
       var app = new StoreLeapApp(attrs, options);
-      console.log('created successfully');
+      console.log('Created StoreLeapApp ', app.id, ': ', app.get('name'));
       return app;
     } else if (attrs.name) {
       return new LocalLeapApp(attrs, options);
