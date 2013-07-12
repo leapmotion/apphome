@@ -1,7 +1,5 @@
 html {
   height: 100%;
-  text-rendering: optimizeLegibility !important;
-  -webkit-font-smoothing: antialiased !important;
 }
 
 body {
