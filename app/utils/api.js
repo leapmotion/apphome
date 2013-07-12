@@ -356,7 +356,7 @@ function sendDeviceData() {
       var urlParts = url.parse(devicedataurl);
       var options = {
         hostname: urlParts.hostname,
-        path: urlParts.pathname + 'token',
+        path: urlParts.pathname,
         port: urlParts.port,
         auth: urlParts.auth,
         method: 'POST',
