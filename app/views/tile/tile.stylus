@@ -130,7 +130,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     left -26px
     float left
     height 14px
-    margin-top 6px
+    margin-top 3px
     margin-right 12px
     width 14px
 
