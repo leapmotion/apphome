@@ -6,6 +6,7 @@ var os = require('os');
 var path = require('path');
 var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
+var url = require('url');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
@@ -377,14 +378,41 @@ function sendDeviceData() {
     if (err) {
       console.error('Failed to get an access token: ' + err && err.stack);
     } else {
-      var url = config.DeviceDataEndpoint + '?' + qs.stringify({ access_token: accessToken, data: authdata });
-      getJson(url, function(err, manifest) {
-        if (err) {
-          console.error('Failed to send device data: ' + err && err.stack);
-        } else {
-          console.log('Sent device data. ');
+      var devicedataurl = config.DeviceDataEndpoint;
+
+      var urlParts = url.parse(devicedataurl);
+      var options = {
+        hostname: urlParts.hostname,
+        path: urlParts.pathname,
+        port: urlParts.port,
+        auth: urlParts.auth,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-      })
+      };
+
+      var responseParts = [];
+      protocolModule = (/^https:/.test(devicedataurl) ? https : http);
+      req = protocolModule.request(options, function(resp) {
+        resp.on('data', function(chunk) {
+          responseParts.push(chunk);
+        });
+        resp.on('end', function() {
+          try {
+            var response = responseParts.join('');
+            console.log('Sent device data. ' + devicedataurl + ", " + qs.stringify({ access_token: accessToken, data: authdata }));
+          } catch(err) {
+            console.error('Failed to send device data: ' + err && err.stack);
+          }
+        });
+
+        resp.on('error', function(err) {
+          console.error('Failed to send device data: ' + err && err.stack);
+        });
+      });
+
+      req.end(qs.stringify({ access_token: accessToken, data: authdata }));
     }
   });
 }
