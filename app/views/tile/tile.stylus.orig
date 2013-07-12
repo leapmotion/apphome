@@ -141,10 +141,17 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     box-shadow 0 0 10px rgba(0, 0, 0, 0.5)
     color white
     display none
+<<<<<<< HEAD
     height 36px
     font-size 18px
     left 20%
     line-height 36px
+=======
+    height 32px
+    font-size 22px
+    left 15%
+    line-height 32px
+>>>>>>> parent of d39492e... Changed primary font to Myriad Pro
     margin-top -17px
     position absolute
     text-align center
