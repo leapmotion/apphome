@@ -93,7 +93,7 @@ module.exports = LeapApp.extend({
     };
 
     if (url.parse(binaryUrl).protocol == null) {
-      var tempFilename = './tmp/' + binaryUrl;
+      var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
       console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
       if (os.platform() === 'win32') {
         extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);

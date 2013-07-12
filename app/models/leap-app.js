@@ -1,7 +1,8 @@
 var exec = require('child_process').exec;
-var fs = require('fs');
+var fs = require('fs-extra');
 var markdown = require('markdown').markdown;
 var os = require('os');
+var path = require('path');
 
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
@@ -179,8 +180,9 @@ var LeapApp = BaseModel.extend({
         if (assetUrl) {
           console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
           if (url.parse(assetUrl).protocol == null) {
-            console.log('local asset detected, copying from ', './tmp/' + assetUrl, 'to', destPath);
-            fs.renameSync('./tmp/' + assetUrl, destPath);
+            var sourceFile = path.join(config.PlatformTempDirs[os.platform()], 'frozen', assetUrl);
+            console.log('local asset detected, copying from ', sourceFile, 'to', destPath);
+            fs.renameSync(sourceFile, destPath);
             this.set(pathAttrName, destPath);
             this.save();
             cb && cb(null);
