@@ -3,6 +3,7 @@ var config = require('../../../config/config.js');
 var BaseView = require('../base-view.js');
 var Slide = require('../slide/slide.js');
 var THREE = window.THREE;
+var LeapApp = require('../../models/leap-app.js');
 
 var CarouselView = BaseView.extend({
   viewDir: __dirname,
@@ -56,7 +57,6 @@ var CarouselView = BaseView.extend({
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-      this.switchToSlide(collection.whichPage(tileModel, this._tilesPerSlide));
     }, this);
 
     this.listenTo(collection, 'remove', function(tileModel) {
@@ -71,6 +71,12 @@ var CarouselView = BaseView.extend({
 
     this.listenTo(collection, 'sort', function() {
       this._updateSlides();
+    }, this);
+
+    this.listenTo(collection, 'change:state', function(tileModel) {
+      if (tileModel && tileModel.get('state') === LeapApp.States.Downloading) {
+        this.switchToSlide(collection.whichPage(tileModel, this._tilesPerSlide));
+      }
     }, this);
   },
 
