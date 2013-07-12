@@ -33,7 +33,10 @@ $borderColor = #3a3e48
 
       h1.name
         float left
+        line-height 96px
+        margin-bottom 0
         margin-left 56px
+        margin-top 0
 
     .table-holder
       height 300px
@@ -41,14 +44,13 @@ $borderColor = #3a3e48
       margin 20px 0
 
       table.details
-        font-weight bold
 
         tr
           padding 10px 0
 
           td.label
             color #666
-            font-size 21px
+            font-size 18px
             width 150px
             vertical-align top
           td.value
@@ -79,13 +81,13 @@ $borderColor = #3a3e48
         cursor pointer
         font-size 21px
         font-weight bold
-        padding 12px 21px 16px
+        padding 12px 21px 12px
         text-shadow 0 -1px 0 rgba(0,0,0,.55)
 
         &.cancel, &.launch
-          background-color gray
-          background-image -webkit-linear-gradient(top, #cfd3d6 0%, #83868a 100%)
-          background-image linear-gradient(top, #cfd3d6 0%, #83868a 100%)
+          float left
+          background-image: -webkit-linear-gradient(top, rgba(207, 211, 214, 0.32) 0%, rgba(131, 134, 138, 0.23) 100%);
+          background-image linear-gradient(top, rgba(207, 211, 214, 0.32) 0%, rgba(131, 134, 138, 0.23) 100%);
           padding-left 40px
           padding-right 40px
 

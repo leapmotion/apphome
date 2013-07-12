@@ -79,7 +79,7 @@ module.exports = BaseView.extend({
 
     this.$el.attr('tile_id', leapApp.id);
 
-    new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -32, top: 4 }).spin(this.$('.message')[0]);
+    new Spinner({ color: '#fff', radius: 4, length: 4, width: 2, left: -32, top: 0 }).spin(this.$('.message')[0]);
 
     nwGui.Window.get().on('focus', function() {
       this._markLaunchComplete();
