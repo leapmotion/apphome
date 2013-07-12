@@ -122,7 +122,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
   .dot
     background -webkit-linear-gradient(top, #c5e171 0%, #bee267 50%, #95bf48 100%)
     border 1px solid #161719
-    border-radius 7px
+    border-radius 8px
     background-clip padding-box
     box-shadow 0 0 10px rgba(154,201,72,1)
     content ""
@@ -130,7 +130,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     left -26px
     float left
     height 14px
-    margin-top 3px
+    margin-top 2px
     margin-right 12px
     width 14px
 
