@@ -171,26 +171,19 @@ messageState(state, showSpinner = false, tileOpacity = .7)
       border-radius 16px
 
   .cancel
-    background-color #ccc
-    border-radius 10px
-    color black
+    background-image url(static/images/cancel-download.png)
     cursor pointer
     display none
-    height 18px
-    left 24px
-    margin-top -5px
+    height 20px
+    left 22px
+    margin-top -6px
+    opacity .88
     position absolute
     top 50%
-    width 18px
-    .x
-      font-size 16px
-      font-weight bold
-      line-height 18px
-      text-align center
-      text-indent 1px
+    width 20px
 
     &:hover
-      background-color white
+      opacity 1
 
   &.notyetinstalled
     .name
