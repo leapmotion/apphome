@@ -84,9 +84,8 @@ $borderColor = #3a3e48
 
         &.cancel, &.launch
           float left
-          background-color gray
-          background-image -webkit-linear-gradient(top, #cfd3d6 0%, #83868a 100%)
-          background-image linear-gradient(top, #cfd3d6 0%, #83868a 100%)
+          background-image: -webkit-linear-gradient(top, rgba(207, 211, 214, 0.32) 0%, rgba(131, 134, 138, 0.23) 100%);
+          background-image linear-gradient(top, rgba(207, 211, 214, 0.32) 0%, rgba(131, 134, 138, 0.23) 100%);
           padding-left 40px
           padding-right 40px
 
