@@ -1,4 +1,3 @@
-var config = require('../../config/config.js');
 var events = require('events');
 var fs = require('fs');
 var http = require('http');
@@ -7,6 +6,12 @@ var os = require('os');
 var path = require('path');
 var url = require('url');
 var util = require('util');
+
+var PlatformTempDirs = {
+  win32:  process.env.TEMP,
+  darwin: '/tmp',
+  linux:  '/tmp'
+};
 
 function DownloadProgressStream() {
   this._bytesSoFar = 0;
@@ -43,10 +48,10 @@ DownloadProgressStream.prototype.cancel = function() {
 
 function newTempFilePath(extension) {
   extension = extension || '';
-  if (!config.PlatformTempDirs[os.platform()]) {
+  if (!PlatformTempDirs[os.platform()]) {
     throw new Error('Unknown operating system: ' + os.platform());
   }
-  var tempDir = config.PlatformTempDirs[os.platform()];
+  var tempDir = PlatformTempDirs[os.platform()];
   var filename = [ 'Airspace', (new Date()).getTime(), Math.random() ].join('_') + '.' + extension.replace(/^\./, '');
   return path.join(tempDir, filename);
 }
