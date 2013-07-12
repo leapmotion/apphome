@@ -26,7 +26,9 @@ module.exports = BaseView.extend({
       }
     }
     var appJson = appToInstall.toJSON();
-    appJson.changelog = appToInstall.getMarkdown('changelog');
+    if (leapApp.isUpgradable()) {
+      appJson.changelog = appToInstall.getMarkdown('changelog');
+    }
     appJson.description = appToInstall.getMarkdown('description');
     this.$el.append($(this.templateHtml({ app: appJson })));
 

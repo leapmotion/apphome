@@ -259,6 +259,7 @@ function refreshAppDetails(app, cb) {
         }
         app.set(cleanUpAppJson(appDetails && appDetails.app_version));
         app.set('gotDetails', true);
+        app.save();
         cb && cb(null);
       });
     });
