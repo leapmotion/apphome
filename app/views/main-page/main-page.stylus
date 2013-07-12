@@ -18,6 +18,11 @@
       width 407px
       margin 0 auto
 
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image url(static/images/airspace-logo@2x.png)
+        background-size 407px 28px
+      }
+
 
   .carousel-link
       left 0
