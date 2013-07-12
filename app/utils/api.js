@@ -334,7 +334,7 @@ function getFrozenApps(cb) {
         var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
         console.log('manifest', manifest)
         manifest.forEach(function(message) {
-          var app = handleAppJson(message, true);
+          var app = handleAppJson(message);
           console.log('manifest item', app)
           if (app) {
             app.install(function (err) {

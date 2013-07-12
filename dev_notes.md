@@ -19,7 +19,6 @@ You can create some fake apps by pasting something like this into the console:
     var leapApps = global.uiGlobals.myApps;
     for (var i = 0; i < 4; i++) {
       leapApps.add(leapAppFactory.storeAppData());
-      leapApps.add(leapAppFactory.localAppData());
     }
     leapApps.first().save();
 
