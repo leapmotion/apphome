@@ -43,12 +43,8 @@ function extractZip(src, dest, cb) {
 }
 
 function unzip(src, dest, cb) {
-  exec(shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest), function(err) {
-    if (err) {
-      return cb(err);
-    }
-    cb(null);
-  });
+  var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+  exec(command, cb);
 }
 
 function extractDmg(src, dest, cb) {

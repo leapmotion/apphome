@@ -323,26 +323,45 @@ function getLocalAppManifest(cb) {
   });
 }
 
-function getFrozenApps(cb) {
-  config.FrozenAppPaths.forEach(function(path) {
-    console.log('looking for path', path)
-    if (fs.existsSync(path)) {
-      console.log('found app', path)
-      extract.unzipfile(path, './tmp/', function(err) {
-        if (err) return;
-        console.log('done extracting', err)
-        var manifest = JSON.parse(fs.readFileSync('./tmp/myapps.json', {encoding: 'utf8'}));
-        console.log('manifest', manifest)
+function getFrozenApps() {
+  config.FrozenAppPaths.forEach(function(appPath) {
+    console.log('looking for path', appPath);
+    if (fs.existsSync(appPath)) {
+      console.log('found app', appPath);
+      var dest = path.join(config.PlatformTempDirs[os.platform()]);
+      var resultDir = path.join(dest, 'frozen');
+      try {
+        if (fs.existsSync) {
+          fs.removeSync(resultDir);
+        }
+      } catch (err) {
+        console.warn('Error removing existing dir: ' + resultDir + '. Attempting to clobber.');
+      }
+      extract.unzipfile(appPath, dest, function(err) {
+        if (err) {
+          console.error('Failed to extract: ' + (err.stack || err));
+          return;
+        }
+        console.log('done extracting to: ' + dest);
+        try {
+        var manifest = JSON.parse(fs.readFileSync(path.join(resultDir, 'myapps.json'), { encoding: 'utf8' }));
+
+        console.log('manifest', manifest);
         manifest.forEach(function(message) {
-          var app = handleAppJson(message, true);
-          console.log('manifest item', app)
-          if (app) {
+          var app = handleAppJson(message);
+          console.log('manifest item', appPath);
+          if (app && !uiGlobals.myApps.get(app.get('appId'))) {
             app.install(function (err) {
-              if (err) console.log('failed to install app', err)
-            }, true);
+              if (err) {
+                console.log('failed to install app', err);
+              }
+            });
             subscribeToAppChannel(app.get('appId'));
           }
         });
+        } catch (err) {
+          console.error('Failed to melt app: ' + (err.stack || err));
+        }
       })
     }
   })

@@ -63,6 +63,12 @@ var config = {
     linux: process.env.HOME + '/.config'
   },
 
+  PlatformTempDirs: {
+    win32:  process.env.TEMP,
+    darwin: '/tmp',
+    linux:  '/tmp'
+  },
+
   FrozenAppPaths: [
     '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
     './PreBundle.LeapMotion'
