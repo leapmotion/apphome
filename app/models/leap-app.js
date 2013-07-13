@@ -240,7 +240,15 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
-  uiGlobals.myApps.add(JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]'));
+  var installedAppsJson = JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]');
+  installedAppsJson.forEach(function(appJson) {
+    try {
+      uiGlobals.myApps.add(appJson);
+    } catch (err) {
+      console.error('corrupt app data in database: ' + appJson);
+    }
+  });
+
 };
 
 module.exports = LeapApp;
