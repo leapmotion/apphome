@@ -10,7 +10,7 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     this.injectCss();
-    this.$el.toggleClass('embedded', this.options.isEmbedded);
+    this.$el.toggleClass('embedded', !!this.options.isEmbedded);
     this.$el.append($(this.templateHtml()));
   },
 
