@@ -184,9 +184,9 @@ function subscribeToAppChannel(appId) {
 function getAuthURL(url, cb) {
   oauth.getAccessToken(function(err, accessToken) {
     if (err, null) {
-      cb(err);
+      cb && cb(err);
     } else {
-      cb(null, config.oauth.redirect_uri + '?' + qs.stringify({ access_token: accessToken, _r: url }));
+      cb && cb(null, config.oauth.redirect_uri + '?' + qs.stringify({ access_token: accessToken, _r: url }));
     }
   });
 }
@@ -394,7 +394,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
         }
       } catch (err) {
         console.error('Corrupt myapps.json prebundled manifest: ' + (err.stack || err));
-        cb(err);
+        cb && cb(err);
       }
     }
   });

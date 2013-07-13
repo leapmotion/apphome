@@ -38,7 +38,7 @@ var appManifest = [
   'config/',
   'index.html',
   'node-main.js',
-  'static/',
+  'static/'
 ].concat(prodDependencies());
 
 if (os.platform() === 'win32') {

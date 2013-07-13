@@ -29,20 +29,24 @@ FsScanner.prototype = {
 
     function cleanData(err, apps) {
       if (err) {
-        cb(err);
+        cb && cb(err);
       }
       apps = _.uniq(_(apps).compact(), function(app) {
         return app.get('id');
       });
-      cb(null, apps);
+      cb && cb(null, apps);
     }
 
-    if (platform === 'win32') {
-      this._scanForWindowsApps(cleanData);
-    } else if (platform === 'darwin') {
-      this._scanForMacApps(cleanData);
-    } else {
-      cb(new Error('Unknown system platform: ' + platform));
+    try {
+      if (platform === 'win32') {
+        this._scanForWindowsApps(cleanData);
+      } else if (platform === 'darwin') {
+        this._scanForMacApps(cleanData);
+      } else {
+        cb && cb(new Error('Unknown system platform: ' + platform));
+      }
+    } catch (err) {
+      cb && cb(err);
     }
   },
 
@@ -53,7 +57,7 @@ FsScanner.prototype = {
     }
     exec('find ~/Applications /Applications -maxdepth 4 -name Info.plist', function(err, stdout) {
       if (err) {
-        return cb(err);
+        return cb && cb(err);
       }
       var plistPaths = stdout.toString().split('\n');
       plistPaths.pop(); // remove empty last path
@@ -62,7 +66,7 @@ FsScanner.prototype = {
           if (err) {
             return cb(err);
           }
-          cb(null, leapApps);
+          cb && cb(null, leapApps);
         });
     }.bind(this));
   },
@@ -88,7 +92,7 @@ FsScanner.prototype = {
         attributes.rawIconFile = path.join(keyFile, 'Contents', 'Resources', icon);
       }
 
-      cb(null, this._createLocalLeapApp(attributes));
+      cb && cb(null, this._createLocalLeapApp(attributes));
     }.bind(this));
   },
 
@@ -115,9 +119,9 @@ FsScanner.prototype = {
       async.map(registryChunks, this._createLeapAppFromRegistryChunk.bind(this),
         function(err, leapApps) {
           if (err) {
-            return cb(err);
+            return cb && cb(err);
           }
-          cb(null, leapApps);
+          cb && cb(null, leapApps);
         });
     }.bind(this));
   },
@@ -143,7 +147,7 @@ FsScanner.prototype = {
       attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath);
     }
 
-    cb(null, this._createLocalLeapApp(attributes));
+    cb && cb(null, this._createLocalLeapApp(attributes));
   },
 
   _createLocalLeapApp: function(attributes) {

@@ -8,12 +8,12 @@ var shell = require('./shell.js');
 function parseFile(plistPath, cb) {
   function parseResult(err, result) {
     if (err) {
-      return cb(err);
+      return cb && cb(err);
     }
     try {
-      return cb(null, parse(result.toString()));
+      return cb && cb(null, parse(result.toString()));
     } catch (err2) {
-      return cb(err2);
+      return cb && cb(err2);
     }
   }
   if (os.platform() === 'darwin') {

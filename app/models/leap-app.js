@@ -154,11 +154,22 @@ var LeapApp = BaseModel.extend({
   },
 
   standardIconPath: function() {
-    return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
+    try {
+      return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
+    } catch (err) {
+      console.error('icon invalid path ' + (err.stack || err));
+      return 'https://lm-assets.s3.amazonaws.com/airspace-desktop/error_icon.png'; // todo: use local asset
+    }
   },
 
   standardTilePath: function() {
-    return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
+    try {
+      return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
+    } catch (err) {
+      console.error('tile invalid path ' + (err.stack || err));
+      return 'https://lm-assets.s3.amazonaws.com/airspace-desktop/error_tile.png'; // todo: use local asset
+
+    }
   },
 
   downloadIcon: function(force, cb) {

@@ -111,8 +111,12 @@ function getFile(sourceUrl, destPath, cb) {
 
     res.on('cancel', function() {
       cleanup(res);
-      if (fs.existsSync(destPath)) {
-        fs.unlinkSync(destPath);
+      try {
+        if (fs.existsSync(destPath)) {
+          fs.unlinkSync(destPath);
+        }
+      } catch (err) {
+        console.error('Could not cleanup cancelled download: ' + (err.stack || err));
       }
       var err = new Error('Download cancelled.');
       err.cancelled = true;

@@ -8,39 +8,40 @@ var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 
 var shell = require('./shell.js');
 
-function extractZip(src, dest, cb) {
-  try {
-    if (fs.existsSync(dest)) {
-      fs.deleteSync(dest);
-    }
-  } catch (err) {
-    console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
-  }
-
-  fs.mkdirpSync(dest);
-
-  unzip(src, dest, function(err) {
-    if (err) {
-      return cb(err);
-    }
-    var extractedFiles = fs.readdirSync(dest);
-    var possibleAppDirs = [];
-    extractedFiles.forEach(function(extractedFile) {
-      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
-        possibleAppDirs.push(extractedFile);
-      }
-    });
-    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
-      // application has a single top-level directory, so pull the contents out of that
-      var topLevelDir = path.join(dest, possibleAppDirs[0]);
-      fs.readdirSync(topLevelDir).forEach(function(appFile) {
-        fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
-      });
-      fs.rmdirSync(topLevelDir);
-    }
-    cb(null);
-  });
-}
+// extractZip not used. TODO: check git for auth and ask if it is ok to remove:
+//function extractZip(src, dest, cb) {
+//  try {
+//    if (fs.existsSync(dest)) {
+//      fs.deleteSync(dest);
+//    }
+//  } catch (err) {
+//    console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
+//  }
+//
+//  fs.mkdirpSync(dest);
+//
+//  unzip(src, dest, function(err) {
+//    if (err) {
+//      return cb(err);
+//    }
+//    var extractedFiles = fs.readdirSync(dest);
+//    var possibleAppDirs = [];
+//    extractedFiles.forEach(function(extractedFile) {
+//      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+//        possibleAppDirs.push(extractedFile);
+//      }
+//    });
+//    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
+//      // application has a single top-level directory, so pull the contents out of that
+//      var topLevelDir = path.join(dest, possibleAppDirs[0]);
+//      fs.readdirSync(topLevelDir).forEach(function(appFile) {
+//        fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+//      });
+//      fs.rmdirSync(topLevelDir);
+//    }
+//    cb(null);
+//  });
+//}
 
 
 function unzip(src, dest, cb) {
@@ -51,12 +52,12 @@ function unzip(src, dest, cb) {
 
 function extractDmg(src, dest, cb) {
   if (os.platform() !== 'darwin') {
-    return cb(new Error('Extracting DMG is only supported on Mac OS X.'));
+    return cb && cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }
 
   exec('hdiutil mount -nobrowse ' + shell.escape(src) + ' -plist', function(err, stdout) {
     if (err) {
-      return cb(err);
+      return cb && cb(err);
     }
 
     var mountPoint;
@@ -71,25 +72,35 @@ function extractDmg(src, dest, cb) {
         }
       }
     } catch (err2) {
-      return cb(err2);
+      return cb && cb(err2);
     }
 
     if (!mountPoint) {
-      return cb(new Error('Mounting disk image failed.'));
+      return cb && cb(new Error('Mounting disk image failed.'));
     }
 
     function unmount(callback) {
       exec('hdiutil unmount -force ' + shell.escape(mountPoint), callback);
     }
 
-    var dirEntries = fs.readdirSync(mountPoint);
+    try {
+      var dirEntries = fs.readdirSync(mountPoint);
+    } catch (readErr) {
+      console.error('Failed to read mount point');
+      return cb && cb(readErr);
+    }
     var appPackage;
     for (var i = 0, len = dirEntries.length; i < len; i++) {
       var dirEntry = path.join(mountPoint, dirEntries[i]);
-      if (/\.app$/i.test(dirEntry) && fs.statSync(dirEntry).isDirectory()) {
+      try {
+        var isValidDir = /\.app$/i.test(dirEntry) && fs.statSync(dirEntry).isDirectory();
+      } catch (dirErr) {
+        isValidDir = false;
+      }
+      if (isValidDir) {
         if (appPackage) {
-          unmount(function() {
-            cb(new Error('Multiple .app directories encountered in DMG: ' + appPackage + ', ' + dirEntry));
+          unmount(function () {
+            cb && cb(new Error('Multiple .app directories encountered in DMG: ' + appPackage + ', ' + dirEntry));
           });
         } else {
           appPackage = dirEntry;
@@ -108,23 +119,27 @@ function extractDmg(src, dest, cb) {
         }
       } catch(err2) {
         return unmount(function() {
-          cb(err2);
+          cb && cb(err2);
         });
       }
 
-      fs.mkdirpSync(path.dirname(dest));
+      try {
+        fs.mkdirpSync(path.dirname(dest));
+      } catch (mkdirErr) {
+        return cb && cb(mkdirErr);
+      }
 
       console.log('Installing app from ' + appPackage + ' to ' + dest);
 
       exec('cp -r ' + shell.escape(appPackage) + ' ' + shell.escape(dest), function(err) {
         if (err) {
           unmount(function(err2) {
-            cb(err || err2 || null);
+            cb && cb(err || err2 || null);
           });
         } else {
           exec('xattr -d com.apple.quarantine ' + shell.escape(dest), function(err2) {
             unmount(function(err3) {
-              cb(err2 || err3 || null);
+              cb && cb(err2 || err3 || null);
             });
           });
         }
@@ -133,7 +148,7 @@ function extractDmg(src, dest, cb) {
   });
 }
 
-module.exports.unzip = extractZip;
+//module.exports.unzip = extractZip;
 module.exports.unzipfile = unzip;
 module.exports.undmg = extractDmg;
 

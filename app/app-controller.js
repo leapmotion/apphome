@@ -223,7 +223,11 @@ AppController.prototype = {
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
 
-    api.sendDeviceData();
+    try {
+      api.sendDeviceData();
+    } catch (err) {
+      console.error('Failed to send device data: ' + (err.stack + err));
+    }
     api.connectToStoreServer();
   },
 
