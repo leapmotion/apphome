@@ -92,7 +92,12 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
-    uiGlobals.myApps.add(this);
+    try {
+      uiGlobals.myApps.add(this);
+    } catch (err) {
+      console.error('Corrupt local app: ' + (err.stack || err));
+      return;
+    }
     this.set('state', LeapApp.States.Installing);
     var rawIconFile = this.get('rawIconFile');
     if (rawIconFile) {

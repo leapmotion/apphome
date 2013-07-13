@@ -156,7 +156,11 @@ function handleAppJson(appJson) {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
-      myApps.add(app);
+      try {
+        myApps.add(app);
+      } catch (err) {
+        console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
+      }
     }
   }
   return app;
@@ -295,7 +299,11 @@ function createWebLinkApps(webAppData) {
       delete existingWebAppsById[id];
       existingWebApp.save();
     } else {
-      uiGlobals.myApps.add(webApp);
+      try {
+        uiGlobals.myApps.add(webApp);
+      } catch (err) {
+        console.error('Corrupt webApp: ' + webApp + '\n' + (err.stack || err));
+      }
       console.log('Added web link: ', webApp.get('urlToLaunch'));
       webApp.save();
     }
