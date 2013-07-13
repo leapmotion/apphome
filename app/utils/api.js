@@ -362,7 +362,7 @@ function getFrozenApps(cb) {
       }
     });
   } else {
-    console.log('tmp - no prebundle path');
+    console.log('No prebundle on this system.');
   }
 }
 
@@ -371,17 +371,17 @@ function _expandFreezeDriedApps(bundlePath, cb) {
   var manifest;
 
   extract.unzipfile(bundlePath, dest, function(err) {
-    console.log('\n\n\ntmp - unzipped to ' + dest);
     if (err) {
       console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
     } else {
       console.info('Unzipped prebundled apps at ' + bundlePath + ' to ' + dest);
       try {
-        console.log('tmp - looking for manifest at ' + path.join(dest, 'myapps.json'));
+        console.log('Looking for prebundle manifest at ' + path.join(dest, 'myapps.json'));
         manifest = JSON.parse(fs.readFileSync(path.join(dest, 'myapps.json'), { encoding: 'utf8' }));
         if (manifest) {
           console.log('Caching prebundled manifest ' + JSON.stringify(manifest));
-          db.setItem(PreBundle.OriginalManifest, manifest);
+          // May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
+          //    db.setItem(PreBundle.OriginalManifest, manifest);
           cb && cb(null, manifest);
         }
       } catch (err) {
@@ -393,13 +393,12 @@ function _expandFreezeDriedApps(bundlePath, cb) {
 }
 
 function _parsePrebundledManifest(manifest) {
-  console.log('Examining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 3));
+  console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 3));
 
   manifest.forEach(function (appJson) {
-    console.log('\n\ntmp - looking at appJson ', JSON.stringify(appJson));
     var app = handleAppJson(appJson);
     if (app && !uiGlobals.myApps.get(app.get('appId'))) {
-      console.log('tmp --- installing app ' + app.get('name'));
+      console.log('Installing prebundled app: ' + app.get('name'));
       app.install(function (err) {
         if (err) {
           console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
