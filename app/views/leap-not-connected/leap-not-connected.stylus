@@ -18,6 +18,13 @@
     top 40%
     width 100%
 
+  &.embedded .leap-graphic
+    background url(static/images/plug-in-device-embedded.png)
+    background-repeat no-repeat
+    background-size contain
+    margin-left -288px
+    max-width 576px
+
   .skip-button-holder
     margin-top 160px
     position absolute

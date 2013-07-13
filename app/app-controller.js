@@ -201,7 +201,7 @@ AppController.prototype = {
     if (this._noMoreLeapConnectionChecks) {
       return cb && cb(null);
     }
-    var leapNotConnectedView = new LeapNotConnectedView();
+    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: this._isEmbedded });
     leapNotConnectedView.encourageConnectingLeap(function() {
       leapNotConnectedView.remove();
       this._noMoreLeapConnectionChecks = true;
