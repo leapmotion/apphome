@@ -26,9 +26,9 @@ var PlatformControlPanelPaths = {
   win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\LeapControlPanel.exe'
 };
 
-var PlatformOrientationCommands = {
-  win32: shell.escape((process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe'),
-  darwin: 'open ' + shell.escape('/Applications/Leap Motion Orientation.app')
+var PlatformOrientationPaths = {
+  win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe',
+  darwin: '/Applications/Leap Motion Orientation.app'
 };
 
 function AppController() {
@@ -90,7 +90,7 @@ AppController.prototype = {
 
   _showFirstRunSplash: function(cb) {
     var isEmbedded = this._isEmbedded;
-    var firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
+    this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
       width: 1080,
       height: 638,
       frame: false,
@@ -98,29 +98,38 @@ AppController.prototype = {
       show: false
     });
 
-    firstRunSplash.on('loaded', function() {
-      var splashWindow = firstRunSplash.window;
+    this._firstRunSplash.on('loaded', function() {
+      var splashWindow = this._firstRunSplash.window;
       $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+      var $continueButton = $('#continue', splashWindow.document);
+      $continueButton.click(function() {
+        mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
+        $continueButton.unbind('click');
+        cb && cb(null);
+      });
       splashWindow.setTimeout(function() {
-        firstRunSplash.show();
-      }, 0);
-    });
-
-    firstRunSplash.on('close', function() {
-      this.close(true);
-      cb && cb(null);
-    });
+        this._firstRunSplash.show();
+        mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
+      }.bind(this), 0);
+    }.bind(this));
   },
 
   _launchOrientation: function(cb) {
-    var orientationCommand = PlatformOrientationCommands[os.platform()];
-    if (orientationCommand) {
+    var orientationPath = PlatformOrientationPaths[os.platform()];
+    if (orientationPath) {
       mixpanel.trackEvent('Started Orientation', null, 'OOBE');
-      exec(orientationCommand).on('exit', function() {
-        mixpanel.trackEvent('Completed Orientation', null, 'OOBE');
-        mixpanel.trackEvent('Airspace Auto-Launched', null, 'OOBE');
-        cb && cb.apply(this, arguments);
-      });
+      setTimeout(function() {
+        var $continueButton = $('#continue', this._firstRunSplash.window.document);
+        $continueButton.text('Launch Airspace');
+        $continueButton.click(function() {
+          this._firstRunSplash.close();
+          this._firstRunSplash = null;
+          mixpanel.trackEvent('Completed Orientation', null, 'OOBE');
+          mixpanel.trackEvent('Airspace Auto-Launched', null, 'OOBE');
+          cb && cb(null);
+        }.bind(this));
+      }.bind(this), 5000);
+      nwGui.Shell.openItem(orientationPath);
     } else {
       cb && cb(null);
     }

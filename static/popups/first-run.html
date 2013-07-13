@@ -2,6 +2,7 @@
   <head>
     <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="../css/fonts.css"/>
+    <title>Welcome to a whole new world</title>
     <style>
       body {
         font-family: "freightsans_probook";
@@ -91,14 +92,7 @@
         <img class="graphic" id="graphic3" src="../images/first-run/peripheral3.png"/>
       </div>
 
-      <div id="continue" onclick="require('nw.gui').Window.get().close()">Continue</div>
+      <div id="continue">Continue</div>
     </div>
-
-    <script>
-      (function() {
-        var mixpanel = require('./app/utils/mixpanel.js');
-        mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
-      })();
-    </script>
   </body>
 </html>
