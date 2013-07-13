@@ -355,7 +355,7 @@ function getFrozenApps(cb) {
         try {
           _parsePrebundledManifest(manifest);
         } catch (installErr) {
-          // TODO: handle err
+          console.error('Failed to initialize prebundled apps. ' + (installErr.stack || installErr));
         }
       } else {
         console.error('Found prebundle but manifest is missing.');
