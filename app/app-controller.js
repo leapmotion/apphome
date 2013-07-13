@@ -67,14 +67,7 @@ AppController.prototype = {
     this._scanFilesystem();
     $('body').removeClass('startup');
     this._checkLeapConnection();
-    async.waterfall([
-      this._authorize.bind(this),
-      this._afterAuthorize.bind(this)
-    ], function(err) {
-      if (err) {
-        setTimeout(this.runApp.bind(this), 50); // Keep on trying...
-      }
-    }.bind(this));
+    this._authorizeAndShowMainScreen();
   },
 
   _startBackgroundEmbedCheck: function() {
@@ -265,6 +258,16 @@ AppController.prototype = {
         cb && cb(null);
       }.bind(this));
 
+    }.bind(this));
+  },
+
+  _authorizeAndShowMainScreen: function() {
+    this._authorize(function(err) {
+      if (err) {
+        setTimeout(this._authorizeAndShowMainScreen.bind(this), 50); // Keep on trying...
+      } else {
+        this._afterAuthorize();
+      }
     }.bind(this));
   },
 
