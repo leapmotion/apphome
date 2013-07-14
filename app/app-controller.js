@@ -14,6 +14,7 @@ var mixpanel = require('./utils/mixpanel.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
 var shell = require('./utils/shell.js');
+var crashCounter = require('./utils/crash-counter.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -248,6 +249,7 @@ AppController.prototype = {
   _paintMainApp: function() {
     this._mainPage = new MainPage();
     $('body').append(this._mainPage.$el);
+    crashCounter.reset();
   },
 
   _scanFilesystem: function() {

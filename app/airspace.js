@@ -5,6 +5,7 @@ var client = new raven.Client(config.SentryDSN);
 
 var AppController = require('./app-controller.js');
 var mixpanel = require('./utils/mixpanel.js');
+var crashCounter = require('./utils/crash-counter.js');
 
 mixpanel.trackOpen();
 
@@ -28,13 +29,22 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
+  console.error('Uncaught exception: ' + err.stack);
   installManager.cancelAll();
-  if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
+  var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
+
+  if (isProduction) {
     client.captureError(err);
   }
-  console.error('Uncaught exception: ' + err.stack);
-  $('body').empty();
-  run(true);
+  if (crashCounter.count() <= 2) {
+    crashCounter.increment();
+    process.exit();
+  } else {
+    if (isProduction) {
+      window.localStorage.clear();
+    }
+    process.exit();
+  }
 });
 
 nwGui.Window.get().on('close', function() {
