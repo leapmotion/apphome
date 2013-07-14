@@ -9,34 +9,39 @@ var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 var shell = require('./shell.js');
 
 function extractZip(src, dest, cb) {
+  // TODO: use async io here
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
     }
+    fs.mkdirpSync(dest);
   } catch (err) {
     console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
+    return cb && cb(err);
   }
-
-  fs.mkdirpSync(dest);
 
   unzip(src, dest, function(err) {
     if (err) {
-      return cb(err);
+      return cb && cb(err);
     }
-    var extractedFiles = fs.readdirSync(dest);
-    var possibleAppDirs = [];
-    extractedFiles.forEach(function(extractedFile) {
-      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
-        possibleAppDirs.push(extractedFile);
-      }
-    });
-    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
-      // application has a single top-level directory, so pull the contents out of that
-      var topLevelDir = path.join(dest, possibleAppDirs[0]);
-      fs.readdirSync(topLevelDir).forEach(function(appFile) {
-        fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+    try {
+      var extractedFiles = fs.readdirSync(dest);
+      var possibleAppDirs = [];
+      extractedFiles.forEach(function (extractedFile) {
+        if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+          possibleAppDirs.push(extractedFile);
+        }
       });
-      fs.rmdirSync(topLevelDir);
+      if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
+        // application has a single top-level directory, so pull the contents out of that
+        var topLevelDir = path.join(dest, possibleAppDirs[0]);
+        fs.readdirSync(topLevelDir).forEach(function (appFile) {
+          fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+        });
+        fs.rmdirSync(topLevelDir);
+      }
+    } catch (err) {
+      cb && cb(err);
     }
     cb(null);
   });
