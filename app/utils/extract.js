@@ -8,40 +8,39 @@ var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 
 var shell = require('./shell.js');
 
-// extractZip not used. TODO: check git for auth and ask if it is ok to remove:
-//function extractZip(src, dest, cb) {
-//  try {
-//    if (fs.existsSync(dest)) {
-//      fs.deleteSync(dest);
-//    }
-//  } catch (err) {
-//    console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
-//  }
-//
-//  fs.mkdirpSync(dest);
-//
-//  unzip(src, dest, function(err) {
-//    if (err) {
-//      return cb(err);
-//    }
-//    var extractedFiles = fs.readdirSync(dest);
-//    var possibleAppDirs = [];
-//    extractedFiles.forEach(function(extractedFile) {
-//      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
-//        possibleAppDirs.push(extractedFile);
-//      }
-//    });
-//    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
-//      // application has a single top-level directory, so pull the contents out of that
-//      var topLevelDir = path.join(dest, possibleAppDirs[0]);
-//      fs.readdirSync(topLevelDir).forEach(function(appFile) {
-//        fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
-//      });
-//      fs.rmdirSync(topLevelDir);
-//    }
-//    cb(null);
-//  });
-//}
+function extractZip(src, dest, cb) {
+  try {
+    if (fs.existsSync(dest)) {
+      fs.deleteSync(dest);
+    }
+  } catch (err) {
+    console.warn('Error deleting directory "' + dest + '": ' + (err.stack || err));
+  }
+
+  fs.mkdirpSync(dest);
+
+  unzip(src, dest, function(err) {
+    if (err) {
+      return cb(err);
+    }
+    var extractedFiles = fs.readdirSync(dest);
+    var possibleAppDirs = [];
+    extractedFiles.forEach(function(extractedFile) {
+      if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+        possibleAppDirs.push(extractedFile);
+      }
+    });
+    if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
+      // application has a single top-level directory, so pull the contents out of that
+      var topLevelDir = path.join(dest, possibleAppDirs[0]);
+      fs.readdirSync(topLevelDir).forEach(function(appFile) {
+        fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+      });
+      fs.rmdirSync(topLevelDir);
+    }
+    cb(null);
+  });
+}
 
 
 function unzip(src, dest, cb) {
@@ -148,7 +147,7 @@ function extractDmg(src, dest, cb) {
   });
 }
 
-//module.exports.unzip = extractZip;
+module.exports.unzip = extractZip;
 module.exports.unzipfile = unzip;
 module.exports.undmg = extractDmg;
 
