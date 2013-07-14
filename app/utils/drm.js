@@ -1,6 +1,7 @@
 var fs = require('fs-extra');
 var path = require('path');
 var os = require('os');
+var async = require('async');
 
 var xmlTemplate = fs.readFileSync(path.join(__dirname, '..', '..', 'config', 'tt.xml.template'), 'utf-8');
 
@@ -9,9 +10,10 @@ var PlatformOutputPaths = {
   win32: [ process.env.APPDATA, 'Leap Motion', 'tt.xml' ]
 };
 
-function generateXml(authId, token) {
+function _generateXml(authId, token) {
   return xmlTemplate.replace('@AUTHID', authId).replace('@TOKEN', token);
 }
+
 
 function writeXml(authId, token) {
   if (!PlatformOutputPaths[os.platform()]) {
@@ -20,18 +22,73 @@ function writeXml(authId, token) {
   }
   var outputPath = path.join.apply(null, PlatformOutputPaths[os.platform()]);
   if (outputPath) {
-    try {
-      var outputDir = path.dirname(outputPath);
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirsSync(outputDir);
+    var ctx = {
+      outputPath: outputPath,
+      outputDir: path.dirname(outputPath),
+      authId: authId,
+      token: token
+    };
+
+    async.waterfall([
+      function(next) {
+        next(null, ctx);
+      },
+      _assureDirectory,
+      _checkContent,
+      _writeXmlToDisk
+    ], function(err, ctx) {
+      if (err) {
+        console.error('Cannot write DRM XML: ' + (err.stack || err));
       }
-      fs.writeFileSync(outputPath, generateXml(authId, token));
-    } catch (err) {
-      console.error('Cannot write DRM XML: ' + err.stack);
-    }
-  } else {
-    console.error('Cannot write DRM XML for platform: ' + os.platform());
+    });
   }
 }
+
+
+function _assureDirectory(ctx, next) {
+  fs.exists(ctx.outputDir, function(doesExist) {
+    if (!doesExist) {
+      fs.mkdirs(ctx.outputDir, function(mkdirErr) {
+        next && next(mkdirErr, ctx);
+      });
+    } else {
+      next && next(null, ctx);
+    }
+  });
+}
+
+
+function _checkContent(ctx, next) {
+  fs.exists(ctx.outputPath, function(doesExist) {
+    if (!doesExist) {
+      console.log('Need to create DRM file: ' + ctx.outputPath);
+      ctx.needsWriting = true;
+      next && next(null, ctx);
+    } else {
+      fs.readFile(ctx.outputPath, function(err, data) {
+        if (!err) {
+          ctx.needsWriting = !(new RegExp(ctx.token)).test(data);
+        } else {
+          ctx.needsWriting = true;
+        }
+        console.log('DRM needs updating: ' + ctx.needsWriting);
+        next && next(null, ctx);
+      });
+    }
+  });
+}
+
+function _writeXmlToDisk(ctx, next) {
+  if (ctx.needsWriting) {
+    console.log('Writing DRM file to ' + ctx.outputPath);
+    fs.writeFile(ctx.outputPath, _generateXml(ctx.authId, ctx.token), function(err) {
+      next(err, ctx);
+    });
+  } else {
+    next(null, ctx);
+  }
+}
+
+
 
 module.exports.writeXml = writeXml;
