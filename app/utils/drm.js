@@ -33,7 +33,7 @@ function writeXml(authId, token) {
       function(next) {
         next(null, ctx);
       },
-      _assureDirectory,
+      _ensureDirectory,
       _checkContent,
       _writeXmlToDisk
     ], function(err, ctx) {
@@ -45,7 +45,7 @@ function writeXml(authId, token) {
 }
 
 
-function _assureDirectory(ctx, next) {
+function _ensureDirectory(ctx, next) {
   fs.exists(ctx.outputDir, function(doesExist) {
     if (!doesExist) {
       fs.mkdirs(ctx.outputDir, function(mkdirErr) {
