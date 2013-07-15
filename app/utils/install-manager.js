@@ -1,12 +1,15 @@
 var LeapApp = require('../models/leap-app.js');
 
+var MaxConsecutiveFailures = 2;
+
 var installQueue = [];
 
 function enqueue(app, cb, skipToFront) {
   app.set('state', LeapApp.States.Waiting);
   var queueData = {
     app: app,
-    cb: cb
+    cb: cb,
+    failureCount: 0
   };
   if (skipToFront && installQueue.length > 0) {
     installQueue.splice(1, 0, queueData);
@@ -22,7 +25,14 @@ function dequeue() {
   var queuedItem = installQueue[0];
   if (queuedItem) {
     queuedItem.app.install(function(err) {
-      if (!err || err.cancelled) {
+      if (err && !err.cancelled) {
+        queuedItem.failureCount++;
+      }
+      var maxFailuresExceeded = (queuedItem.failureCount >= MaxConsecutiveFailures);
+      if (!err || err.cancelled || maxFailuresExceeded) {
+        if (maxFailuresExceeded) {
+          console.warn('Gave up trying to install ' + queuedItem.app.get('name') + ' after ' + queuedItem.failureCount + ' consecutive errors.');
+        }
         installQueue.shift();
       }
       if (_.isFunction(queuedItem.cb)) {
