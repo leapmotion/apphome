@@ -1,6 +1,6 @@
 var LeapApp = require('../models/leap-app.js');
 
-var MaxConsecutiveFailures = 2;
+var MaxConsecutiveFailures = 3;
 
 var installQueue = [];
 
