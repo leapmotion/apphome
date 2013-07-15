@@ -118,28 +118,29 @@ AppController.prototype = {
   },
 
   _showFirstRunSplash: function(cb) {
-    var isEmbedded = this._isEmbedded;
-    this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
-      width: 1080,
-      height: 638,
-      frame: false,
-      resizable: false,
-      show: false
-    });
-
-    this._firstRunSplash.on('loaded', function() {
-      var splashWindow = this._firstRunSplash.window;
-      $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
-      var $continueButton = $('#continue', splashWindow.document);
-      $continueButton.click(function() {
-        mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
-        $continueButton.unbind('click');
-        cb && cb(null);
+    embedCheckPromise.done(function(isEmbedded) {
+      this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
+        width: 1080,
+        height: 638,
+        frame: false,
+        resizable: false,
+        show: false
       });
-      splashWindow.setTimeout(function() {
-        this._firstRunSplash.show();
-        mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
-      }.bind(this), 0);
+
+      this._firstRunSplash.on('loaded', function() {
+        var splashWindow = this._firstRunSplash.window;
+        $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+        var $continueButton = $('#continue', splashWindow.document);
+        $continueButton.click(function() {
+          mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
+          $continueButton.unbind('click');
+          cb && cb(null);
+        });
+        splashWindow.setTimeout(function() {
+          this._firstRunSplash.show();
+          mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
+        }.bind(this), 0);
+      }.bind(this));
     }.bind(this));
   },
 
