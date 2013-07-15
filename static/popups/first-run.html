@@ -7,7 +7,7 @@
       body {
         font-family: "freightsans_probook";
         text-align: center;
-        padding: 50px;
+        padding: 10px 50px;
       }
 
       #container {
@@ -57,17 +57,27 @@
         margin-left: 0;
       }
 
-      #continue {
+      .actions {
+        position: relative;
         float: right;
+        width: 300px;
+        margin-top: 30px;
+        text-align: left;
+      }
+      #continue {
         height: 40px;
         width: 180px;
         font-size: 15px;
-        margin-top: 40px;
+        margin-top: 20px;
         border-radius: 40px;
         line-height: 40px;
         color: white;
         background-color: rgb(153, 185, 96);
         cursor: pointer;
+        text-align: center;
+      }
+      #continue.disabled, #continue.disabled:hover {
+        background-color: rgb(205, 221, 172);
       }
 
       #continue:hover {
@@ -75,13 +85,38 @@
       }
 
       .eula {
-        float: left;
-        height: 40px;
+        text-align: left;
+      }
+      .eula label {
         font-size: 15px;
-        margin-top: 40px;
+        color: #556635;
+        font-weight: bold;
+      }
+
+      .eula .checkbox {
+        float: left;
+        margin: 4px 0 0 -20px;
+        padding: 2px;
       }
 
       .eula-popup {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .validation {
+        position: absolute;
+        top: -35px;
+        left: 0;
+        color: #785DB3;
+        margin: 12px 0 0 0;
+        font-weight: bold;
+        display: none;
+      }
+      .close-app {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        padding: 2px;
         cursor: pointer;
         font-weight: bold;
       }
@@ -89,6 +124,7 @@
   </head>
   <body>
     <div id="container">
+      <span class="close-app">X</span>
       <img id="logo" src="../images/leap-logo.png"/>
       <h1>Welcome to a whole new world</h1>
       <h2>Here are a few reminders to get you started with Leap Motion</h2>
@@ -104,12 +140,18 @@
         <img class="graphic" id="graphic3" src="../images/first-run/peripheral3.png"/>
       </div>
 
-      <div class="eula">
-        <p>I agree to the <pan class="eula-popup">Leap Motion End User License Agreement</span></p>
+      <div class="actions">
+        <p class="validation">Agreement Required</p>
+        <div class="eula">
+          <input class="checkbox" type="checkbox" />
+          <label>
+            I agree to the Leap Motion<br />
+            <span class="eula-popup">Software End User License Agreement</span>
+          </label>
+        </div>
+
+        <div id="continue" class="disabled">Continue</div>
       </div>
-
-      <div id="continue">Continue</div>
-
     </div>
   </body>
 </html>

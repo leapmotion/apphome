@@ -125,26 +125,41 @@ AppController.prototype = {
         var $s = $('body', splashWindow.document);
 
         $s.find('.eula-popup').click(function() {
-          console.log('tmp -- click, open popup');
           var eulaWindow = popupWindow.open('/static/popups/license-en.html', {
-            title: 'Leap Motion End User License Agreement',
+            title: 'Leap Motion End User Software License Agreement',
             width: 640,
             height: 480,
             frame: true,
             resizable: true,
             show: true,
-            allowMultiple: true
+            x: 50,
+            y: 50,
+            allowMultiple: false
           });
-          // mixpanel?
+          // need mixpanel?
         });
 
 
         var $continueButton = $('#continue', splashWindow.document);
         $continueButton.click(function() {
+          if ($continueButton.hasClass('disabled')) {
+            $s.find('.validation').show();
+            return;
+          }
+          $s.find('.eula').css('visibility', 'hidden');
           mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
           $continueButton.unbind('click');
-          $s.find('.eula-popup').remove();
           cb && cb(null);
+        });
+
+        var $checkbox = $s.find('.eula .checkbox');
+        $checkbox.change(function(evt) {
+          $continueButton.toggleClass('disabled', !$checkbox.is(':checked'));
+          $s.find('.validation').hide();
+        });
+
+        $s.find('.close-app').click(function() {
+          process.exit();
         });
 
         splashWindow.setTimeout(function() {
