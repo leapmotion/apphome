@@ -77,7 +77,7 @@ var LeapApp = BaseModel.extend({
 
   save: function() {
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
-    db.setItem(config.DbKeys.InstalledApps, JSON.stringify(uiGlobals.myApps.toJSON()));
+    db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
   },
 
   sortScore: function() {
@@ -251,12 +251,7 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
-  try {
-    var installedAppsJson = JSON.parse(db.getItem(config.DbKeys.InstalledApps) || '[]');
-  } catch (err) {
-    console.error('SEVERE. Could not parse installed apps json in database. ' + (err.stack || err));
-    db.setItem(config.DbKeys.InstalledApps, []);
-  }
+  var installedAppsJson = db.fetchObj(config.DbKeys.InstalledApps) || [];
   installedAppsJson.forEach(function(appJson) {
     try {
       uiGlobals.myApps.add(appJson);

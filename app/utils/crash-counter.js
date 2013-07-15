@@ -3,15 +3,15 @@ var db = require('./db.js');
 var Key = 'crashCount';
 
 function count() {
-  return db.getItem(Key) || 0;
+  return db.fetchObj(Key) || 0;
 }
 
 function increment() {
-  db.setItem(Key, count() + 1);
+  db.saveObj(Key, count() + 1);
 }
 
 function reset() {
-  db.setItem(Key, 0);
+  db.saveObj(Key, 0);
 }
 
 

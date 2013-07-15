@@ -76,27 +76,27 @@ AppController.prototype = {
     }
     var defer = $.Deferred();
     embedCheckPromise = defer.promise();
-    var existingValue = db.getItem(EmbeddedDeviceDbKey);
+    var existingValue = db.fetchObj(EmbeddedDeviceDbKey);
     if (existingValue && existingValue.length) {
-      defer.resolve(existingValue === 'true');
+      defer.resolve(existingValue);
       return;
     }
     if (os.platform() === 'win32') {
       exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdoutBufferedResult, stderrBufferedResult) {
         var isEmbedded;
         if (err) {
-          isEmbedded = 'no';
+          isEmbedded = false;
         } else {
           var output = stdoutBufferedResult.toString();
           // this is to detect HP pre-installed builds
           isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
             /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
         }
-        db.setItem(EmbeddedDeviceDbKey, isEmbedded);
+        db.saveObj(EmbeddedDeviceDbKey, isEmbedded);
         defer.resolve(isEmbedded);
       }.bind(this));
     } else {
-      db.setItem(EmbeddedDeviceDbKey, false);
+      db.saveObj(EmbeddedDeviceDbKey, false);
       defer.resolve(false);
     }
   },

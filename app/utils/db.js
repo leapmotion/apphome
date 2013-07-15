@@ -1,6 +1,22 @@
 var dbPrefix;
 
-module.exports = {
+var db = module.exports = {
+  saveObj: function(key, value) {
+    db.setItem(key, JSON.stringify(value));
+  },
+
+  fetchObj: function(key) {
+    var val = db.getItem(key);
+    if (!val) {
+      return void 0;
+    }
+    try {
+      return JSON.parse(val);
+    } catch (err) {
+      return void 0;
+    }
+  },
+
   getItem: function(key) {
     return window.localStorage.getItem(dbPrefix + key);
   },

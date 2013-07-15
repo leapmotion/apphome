@@ -21,28 +21,28 @@ function newTempFilePath(extension) {
 }
 
 function _workingSet() {
-  return _getAsObject(ActiveTempFilesKey);
+  return db.fetchObj(ActiveTempFilesKey);
 }
 
 function _deletionSet() {
-  return _getAsObject(TempFilesNeedingDeletionKey);
+  return db.fetchObj(TempFilesNeedingDeletionKey);
 }
 
 function _trackFile(filePath) {
   var all = _workingSet();
   all[filePath] = true;
-  _saveObject(ActiveTempFilesKey, all);
+  db.saveObj(ActiveTempFilesKey, all);
 }
 
 function _markAsDeleted(filePath) {
   var all = _deletionSet();
   delete all[filePath];
-  _saveObject(TempFilesNeedingDeletionKey, all);
+  db.saveObj(TempFilesNeedingDeletionKey, all);
 }
 
 function cleanup() {
   var toDeleteNow = _(_.extend({}, _workingSet(), _deletionSet())).keys();
-  _saveObject(ActiveTempFilesKey, {});
+  db.saveObj(ActiveTempFilesKey, {});
 
   var sequentialRemove = function() {
     if (!toDeleteNow.length) {
@@ -66,23 +66,6 @@ function cleanup() {
   };
 
   sequentialRemove();
-}
-
-
-function _getAsObject(key) {
-  try {
-    return JSON.parse(db.getItem(key) || '{}');
-  } catch (err) {
-    return {};
-  }
-}
-
-function _saveObject(key, obj) {
-  try {
-    db.setItem(key, JSON.stringify(obj));
-  } catch (err) {
-    db.setItem(key, {});
-  }
 }
 
 
