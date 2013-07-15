@@ -108,6 +108,7 @@ AppController.prototype = {
     }
   },
 
+  // TODO: move this into its own view
   _showFirstRunSplash: function(cb) {
     embedCheckPromise.done(function(isEmbedded) {
       this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
@@ -121,12 +122,31 @@ AppController.prototype = {
       this._firstRunSplash.on('loaded', function() {
         var splashWindow = this._firstRunSplash.window;
         $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+        var $s = $('body', splashWindow.document);
+
+        $s.find('.eula-popup').click(function() {
+          console.log('tmp -- click, open popup');
+          var eulaWindow = popupWindow.open('/static/popups/license-en.html', {
+            title: 'Leap Motion End User License Agreement',
+            width: 640,
+            height: 480,
+            frame: true,
+            resizable: true,
+            show: true,
+            allowMultiple: true
+          });
+          // mixpanel?
+        });
+
+
         var $continueButton = $('#continue', splashWindow.document);
         $continueButton.click(function() {
           mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
           $continueButton.unbind('click');
+          $s.find('.eula-popup').remove();
           cb && cb(null);
         });
+
         splashWindow.setTimeout(function() {
           this._firstRunSplash.show();
           mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
