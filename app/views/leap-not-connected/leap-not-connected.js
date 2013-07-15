@@ -20,15 +20,15 @@ module.exports = BaseView.extend({
       var checkInterval = setInterval(function() {
         if (leap.isConnected()) {
           clearInterval(checkInterval);
-          cb && cb(null);
+          cb(null);
         }
       });
       this.$('.skip-button').click(function() {
         clearInterval(checkInterval);
-        cb && cb(null);
+        cb(null);
       });
     } else {
-      cb && cb(null);
+      cb(null);
     }
   }
 

@@ -32,9 +32,6 @@ var PlatformOrientationPaths = {
   darwin: '/Applications/Leap Motion Orientation.app'
 };
 
-var EmbeddedDeviceDbKey = 'is_leap_embedded';
-var embedCheckPromise;
-
 function AppController() {
   uiGlobals.on(uiGlobals.Event.SignIn, function() {
     this._createMenu(true);
@@ -48,38 +45,22 @@ AppController.prototype = {
   },
 
   runApp: function() {
-    this._startBackgroundEmbedCheck();
-
-    var steps = [];
     if (uiGlobals.isFirstRun) {
-      steps = steps.concat(
+      async.waterfall([
+        this._checkIfEmbedded.bind(this),
         this._showFirstRunSplash.bind(this),
         this._launchOrientation.bind(this)
-      );
+      ], this._setupWindow.bind(this));
+    } else {
+      this._setupWindow();
     }
-    steps = steps.concat(
-      this._setupWindow.bind(this),
 
-      function(cb) {
-        this._createMenu(false);
-        $('body').removeClass('startup');
-        api.getFrozenApps();
-        this._scanFilesystem();
-        cb && cb(null)
-      }.bind(this),
-
-      this._checkLeapConnection.bind(this)
-    );
-
-    async.series(steps, function(err) {
-      if (err) {
-        console.error('\n\n\nCRITICAL. Error during bootstrap: ' + (err.stack || err));
-        process.exit();
-      }
-    });
-
-    // concurrently authorize in background:
-    async.series([
+    this._createMenu(false);
+    api.getFrozenApps();
+    this._scanFilesystem();
+    $('body').removeClass('startup');
+    this._checkLeapConnection();
+    async.waterfall([
       this._authorize.bind(this),
       this._afterAuthorize.bind(this)
     ], function(err) {
@@ -89,31 +70,22 @@ AppController.prototype = {
     }.bind(this));
   },
 
-  _startBackgroundEmbedCheck: function() {
-    var defer = $.Deferred();
-    embedCheckPromise = defer.promise();
-    var existingValue = db.getItem(EmbeddedDeviceDbKey);
-    if (existingValue && existingValue.length) {
-      defer.resolve(existingValue === 'true');
-      return;
-    }
+  _checkIfEmbedded: function(cb) {
     if (os.platform() === 'win32') {
-      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdoutBufferedResult, stderrBufferedResult) {
-        var isEmbedded;
+      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdout) {
         if (err) {
-          isEmbedded = 'no';
+          this._isEmbedded = false;
         } else {
-          var output = stdoutBufferedResult.toString();
+          var output = stdout.toString();
           // this is to detect HP pre-installed builds
-          isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
+          this._isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
                              /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
         }
-        db.setItem(EmbeddedDeviceDbKey, isEmbedded);
-        defer.resolve(isEmbedded);
+        cb && cb(null);
       }.bind(this));
     } else {
-      db.setItem(EmbeddedDeviceDbKey, false);
-      defer.resolve(false);
+      this._isEmbedded = false;
+      cb && cb(null);
     }
   },
 
@@ -164,13 +136,12 @@ AppController.prototype = {
     }
   },
 
-  _setupWindow: function(cb) {
+  _setupWindow: function() {
     var win = nwGui.Window.get();
     win.show();
     win.maximize();
     win.setAlwaysOnTop(true);
     win.setAlwaysOnTop(false);
-    cb && cb(null);
   },
 
   _createMenu: function(enableLogOut) {
@@ -231,26 +202,23 @@ AppController.prototype = {
     if (this._noMoreLeapConnectionChecks) {
       return cb && cb(null);
     }
-    embedCheckPromise.done(function(isEmbedded) {
-      var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
-      leapNotConnectedView.encourageConnectingLeap(function() {
-        leapNotConnectedView.remove();
-        this._noMoreLeapConnectionChecks = true;
-        cb && cb(null);
-      }.bind(this));
-
-    });
+    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: this._isEmbedded });
+    leapNotConnectedView.encourageConnectingLeap(function() {
+      leapNotConnectedView.remove();
+      this._noMoreLeapConnectionChecks = true;
+      cb && cb(null);
+    }.bind(this));
   },
 
   _authorize: function(cb) {
     if (!oauth.getRefreshToken()) {
       oauth.getAccessToken(cb);
     } else {
-      cb && cb(null);
+      cb(null);
     }
   },
 
-  _afterAuthorize: function(cb) {
+  _afterAuthorize: function() {
     uiGlobals.isFirstRun = false;
     this._paintMainApp();
 
@@ -262,7 +230,6 @@ AppController.prototype = {
       console.error('Failed to send device data: ' + (err.stack + err));
     }
     api.connectToStoreServer();
-    cb && cb(null);
   },
 
   _logOut: function() {
