@@ -32,6 +32,9 @@ var PlatformOrientationPaths = {
   darwin: '/Applications/Leap Motion Orientation.app'
 };
 
+var EmbeddedDeviceDbKey = 'is_leap_embedded';
+var embedCheckPromise;
+
 function AppController() {
   uiGlobals.on(uiGlobals.Event.SignIn, function() {
     this._createMenu(true);
@@ -45,9 +48,10 @@ AppController.prototype = {
   },
 
   runApp: function() {
+    this._startBackgroundEmbedCheck();
+
     if (uiGlobals.isFirstRun) {
       async.waterfall([
-        this._checkIfEmbedded.bind(this),
         this._showFirstRunSplash.bind(this),
         this._launchOrientation.bind(this)
       ], this._setupWindow.bind(this));
@@ -70,48 +74,61 @@ AppController.prototype = {
     }.bind(this));
   },
 
-  _checkIfEmbedded: function(cb) {
+  _startBackgroundEmbedCheck: function() {
+    if (embedCheckPromise) {
+      return;
+    }
+    var defer = $.Deferred();
+    embedCheckPromise = defer.promise();
+    var existingValue = db.getItem(EmbeddedDeviceDbKey);
+    if (existingValue && existingValue.length) {
+      defer.resolve(existingValue === 'true');
+      return;
+    }
     if (os.platform() === 'win32') {
-      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdout) {
+      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdoutBufferedResult, stderrBufferedResult) {
+        var isEmbedded;
         if (err) {
-          this._isEmbedded = false;
+          isEmbedded = 'no';
         } else {
-          var output = stdout.toString();
+          var output = stdoutBufferedResult.toString();
           // this is to detect HP pre-installed builds
-          this._isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
-                             /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
+          isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
+            /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
         }
-        cb && cb(null);
+        db.setItem(EmbeddedDeviceDbKey, isEmbedded);
+        defer.resolve(isEmbedded);
       }.bind(this));
     } else {
-      this._isEmbedded = false;
-      cb && cb(null);
+      db.setItem(EmbeddedDeviceDbKey, false);
+      defer.resolve(false);
     }
   },
 
   _showFirstRunSplash: function(cb) {
-    var isEmbedded = this._isEmbedded;
-    this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
-      width: 1080,
-      height: 638,
-      frame: false,
-      resizable: false,
-      show: false
-    });
-
-    this._firstRunSplash.on('loaded', function() {
-      var splashWindow = this._firstRunSplash.window;
-      $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
-      var $continueButton = $('#continue', splashWindow.document);
-      $continueButton.click(function() {
-        mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
-        $continueButton.unbind('click');
-        cb && cb(null);
+    embedCheckPromise.done(function(isEmbedded) {
+      this._firstRunSplash = popupWindow.open('/static/popups/first-run.html', {
+        width: 1080,
+        height: 638,
+        frame: false,
+        resizable: false,
+        show: false
       });
-      splashWindow.setTimeout(function() {
-        this._firstRunSplash.show();
-        mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
-      }.bind(this), 0);
+
+      this._firstRunSplash.on('loaded', function() {
+        var splashWindow = this._firstRunSplash.window;
+        $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
+        var $continueButton = $('#continue', splashWindow.document);
+        $continueButton.click(function() {
+          mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
+          $continueButton.unbind('click');
+          cb && cb(null);
+        });
+        splashWindow.setTimeout(function() {
+          this._firstRunSplash.show();
+          mixpanel.trackEvent('Displayed First Run Panel', null, 'OOBE');
+        }.bind(this), 0);
+      }.bind(this));
     }.bind(this));
   },
 
@@ -202,11 +219,14 @@ AppController.prototype = {
     if (this._noMoreLeapConnectionChecks) {
       return cb && cb(null);
     }
-    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: this._isEmbedded });
-    leapNotConnectedView.encourageConnectingLeap(function() {
-      leapNotConnectedView.remove();
-      this._noMoreLeapConnectionChecks = true;
-      cb && cb(null);
+    embedCheckPromise.done(function(isEmbedded) {
+      var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
+      leapNotConnectedView.encourageConnectingLeap(function() {
+        leapNotConnectedView.remove();
+        this._noMoreLeapConnectionChecks = true;
+        cb && cb(null);
+      }.bind(this));
+
     }.bind(this));
   },
 
