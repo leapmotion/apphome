@@ -339,7 +339,7 @@ function getLocalAppManifest(cb) {
   });
 }
 
-function getFrozenApps(cb) {
+function getFrozenApps() {
   if (db.getItem(PreBundle.PreBundlingComplete)) {
     console.log('PreBundling Complete');
     return;
