@@ -7,6 +7,7 @@ var path = require('path');
 var url = require('url');
 var util = require('util');
 var config = require('../../config/config.js');
+var workingFile = require('../utils/working-file.js');
 
 function DownloadProgressStream() {
   this._bytesSoFar = 0;
@@ -39,17 +40,8 @@ DownloadProgressStream.prototype.cancel = function() {
   } else {
     return false;
   }
-}
+};
 
-function newTempFilePath(extension) {
-  extension = extension || '';
-  if (!config.PlatformTempDirs[os.platform()]) {
-    throw new Error('Unknown operating system: ' + os.platform());
-  }
-  var tempDir = config.PlatformTempDirs[os.platform()];
-  var filename = [ 'Airspace', (new Date()).getTime(), Math.random() ].join('_') + '.' + extension.replace(/^\./, '');
-  return path.join(tempDir, filename);
-}
 
 function getFile(sourceUrl, destPath, cb) {
   if (!sourceUrl) {
@@ -58,7 +50,7 @@ function getFile(sourceUrl, destPath, cb) {
 
   if (typeof destPath === 'function') {
     cb = destPath;
-    destPath = newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
+    destPath = workingFile.newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
   }
   var totalBytes = 0;
   var destStream = fs.createWriteStream(destPath);

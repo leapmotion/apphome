@@ -15,6 +15,8 @@ var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
 var shell = require('./utils/shell.js');
 var crashCounter = require('./utils/crash-counter.js');
+var workingFile = require('./utils/working-file.js');
+
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -61,6 +63,7 @@ AppController.prototype = {
 
     this._createMenu(false);
     api.getFrozenApps();
+    workingFile.cleanup();
     this._scanFilesystem();
     $('body').removeClass('startup');
     this._checkLeapConnection();
