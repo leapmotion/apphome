@@ -21,20 +21,26 @@ function newTempFilePath(extension) {
 }
 
 function _workingSet() {
-  return db.fetchObj(ActiveTempFilesKey);
+  return db.fetchObj(ActiveTempFilesKey) || {};
 }
 
 function _deletionSet() {
-  return db.fetchObj(TempFilesNeedingDeletionKey);
+  return db.fetchObj(TempFilesNeedingDeletionKey) || {};
 }
 
 function _trackFile(filePath) {
+  if (!filePath) {
+    return;
+  }
   var all = _workingSet();
   all[filePath] = true;
   db.saveObj(ActiveTempFilesKey, all);
 }
 
 function _markAsDeleted(filePath) {
+  if (!filePath) {
+    return;
+  }
   var all = _deletionSet();
   delete all[filePath];
   db.saveObj(TempFilesNeedingDeletionKey, all);
