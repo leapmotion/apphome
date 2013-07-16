@@ -126,7 +126,8 @@ AppController.prototype = {
         height: 638,
         frame: false,
         resizable: false,
-        show: false
+        show: false,
+        'always-on-top': false
       });
 
       this._firstRunSplash.on('loaded', function() {
