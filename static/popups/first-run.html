@@ -2,9 +2,10 @@
   <head>
     <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="../css/fonts.css"/>
-    <title>Welcome to a whole new world</title>
+    <title>Welcome</title>
     <style>
       body {
+        color: #4b4c4c;
         font-family: "freightsans_probook";
         text-align: center;
         padding: 10px 50px;
@@ -23,20 +24,30 @@
 
       h1 {
         font-weight: bold;
-        font-size: 18px;
-        line-height: 18px;
-        margin-bottom: 20px;
+        font-size: 40px;
+        line-height: 40px;
+        height: 40px;
+        margin-bottom: 13px;
+        margin-top: 64px;
       }
 
       h2 {
         font-weight: normal;
-        font-size: 15px;
-        line-height: 15px;
-        margin-bottom: 40px;
+        font-size: 21px;
+        line-height: 21px;
+        margin: 0 auto 48px;
+      }
+
+      a{
+          color: #9ac948;
+          text-decoration: none;
       }
 
       #embedded-graphics {
         display: none;
+      }
+      #embedded-graphics, #peripheral-graphics{
+        overflow: auto;
       }
 
       body.embedded #embedded-graphics {
@@ -57,27 +68,31 @@
         margin-left: 0;
       }
 
+      #continue {
+        /*background-color: #a9d029; *//* layer fill content */
+        background-clip: padding-box; /* prevents bg color from leaking outside the border */
+        background-image: -webkit-linear-gradient(top, #bcdd41 0%, #aad029 100%);
+        background-image: linear-gradient(top, #bcdd41 0%, #aad029 100%);
+        border-radius: 6px; /* border radius */
+        color: white;
+        cursor: pointer;
+        height: 48px;
+        font-size: 24px;
+        line-height: 46px;
+        margin-top: 16px;
+        text-align: center;
+        text-shadow: 0 -1px 0 rgba(1,1,1,.2);
+        width: 304px;
+      }
       .actions {
         position: relative;
-        float: right;
-        width: 300px;
-        margin-top: 30px;
+        margin: 28px auto 0;
         text-align: left;
-      }
-      #continue {
-        height: 40px;
-        width: 180px;
-        font-size: 15px;
-        margin-top: 20px;
-        border-radius: 40px;
-        line-height: 40px;
-        color: white;
-        background-color: rgb(153, 185, 96);
-        cursor: pointer;
-        text-align: center;
+        width: 300px;
       }
       #continue.disabled, #continue.disabled:hover {
-        background-color: rgb(205, 221, 172);
+        color: rgba(255, 255, 255, 0.9);
+        opacity: 0.6;
       }
 
       #continue:hover {
@@ -85,23 +100,25 @@
       }
 
       .eula {
+        padding-bottom: 8px;
+        padding-left: 18px;
+        padding-top: 8px;
         text-align: left;
       }
       .eula label {
-        font-size: 15px;
-        color: #556635;
-        font-weight: bold;
+        font-size: 16px;
+        line-height: 1.5em;
       }
 
       .eula .checkbox {
         float: left;
-        margin: 4px 0 0 -20px;
+        margin: 6px 0 0 -20px;
         padding: 2px;
       }
 
       .eula-popup {
+        color: #9ac948;
         cursor: pointer;
-        text-decoration: underline;
       }
       .validation {
         position: absolute;
@@ -125,9 +142,8 @@
   <body>
     <div id="container">
       <span class="close-app">&times;</span>
-      <img id="logo" src="../images/leap-logo.png"/>
-      <h1>Welcome to a whole new world</h1>
-      <h2>Here are a few reminders to get you started with Leap Motion</h2>
+      <h1>Welcome!</h1>
+      <h2>Here are a few reminders to get you started</h2>
 
       <div id="embedded-graphics">
         <img class="graphic" id="graphic1" src="../images/first-run/embedded1.png"/>
@@ -146,7 +162,7 @@
           <input class="checkbox" type="checkbox" />
           <label>
             I agree to the Leap Motion<br />
-            <span class="eula-popup">Software End User License Agreement</span>
+            <span class="eula-popup">End User License Agreement</span>
           </label>
         </div>
 
