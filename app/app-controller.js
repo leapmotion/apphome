@@ -177,7 +177,7 @@ AppController.prototype = {
         }
 
         $s.find('.close-app').click(function() {
-          process.exit();
+          window.close();
         });
 
         splashWindow.setTimeout(function() {
