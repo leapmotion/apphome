@@ -136,7 +136,7 @@ AppController.prototype = {
         var $continueButton = $('#continue', splashWindow.document);
         $continueButton.click(function() {
           if ($continueButton.hasClass('disabled')) {
-            $s.find('.validation').show();
+            $s.find('.eula').effect('highlight', '', 1000);
             return;
           }
           $s.find('.eula').css('visibility', 'hidden');
