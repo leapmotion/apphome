@@ -104,11 +104,18 @@
       }
 
       .eula {
+        display: none;
         padding-bottom: 8px;
         padding-left: 18px;
         padding-top: 8px;
         text-align: left;
+        padding: 1px 30px;
       }
+
+      body.embedded .eula {
+        display: block;
+      }
+
       .eula label {
         font-size: 16px;
         line-height: 1.5em;
@@ -124,15 +131,7 @@
         color: #9ac948;
         cursor: pointer;
       }
-      .validation {
-        position: absolute;
-        top: -35px;
-        left: 0;
-        color: #785DB3;
-        margin: 12px 0 0 0;
-        font-weight: bold;
-        display: none;
-      }
+
       .close-app {
         position: absolute;
         top: 0;
@@ -161,7 +160,6 @@
       </div>
 
       <div class="actions">
-        <p class="validation">Agreement Required</p>
         <div class="eula">
           <input class="checkbox" type="checkbox" />
           <label>
@@ -170,7 +168,7 @@
           </label>
         </div>
 
-        <div id="continue" class="disabled">Continue</div>
+        <div id="continue">Continue</div>
       </div>
     </div>
   </body>
