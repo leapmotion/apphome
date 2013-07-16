@@ -193,8 +193,12 @@ AppController.prototype = {
     if (orientationPath) {
       mixpanel.trackEvent('Started Orientation', null, 'OOBE');
       setTimeout(function() {
+        var $s = $('body', this._firstRunSplash.window.document);
+        var $graphic = $s.hasClass('embedded') ? $s.find('#embedded-graphics') : $s.find('#peripheral-graphics');
+        $graphic.effect("blind");
         var $continueButton = $('#continue', this._firstRunSplash.window.document);
         $continueButton.text('Launch Airspace');
+
         $continueButton.click(function() {
           this._firstRunSplash.close();
           this._firstRunSplash = null;
