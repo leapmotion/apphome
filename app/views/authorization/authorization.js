@@ -190,7 +190,6 @@ module.exports = BaseView.extend({
 
   _interceptPopupLinks: function($elem) {
     $elem.on('click', 'a[data-airspace-home-popup]', function(evt) {
-      evt.stopPropagation();
       evt.preventDefault();
       var href = $(this).attr('href');
       if (href) {
