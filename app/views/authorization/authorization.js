@@ -191,7 +191,7 @@ module.exports = BaseView.extend({
     if (iframeWindow) {
       this.$iframe.css('visibility', 'hidden');
       this.$iframe.height(0);
-      this.$iframe.height($(iframeWindow.document).height());
+      this.$iframe.height(Math.min($(iframeWindow.document).height(), $(window).height() - 40));
       this._centerElement(this.$iframe);
       this.$iframe.css('visibility', 'visible');
     }
