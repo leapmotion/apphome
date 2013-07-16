@@ -124,6 +124,7 @@ module.exports = LeapApp.extend({
               downloadProgress = null;
               this.set('noAutoInstall', true);
               this.off('cancel-download', cancelDownload);
+              this.set('state', LeapApp.Stores.NotYetInstalled);
             }
           } else {
             this.off('cancel-download', cancelDownload);
