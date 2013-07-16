@@ -135,8 +135,8 @@ module.exports = BaseView.extend({
       $trashCan.removeClass('empty');
     }
 
-    uiGlobals.myApps.on('installend', this._updateTrashState.bind(this));
-    uiGlobals.myApps.on('uninstallend', this._updateTrashState.bind(this))
+    uiGlobals.myApps.on('install', this._updateTrashState.bind(this));
+    uiGlobals.myApps.on('uninstall', this._updateTrashState.bind(this))
 
     uiGlobals.myApps.on('dragstart', function() {
       this.$('#uninstalled-link').addClass('highlight');

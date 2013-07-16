@@ -77,43 +77,52 @@ module.exports = LeapApp.extend({
     console.info('Downloading binary of ' + this.get('name'));
     this.set('state', LeapApp.States.Connecting);
     var binaryUrl = this.get('binaryUrl');
-    if (url.parse(binaryUrl).protocol == null) { // freeze-dried local file
+    console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
+
+    var tempFilename;
+    var cleanupTempfileAndContinue = function(err) {
+      try {
+        if (tempFilename && fs.existsSync(tempFilename)) {
+          fs.deleteSync(tempFilename);
+        }
+      } catch (e) {
+        console.error('Failed to cleanup StoreLeapApp temp binary' + (e.stack || e));
+        err = e;
+      }
+      cb && cb(err || null);
+    };
+
+    if (url.parse(binaryUrl).protocol == null) {
       var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
       console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
+
       if (os.platform() === 'win32') {
-        extract.unzip(tempFilename, this._appDir(), function(err) {
-          this._cleanupTempfile(tempFilename, err, cb);
-        }.bind(this));
+        extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else if (os.platform() === 'darwin') {
-        extract.undmg(tempFilename, this._appDir(), function(err) {
-          this._cleanupTempfile(tempFilename, err, cb);
-        }.bind(this));
+        extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else {
-        cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+        return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
-    } else { // install from server
+      cb && cb(null);
+    } else {
       api.refreshAppDetails(this, function(err) {
         if (err) {
           return cb(err);
         }
-        binaryUrl = this.get('binaryUrl'); // refreshed binary URL
+        binaryUrl = this.get('binaryUrl');
         var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
           if (err) {
-            return this._cleanupTempfile(err, tempFilename, cb);
+            return cb(err);
           }
           this.set('state', LeapApp.States.Installing);
           console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
           if (os.platform() === 'win32') {
-            extract.unzip(tempFilename, this._appDir(), function(err) {
-              this._cleanupTempfile(err, tempFilename, cb);
-            }.bind(this));
+            extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
           } else if (os.platform() === 'darwin') {
-            extract.undmg(tempFilename, this._appDir(), function(err) {
-              this._cleanupTempfile(err, tempFilename, cb);
-            }.bind(this));
+            extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
           } else {
-            return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+            return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
           }
         }.bind(this));
 
@@ -188,24 +197,12 @@ module.exports = LeapApp.extend({
     } else {
       console.info('Installation of ' + this.get('name') + ' complete');
       this.set('state', LeapApp.States.Ready);
-      this.trigger('installend');
+      this.trigger('install');
     }
     cb && cb(err);
   },
 
-  _cleanupTempfile: function(err, tempFilename, cb) {
-    try {
-      if (tempFilename && fs.existsSync(tempFilename)) {
-        fs.deleteSync(tempFilename);
-      }
-    } catch (e) {
-      console.error('Failed to cleanup StoreLeapApp temp binary. ' + (e.stack || e));
-    }
-    return cb && cb(err || null);
-  },
-
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
-    this.trigger('uninstallstart');
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {
@@ -258,7 +255,7 @@ module.exports = LeapApp.extend({
     } finally {
       this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
-      this.trigger('uninstallend');
+      this.trigger('uninstall');
     }
   },
 

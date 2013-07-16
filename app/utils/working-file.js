@@ -15,9 +15,9 @@ function newTempFilePath(extension) {
   }
   var tempDir = config.PlatformTempDirs[os.platform()];
   var filename = [ 'Airspace', (new Date()).getTime(), Math.random() ].join('_') + '.' + extension.replace(/^\./, '');
-  var tempFilepath = path.join(tempDir, filename);
-  _trackFile(tempFilepath);
-  return tempFilepath;
+  var res = path.join(tempDir, filename);
+  _trackFile(res);
+  return res;
 }
 
 function _workingSet() {
