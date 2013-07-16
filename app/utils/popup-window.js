@@ -15,6 +15,21 @@ function openPopup(htmlFile, options) {
     }, options));
     singletonPopups[htmlFile] = popup;
 
+    if (!options.openLinksInternally) {
+      popup.on('loaded', function() {
+        var popupDocument = popup.window && popup.window.document;
+        if (popupDocument) {
+          $('body', popupDocument).on('click', 'a', function(evt) {
+            evt.preventDefault();
+            var href = $(this).attr('href');
+            if (href) {
+              nwGui.Shell.openExternal(href);
+            }
+          });
+        }
+      });
+    }
+
     popup.on('close', function() {
       delete singletonPopups[htmlFile];
       popup.close(true);
