@@ -46,7 +46,7 @@ module.exports = BaseView.extend({
                 this.$iframe.css('visibility', 'hidden');
                 this._startLoadTimeout(cb);
               }.bind(this));
-              this._interceptPopupLinks($(iframeWindow.document));
+              this._interceptPopupLinks($('body', iframeWindow.document));
               this._center();
               this._clearLoadTimeout();
               this._performActionBasedOnUrl(iframeWindow.location.href, cb);
@@ -188,22 +188,23 @@ module.exports = BaseView.extend({
     this.$waiting.removeClass('background').removeClass('before').addClass('logout');
   },
 
-  _interceptPopupLinks: function($d) {
-    $d.on('click', 'a[data-airspace-home-popup]', function(evt) {
+  _interceptPopupLinks: function($elem) {
+    $elem.on('click', 'a[data-airspace-home-popup]', function(evt) {
+      evt.stopPropagation();
       evt.preventDefault();
-      var $a = $(evt.target);
-      var href = $a.attr('href');
-      popupWindow.open(href, {
-        width: 640,
-        height: 480,
-        frame: true,
-        resizable: true,
-        show: true,
-        x: 50,
-        y: 50,
-        allowMultiple: false
-      });
-      return false;
+      var href = $(this).attr('href');
+      if (href) {
+        popupWindow.open(href, {
+          width: 640,
+          height: 480,
+          frame: true,
+          resizable: true,
+          show: true,
+          x: 50,
+          y: 50,
+          allowMultiple: false
+        });
+      }
     });
   },
 
