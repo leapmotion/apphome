@@ -16,7 +16,7 @@ body {
 }
 
 body.startup {
-  visibility: hidden;
+  left: -100000px;
   background: transparent;
 }
 
