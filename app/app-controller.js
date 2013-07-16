@@ -243,7 +243,9 @@ AppController.prototype = {
       }));
       fileMenu.append(new nwGui.MenuItem({
         label: 'Exit',
-        click: process.exit
+        click: function() {
+          window.close();
+        }
       }));
       mainMenu.append(new nwGui.MenuItem({
         label: 'File',
