@@ -46,6 +46,10 @@ function markAsAgreed() {
     fs.copy(licenseSourcePath, targetPath, cb);
   };
 
+  var ensureLeapMotionDir = function(cb) {
+    fs.mkdirs(sharedLeapDir, cb);
+  };
+
   var writeHashInSharedLocation = function(cb) {
     var targetPath = path.join.apply(null, sharedLeapDir.concat([ md5Name]));
     fs.writeFile(targetPath, db.getItem(BundleEulaAgreementKey), cb);
@@ -53,6 +57,7 @@ function markAsAgreed() {
 
   async.series([
     _updateEulaAgeementHash,
+    ensureLeapMotionDir,
     copyLicenseToSharedLocation,
     writeHashInSharedLocation
   ], function(err) {
