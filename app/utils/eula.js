@@ -10,7 +10,7 @@ var config = require('../../config/config.js');
 var BundleEulaAgreementKey = 'bundled_eula_agreement';
 var licenseName = 'license-en.html';
 var md5Name = 'eulahash.md5';
-var sharedLeapDir = [ config.PlatformDirs[os.platform()], 'Leap Motion' ];
+var sharedLeapDir = path.join.apply(null, [ config.PlatformDirs[os.platform()], 'Leap Motion' ]);
 var licenseSourcePath = path.join.apply(null, [ __dirname, '..', '..', 'static', 'popups', licenseName ]);
 
 
@@ -19,7 +19,7 @@ function needsUpdating(cb) {
   if (db.getItem(BundleEulaAgreementKey)) {
     return cb && cb(null, false);
   }
-  var sharedMd5Path = path.join.apply(null, sharedLeapDir.concat([ md5Name]));
+  var sharedMd5Path = path.join.apply(null, [ sharedLeapDir ].concat([ md5Name]));
 
   _readOrNull(sharedMd5Path, function(err, sharedHash) {
     if (err) {
@@ -42,16 +42,22 @@ function markAsAgreed() {
   var licenseMd5 = db.getItem(BundleEulaAgreementKey);
 
   var copyLicenseToSharedLocation = function(cb) {
-    var targetPath = path.join.apply(null, sharedLeapDir.concat([ licenseName]));
+    var targetPath = path.join.apply(null, [ sharedLeapDir ].concat([ licenseName]));
     fs.copy(licenseSourcePath, targetPath, cb);
   };
 
   var ensureLeapMotionDir = function(cb) {
-    fs.mkdirs(sharedLeapDir, cb);
+    fs.exists(sharedLeapDir, function(doesExist) {
+      if (!doesExist) {
+        fs.mkdirs(sharedLeapDir, cb);
+      } else {
+        cb && cb(null);
+      }
+    });
   };
 
   var writeHashInSharedLocation = function(cb) {
-    var targetPath = path.join.apply(null, sharedLeapDir.concat([ md5Name]));
+    var targetPath = path.join.apply(null, [ sharedLeapDir ].concat([ md5Name]));
     fs.writeFile(targetPath, db.getItem(BundleEulaAgreementKey), cb);
   };
 
