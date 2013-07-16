@@ -33,50 +33,52 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
 
-var subscribe = (function() {
-  var subscribed = {};
-  var pubnub;
-  var pubnubDomain = domain.create();
-  pubnubDomain.on('error', function(err) {
-    Object.keys(subscribed).forEach(function(channel) {
-      try {
-        pubnub.unsubscribe({ channel: channel });
-      } catch (e) {
-        console.warn('Could not unsubscribe from channel: ' + channel);
-      }
-    });
-    subscribed = {};
-    reconnectAfterError(err);
+var pubnubSubscriptions = {};
+var pubnub;
+var pubnubDomain = domain.create();
+
+pubnubDomain.on('error', function(err) {
+  unsubscribeAllPubnubChannels()
+  reconnectAfterError(err);
+});
+
+pubnubDomain.run(function() {
+  pubnub = pubnubInit({
+    subscribe_key: config.PubnubSubscribeKey,
+    ssl: true,
+    jsonp: true // force http transport to work better with http proxies
   });
+});
 
-  pubnubDomain.run(function() {
-    pubnub = pubnubInit({
-      subscribe_key: config.PubnubSubscribeKey,
-      ssl: true,
-      jsonp: true // force http transport to work better with http proxies
+function unsubscribeAllPubnubChannels() {
+  Object.keys(pubnubSubscriptions).forEach(function(channel) {
+    console.log('Unsubscribing from PubNub channel: ' + channel);
+    pubnubDomain.run(function() {
+      pubnub.unsubscribe({ channel: channel });
     });
   });
+  pubnubSubscriptions = {};
+}
 
-  // Don't subscribe to the same channel more than once
-  return function(channel, callback) {
-    if (subscribed[channel] !== callback) {
-      subscribed[channel] = callback;
+// only allow one callback per channel
+function subscribeToPubnubChannel(channel, callback) {
+  if (!pubnubSubscriptions[channel]) {
+    pubnubSubscriptions[channel] = true;
 
-      pubnubDomain.run(function() {
-        pubnub.subscribe({
-          channel: channel,
-          callback: function(data) {
-            try {
-              callback(JSON.parse(data));
-            } catch (e) {
-              console.error('failed to parse pubsub response for', channel, data, e);
-            }
+    pubnubDomain.run(function() {
+      pubnub.subscribe({
+        channel: channel,
+        callback: function(data) {
+          try {
+            callback(JSON.parse(data));
+          } catch (e) {
+            console.error('failed to parse pubsub response for', channel, data, e);
           }
-        });
+        }
       });
-    }
-  };
-})();
+    });
+  }
+}
 
 function getJson(url, cb) {
   var protocolModule = (/^https:/.test(url) ? https : http);
@@ -167,7 +169,7 @@ function handleAppJson(appJson) {
 }
 
 function subscribeToUserChannel(userId) {
-  subscribe(userId + '.user.purchased', function() {
+  subscribeToPubnubChannel(userId + '.user.purchased', function() {
     var win = nwGui.Window.get();
     // steal focus
     win.setAlwaysOnTop(true);
@@ -178,7 +180,7 @@ function subscribeToUserChannel(userId) {
 }
 
 function subscribeToAppChannel(appId) {
-  subscribe(appId + '.app.updated', handleAppJson);
+  subscribeToPubnubChannel(appId + '.app.updated', handleAppJson);
 }
 
 function getAuthURL(url, cb) {
@@ -489,6 +491,7 @@ function sendDeviceData() {
   });
 }
 
+module.exports.unsubscribeAllPubnubChannels = unsubscribeAllPubnubChannels;
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.refreshAppDetails = refreshAppDetails;

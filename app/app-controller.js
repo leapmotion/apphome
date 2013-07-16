@@ -68,9 +68,11 @@ AppController.prototype = {
     api.getFrozenApps();
     workingFile.cleanup();
     this._scanFilesystem();
-    $('body').removeClass('startup');
     this._checkLeapConnection();
     this._authorizeAndShowMainScreen();
+    window.setTimeout(function() {
+      $('body').removeClass('startup');
+    }, 50);
   },
 
   _startBackgroundEmbedCheck: function() {
@@ -289,7 +291,6 @@ AppController.prototype = {
         this._noMoreLeapConnectionChecks = true;
         cb && cb(null);
       }.bind(this));
-
     }.bind(this));
   },
 
@@ -329,6 +330,7 @@ AppController.prototype = {
 
   _logOut: function() {
     installManager.cancelAll();
+    api.unsubscribeAllPubnubChannels();
     this._createMenu(false);
     if (this._mainPage) {
       this._mainPage.$el.remove();
