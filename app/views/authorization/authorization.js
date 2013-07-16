@@ -5,6 +5,7 @@ var config = require('../../../config/config.js');
 var connection = require('../../utils/connection.js');
 var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
+var popupWindow = require('../../utils/popup-window.js');
 
 var BaseView = require('../base-view.js');
 
@@ -45,6 +46,7 @@ module.exports = BaseView.extend({
                 this.$iframe.css('visibility', 'hidden');
                 this._startLoadTimeout(cb);
               }.bind(this));
+              this._interceptPopupLinks($(iframeWindow.document));
               this._center();
               this._clearLoadTimeout();
               this._performActionBasedOnUrl(iframeWindow.location.href, cb);
@@ -184,6 +186,25 @@ module.exports = BaseView.extend({
 
   _showLoggingOutMessage: function() {
     this.$waiting.removeClass('background').removeClass('before').addClass('logout');
+  },
+
+  _interceptPopupLinks: function($d) {
+    $d.on('click', 'a[data-airspace-home-popup]', function(evt) {
+      evt.preventDefault();
+      var $a = $(evt.target);
+      var href = $a.attr('href');
+      popupWindow.open(href, {
+        width: 640,
+        height: 480,
+        frame: true,
+        resizable: true,
+        show: true,
+        x: 50,
+        y: 50,
+        allowMultiple: false
+      });
+      return false;
+    });
   },
 
   _center: function() {
