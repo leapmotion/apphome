@@ -16,7 +16,7 @@ var popupWindow = require('./utils/popup-window.js');
 var shell = require('./utils/shell.js');
 var crashCounter = require('./utils/crash-counter.js');
 var workingFile = require('./utils/working-file.js');
-
+var eula = require('./utils/eula.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -50,10 +50,13 @@ AppController.prototype = {
   },
 
   runApp: function() {
+    // TODO: use asyncjs control structure to more explicitly start bootstrap tasks (has gotten messy)
+
     this._startBackgroundEmbedCheck();
 
     if (uiGlobals.isFirstRun) {
       async.waterfall([
+        this._checkEulaState.bind(this),
         this._showFirstRunSplash.bind(this),
         this._launchOrientation.bind(this)
       ], this._setupWindow.bind(this));
@@ -65,9 +68,11 @@ AppController.prototype = {
     api.getFrozenApps();
     workingFile.cleanup();
     this._scanFilesystem();
-    $('body').removeClass('startup');
     this._checkLeapConnection();
     this._authorizeAndShowMainScreen();
+    window.setTimeout(function() {
+      $('body').removeClass('startup');
+    }, 50);
   },
 
   _startBackgroundEmbedCheck: function() {
@@ -101,6 +106,18 @@ AppController.prototype = {
     }
   },
 
+  _checkEulaState: function(cb) {
+    eula.needsUpdating(function(err, needsUpdating) {
+      if (err) {
+        console.error('Error checking for eula, assuming it needs agreement. ' + (err.stack || err));
+        uiGlobals.isEulaAgreed = false;
+      } else {
+        uiGlobals.isEulaAgreed = !needsUpdating;
+      }
+      cb && cb(null);
+    });
+  },
+
   // TODO: move this into its own view
   _showFirstRunSplash: function(cb) {
     embedCheckPromise.done(function(isEmbedded) {
@@ -113,25 +130,10 @@ AppController.prototype = {
       });
 
       this._firstRunSplash.on('loaded', function() {
+        // hacky changes... in a hurry
         var splashWindow = this._firstRunSplash.window;
         $(splashWindow.document.body).toggleClass('embedded', isEmbedded);
         var $s = $('body', splashWindow.document);
-
-        $s.find('.eula-popup').click(function() {
-          var eulaWindow = popupWindow.open('/static/popups/license-en.html', {
-            title: 'Leap Motion End User Software License Agreement',
-            width: 640,
-            height: 480,
-            frame: true,
-            resizable: true,
-            show: true,
-            x: 50,
-            y: 50,
-            allowMultiple: false
-          });
-          // need mixpanel?
-        });
-
 
         var $continueButton = $('#continue', splashWindow.document);
         $continueButton.click(function() {
@@ -139,17 +141,40 @@ AppController.prototype = {
             $s.find('.eula').effect('highlight', '', 1000);
             return;
           }
-          $s.find('.eula').css('visibility', 'hidden');
+          this._markFirstRun();
+          if (!uiGlobals.isEulaAgreed) {
+            $s.find('.eula').css('visibility', 'hidden');
+            this._markEulaAsAgreed();
+          }
           mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
           $continueButton.unbind('click');
           cb && cb(null);
-        });
+        }.bind(this));
 
-        var $checkbox = $s.find('.eula .checkbox');
-        $checkbox.change(function(evt) {
-          $continueButton.toggleClass('disabled', !$checkbox.is(':checked'));
-          $s.find('.validation').hide();
-        });
+        if (uiGlobals.isEulaAgreed) {
+          $continueButton.removeClass('disabled');
+          $s.find('.eula').remove();
+        } else {
+          $s.find('.eula-popup').click(function() {
+            var eulaWindow = popupWindow.open('/static/popups/license-en.html', {
+              title: 'Leap Motion End User Software License Agreement',
+              width: 640,
+              height: 480,
+              frame: true,
+              resizable: true,
+              show: true,
+              x: 50,
+              y: 50,
+              allowMultiple: false
+            });
+          });
+
+          var $checkbox = $s.find('.eula .checkbox');
+          $checkbox.change(function(evt) {
+            $continueButton.toggleClass('disabled', !$checkbox.is(':checked'));
+            $s.find('.validation').hide();
+          });
+        }
 
         $s.find('.close-app').click(function() {
           process.exit();
@@ -190,6 +215,15 @@ AppController.prototype = {
     win.maximize();
     win.setAlwaysOnTop(true);
     win.setAlwaysOnTop(false);
+  },
+
+  _markFirstRun: function() {
+    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
+  },
+
+  _markEulaAsAgreed: function() {
+    this._markFirstRun();
+    eula.markAsAgreed(); // ignore errors.. used by leap controller to skip prompting the user, not end of world if it happens twice
   },
 
   _createMenu: function(enableLogOut) {
@@ -257,7 +291,6 @@ AppController.prototype = {
         this._noMoreLeapConnectionChecks = true;
         cb && cb(null);
       }.bind(this));
-
     }.bind(this));
   },
 
@@ -280,7 +313,9 @@ AppController.prototype = {
   },
 
   _afterAuthorize: function() {
-    uiGlobals.isFirstRun = false;
+      uiGlobals.isFirstRun = false;
+      this._markFirstRun();
+
     this._paintMainApp();
 
     setInterval(this._scanFilesystem.bind(this), config.FsScanIntervalMs);
@@ -295,6 +330,7 @@ AppController.prototype = {
 
   _logOut: function() {
     installManager.cancelAll();
+    api.unsubscribeAllPubnubChannels();
     this._createMenu(false);
     if (this._mainPage) {
       this._mainPage.$el.remove();
