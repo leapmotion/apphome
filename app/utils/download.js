@@ -6,8 +6,10 @@ var os = require('os');
 var path = require('path');
 var url = require('url');
 var util = require('util');
+
 var config = require('../../config/config.js');
-var workingFile = require('../utils/working-file.js');
+var oauth = require('./oauth.js');
+var workingFile = require('./working-file.js');
 
 function DownloadProgressStream() {
   this._bytesSoFar = 0;
@@ -43,18 +45,28 @@ DownloadProgressStream.prototype.cancel = function() {
 };
 
 
-function getFile(sourceUrl, destPath, cb) {
+function getFile(sourceUrl, destPath, sendAccessToken, cb, progressStreamOverride) {
   if (!sourceUrl) {
     return cb(new Error('No source url specified.'));
   }
 
-  if (typeof destPath === 'function') {
+  var platformExtension = (os.platform() === 'darwin' ? 'dmg' : 'zip');
+  if (!cb && _.isFunction(sendAccessToken)) {
+    // 3 param case (sourceUrl, destPath, cb)
+    cb = sendAccessToken;
+    sendAccessToken = false;
+  } else if (!cb && !sendAccessToken && _.isFunction(destPath)) {
+    // 2 param case (sourceUrl, cb)
     cb = destPath;
-    destPath = workingFile.newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
+    destPath = workingFile.newTempFilePath(platformExtension);
+  } else if (!destPath) {
+    destPath = workingFile.newTempFilePath(platformExtension);
   }
+
   var totalBytes = 0;
   var destStream = fs.createWriteStream(destPath);
-  var progressStream = new DownloadProgressStream();
+  var progressStream = progressStreamOverride || new DownloadProgressStream();
+  var request;
 
   destStream.on('error', function(err) {
     cleanup();
@@ -77,64 +89,87 @@ function getFile(sourceUrl, destPath, cb) {
     cb = null;
   });
 
-  var protocolModule;
-  if (url.parse(sourceUrl).protocol === 'https:') {
-    protocolModule = https;
-  } else {
-    protocolModule = http;
-  }
-
-  var req = protocolModule.get(sourceUrl, function(res) {
-    if (res.statusCode >= 301 && res.statusCode <= 303 && res.headers['location']) {
-      // handle redirect
-      cleanup(res);
-      return getFile(res.headers['location'], destPath, cb);
+  function makeRequest(accessToken) {
+    var protocolModule;
+    var urlParts = url.parse(sourceUrl, true);
+    if (urlParts.protocol === 'https:') {
+      protocolModule = https;
+    } else {
+      protocolModule = http;
     }
 
-    totalBytes = Number(res.headers['content-length']);
-    progressStream.setTotalBytes(totalBytes);
-    progressStream.listenTo(res);
+    if (accessToken) {
+      urlParts.query.access_token = accessToken;
+      sourceUrl = url.format(urlParts);
+    }
 
-    res.on('error', function(err) {
-      cleanup(res);
-      cb && cb(err);
-      cb = null;
-    });
-
-    res.on('cancel', function() {
-      cleanup(res);
-      try {
-        if (fs.existsSync(destPath)) {
-          fs.unlinkSync(destPath);
-        }
-      } catch (err) {
-        console.error('Could not cleanup cancelled download: ' + (err.stack || err));
+    var req = protocolModule.get(sourceUrl, function(res) {
+      if (res.statusCode >= 301 && res.statusCode <= 303 && res.headers['location']) {
+        // handle redirect
+        cleanup(res);
+        return getFile(res.headers['location'], destPath, sendAccessToken, cb, progressStream);
+      } else if (res.statusCode !== 200) {
+        cleanup(res);
+        cb && cb(new Error('Got status code: ' + res.statusCode));
+        cb = null;
+        return;
       }
-      var err = new Error('Download cancelled.');
-      err.cancelled = true;
+
+      totalBytes = Number(res.headers['content-length']);
+      progressStream.setTotalBytes(totalBytes);
+      progressStream.listenTo(res);
+
+      res.on('error', function(err) {
+        cleanup(res);
+        cb && cb(err);
+        cb = null;
+      });
+
+      res.on('cancel', function() {
+        cleanup(res);
+        try {
+          if (fs.existsSync(destPath)) {
+            fs.unlinkSync(destPath);
+          }
+        } catch (err) {
+          console.error('Could not cleanup cancelled download: ' + (err.stack || err));
+        }
+        var err = new Error('Download cancelled.');
+        err.cancelled = true;
+        cb && cb(err);
+        cb = null;
+      });
+
+      res.on('close', function() {
+        res.removeAllListeners();
+      });
+
+      res.pipe(destStream);
+    });
+
+    req.on('error', function(err) {
+      cleanup();
       cb && cb(err);
       cb = null;
     });
 
-    res.on('close', function() {
-      res.removeAllListeners();
-    });
-
-    res.pipe(destStream);
-  });
+    return req;
+  }
 
   function cleanup(res) {
     res && res.removeAllListeners();
-    req.removeAllListeners();
+    request && request.removeAllListeners();
     destStream.removeAllListeners();
     destStream.close();
   }
 
-  req.on('error', function(err) {
-    cleanup();
-    cb && cb(err);
-    cb = null;
-  });
+  if (sendAccessToken) {
+    oauth.getAccessToken(function(err, accessToken) {
+      request = makeRequest(accessToken);
+    });
+  } else {
+    request = makeRequest();
+  }
 
   return progressStream;
 }
