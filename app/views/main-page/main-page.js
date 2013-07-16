@@ -10,6 +10,9 @@ module.exports = BaseView.extend({
   className: 'main-page',
 
   initialize: function() {
+    window.ondragover = function(evt) { evt.preventDefault(); return false }; // ignore dragged in files
+    window.ondrop = function(evt) { evt.preventDefault(); return false };
+
     this.injectCss();
     this.$el.append(this.templateHtml());
     this._linkMapping = {};
