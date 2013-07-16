@@ -177,7 +177,7 @@ AppController.prototype = {
         }
 
         $s.find('.close-app').click(function() {
-          nwGui.App.quit();
+          window.close();
         });
 
         splashWindow.setTimeout(function() {
@@ -243,9 +243,7 @@ AppController.prototype = {
       }));
       fileMenu.append(new nwGui.MenuItem({
         label: 'Exit',
-        click: function() {
-          nwGui.App.quit();
-        }
+        click: process.exit
       }));
       mainMenu.append(new nwGui.MenuItem({
         label: 'File',
