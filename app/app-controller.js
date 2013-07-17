@@ -314,8 +314,8 @@ AppController.prototype = {
   },
 
   _afterAuthorize: function() {
-      uiGlobals.isFirstRun = false;
-      this._markFirstRun();
+    uiGlobals.isFirstRun = false;
+    this._markFirstRun();
 
     this._paintMainApp();
 
@@ -340,7 +340,10 @@ AppController.prototype = {
     var authorizationView = new AuthorizationView();
     authorizationView.logOut(function() {
       authorizationView.remove();
-      this._authorize(this._paintMainApp.bind(this));
+      this._authorize(function() {
+        this._paintMainApp();
+        api.connectToStoreServer();
+      }.bind(this));
     }.bind(this));
   },
 

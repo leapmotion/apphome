@@ -74,7 +74,6 @@ module.exports = LeapApp.extend({
   },
 
   _downloadBinary: function(cb) {
-    console.info('Downloading binary of ' + this.get('name'));
     this.set('state', LeapApp.States.Connecting);
     var binaryUrl = this.get('binaryUrl');
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
@@ -110,7 +109,8 @@ module.exports = LeapApp.extend({
           return cb(err);
         }
         binaryUrl = this.get('binaryUrl');
-        var downloadProgress = download.get(binaryUrl, function(err, tempFilename) {
+        console.info('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
+        var downloadProgress = download.get(binaryUrl, null, true, function(err, tempFilename) {
           if (err) {
             return cb(err);
           }
