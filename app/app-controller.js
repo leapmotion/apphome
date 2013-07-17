@@ -337,9 +337,14 @@ AppController.prototype = {
       this._mainPage.$el.remove();
       this._mainPage.remove();
     }
-    var authorizationView = new AuthorizationView();
-    authorizationView.logOut(function() {
-      authorizationView.remove();
+    if (this._logOutView) {
+      this._logOutView.remove();
+      this._logOutView = null;
+    }
+    this._logOutView = new AuthorizationView();
+    this._logOutView.logOut(function() {
+      this._logOutView.remove();
+      this._logOutView = null;
       this._authorize(function() {
         this._paintMainApp();
         api.connectToStoreServer();
