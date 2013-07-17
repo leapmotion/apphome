@@ -38,6 +38,7 @@ module.exports = LeapApp.extend({
         this.save();
       }.bind(this));
     }
+    this.set('availableUpgrade', null);
     LeapApp.prototype.initialize.apply(this, arguments);
   },
 
