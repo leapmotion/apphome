@@ -114,8 +114,8 @@ module.exports = BaseView.extend({
       this.$('#uninstalled-link').removeClass('highlight');
 
       try {
-        var id = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json')).id;
-        var leapApp = uiGlobals.myApps.get(id);
+        var transferredJson = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json'));
+        var leapApp = uiGlobals.myApps.get(transferredJson.appId || transferredJson.id);
       } catch (err) {
         console.error('received invalid json: ' + (err.stack || err));
       }
