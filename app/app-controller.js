@@ -148,7 +148,7 @@ AppController.prototype = {
             return;
           }
           this._markFirstRun();
-          $s.find('.eula').css('visibility', 'hidden');
+          $s.find('.eula, h2.tagline').css('visibility', 'hidden');
           // this._markEulaAsAgreed(); // todo: restore block when file eula check determines this value
           mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
           $continueButton.unbind('click');
