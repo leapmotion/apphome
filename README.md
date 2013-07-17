@@ -16,9 +16,17 @@ Running without specifying test file(s) will run the entire set of test suites.
 
 ### Building
 
+If it's a release build, first run:
+
+    node bin/release [version]
+
+To build, run:
+
     node bin/build [version]
 
 Outputs to: <code>build/</code>
+
+Building for Windows requires building on Windows, unfortunately.
 
 ### App Manifest
 
