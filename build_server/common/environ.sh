@@ -70,11 +70,11 @@ export BUILD_IDENTIFIER="${_branch_basename}_${_audience}_${BUILD_PLAT}_${BUILD_
 unset _audience
 
 #define build tools
-if [ ! -n "${NODE}" ]; then
-  export CMAKE=$(which node)
+if [ ! -x "${NODE}" ]; then
+  export NODE=$(which node)
 fi
 
-if [ ! -n "${TAR}" ]; then
+if [ ! -x "${TAR}" ]; then
   export TAR=$(which tar)
 fi
 
