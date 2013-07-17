@@ -9,6 +9,7 @@ module.exports = BaseView.extend({
   className: 'leap-not-connected',
 
   initialize: function() {
+    console.log('tmp --- init');
     this.injectCss();
     this.$el.toggleClass('embedded', !!this.options.isEmbedded);
     this.$el.append($(this.templateHtml()));
@@ -16,19 +17,20 @@ module.exports = BaseView.extend({
 
   encourageConnectingLeap: function(cb) {
     if (!leap.isConnected()) {
+      console.log('tmp --- encourageConnectingLeap');
       this.$el.appendTo('body');
       var checkInterval = setInterval(function() {
         if (leap.isConnected()) {
           clearInterval(checkInterval);
-          cb(null);
+          cb && cb(null);
         }
       });
       this.$('.skip-button').click(function() {
         clearInterval(checkInterval);
-        cb(null);
+        cb && cb(null);
       });
     } else {
-      cb(null);
+      cb && cb(null);
     }
   }
 

@@ -13,7 +13,7 @@ var async = require('async');
 
 var config = require('../../config/config.js');
 var drm = require('./drm.js');
-var extract = require('../utils/extract.js');
+var extract = require('./extract.js');
 var oauth = require('./oauth.js');
 var semver = require('./semver.js');
 
@@ -341,7 +341,7 @@ function getLocalAppManifest(cb) {
   });
 }
 
-function getFrozenApps(cb) {
+function getFrozenApps() {
   if (db.getItem(PreBundle.PreBundlingComplete)) {
     console.log('PreBundling Complete');
     return;

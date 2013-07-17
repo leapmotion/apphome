@@ -15,7 +15,6 @@ function withOverrides(overrides) {
     tile_url: randomValue.randomString(16),
     binary_url: randomValue.randomString(16),
     version_number: [ randomValue.randomInt(1), randomValue.randomInt(1), randomValue.randomInt(1) ].join('.'),
-    changelog: randomValue.randomString(16),
     certified_at: (new Date()).toString(),
     created_at: (new Date()).toString()
   }

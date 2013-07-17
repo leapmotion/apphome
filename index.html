@@ -28,13 +28,11 @@
       global.uiGlobals = require('./app/ui-globals.js');
       window.document.title = global.uiGlobals.appName;
       require('./app/utils/logging.js');
-      var preloadScriptPath = process.env.LEAPHOME_PRELOAD_SCRIPT_PATH;
-      if (preloadScriptPath) {
-        require(preloadScriptPath); // a hook primarily used for testing
-      };
       console.log('Using node-webkit version ' + process.versions['node-webkit']);
+      var bootstrapScriptPath = process.env.BOOTSTRAP_SCRIPT_PATH || './app/airspace.js'; // a hook primarily used for testing
+      var airspace = require(bootstrapScriptPath);
       window.onload = function() {
-        require('./app/airspace.js').run();
+        airspace.run();
       };
     })();
   </script>

@@ -1,20 +1,15 @@
-raven = require('raven');
 var config = require('../config/config.js');
 var installManager = require('./utils/install-manager.js');
-var client = new raven.Client(config.SentryDSN);
+var client;
 
-var AppController = require('./app-controller.js');
+var bootstrapController = require('./bootstrap-controller.js');
 var mixpanel = require('./utils/mixpanel.js');
 var crashCounter = require('./utils/crash-counter.js');
 
 mixpanel.trackOpen();
 
-function run(recoveringFromError) {
-  var appController = new AppController();
-  if (!recoveringFromError) {
-    appController.restoreModels();
-  }
-  appController.runApp();
+function run() {
+  bootstrapController.run();
 }
 
 // This code redirects links in app description/changelog
@@ -39,6 +34,9 @@ process.on('uncaughtException', function(err) {
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
   if (isProduction) {
+    if (!client) {
+      client = new require('raven').Client(config.SentryDSN);
+    }
     client.captureError(err);
   }
   if (crashCounter.count() <= 2) {

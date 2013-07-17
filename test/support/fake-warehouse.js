@@ -6,6 +6,17 @@ var randomValue = require('./random-value.js');
 var app = express();
 
 var availableAppsByPlatform = {};
+var appsByAppId = {};
+
+function getApp(overrides) {
+  var appId = overrides.app_id;
+  var app = appsByAppId[appId];
+  if (!app) {
+    app = newApp.withOverrides(overrides);
+    appsByAppId[app.appId] = app;
+  }
+  return app;
+}
 
 function getAppsForPlatform(platform) {
   if (!availableAppsByPlatform[platform]) {
@@ -15,9 +26,9 @@ function getAppsForPlatform(platform) {
         auth_id: 4000,
         secret_token: randomValue.randomString(16)
       },
-      newApp.withOverrides({ platform: platform, app_id: 1 }),
-      newApp.withOverrides({ platform: platform, app_id: 2 }),
-      newApp.withOverrides({ platform: platform, app_id: 3 })
+      getApp({ platform: platform, app_id: 1 }),
+      getApp({ platform: platform, app_id: 2 }),
+      getApp({ platform: platform, app_id: 3 })
     ];
   }
   return availableAppsByPlatform[platform];
@@ -31,6 +42,10 @@ app.get('/api/apps/myapps', function(req, res) {
   } else {
     res.json(200, getAppsForPlatform(req.query.platform));
   }
+});
+
+app.get('/api/apps/:id/homebase/:platform', function(req, res) {
+  res.json(200, getApp({ app_id: req.params.id, platform: req.params.platform }));
 });
 
 module.exports = app;

@@ -21,7 +21,7 @@ var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package
 uiGlobals.appName = packageJson.fullName;
 uiGlobals.appVersion = packageJson.version;
 
-uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
 uiGlobals.sendNotification = function(header, body, icon) {
   var win = nwGui.Window.get();
   window.LOCAL_NW.desktopNotifications.notify(icon || '', header, body, function() {

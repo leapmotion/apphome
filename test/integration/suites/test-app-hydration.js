@@ -7,8 +7,8 @@ var leapAppFactory = require('../../support/leap-app-factory.js');
 if (global.isRunningTest()) {
   var leapApps = [];
   leapApps.push(leapAppFactory.storeAppData({
-    id: 'x500',
-    app_id: 1,
+    id: 2234,
+    app_id: 500,
     name: 'PopCAD'
   }));
   leapApps.push(leapAppFactory.storeAppData());
@@ -22,10 +22,8 @@ integrationTest.runInApp(__filename, function() {
   describe('apps hydrated', function() {
     it('should create leapApp models from persisted data', function() {
       assert.ok(uiGlobals.myApps.length >= 3, 'should add models to central leapApp collection');
-      var expected = uiGlobals.myApps.find(function(leapApp) {
-        return leapApp.get('name') === 'PopCAD';
-      });
-      assert.equal(expected.id, 'x500', 'should load existing app');
+      var expected = uiGlobals.myApps.findWhere({ name: 'PopCAD' });
+      assert.equal(expected.get('appId'), 500, 'should load existing app');
     });
   });
 

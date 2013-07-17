@@ -7,11 +7,12 @@ var config = require('../../config/config.js');
 var icns = require('../utils/icns.js');
 var ico = require('../utils/ico.js');
 var shell = require('../utils/shell.js');
+var FsScanner = require('../utils/fs-scanner.js');
 
 var LeapApp = require('./leap-app.js');
 
-module.exports = LeapApp.extend({
 
+var LocalLeapApp = LeapApp.extend({
   constructor: function(args) {
     if (!args.keyFile && args.relativeExePath) {
       try {
@@ -137,3 +138,77 @@ module.exports = LeapApp.extend({
   }
 
 });
+
+
+
+function explicitPathApps(manifest) {
+  var existingExplicitPathLocalAppsById = {};
+  uiGlobals.myApps.forEach(function(app) {
+    if (app.isLocalApp() && !app.get('findByScanning')) {
+      existingExplicitPathLocalAppsById[app.get('id')] = app;
+    }
+  });
+
+  manifest.forEach(function(appToFind) {
+    if (!appToFind.findByScanning) {
+      try {
+        var app = new LocalLeapApp(appToFind);
+        if (app.isValid()) {
+          var id = app.get('id');
+          var existingApp = existingExplicitPathLocalAppsById[id];
+          if (existingApp) {
+            delete existingExplicitPathLocalAppsById[id];
+            existingApp.set('iconUrl', app.get('iconUrl'));
+            existingApp.set('tileUrl', app.get('tileUrl'));
+          } else {
+            console.log('New local app: ' + app.get('name'));
+            app.install();
+          }
+        }
+      } catch(err) {
+        // app is not found
+      }
+    }
+  });
+
+  // remove old apps
+  _(existingExplicitPathLocalAppsById).forEach(function (oldApp) {
+    uiGlobals.myApps.remove(oldApp);
+    oldApp.save();
+  });
+}
+
+function localAppScan(manifest) {
+  var existingScannedLocalAppsById = {};
+  uiGlobals.myApps.forEach(function(app) {
+    if (app.isLocalApp() && app.get('findByScanning')) {
+      existingScannedLocalAppsById[app.get('id')] = app;
+    }
+  });
+
+  var fsScanner = new FsScanner(manifest);
+  fsScanner.scan(function(err, apps) {
+    if (!err) {
+      apps.forEach(function(app) {
+        var id = app.get('id');
+        if (existingScannedLocalAppsById[id]) {
+          delete existingScannedLocalAppsById[id];
+        } else {
+          console.log('Found new local app: ' + app.get('name'));
+          app.install();
+        }
+      });
+
+      // remove old apps
+      _(existingScannedLocalAppsById).forEach(function(oldApp){
+        uiGlobals.myApps.remove(oldApp);
+        oldApp.save();
+      });
+    }
+  });
+}
+
+
+module.exports = LocalLeapApp;
+module.exports.localAppScan = localAppScan;
+module.exports.explicitPathAppScan = explicitPathApps;

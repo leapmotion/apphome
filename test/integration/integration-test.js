@@ -4,6 +4,7 @@ var fork = require('child_process').fork;
 var async = require('async');
 var net = require('net');
 var Mocha = require('mocha');
+
 global._ = global._ || require('underscore');
 global.assert = require('assert');
 
@@ -17,9 +18,7 @@ global.isRunningTest = function() {
 };
 
 function runInApp(fileName, testFn) {
-  var testPath = process.env.LEAPHOME_INTEGRATION_TEST_PATH;
-
-  if (!testPath) {
+  if (!global.isRunningTest()) {
     setupLeapHomeTestApp(fileName, testFn);
   } else {
     console.info('Running integration test: ' + fileName);
@@ -142,4 +141,16 @@ function runApp(testFile, tearDown) {
   });
 }
 
+function setTestOptions(opts) {
+  if (isRunningTest()) {
+    var defaults = {
+      alreadyDidFirstRun: true,
+      hasEmbeddedLeapDevice: false,
+      loginAs: 'pongo@twistleton.test',
+      preInit: function() {}
+    };
+    global.testOptions = _.extend({}, defaults, opts);
+  }
+}
 module.exports.runInApp = runInApp;
+module.exports.options = setTestOptions;

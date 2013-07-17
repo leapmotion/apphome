@@ -1,6 +1,10 @@
 var integrationTest = require('../integration-test.js');
 var leapAppFactory = require('../../support/leap-app-factory.js');
 
+integrationTest.options({
+
+});
+
 integrationTest.runInApp(__filename, function() {
 
   var leapApps;

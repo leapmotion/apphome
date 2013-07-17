@@ -250,6 +250,7 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
+  console.log('Rehydrating leap apps from database');
   var installedAppsJson = db.fetchObj(config.DbKeys.InstalledApps) || [];
   installedAppsJson.forEach(function(appJson) {
     try {
