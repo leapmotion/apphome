@@ -191,6 +191,8 @@ AppController.prototype = {
         $graphic.effect("blind");
         var $continueButton = $('#continue', this._firstRunSplash.window.document);
         $continueButton.text('Launch Airspace');
+        $('h1', this._firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
+        $('h2', this._firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
 
         $continueButton.click(function() {
           this._firstRunSplash.close();
