@@ -29,7 +29,12 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
-  console.error('Uncaught exception: ' + err.stack);
+  if (/ECONNRESET|ECONNREFUSED|ECONNABORTED|ETIMEOUT|ETIMEDOUT|ENOTFOUND/.test(err.code)) {
+    console.warn('Ignoring uncaught network exception: ' + (err.stack || err));
+    return;
+  }
+
+  console.error('Uncaught exception: ' + (err.stack || err));
   installManager.cancelAll();
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
