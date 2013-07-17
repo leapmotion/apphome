@@ -158,7 +158,7 @@ var LeapApp = BaseModel.extend({
       return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
     } catch (err) {
       console.error('icon invalid path ' + (err.stack || err));
-      return 'https://lm-assets.s3.amazonaws.com/airspace-desktop/error_icon.png'; // todo: use local asset
+      return null; // so app knows to try again
     }
   },
 
@@ -167,8 +167,7 @@ var LeapApp = BaseModel.extend({
       return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
     } catch (err) {
       console.error('tile invalid path ' + (err.stack || err));
-      return 'https://lm-assets.s3.amazonaws.com/airspace-desktop/error_tile.png'; // todo: use local asset
-
+      return null; // so app knows to try again
     }
   },
 
