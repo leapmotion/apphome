@@ -319,6 +319,8 @@ AppController.prototype = {
   },
 
   _afterAuthorize: function() {
+    $('body').addClass('loading');
+
     uiGlobals.isFirstRun = false;
     this._markFirstRun();
 
@@ -331,6 +333,7 @@ AppController.prototype = {
     } catch (err) {
       console.error('Failed to send device data: ' + (err.stack + err));
     }
+
     api.connectToStoreServer();
   },
 
