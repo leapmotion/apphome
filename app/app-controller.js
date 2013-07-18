@@ -259,9 +259,14 @@ AppController.prototype = {
       submenu: accountMenu
     }));
 
-    // TODO: support website links on both OS X and Windows
+    var helpMenu = new nwGui.Menu();
+    helpMenu.append(new nwGui.MenuItem({
+      label: 'Getting Started...',
+      click: function() {
+        nwGui.Shell.openExternal(config.GettingStartedUrl);
+      }
+    }));
     if (os.platform() === 'win32') {
-      var helpMenu = new nwGui.Menu();
       helpMenu.append(new nwGui.MenuItem({
         label: 'About ' + uiGlobals.appName,
         click: function() {
@@ -272,11 +277,11 @@ AppController.prototype = {
            });
         }
       }));
-      mainMenu.append(new nwGui.MenuItem({
-        label: 'Help',
-        submenu: helpMenu
-      }));
     }
+    mainMenu.append(new nwGui.MenuItem({
+      label: 'Help',
+      submenu: helpMenu
+    }));
 
     nwGui.Window.get().menu = mainMenu;
   },
