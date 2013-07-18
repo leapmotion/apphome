@@ -33,13 +33,14 @@ module.exports = LeapApp.extend({
   idAttribute: 'appId',
 
   initialize: function() {
-    if (!this.get('gotDetails')) {
-      api.refreshAppDetails(this, function() {
-        this.save();
-      }.bind(this));
-    }
-    this.set('availableUpgrade', null);
     LeapApp.prototype.initialize.apply(this, arguments);
+
+    this.on('add', function() {
+      this.set('availableUpgrade', null);
+      if (!this.get('gotDetails')) {
+        api.refreshAppDetails(this);
+      }
+    }.bind(this));
   },
 
   isStoreApp: function() {
@@ -52,6 +53,11 @@ module.exports = LeapApp.extend({
       mixpanel.trackAppUpgrade();
       this.set(this.get('availableUpgrade').toJSON());
       console.log('Upgrading: ' + this.get('name'));
+
+      // refresh icon and tile
+      this.downloadIcon(true);
+      this.downloadTile(true);
+
       this._installFromServer(function(err) {
         if (!err) {
           this.set('availableUpgrade', null);
