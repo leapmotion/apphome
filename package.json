@@ -1,7 +1,7 @@
 {
   "name": "Airspace",
   "fullName": "Airspace Home",
-  "version": "0.8.2.2",
+  "version": "0.8.2.3",
   "description": "Leap Motion Airspace Home",
   "main": "index.html",
   "node-main": "node-main.js",
