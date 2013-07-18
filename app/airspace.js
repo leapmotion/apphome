@@ -7,6 +7,8 @@ var AppController = require('./app-controller.js');
 var mixpanel = require('./utils/mixpanel.js');
 var crashCounter = require('./utils/crash-counter.js');
 
+var IgnoredErrorRegex = /ECONNRESET|ECONNREFUSED|ECONNABORTED|ETIMEOUT|ETIMEDOUT|ENOTFOUND/;
+
 mixpanel.trackOpen();
 
 function run(recoveringFromError) {
@@ -29,7 +31,7 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
-  if (/ECONNRESET|ECONNREFUSED|ECONNABORTED|ETIMEOUT|ETIMEDOUT|ENOTFOUND/.test(err.code)) {
+  if (IgonoredErrorRegex.test(err.code) || IgnoredErrorRegex.test(err.message)) {
     console.warn('Ignoring uncaught network exception: ' + (err.stack || err));
     return;
   }
