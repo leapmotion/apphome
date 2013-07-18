@@ -248,7 +248,6 @@ module.exports = LeapApp.extend({
     } catch (err) {
       return this._failUninstallation(err, cb);
     } finally {
-      this.set('installedAt', null);
       this.set('state', LeapApp.States.Uninstalled);
       this.trigger('uninstall');
     }
