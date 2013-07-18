@@ -37,7 +37,7 @@ var LeapApp = BaseModel.extend({
         state === LeapApp.States.Downloading ||
         state === LeapApp.States.Installing) {
       this.set('state', LeapApp.States.NotYetInstalled);
-    } else if (this.get('state') === LeapApp.States.Uninstalling) {
+    } else if (state === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }
 
