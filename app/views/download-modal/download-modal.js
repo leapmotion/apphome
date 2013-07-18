@@ -19,17 +19,18 @@ module.exports = BaseView.extend({
 
     this.injectCss();
 
+
+    var appJson = leapApp.toJSON()
+    appJson.changelog = leapApp.getMarkdown('changelog');
+    appJson.description = leapApp.getMarkdown('description');
+
     if (leapApp.isUpgradable()) {
       var upgradeApp = leapApp.get('availableUpgrade');
       if (_.isFunction(upgradeApp.toJSON)) {
-        appToInstall = upgradeApp;
+        _(appJson).extend(upgradeApp.toJSON());
+        appJson.changelog = upgradeApp.getMarkdown('changelog');
       }
     }
-    var appJson = appToInstall.toJSON();
-    if (leapApp.isUpgradable()) {
-      appJson.changelog = appToInstall.getMarkdown('changelog');
-    }
-    appJson.description = appToInstall.getMarkdown('description');
     this.$el.append($(this.templateHtml({ app: appJson })));
 
     this.$('img').on('load error', function() {

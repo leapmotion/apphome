@@ -64,15 +64,17 @@ var LeapApp = BaseModel.extend({
       }
     }.bind(this));
 
-    if (!this.get('tilePath') && this.get('tileUrl')) {
-      this.downloadTile(true, function() {
-        if (!this.get('iconPath') && this.get('iconUrl')) {
-          this.downloadIcon(true);
-        }
-      }.bind(this));
-    } else if (!this.get('iconPath') && this.get('iconUrl')) {
-      this.downloadIcon(true);
-    }
+    this.on('add', function() {
+      if (!this.get('tilePath') && this.get('tileUrl')) {
+        this.downloadTile(true, function() {
+          if (!this.get('iconPath') && this.get('iconUrl')) {
+            this.downloadIcon(true);
+          }
+        }.bind(this));
+      } else if (!this.get('iconPath') && this.get('iconUrl')) {
+        this.downloadIcon(true);
+      }
+    }.bind(this));
   },
 
   save: function() {
@@ -155,7 +157,8 @@ var LeapApp = BaseModel.extend({
 
   standardIconPath: function() {
     try {
-      return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
+      var id = this.get('versionId') || this.get('id');
+      return appData.pathForFile(config.AppSubdir.AppIcons, id + '.png');
     } catch (err) {
       console.error('icon invalid path ' + (err.stack || err));
       return null; // so app knows to try again
@@ -164,7 +167,8 @@ var LeapApp = BaseModel.extend({
 
   standardTilePath: function() {
     try {
-      return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
+      var id = this.get('versionId') || this.get('id');
+      return appData.pathForFile(config.AppSubdir.AppTiles, id + '.png');
     } catch (err) {
       console.error('tile invalid path ' + (err.stack || err));
       return null; // so app knows to try again

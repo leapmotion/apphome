@@ -148,12 +148,15 @@ function handleAppJson(appJson) {
     var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
       if (!existingApp.isInstalled()) {
-        var appJson = app.toJSON();
-        delete appJson.state;
-        existingApp.set(appJson);
+        refreshAppDetails(app, function() {
+          var appJson = app.toJSON();
+          delete appJson.state;
+          existingApp.set(appJson);
+        });
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpgrade', app);
+        refreshAppDetails(app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
