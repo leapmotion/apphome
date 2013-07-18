@@ -31,7 +31,7 @@ $('body').on('click', 'a', function(evt) {
 });
 
 process.on('uncaughtException', function(err) {
-  if (IgonoredErrorRegex.test(err.code) || IgnoredErrorRegex.test(err.message)) {
+  if (IgnoredErrorRegex.test(err.code) || IgnoredErrorRegex.test(err.message)) {
     console.warn('Ignoring uncaught network exception: ' + (err.stack || err));
     return;
   }
