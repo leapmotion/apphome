@@ -120,8 +120,7 @@ function cleanUpAppJson(appJson) {
     version: appJson.version_number,
     changelog: appJson.changelog,
     description: appJson.description,
-    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null,
-    firstSeenAt: (new Date()).getTime()
+    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null
   };
   Object.keys(cleanAppJson).forEach(function(key) {
     if (!cleanAppJson[key]) {
@@ -159,6 +158,7 @@ function handleAppJson(appJson) {
       }
     } else {
       try {
+        app.set('firstSeenAt', (new Date()).getTime());
         myApps.add(app);
       } catch (err) {
         console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
