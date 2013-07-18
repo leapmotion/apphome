@@ -156,21 +156,23 @@ var LeapApp = BaseModel.extend({
   },
 
   standardIconPath: function() {
-    try {
-      var id = this.get('versionId') || this.get('id');
-      return appData.pathForFile(config.AppSubdir.AppIcons, id + '.png');
-    } catch (err) {
-      console.error('icon invalid path ' + (err.stack || err));
-      return null; // so app knows to try again
-    }
+    return this._standardAssetPath(config.AppSubdir.AppIcons);
   },
 
   standardTilePath: function() {
+    return this._standardAssetPath(config.AppSubdir.AppTiles);
+  },
+
+  _standardAssetPath: function(dir) {
+    if (typeof dir !== 'string') {
+      console.warn('Invalid directory: ' + dir);
+      return null;
+    }
     try {
-      var id = this.get('versionId') || this.get('id');
-      return appData.pathForFile(config.AppSubdir.AppTiles, id + '.png');
+      var filename = (this.isStoreApp() ? this.get('versionId') : this.get('id')) + '.png';
+      return appData.pathForFile(dir, filename);
     } catch (err) {
-      console.error('tile invalid path ' + (err.stack || err));
+      console.error('Error with asset path: ' + (err.stack || err));
       return null; // so app knows to try again
     }
   },
