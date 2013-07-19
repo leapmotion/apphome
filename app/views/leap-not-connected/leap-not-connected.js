@@ -9,7 +9,6 @@ module.exports = BaseView.extend({
   className: 'leap-not-connected',
 
   initialize: function() {
-    console.log('tmp --- init');
     this.injectCss();
     this.$el.toggleClass('embedded', !!this.options.isEmbedded);
     this.$el.append($(this.templateHtml()));
@@ -17,7 +16,6 @@ module.exports = BaseView.extend({
 
   encourageConnectingLeap: function(cb) {
     if (!leap.isConnected()) {
-      console.log('tmp --- encourageConnectingLeap');
       this.$el.appendTo('body');
       var checkInterval = setInterval(function() {
         if (leap.isConnected()) {

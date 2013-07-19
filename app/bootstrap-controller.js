@@ -23,72 +23,77 @@ var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connecte
 var firstRunView = require('./views/first-run/first-run.js');
 
 
-var BootstrapSequence = {
+function prerunAsyncKickoff(cb) {
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+  LeapApp.hydrateCachedModels();
+  embeddedLeap.embeddedLeapPromise();
+  AsyncTasks.localAppFileSystemScan();
+  windowChrome.rebuildMenuBar(false);
+  cb && cb(null);
+}
 
-  prerunAsyncKickoff: function(cb) {
-    uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-    LeapApp.hydrateCachedModels();
-    embeddedLeap.embeddedLeapPromise();
-    AsyncTasks.localAppFileSystemScan();
-    windowChrome.rebuildMenuBar(false);
+function firstRun(cb) {
+  if (!uiGlobals.isFirstRun) {
     cb && cb(null);
-  },
-
-  firstRun: function(cb) {
-    if (!uiGlobals.isFirstRun) {
-      cb && cb(null);
-    } else {
-      firstRunView.showFirstRunSequence(cb);
-    }
-  },
-
-  setupMainWindow: function(cb) {
-    windowChrome.maximizeWindow();
-    window.setTimeout(function() { // what's this for? todo: move to an explicit step at end?
-      $('body').removeClass('startup');
-    }, 50);
-
-    cb && cb(null);
-  },
-
-  checkLeapConnection: function(cb) {
-    embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
-      var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
-      leapNotConnectedView.encourageConnectingLeap(function() {
-        leapNotConnectedView.remove();
-        cb && cb(null);
-      });
-    });
-  },
-
-  startMainApp: function() {
-    AsyncTasks.authorizeAndPaintMainScreen();
-  },
-
-  afterwardsAsyncKickoffs: function(cb) {
-    var stacked = function(task, ms) {
-      try {
-        setTimeout(task, ms);
-      } catch (err) {
-        console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
-      }
-    };
-    stacked(frozenApps.get, 10);
-    stacked(workingFile.cleanup, 3000);
-
-    cb && cb(null);
+  } else {
+    firstRunView.showFirstRunSequence(cb);
   }
-};
+}
+
+function setupMainWindow(cb) {
+  windowChrome.maximizeWindow();
+  window.setTimeout(function() { // what's this for? todo: move to an explicit step at end?
+    $('body').removeClass('startup');
+  }, 50);
+
+  cb && cb(null);
+}
+
+function checkLeapConnection(cb) {
+  embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
+    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
+    leapNotConnectedView.encourageConnectingLeap(function() {
+      leapNotConnectedView.remove();
+      cb && cb(null);
+    });
+  });
+}
+
+function startMainApp() {
+  AsyncTasks.authorizeAndPaintMainScreen();
+}
+
+function afterwardsAsyncKickoffs(cb) {
+  var stacked = function(task, ms) {
+    try {
+      setTimeout(task, ms);
+    } catch (err) {
+      console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
+    }
+  };
+  stacked(frozenApps.get, 10);
+  stacked(workingFile.cleanup, 3000);
+  cb && cb(null);
+}
 
 
 function bootstrapAirspace() {
-  var steps = _(BootstrapSequence).map(function(fn, key) {
+  var steps = [
+    prerunAsyncKickoff,
+    firstRun,
+    setupMainWindow,
+    checkLeapConnection,
+    startMainApp,
+    afterwardsAsyncKickoffs
+  ];
+
+  var wrappedSteps =  _(steps).map(function(fn, key) {
     return function(cb) {
-      console.log('Bootstrap Step: ' + key + '\n');
+      console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
       fn.call(null, cb);
     }
   });
-  async.series(steps, function(err) {
+  async.series(wrappedSteps, function(err) {
     if (err) {
       console.error('Error bootstrapping airspace: ' + (err.stack || err));
       process.exit();
