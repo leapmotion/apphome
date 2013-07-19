@@ -91,7 +91,8 @@ var CarouselView = BaseView.extend({
     }, this);
 
     this.listenTo(collection, 'change:state', function(tileModel) {
-      if (tileModel && tileModel.get('state') === LeapApp.States.Downloading) {
+      var previousState = tileModel && tileModel.previous('state');
+      if (previousState === LeapApp.States.NotYetInstalled || previousState === LeapApp.States.Uninstalled) {
         this.switchToSlide(collection.whichPage(tileModel, this._tilesPerSlide));
       }
     }, this);

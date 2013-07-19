@@ -20,6 +20,10 @@ body.startup {
   background: transparent;
 }
 
+body.loading {
+  cursor: progress;
+}
+
 body * {
   user-select: none;
   -webkit-user-select: none;

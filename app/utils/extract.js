@@ -51,7 +51,7 @@ function extractZip(src, dest, cb) {
 function unzip(src, dest, cb) {
   var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
   console.log('\n\nUsing shell to unzip: ' + command);
-  exec(command, cb);
+  exec(command, { maxBuffer: 1024 * 1024 }, cb);
 }
 
 function extractDmg(src, dest, cb) {

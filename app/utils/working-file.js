@@ -20,6 +20,10 @@ function newTempFilePath(extension) {
   return res;
 }
 
+function newTempPlatformArchive() {
+  return newTempFilePath(os.platform() === 'darwin' ? 'dmg' : 'zip');
+}
+
 function _workingSet() {
   return db.fetchObj(ActiveTempFilesKey) || {};
 }
@@ -76,4 +80,5 @@ function cleanup() {
 
 
 module.exports.newTempFilePath = newTempFilePath;
+module.exports.newTempPlatformArchive = newTempPlatformArchive;
 module.exports.cleanup = cleanup;

@@ -22,7 +22,7 @@ If it's a release build, first run:
 
 To build, run:
 
-    node bin/build [version]
+    node bin/build
 
 Outputs to: <code>build/</code>
 

@@ -4,7 +4,6 @@ var http = require('http');
 var https = require('https');
 var os = require('os');
 var path = require('path');
-var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
 var url = require('url');
 var db = require('./db.js');
@@ -12,9 +11,11 @@ var enumerable = require('./enumerable.js');
 var async = require('async');
 
 var config = require('../../config/config.js');
+var download = require('./download.js');
 var drm = require('./drm.js');
 var extract = require('./extract.js');
 var oauth = require('./oauth.js');
+var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
@@ -33,78 +34,6 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
 
-var pubnubSubscriptions = {};
-var pubnub;
-var pubnubDomain = domain.create();
-
-pubnubDomain.on('error', function(err) {
-  unsubscribeAllPubnubChannels()
-  reconnectAfterError(err);
-});
-
-pubnubDomain.run(function() {
-  pubnub = pubnubInit({
-    subscribe_key: config.PubnubSubscribeKey,
-    ssl: true,
-    jsonp: true // force http transport to work better with http proxies
-  });
-});
-
-function unsubscribeAllPubnubChannels() {
-  Object.keys(pubnubSubscriptions).forEach(function(channel) {
-    console.log('Unsubscribing from PubNub channel: ' + channel);
-    pubnubDomain.run(function() {
-      pubnub.unsubscribe({ channel: channel });
-    });
-  });
-  pubnubSubscriptions = {};
-}
-
-// only allow one callback per channel
-function subscribeToPubnubChannel(channel, callback) {
-  if (!pubnubSubscriptions[channel]) {
-    pubnubSubscriptions[channel] = true;
-
-    pubnubDomain.run(function() {
-      pubnub.subscribe({
-        channel: channel,
-        callback: function(data) {
-          try {
-            callback(JSON.parse(data));
-          } catch (e) {
-            console.error('failed to parse pubsub response for', channel, data, e);
-          }
-        }
-      });
-    });
-  }
-}
-
-function getJson(url, cb) {
-  var protocolModule = (/^https:/.test(url) ? https : http);
-  var responseParts = [];
-  return protocolModule.get(url, function(resp) {
-    resp.on('data', function(chunk) {
-      responseParts.push(chunk);
-    });
-    resp.on('end', function() {
-      try {
-        var response = responseParts.join('');
-        cb && cb(null, JSON.parse(response));
-      } catch(err) {
-        cb && cb(err);
-      } finally {
-        cb = null;
-      }
-    });
-
-    resp.on('error', function(err) {
-      cb && cb(err);
-      cb = null;
-    });
-  });
-}
-
 function cleanUpAppJson(appJson) {
   appJson = appJson || {};
   var releaseDate = appJson.certified_at || appJson.created_at;
@@ -120,8 +49,7 @@ function cleanUpAppJson(appJson) {
     version: appJson.version_number,
     changelog: appJson.changelog,
     description: appJson.description,
-    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null,
-    firstSeenAt: (new Date()).getTime()
+    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null
   };
   Object.keys(cleanAppJson).forEach(function(key) {
     if (!cleanAppJson[key]) {
@@ -148,17 +76,21 @@ function handleAppJson(appJson) {
     var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
       if (!existingApp.isInstalled()) {
-        var appJson = app.toJSON();
-        delete appJson.state;
-        existingApp.set(appJson);
+        refreshAppDetails(app, function() {
+          var appJson = app.toJSON();
+          delete appJson.state;
+          existingApp.set(appJson);
+        });
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpgrade', app);
+        refreshAppDetails(app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
       try {
+        app.set('firstSeenAt', (new Date()).getTime());
         myApps.add(app);
       } catch (err) {
         console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
@@ -169,7 +101,7 @@ function handleAppJson(appJson) {
 }
 
 function subscribeToUserChannel(userId) {
-  subscribeToPubnubChannel(userId + '.user.purchased', function() {
+  pubnub.subscribe(userId + '.user.purchased', function() {
     var win = nwGui.Window.get();
     // steal focus
     win.setAlwaysOnTop(true);
@@ -180,7 +112,7 @@ function subscribeToUserChannel(userId) {
 }
 
 function subscribeToAppChannel(appId) {
-  subscribeToPubnubChannel(appId + '.app.updated', handleAppJson);
+  pubnub.subscribe(appId + '.app.updated', handleAppJson);
 }
 
 function getAuthURL(url, cb) {
@@ -203,27 +135,23 @@ function reconnectAfterError(err) {
   }
 }
 
-function connectToStoreServer(cb) {
+function connectToStoreServer() {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       reconnectAfterError(err);
-      cb && cb(err);
-      cb = null;
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
-      var req = getJson(apiEndpoint, function(err, messages) {
+      download.getJson(apiEndpoint, function(err, messages) {
         if (err) {
           reconnectAfterError(err);
-          cb && cb(err);
-          cb = null;
         } else if (messages.errors) {
-          cb && cb(new Error(messages.errors));
-          cb = null;
+          reconnectAfterError(new Error(messages.errors));
         } else {
           console.log('Connected to store server.');
+          $('body').removeClass('loading');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
               drm.writeXml(message.auth_id, message.secret_token);
@@ -241,15 +169,7 @@ function connectToStoreServer(cb) {
               }
             }
           });
-          cb && cb(null);
-          cb = null;
         }
-      });
-
-      req.on('error', function(err) {
-        reconnectAfterError(err);
-        cb && cb(err);
-        cb = null;
       });
     }
   });
@@ -268,14 +188,16 @@ function refreshAppDetails(app, cb) {
       url = url.replace(':platform', platform);
       url += '?access_token=' + accessToken;
       console.log('Refreshing app via url: ' + url);
-      getJson(url, function(err, appDetails) {
+      download.getJson(url, function(err, appDetails) {
         if (err) {
-          return cb && cb(err);
+          cb && cb(err);
+        } else {
+          app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+          app.set('gotDetails', true);
+          app.save();
+          cb && cb(null);
         }
-        app.set(cleanUpAppJson(appDetails && appDetails.app_version));
-        app.set('gotDetails', true);
-        app.save();
-        cb && cb(null);
+        cb = null;
       });
     });
   } else {
@@ -322,21 +244,15 @@ function createWebLinkApps(webAppData) {
 }
 
 function getLocalAppManifest(cb) {
-  var req = getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
+  download.getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
     if (err) {
       console.error('Failed to get app manifest: ' + err && err.stack);
       cb && cb(err);
     } else {
       createWebLinkApps(manifest.web);
-
       var platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
       cb && cb(null, platformApps);
     }
-    cb = null;
-  });
-
-  req.on('error', function(err) {
-    cb && cb(err);
     cb = null;
   });
 }
@@ -491,7 +407,6 @@ function sendDeviceData() {
   });
 }
 
-module.exports.unsubscribeAllPubnubChannels = unsubscribeAllPubnubChannels;
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.refreshAppDetails = refreshAppDetails;

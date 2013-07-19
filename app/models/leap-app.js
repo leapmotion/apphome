@@ -37,16 +37,17 @@ var LeapApp = BaseModel.extend({
         state === LeapApp.States.Downloading ||
         state === LeapApp.States.Installing) {
       this.set('state', LeapApp.States.NotYetInstalled);
-    } else if (this.get('state') === LeapApp.States.Uninstalling) {
+    } else if (state === LeapApp.States.Uninstalling) {
       this.set('state', LeapApp.States.Uninstalled);
     }
 
     this.on('change:state', function() {
       var state = this.get('state');
-      if (!this.get('installedAt') && state === LeapApp.States.Ready) {
+      if (!this.get('installedAt') && state !== LeapApp.States.NotYetInstalled) {
         this.set('installedAt', (new Date()).getTime());
-      }
-      if (state === LeapApp.States.Ready || state === LeapApp.States.Uninstalled) {
+        uiGlobals.myApps.sort();
+      } else if (state === LeapApp.States.Uninstalled) {
+        this.set('installedAt', null);
         uiGlobals.myApps.sort();
       }
       this.save();
@@ -64,15 +65,17 @@ var LeapApp = BaseModel.extend({
       }
     }.bind(this));
 
-    if (!this.get('tilePath') && this.get('tileUrl')) {
-      this.downloadTile(true, function() {
-        if (!this.get('iconPath') && this.get('iconUrl')) {
-          this.downloadIcon(true);
-        }
-      }.bind(this));
-    } else if (!this.get('iconPath') && this.get('iconUrl')) {
-      this.downloadIcon(true);
-    }
+    this.on('add', function() {
+      if (!this.get('tilePath') && this.get('tileUrl')) {
+        this.downloadTile(true, function() {
+          if (!this.get('iconPath') && this.get('iconUrl')) {
+            this.downloadIcon(true);
+          }
+        }.bind(this));
+      } else if (!this.get('iconPath') && this.get('iconUrl')) {
+        this.downloadIcon(true);
+      }
+    }.bind(this));
   },
 
   save: function() {
@@ -154,19 +157,23 @@ var LeapApp = BaseModel.extend({
   },
 
   standardIconPath: function() {
-    try {
-      return appData.pathForFile(config.AppSubdir.AppIcons, this.get('id') + '.png');
-    } catch (err) {
-      console.error('icon invalid path ' + (err.stack || err));
-      return null; // so app knows to try again
-    }
+    return this._standardAssetPath(config.AppSubdir.AppIcons);
   },
 
   standardTilePath: function() {
+    return this._standardAssetPath(config.AppSubdir.AppTiles);
+  },
+
+  _standardAssetPath: function(dir) {
+    if (typeof dir !== 'string') {
+      console.warn('Invalid directory: ' + dir);
+      return null;
+    }
     try {
-      return appData.pathForFile(config.AppSubdir.AppTiles, this.get('id') + '.png');
+      var filename = (this.isStoreApp() ? this.get('versionId') : this.get('id')) + '.png';
+      return appData.pathForFile(dir, filename);
     } catch (err) {
-      console.error('tile invalid path ' + (err.stack || err));
+      console.error('Error with asset path: ' + (err.stack || err));
       return null; // so app knows to try again
     }
   },
@@ -198,7 +205,7 @@ var LeapApp = BaseModel.extend({
             cb && cb(null);
             return;
           }
-          download.get(assetUrl, destPath, function (err) {
+          download.getToDisk(assetUrl, { destPath: destPath }, function(err) {
             try {
               if (err && fs.existsSync(destPath)) {
                 try {
