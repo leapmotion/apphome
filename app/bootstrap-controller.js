@@ -73,7 +73,6 @@ var BootstrapSequence = {
       }
     };
     stacked(api.getFrozenApps, 10);
-    stacked(AsyncTasks.localAppFileSystemScan, 300);
     stacked(workingFile.cleanup, 3000);
 
     cb && cb(null);
