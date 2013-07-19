@@ -122,7 +122,9 @@ function getToDisk(sourceUrl, opts, cb) {
 
 function getJson(url, cb) {
   var responseParts = [];
-  var req = makeRequest(url, function(res) {
+  var req = makeRequest(url);
+
+  req.on('connected', function(res) {
     res.on('data', function(chunk) {
       responseParts.push(chunk);
     });
