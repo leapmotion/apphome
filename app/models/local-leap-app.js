@@ -185,6 +185,9 @@ function localAppScan(manifest) {
     isScanningFileSystem = false;
     return;
   }
+  if (isScanningFileSystem) {
+    return;
+  }
   isScanningFileSystem = true;
 
   var existingScannedLocalAppsById = {};
