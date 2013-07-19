@@ -178,7 +178,15 @@ function explicitPathApps(manifest) {
   });
 }
 
+var isScanningFileSystem = false;
+
 function localAppScan(manifest) {
+  if (!manifest) {
+    isScanningFileSystem = false;
+    return;
+  }
+  isScanningFileSystem = true;
+
   var existingScannedLocalAppsById = {};
   uiGlobals.myApps.forEach(function(app) {
     if (app.isLocalApp() && app.get('findByScanning')) {
