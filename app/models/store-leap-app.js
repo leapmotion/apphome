@@ -6,7 +6,7 @@ var path = require('path');
 
 var api = require('../utils/api.js');
 var config = require('../../config/config.js');
-var download = require('../utils/download.js');
+var httpHelper = require('../utils/http-helper.js');
 var extract = require('../utils/extract.js');
 var oauth = require('../utils/oauth.js');
 var mixpanel = require('../utils/mixpanel.js');
@@ -39,7 +39,7 @@ module.exports = LeapApp.extend({
     this.on('add', function() {
       this.set('availableUpgrade', null);
       if (!this.get('gotDetails')) {
-        api.refreshAppDetails(this);
+        api.getAppDetails(this);
       }
     }.bind(this));
   },
@@ -104,9 +104,9 @@ module.exports = LeapApp.extend({
       console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
 
       if (os.platform() === 'win32') {
-        extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+        extract.unzipApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else if (os.platform() === 'darwin') {
-        extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+        extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else {
         return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
@@ -117,7 +117,7 @@ module.exports = LeapApp.extend({
         if (err) {
           return cb(err);
         }
-        var downloadProgress = download.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
+        var downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
           if (err) {
             return cb(err);
           }
@@ -125,9 +125,9 @@ module.exports = LeapApp.extend({
           console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
           if (os.platform() === 'win32') {
-            extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+            extract.unzipApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
           } else if (os.platform() === 'darwin') {
-            extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+            extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
           } else {
             return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
           }

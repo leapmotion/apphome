@@ -18,6 +18,8 @@ var config = {
   AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
   AppDetailsEndpoint: 'https://warehouse.leapmotion.com/api/apps/:id/homebase/:platform',
 
+  AuthWithAccessTokenUrl: 'https://central.leapmotion.com/',
+
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
   NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v2.json',
@@ -55,13 +57,20 @@ var config = {
     OauthRefreshToken: 'OauthRefreshToken',
     InstalledApps: 'InstalledApps',
     UninstalledApps: 'UninstalledApps',
-    HasEmbeddedLeapDevice: 'HasEmbeddedLeapDevice'
+    HasEmbeddedLeapDevice: 'HasEmbeddedLeapDevice',
+    PrebundlingComplete: 'PrebundlingComplete',
+    OriginalPrebundlingManifest: 'OriginalPrebundlingManifest'
   },
 
   PlatformDirs: {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',
     darwin: process.env.HOME + '/Library/Application Support',
     linux: process.env.HOME + '/.config'
+  },
+
+  PlatformLeapDataDirs: {
+    win32:  process.env.APPDATA + '\\Leap Motion',
+    darwin: process.env.HOME + '/Library/Application Support/Leap Motion'
   },
 
   PlatformTempDirs: {

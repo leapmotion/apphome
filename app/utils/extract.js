@@ -4,12 +4,22 @@ var os = require('os');
 var path = require('path');
 var plist = require('plist');
 
-var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
-
 var shell = require('./shell.js');
 
-function extractZip(src, dest, cb) {
-  // TODO: use async io here
+var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
+var MaxChildProcessBufferSize = 1024 * 1024 * 5; // 5 MB
+
+function unzip(src, dest, cb) {
+  if (os.platform() === 'win32') {
+    var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+    console.log('\n\nUsing shell to unzip: ' + command);
+    exec(command, { maxBuffer: MaxChildProcessBufferSize }, cb);
+  } else {
+    cb && cb(new Error("Don't know how to unzip on platform: " + os.platform()));
+  }
+}
+
+function extractAppZip(src, dest, cb) {
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
@@ -47,14 +57,7 @@ function extractZip(src, dest, cb) {
   });
 }
 
-
-function unzip(src, dest, cb) {
-  var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
-  console.log('\n\nUsing shell to unzip: ' + command);
-  exec(command, { maxBuffer: 1024 * 1024 }, cb);
-}
-
-function extractDmg(src, dest, cb) {
+function extractAppDmg(src, dest, cb) {
   if (os.platform() !== 'darwin') {
     return cb && cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }
@@ -152,7 +155,7 @@ function extractDmg(src, dest, cb) {
   });
 }
 
-module.exports.unzip = extractZip;
-module.exports.unzipfile = unzip;
-module.exports.undmg = extractDmg;
+module.exports.unzip = unzip;
+module.exports.unzipApp = extractAppZip;
+module.exports.undmgApp = extractAppDmg;
 

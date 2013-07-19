@@ -8,6 +8,7 @@ var authorization = require('./utils/authorization.js');
 var config = require('../config/config.js');
 var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
+var frozenApps = require('./utils/frozen-apps.js');
 var leap = require('./utils/leap.js');
 var mixpanel = require('./utils/mixpanel.js');
 var crashCounter = require('./utils/crash-counter.js');
@@ -72,7 +73,7 @@ var BootstrapSequence = {
         console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
       }
     };
-    stacked(api.getFrozenApps, 10);
+    stacked(frozenApps.get, 10);
     stacked(workingFile.cleanup, 3000);
 
     cb && cb(null);

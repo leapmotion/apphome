@@ -7,7 +7,7 @@ var path = require('path');
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
-var download = require('../utils/download.js');
+var httpHelper = require('../utils/http-helper.js');
 var enumerable = require('../utils/enumerable.js');
 var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
@@ -205,7 +205,7 @@ var LeapApp = BaseModel.extend({
             cb && cb(null);
             return;
           }
-          download.getToDisk(assetUrl, { destPath: destPath }, function(err) {
+          httpHelper.getToDisk(assetUrl, { destPath: destPath }, function(err) {
             try {
               if (err && fs.existsSync(destPath)) {
                 try {

@@ -1,8 +1,10 @@
 var crypto = require('crypto');
+var qs = require('querystring');
 
 var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var mixpanel = require('../utils/mixpanel.js');
+var oauth = require('../utils/oauth.js');
 
 var LeapApp = require('./leap-app.js');
 
@@ -28,18 +30,16 @@ var WebLinkApp = LeapApp.extend({
   },
 
   launch: function() {
-    var url = this.get('urlToLaunch');
+    var urlToLaunch = this.get('urlToLaunch');
     if (this.get('passAccessToken')) {
-      api.getAuthURL(url, function(err, authURL) {
-        if (err) {
-          console.log('error getting an authenticated URL', err);
-          nwGui.Shell.openExternal(url);
-        } else {
-          nwGui.Shell.openExternal(authURL);
+      oauth.getAccessToken(function(err, accessToken) {
+        if (!err) {
+          urlToLaunch = config.AuthWithAccessTokenUrl + '?' + qs.stringify({ access_token: accessToken, _r: urlToLaunch });
         }
+        nwGui.Shell.openExternal(urlToLaunch);
       });
     } else {
-      nwGui.Shell.openExternal(url);
+      nwGui.Shell.openExternal(urlToLaunch);
     }
 
     var eventToTrack = this.get('eventToTrack');

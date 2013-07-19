@@ -71,7 +71,7 @@ function _checkContent(ctx, next) {
         } else {
           ctx.needsWriting = true;
         }
-        console.log('DRM needs updating: ' + ctx.needsWriting);
+        console.log('DRM ' + (ctx.needsWriting ? 'needs' : 'does not need') + ' updating.');
         next && next(null, ctx);
       });
     }

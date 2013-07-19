@@ -3,6 +3,7 @@ var http = require('http');
 var https = require('https');
 var os = require('os');
 var path = require('path');
+var qs = require('querystring');
 var url = require('url');
 
 var config = require('../../config/config.js');
@@ -160,9 +161,54 @@ function getJson(url, cb) {
   });
 }
 
-function protocolModuleForUrl(url) {
-  return (/^https:/i.test(url) ? https : http);
+function post(requestUrl, data, cb) {
+  var urlParts = url.parse(requestUrl);
+  var options = {
+    hostname: urlParts.hostname,
+    path: urlParts.pathname,
+    port: urlParts.port,
+    auth: urlParts.auth,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  var req = protocolModuleForUrl(requestUrl).request(options, function(res) {
+    if (res.statusCode !== 200) {
+      req.removeAllListeners();
+      cb && cb(new Error('Got status code: ' + res.statusCode));
+      cb = null;
+    } else {
+      res.on('error', function(err) {
+        req.removeAllListeners();
+        res.removeAllListeners();
+        cb && cb(err);
+        cb = null;
+      });
+
+      res.on('end', function() {
+        req.removeAllListeners();
+        res.removeAllListeners();
+        cb && cb(null);
+        cb = null;
+      });
+    }
+  });
+
+  req.on('error', function(err) {
+    req.removeAllListeners();
+    cb && cb(err);
+    cb = null;
+  });
+
+  req.end(qs.stringify(data));
+}
+
+function protocolModuleForUrl(requestUrl) {
+  return (/^https:/i.test(requestUrl) ? https : http);
 }
 
 module.exports.getToDisk = getToDisk;
 module.exports.getJson = getJson;
+module.exports.post = post;

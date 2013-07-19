@@ -11,19 +11,13 @@ var enumerable = require('./enumerable.js');
 var async = require('async');
 
 var config = require('../../config/config.js');
-var download = require('./download.js');
+var httpHelper = require('./http-helper.js');
 var drm = require('./drm.js');
-var extract = require('./extract.js');
 var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
-
-var PreBundle = enumerable.make([
-  'PreBundlingComplete',
-  'OriginalManifest'
-], 'PreBundle');
 
 var NodePlatformToServerPlatform = {
   'darwin': 'osx',
@@ -76,7 +70,7 @@ function handleAppJson(appJson) {
     var existingApp = myApps.get(app.get('appId'));
     if (existingApp) {
       if (!existingApp.isInstalled()) {
-        refreshAppDetails(app, function() {
+        getAppDetails(app, function() {
           var appJson = app.toJSON();
           delete appJson.state;
           existingApp.set(appJson);
@@ -84,7 +78,7 @@ function handleAppJson(appJson) {
       } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpgrade', app);
-        refreshAppDetails(app);
+        getAppDetails(app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
@@ -115,16 +109,6 @@ function subscribeToAppChannel(appId) {
   pubnub.subscribe(appId + '.app.updated', handleAppJson);
 }
 
-function getAuthURL(url, cb) {
-  oauth.getAccessToken(function(err, accessToken) {
-    if (err, null) {
-      cb && cb(err);
-    } else {
-      cb && cb(null, config.oauth.redirect_uri + '?' + qs.stringify({ access_token: accessToken, _r: url }));
-    }
-  });
-}
-
 var reconnectionTimeoutId;
 function reconnectAfterError(err) {
   console.log('Failed to connect to store server (retrying in ' +  config.ServerConnectRetryMs + 'ms):', err && err.stack ? err.stack : err);
@@ -144,7 +128,7 @@ function connectToStoreServer() {
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
-      download.getJson(apiEndpoint, function(err, messages) {
+      httpHelper.getJson(apiEndpoint, function(err, messages) {
         if (err) {
           reconnectAfterError(err);
         } else if (messages.errors) {
@@ -175,7 +159,7 @@ function connectToStoreServer() {
   });
 }
 
-function refreshAppDetails(app, cb) {
+function getAppDetails(app, cb) {
   var appId = app.get('appId');
   var platform = NodePlatformToServerPlatform[os.platform()];
   if (appId && platform) {
@@ -188,7 +172,7 @@ function refreshAppDetails(app, cb) {
       url = url.replace(':platform', platform);
       url += '?access_token=' + accessToken;
       console.log('Refreshing app via url: ' + url);
-      download.getJson(url, function(err, appDetails) {
+      httpHelper.getJson(url, function(err, appDetails) {
         if (err) {
           cb && cb(err);
         } else {
@@ -244,7 +228,7 @@ function createWebLinkApps(webAppData) {
 }
 
 function getLocalAppManifest(cb) {
-  download.getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
+  httpHelper.getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
     if (err) {
       console.error('Failed to get app manifest: ' + err && err.stack);
       cb && cb(err);
@@ -257,69 +241,44 @@ function getLocalAppManifest(cb) {
   });
 }
 
-function getFrozenApps() {
-  if (db.getItem(PreBundle.PreBundlingComplete)) {
-    console.log('PreBundling Complete');
+
+var AppDataFile = 'lastauth';
+function sendDeviceData() {
+  var dataDir = config.PlatformLeapDataDirs[os.platform()];
+  if (!dataDir) {
+    console.error('Leap Motion data dir unknown for operating system: ' + os.platform());
+    return;
+  }
+  
+  var authDataFile = path.join(dataDir, AppDataFile);
+  if (!fs.existsSync(AppDataFile)) {
+    console.warn('Auth data not found: ' + AppDataFile);
     return;
   }
 
-  var freezeDriedBundlePath = _(config.FrozenAppPaths).find(function(bundlePath) {
-    try {
-      console.log('Looking for prebundled path in: ' + bundlePath);
-      return fs.existsSync(bundlePath);
-    } catch (err) {
-      console.log('Prebundle path does not exist: ' + bundlePath);
-      return false;
-    }
-  });
-  if (freezeDriedBundlePath) {
-    console.log('\n\n\nFound freeze-dried preBundle: ' + freezeDriedBundlePath);
-    _expandFreezeDriedApps(freezeDriedBundlePath, function(err, manifest) {
-      if (err) {
-        console.error('Failed to expand prebundle. ' + (err.stack || err));
-      } else if (manifest) {
-        try {
-          _parsePrebundledManifest(manifest);
-        } catch (installErr) {
-          console.error('Failed to initialize prebundled apps. ' + (installErr.stack || installErr));
-        }
-      } else {
-        console.error('Found prebundle but manifest is missing.');
-      }
-    });
-  } else {
-    console.log('No prebundle on this system.');
+  var authData = fs.readFileSync(authDataFile, 'utf-8');
+  if (!authData) {
+    console.warn('Auth data file is empty.');
+    return;
   }
-}
 
-function _expandFreezeDriedApps(bundlePath, cb) {
-  var dest = path.join(config.PlatformTempDirs[os.platform()], 'frozen');
-  var manifest;
-
-  extract.unzipfile(bundlePath, dest, function(err) {
+  oauth.getAccessToken(function(err, accessToken) {
     if (err) {
-      console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
+      console.warn('Failed to get an access token: ' + (err.stack || err));
     } else {
-      console.info('Unzipped prebundled apps at ' + bundlePath + ' to ' + dest);
-      try {
-        console.log('Looking for prebundle manifest at ' + path.join(dest, 'myapps.json'));
-        manifest = JSON.parse(fs.readFileSync(path.join(dest, 'myapps.json'), { encoding: 'utf8' }));
-        if (manifest) {
-          console.log('Caching prebundled manifest ' + JSON.stringify(manifest));
-          // May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
-          //    db.setItem(PreBundle.OriginalManifest, manifest);
-          cb && cb(null, manifest);
+      httpHelper.post(config.DeviceDataEndpoint, { access_token: accessToken, data: authData }, function(err) {
+        if (err) {
+          console.warn('Failed to send device data: ' + (err.stack || err));
+        } else {
+          console.log('Sent device data: ' + authData);
         }
-      } catch (err) {
-        console.error('Corrupt myapps.json prebundled manifest: ' + (err.stack || err));
-        cb && cb(err);
-      }
+      });
     }
   });
 }
 
-function _parsePrebundledManifest(manifest) {
-  console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 3));
+function parsePrebundledManifest(manifest) {
+  console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 2));
 
   manifest.forEach(function (appJson) {
     var app = handleAppJson(appJson);
@@ -333,83 +292,10 @@ function _parsePrebundledManifest(manifest) {
       subscribeToAppChannel(app.get('appId'));
     }
   });
-
-  db.setItem(PreBundle.PreBundlingComplete, true);
-}
-
-
-var LeapDataDir = 'Leap Motion';
-var appDataFile = 'lastauth';
-var PlatformUserDataDirs = {
-  win32:  [ process.env.APPDATA, LeapDataDir, appDataFile ],
-  darwin: [ process.env.HOME, 'Library', 'Application Support', LeapDataDir, appDataFile ],
-  linux:  [ process.env.HOME, appDataFile ]
-};
-
-function sendDeviceData() {
-  var dirs = PlatformUserDataDirs[os.platform()];
-  if (!dirs) {
-    throw new Error('Unknown operating system: ' + os.platform());
-  }
-  
-  var baseDir = path.join.apply(path, dirs);
-  if (!fs.existsSync(baseDir)) {
-    console.error('App data not found: ' + baseDir);
-    return;
-  }
-
-  var authdata = fs.readFileSync(baseDir).toString();
-  if (!authdata) {
-    console.error('Missing auth data' + authdata);
-    return;
-  }
-
-  oauth.getAccessToken(function(err, accessToken) {
-    if (err) {
-      console.error('Failed to get an access token: ' + err && err.stack);
-    } else {
-      var devicedataurl = config.DeviceDataEndpoint;
-
-      var urlParts = url.parse(devicedataurl);
-      var options = {
-        hostname: urlParts.hostname,
-        path: urlParts.pathname,
-        port: urlParts.port,
-        auth: urlParts.auth,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      };
-
-      var responseParts = [];
-      var protocolModule = (/^https:/.test(devicedataurl) ? https : http);
-      var req = protocolModule.request(options, function(resp) {
-        resp.on('data', function(chunk) {
-          responseParts.push(chunk);
-        });
-        resp.on('end', function() {
-          try {
-            var response = responseParts.join('');
-            console.log('Sent device data. ' + devicedataurl + ", " + qs.stringify({ access_token: accessToken, data: authdata }));
-          } catch(err) {
-            console.error('Failed to send device data: ' + err && err.stack);
-          }
-        });
-
-        resp.on('error', function(err) {
-          console.error('Failed to send device data: ' + err && err.stack);
-        });
-      });
-
-      req.end(qs.stringify({ access_token: accessToken, data: authdata }));
-    }
-  });
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
-module.exports.refreshAppDetails = refreshAppDetails;
-module.exports.getFrozenApps = getFrozenApps;
+module.exports.getAppDetails = getAppDetails;
 module.exports.sendDeviceData = sendDeviceData;
-module.exports.getAuthURL = getAuthURL;
+module.exports.parsePrebundledManifest = parsePrebundledManifest;
