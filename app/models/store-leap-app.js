@@ -153,7 +153,7 @@ module.exports = LeapApp.extend({
           this.set('state', LeapApp.States.Downloading);
           this.trigger('progress', progress);
         }.bind(this));
-      });
+      }.bind(this));
     }
   },
 
