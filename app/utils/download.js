@@ -114,7 +114,7 @@ function getToDisk(sourceUrl, opts, cb) {
 
   request.on('redirect', function(newUrl) {
     request.removeAllListeners();
-    getToDisk(newUrl, opts, cb);
+    getToDisk(newUrl, _({ progressStreamOverride: progressStream }).extend(opts), cb);
   });
 
   return progressStream;
