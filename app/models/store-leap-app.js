@@ -8,6 +8,7 @@ var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var download = require('../utils/download.js');
 var extract = require('../utils/extract.js');
+var oauth = require('../utils/oauth.js');
 var mixpanel = require('../utils/mixpanel.js');
 var shell = require('../utils/shell.js');
 var url = require('url');
@@ -112,42 +113,47 @@ module.exports = LeapApp.extend({
       cb && cb(null);
     } else {
       console.info('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
-      var downloadProgress = download.get(binaryUrl, null, true, function(err, tempFilename) {
+      oauth.getAccessToken(function(err, accessToken) {
         if (err) {
           return cb(err);
         }
-        this.set('state', LeapApp.States.Installing);
-        console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
-
-        if (os.platform() === 'win32') {
-          extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
-        } else if (os.platform() === 'darwin') {
-          extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
-        } else {
-          return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-        }
-      }.bind(this));
-
-      function cancelDownload() {
-        if (downloadProgress) {
-          var cancelled = downloadProgress.cancel();
-          if (cancelled) {
-            downloadProgress = null;
-            this.set('noAutoInstall', true);
-            this.off('cancel-download', cancelDownload);
-            this.set('state', LeapApp.States.NotYetInstalled);
+        var downloadProgress = download.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
+          if (err) {
+            return cb(err);
           }
-        } else {
-          this.off('cancel-download', cancelDownload);
+          this.set('state', LeapApp.States.Installing);
+          console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
+
+          if (os.platform() === 'win32') {
+            extract.unzip(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+          } else if (os.platform() === 'darwin') {
+            extract.undmg(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+          } else {
+            return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
+          }
+        }.bind(this));
+
+        function cancelDownload() {
+          if (downloadProgress) {
+            var cancelled = downloadProgress.cancel();
+            if (cancelled) {
+              downloadProgress = null;
+              this.set('noAutoInstall', true);
+              this.off('cancel-download', cancelDownload);
+              this.set('state', LeapApp.States.NotYetInstalled);
+            }
+          } else {
+            this.off('cancel-download', cancelDownload);
+          }
         }
-      }
 
-      this.on('cancel-download', cancelDownload, this);
+        this.on('cancel-download', cancelDownload, this);
 
-      downloadProgress.on('progress', function(progress) {
-        this.set('state', LeapApp.States.Downloading);
-        this.trigger('progress', progress);
-      }.bind(this));
+        downloadProgress.on('progress', function(progress) {
+          this.set('state', LeapApp.States.Downloading);
+          this.trigger('progress', progress);
+        }.bind(this));
+      });
     }
   },
 

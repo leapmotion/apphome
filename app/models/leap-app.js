@@ -205,7 +205,7 @@ var LeapApp = BaseModel.extend({
             cb && cb(null);
             return;
           }
-          download.get(assetUrl, destPath, function (err) {
+          download.getToDisk(assetUrl, { destPath: destPath }, function(err) {
             try {
               if (err && fs.existsSync(destPath)) {
                 try {

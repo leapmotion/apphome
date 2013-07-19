@@ -1,188 +1,166 @@
-var events = require('events');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
 var os = require('os');
 var path = require('path');
 var url = require('url');
-var util = require('util');
 
 var config = require('../../config/config.js');
-var oauth = require('./oauth.js');
+var DownloadProgressStream = require('./download-progress-stream.js');
 var workingFile = require('./working-file.js');
 
-function DownloadProgressStream() {
-  this._bytesSoFar = 0;
+function isRedirect(serverResponse) {
+  return serverResponse.statusCode >= 301 && serverResponse.statusCode <= 303 && serverResponse.headers.location;
 }
 
-util.inherits(DownloadProgressStream, events.EventEmitter);
-
-DownloadProgressStream.prototype.setTotalBytes = function(totalBytes) {
-  this._totalBytes = Number(totalBytes);
-};
-
-DownloadProgressStream.prototype.listenTo = function(res) {
-  this._res = res;
-
-  this._res.on('data', function(chunk) {
-    this._bytesSoFar += chunk.length;
-    this.emit('progress', this._bytesSoFar / this._totalBytes);
-  }.bind(this));
-
-  this._res.on('end', function() {
-    this.emit('end');
-  }.bind(this));
-};
-
-DownloadProgressStream.prototype.cancel = function() {
-  if (this._res) {
-    this._res.emit('cancel');
-    this._res = null;
-    return true;
-  } else {
-    return false;
-  }
-};
-
-
-function getFile(sourceUrl, destPath, sendAccessToken, cb, progressStreamOverride) {
-  if (!sourceUrl) {
-    return cb(new Error('No source url specified.'));
-  }
-
-  var platformExtension = (os.platform() === 'darwin' ? 'dmg' : 'zip');
-  if (!cb && _.isFunction(sendAccessToken)) {
-    // 3 param case (sourceUrl, destPath, cb)
-    cb = sendAccessToken;
-    sendAccessToken = false;
-  } else if (!cb && !sendAccessToken && _.isFunction(destPath)) {
-    // 2 param case (sourceUrl, cb)
-    cb = destPath;
-    destPath = workingFile.newTempFilePath(platformExtension);
-  } else if (!destPath) {
-    destPath = workingFile.newTempFilePath(platformExtension);
-  }
-
-  var totalBytes = 0;
-  var destStream = fs.createWriteStream(destPath);
-  var progressStream = progressStreamOverride || new DownloadProgressStream();
-  var request;
-
-  destStream.on('error', function(err) {
-    cleanup();
-    cb && cb(err);
-    cb = null;
-  });
-
-  destStream.on('close', function() {
-    try {
-      cleanup();
-      var fileSize = fs.statSync(destPath).size;
-      if (isNaN(totalBytes) || fileSize === totalBytes) {
-        cb && cb(null, destPath);
-      } else {
-        cb && cb(new Error('Expected: ' + totalBytes + ' bytes, but got: ' + fileSize + ' bytes.'));
-      }
-    } catch(err) {
-      cb && cb(err);
-    }
-    cb = null;
-  });
-
-  function makeRequest(accessToken) {
-    var protocolModule;
-    var urlParts = url.parse(sourceUrl, true);
-    if (urlParts.protocol === 'https:') {
-      protocolModule = https;
+function makeRequest(sourceUrl) {
+  var req = protocolModuleForUrl(sourceUrl).get(sourceUrl, function(res) {
+    if (isRedirect(res)) {
+      req.emit('redirect', res.headers.location);
+    } else if (res.statusCode !== 200) {
+      req.emit('error', new Error('Got status code: ' + res.statusCode));
     } else {
-      protocolModule = http;
-    }
-
-    if (accessToken) {
-      urlParts.query.access_token = accessToken;
-      sourceUrl = url.format(urlParts);
-    }
-
-    var req = protocolModule.get(sourceUrl, function(res) {
-      if (res.statusCode >= 301 && res.statusCode <= 303 && res.headers['location']) {
-        // handle redirect
-        cleanup(res);
-        return getFile(res.headers['location'], destPath, sendAccessToken, cb, progressStream);
-      } else if (res.statusCode !== 200) {
-        cleanup(res);
-        cb && cb(new Error('Got status code: ' + res.statusCode));
-        cb = null;
-        return;
-      }
-
-      totalBytes = Number(res.headers['content-length']);
-      progressStream.setTotalBytes(totalBytes);
-      progressStream.listenTo(res);
-
-      res.on('error', function(err) {
-        cleanup(res);
-        cb && cb(err);
-        cb = null;
+      res.on('error', function() {
+        res.removeAllListeners();
       });
 
       res.on('cancel', function() {
-        cleanup(res);
-        try {
-          if (fs.existsSync(destPath)) {
-            fs.unlinkSync(destPath);
-          }
-        } catch (err) {
-          console.error('Could not cleanup cancelled download: ' + (err.stack || err));
-        }
-        var err = new Error('Download cancelled.');
-        err.cancelled = true;
-        cb && cb(err);
-        cb = null;
+        res.removeAllListeners();
       });
 
       res.on('close', function() {
         res.removeAllListeners();
       });
 
-      res.pipe(destStream);
+      req.emit('connected', res);
+    }
+  });
+
+  return req;
+}
+
+function getToDisk(sourceUrl, opts, cb) {
+  opts = opts || {};
+  if (!sourceUrl) {
+    return cb(new Error('No source url specified.'));
+  }
+  if (!cb && _.isFunction(opts)) {
+    cb = opts;
+    opts = {};
+  }
+
+  if (opts.accessToken) {
+    var urlParts = url.parse(sourceUrl, true);
+    urlParts.query.access_token = opts.accessToken;
+    sourceUrl = url.format(urlParts);
+  }
+
+  var destPath = opts.destPath || workingFile.newTempPlatformArchive();
+  var progressStream = opts.progressStreamOverride || new DownloadProgressStream();
+
+  var destStream = fs.createWriteStream(destPath);
+  var request = makeRequest(sourceUrl);
+
+  request.on('connected', function(serverResponse) {
+    function cleanup() {
+      serverResponse.removeAllListeners();
+      request.removeAllListeners();
+      destStream.removeAllListeners();
+    }
+
+    progressStream.listenTo(serverResponse);
+
+    serverResponse.on('cancel', function() {
+      cleanup();
+      destStream.close();
+      try {
+        if (fs.existsSync(destPath)) {
+          fs.unlinkSync(destPath);
+        }
+      } catch (err) {
+        console.warn('Could not cleanup cancelled download: ' + (err.stack || err));
+      }
+      var err = new Error('Download cancelled.');
+      err.cancelled = true;
+      cb && cb(err);
+      cb = null;
     });
 
-    req.on('error', function(err) {
+    destStream.on('error', function(err) {
       cleanup();
       cb && cb(err);
       cb = null;
     });
 
-    return req;
-  }
-
-  function cleanup(res) {
-    res && res.removeAllListeners();
-    request && request.removeAllListeners();
-    destStream.removeAllListeners();
-    destStream.close();
-  }
-
-  if (sendAccessToken) {
-    oauth.getAccessToken(function(err, accessToken) {
-      request = makeRequest(accessToken);
+    destStream.on('close', function() {
+      cleanup();
+      if (progressStream.isFullyDownloaded()) {
+          cb && cb(null, destPath);
+        } else {
+          cb && cb(new Error('Expected: ' + progressStream.totalBytes + ' bytes, but got: ' + progressStream.bytesSoFar + ' bytes.'));
+        }
+      cb = null;
     });
-  } else {
-    request = makeRequest();
-  }
+
+    serverResponse.pipe(destStream);
+  });
+
+  request.on('error', function(err) {
+    destStream.removeAllListeners();
+    request.removeAllListeners();
+    cb && cb(err);
+    cb = null;
+  });
+
+  request.on('redirect', function(newUrl) {
+    request.removeAllListeners();
+    getToDisk(newUrl, opts, cb);
+  });
 
   return progressStream;
 }
 
-function getFileWithFallback(sourceUrl, destPath, fallbackPath, cb) {
-  if (sourceUrl) {
-    return getFile(sourceUrl, destPath, function(err) {
-      cb(null, err ? fallbackPath : destPath);
+function getJson(url, cb) {
+  var responseParts = [];
+  var req = makeRequest(url, function(res) {
+    res.on('data', function(chunk) {
+      responseParts.push(chunk);
     });
-  } else {
-    cb(null, fallbackPath);
-  }
+    res.on('end', function() {
+      req.removeAllListeners();
+      res.removeAllListeners();
+      try {
+        var response = responseParts.join('');
+        cb && cb(null, JSON.parse(response));
+      } catch(err) {
+        cb && cb(err);
+      } finally {
+        cb = null;
+      }
+    });
+
+    res.on('error', function(err) {
+      req.removeAllListeners();
+      res.removeAllListeners();
+      cb && cb(err);
+      cb = null;
+    });
+  });
+
+  req.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
+
+  req.on('redirect', function(newUrl) {
+    req.removeAllListeners();
+    getJson(newUrl, cb);
+  });
 }
 
-module.exports.get = getFile;
-module.exports.getWithFallback = getFileWithFallback;
+function protocolModuleForUrl(url) {
+  return (/^https:/i.test(url) ? https : http);
+}
+
+module.exports.getToDisk = getToDisk;
+module.exports.getJson = getJson;

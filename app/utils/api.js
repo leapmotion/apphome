@@ -11,8 +11,9 @@ var enumerable = require('./enumerable.js');
 var async = require('async');
 
 var config = require('../../config/config.js');
+var download = require('./download.js');
 var drm = require('./drm.js');
-var extract = require('../utils/extract.js');
+var extract = require('./extract.js');
 var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
@@ -32,31 +33,6 @@ var ServerPlatformToNodePlatform = {};
 Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
-
-function getJson(url, cb) {
-  var protocolModule = (/^https:/.test(url) ? https : http);
-  var responseParts = [];
-  return protocolModule.get(url, function(resp) {
-    resp.on('data', function(chunk) {
-      responseParts.push(chunk);
-    });
-    resp.on('end', function() {
-      try {
-        var response = responseParts.join('');
-        cb && cb(null, JSON.parse(response));
-      } catch(err) {
-        cb && cb(err);
-      } finally {
-        cb = null;
-      }
-    });
-
-    resp.on('error', function(err) {
-      cb && cb(err);
-      cb = null;
-    });
-  });
-}
 
 function cleanUpAppJson(appJson) {
   appJson = appJson || {};
@@ -168,7 +144,7 @@ function connectToStoreServer() {
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
-      var req = getJson(apiEndpoint, function(err, messages) {
+      download.getJson(apiEndpoint, function(err, messages) {
         if (err) {
           reconnectAfterError(err);
         } else if (messages.errors) {
@@ -195,10 +171,6 @@ function connectToStoreServer() {
           });
         }
       });
-
-      req.on('error', function(err) {
-        reconnectAfterError(err);
-      });
     }
   });
 }
@@ -216,14 +188,16 @@ function refreshAppDetails(app, cb) {
       url = url.replace(':platform', platform);
       url += '?access_token=' + accessToken;
       console.log('Refreshing app via url: ' + url);
-      getJson(url, function(err, appDetails) {
+      download.getJson(url, function(err, appDetails) {
         if (err) {
-          return cb && cb(err);
+          cb && cb(err);
+        } else {
+          app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+          app.set('gotDetails', true);
+          app.save();
+          cb && cb(null);
         }
-        app.set(cleanUpAppJson(appDetails && appDetails.app_version));
-        app.set('gotDetails', true);
-        app.save();
-        cb && cb(null);
+        cb = null;
       });
     });
   } else {
@@ -270,26 +244,20 @@ function createWebLinkApps(webAppData) {
 }
 
 function getLocalAppManifest(cb) {
-  var req = getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
+  download.getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
     if (err) {
       console.error('Failed to get app manifest: ' + err && err.stack);
       cb && cb(err);
     } else {
       createWebLinkApps(manifest.web);
-
       var platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
       cb && cb(null, platformApps);
     }
     cb = null;
   });
-
-  req.on('error', function(err) {
-    cb && cb(err);
-    cb = null;
-  });
 }
 
-function getFrozenApps(cb) {
+function getFrozenApps() {
   if (db.getItem(PreBundle.PreBundlingComplete)) {
     console.log('PreBundling Complete');
     return;
