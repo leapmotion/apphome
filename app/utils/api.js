@@ -4,7 +4,6 @@ var http = require('http');
 var https = require('https');
 var os = require('os');
 var path = require('path');
-var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
 var qs = require('querystring');
 var url = require('url');
 var db = require('./db.js');
@@ -15,6 +14,7 @@ var config = require('../../config/config.js');
 var drm = require('./drm.js');
 var extract = require('../utils/extract.js');
 var oauth = require('./oauth.js');
+var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
 
 var WebLinkApp = require('../models/web-link-app.js');
@@ -32,53 +32,6 @@ var ServerPlatformToNodePlatform = {};
 Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
-
-var pubnubSubscriptions = {};
-var pubnub;
-var pubnubDomain = domain.create();
-
-pubnubDomain.on('error', function(err) {
-  unsubscribeAllPubnubChannels()
-  reconnectAfterError(err);
-});
-
-pubnubDomain.run(function() {
-  pubnub = pubnubInit({
-    subscribe_key: config.PubnubSubscribeKey,
-    ssl: true,
-    jsonp: true // force http transport to work better with http proxies
-  });
-});
-
-function unsubscribeAllPubnubChannels() {
-  Object.keys(pubnubSubscriptions).forEach(function(channel) {
-    console.log('Unsubscribing from PubNub channel: ' + channel);
-    pubnubDomain.run(function() {
-      pubnub.unsubscribe({ channel: channel });
-    });
-  });
-  pubnubSubscriptions = {};
-}
-
-// only allow one callback per channel
-function subscribeToPubnubChannel(channel, callback) {
-  if (!pubnubSubscriptions[channel]) {
-    pubnubSubscriptions[channel] = true;
-
-    pubnubDomain.run(function() {
-      pubnub.subscribe({
-        channel: channel,
-        callback: function(data) {
-          try {
-            callback(JSON.parse(data));
-          } catch (e) {
-            console.error('failed to parse pubsub response for', channel, data, e);
-          }
-        }
-      });
-    });
-  }
-}
 
 function getJson(url, cb) {
   var protocolModule = (/^https:/.test(url) ? https : http);
@@ -172,7 +125,7 @@ function handleAppJson(appJson) {
 }
 
 function subscribeToUserChannel(userId) {
-  subscribeToPubnubChannel(userId + '.user.purchased', function() {
+  pubnub.subscribe(userId + '.user.purchased', function() {
     var win = nwGui.Window.get();
     // steal focus
     win.setAlwaysOnTop(true);
@@ -183,7 +136,7 @@ function subscribeToUserChannel(userId) {
 }
 
 function subscribeToAppChannel(appId) {
-  subscribeToPubnubChannel(appId + '.app.updated', handleAppJson);
+  pubnub.subscribe(appId + '.app.updated', handleAppJson);
 }
 
 function getAuthURL(url, cb) {
@@ -206,25 +159,20 @@ function reconnectAfterError(err) {
   }
 }
 
-function connectToStoreServer(cb) {
+function connectToStoreServer() {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       reconnectAfterError(err);
-      cb && cb(err);
-      cb = null;
     } else {
       var platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       var apiEndpoint = config.AppListingEndpoint + '?' + qs.stringify({ access_token: accessToken, platform: platform });
       var req = getJson(apiEndpoint, function(err, messages) {
         if (err) {
           reconnectAfterError(err);
-          cb && cb(err);
-          cb = null;
         } else if (messages.errors) {
-          cb && cb(new Error(messages.errors));
-          cb = null;
+          reconnectAfterError(new Error(messages.errors));
         } else {
           console.log('Connected to store server.');
           $('body').removeClass('loading');
@@ -245,15 +193,11 @@ function connectToStoreServer(cb) {
               }
             }
           });
-          cb && cb(null);
-          cb = null;
         }
       });
 
       req.on('error', function(err) {
         reconnectAfterError(err);
-        cb && cb(err);
-        cb = null;
       });
     }
   });
@@ -495,7 +439,6 @@ function sendDeviceData() {
   });
 }
 
-module.exports.unsubscribeAllPubnubChannels = unsubscribeAllPubnubChannels;
 module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.refreshAppDetails = refreshAppDetails;

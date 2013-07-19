@@ -5,18 +5,19 @@ var path = require('path');
 
 var api = require('./utils/api.js');
 var config = require('../config/config.js');
+var crashCounter = require('./utils/crash-counter.js');
 var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
+var eula = require('./utils/eula.js');
 var FsScanner = require('./utils/fs-scanner.js');
 var installManager = require('./utils/install-manager.js');
 var leap = require('./utils/leap.js');
 var mixpanel = require('./utils/mixpanel.js');
 var oauth = require('./utils/oauth.js');
 var popupWindow = require('./utils/popup-window.js');
+var pubnub = require('./utils/pubnub.js');
 var shell = require('./utils/shell.js');
-var crashCounter = require('./utils/crash-counter.js');
 var workingFile = require('./utils/working-file.js');
-var eula = require('./utils/eula.js');
 
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -339,7 +340,7 @@ AppController.prototype = {
 
   _logOut: function() {
     installManager.cancelAll();
-    api.unsubscribeAllPubnubChannels();
+    pubnub.unsubscribeAll(false);
     this._createMenu(false);
     if (this._mainPage) {
       this._mainPage.$el.remove();
