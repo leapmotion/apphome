@@ -1,3 +1,4 @@
+var exec = require('child_process').exec;
 var os = require('os');
 
 var db = require('./db.js');

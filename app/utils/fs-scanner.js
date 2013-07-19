@@ -9,8 +9,6 @@ var plist = require('./plist.js');
 var semver = require('./semver.js');
 var shell = require('./shell.js');
 
-var LocalLeapApp = require('../models/local-leap-app.js');
-
 function FsScanner(allowedApps) {
   if (Array.isArray(allowedApps)) {
     this._allowedApps = {};
@@ -162,6 +160,7 @@ FsScanner.prototype = {
 
     attributes.findByScanning = true;
 
+    var LocalLeapApp = require('../models/local-leap-app.js');
     var localLeapApp = new LocalLeapApp(attributes);
     return localLeapApp.isValid() ? localLeapApp : null;
   },
