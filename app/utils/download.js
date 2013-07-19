@@ -130,8 +130,7 @@ function getJson(url, cb) {
       req.removeAllListeners();
       res.removeAllListeners();
       try {
-        var response = responseParts.join('');
-        cb && cb(null, JSON.parse(response));
+        cb && cb(null, JSON.parse(responseParts.join('')));
       } catch(err) {
         cb && cb(err);
       } finally {
@@ -148,6 +147,7 @@ function getJson(url, cb) {
   });
 
   req.on('error', function(err) {
+    req.removeAllListeners();
     cb && cb(err);
     cb = null;
   });
