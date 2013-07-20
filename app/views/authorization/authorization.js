@@ -213,6 +213,10 @@ module.exports = BaseView.extend({
       this.$iframe.css('visibility', 'hidden');
       this.$iframe.height(0);
       this.$iframe.height(Math.min($(iframeWindow.document).height(), $(window).height() - 10));
+      var declaredWidth = parseInt($('body', iframeWindow.document).attr('airspace-home-width'), 10);
+      if (declaredWidth) {
+        this.$iframe.width(declaredWidth);
+      }
       this._centerElement(this.$iframe);
       this.$iframe.css('visibility', 'visible');
     }
