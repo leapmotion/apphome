@@ -1,4 +1,5 @@
-var leap = require('../../utils/leap.js');
+var config = require('../../../config/config.js');
+var leap = require('../../utils/leap.js'); // require(config.ModulePaths.LeapJs);
 
 var BaseView = require('../base-view.js');
 

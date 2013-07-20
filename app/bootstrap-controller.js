@@ -129,10 +129,9 @@ var AsyncTasks = {
 
   afterAuthorizionComplete: function() {
     console.log('Authorization complete. Painting main page');
-    uiGlobals.isFirstRun = false;
+    uiGlobals.isFirstRun = false; // todo: remove this. First run should remain constant throughout app's first run. check AlreadyDidFirstRun elsewhere if needed
     db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
     $('body').addClass('loading');
-    // todo: mark first-run again?
     windowChrome.paintMainPage();
     crashCounter.reset();
     setInterval(AsyncTasks.localAppFileSystemScan, config.FsScanIntervalMs);
@@ -147,5 +146,5 @@ var AsyncTasks = {
 
 };
 
-
+module.exports.tmpBah = 4;
 module.exports.run = bootstrapAirspace;

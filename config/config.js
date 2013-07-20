@@ -84,7 +84,12 @@ var config = {
     './PreBundle.LeapMotion'
   ],
 
-  GettingStartedUrl: 'https://www.leapmotion.com/getting-started'
+  GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
+
+  ModulePaths: {
+//    LeapJs: '../../utils/leap.js',
+    Pubnub: 'pubnub'
+  }
 
 };
 
@@ -94,6 +99,9 @@ if (process.env.LEAPHOME_ENV === 'test') {
   config.AppListingEndpoint = 'http://localhost:9877/api/apps/myapps';
   config.AppDetailsEndpoint = 'https://localhost:9877/api/apps/:id/homebase/:platform';
   config.NonStoreAppManifestUrl = 'http://localhost:9878/non-store-app-manifest.json';
+
+//  config.ModulePaths.LeapJs = '../../test/support/fake-leap.js';
+  config.ModulePaths.Pubnub = '../../test/support/fake-pubnub.js';
 }
 
 module.exports = config;

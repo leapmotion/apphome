@@ -2,20 +2,15 @@ var fs = require('fs');
 var path = require('path');
 var Mocha = require('mocha');
 var assert = require('assert');
-var rewire = require("rewire");
 
 var SocketReporter = require('./socket-reporter.js');
 var config = require('../../config/config.js');
 var db = require('../../app/utils/db.js');
-var airspace = require('../../app/airspace.js');
 
 global.leapEnv = 'test';
 global.assert = assert;
 var scripts = _.compact(sources(path.join(__dirname, 'js_support')));
-
-var appController = rewire('../../app/app-controller.js');
-
-initTestState(global.testOptions);
+var bootstrapController = require('../../app/bootstrap-controller.js');
 
 // tmp - todo: move to auth tests
 //setInterval(function() {
@@ -50,15 +45,25 @@ function sources(dir) {
 }
 
 function initTestState(opts) {
+  console.log('Test Options: ' + JSON.stringify(opts));
   window.localStorage.clear();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, opts.alreadyDidFirstRun);
   db.setItem(config.DbKeys.HasEmbeddedLeapDevice, opts.hasEmbeddedLeapDevice);
-  if (opts.loginAs) {
-    var AuthTasks = appController.__get__('AuthTasks');
-    AuthTasks.getAccessToken = function() { return 'abcdef0123456789'; };
-    // todo: complete
-  }
+//  if (opts.loginAs) {
+//    var AuthTasks = bootstrapController.__get__('AuthTasks');
+//    AuthTasks.getAccessToken = function() { return 'abcdef0123456789'; };
+//    // todo: complete
+//  }
   if (_.isFunction(opts.dbInit)) {
     opts.preInit();
   }
 }
+
+function runTestApp() {
+  initTestState(global.testOptions);
+  console.log('tmp - bootstrapController.tmpBah: ' + bootstrapController.tmpBah);
+  bootstrapController.run();
+}
+
+
+exports.run = runTestApp;

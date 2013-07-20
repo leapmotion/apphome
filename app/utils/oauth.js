@@ -74,12 +74,12 @@ function authorizeWithCode(code, cb) {
     code: code
   }, function(err, result) {
     if (err) {
-      cb(err);
+      cb && cb(err);
     } else if (result.error) {
-      cb(new Error(result.error_description));
+      cb && cb(new Error(result.error_description));
     } else {
       saveRefreshToken(result.refresh_token);
-      cb(null);
+      cb && cb(null);
     }
   });
 }
@@ -104,7 +104,7 @@ function getAccessToken(cb) {
   var now = (new Date()).getTime();
   if (accessToken && accessTokenExpiry && (now < accessTokenExpiry)) {
     console.log('Using cached OAUTH access token.');
-    cb(null, accessToken);
+    cb && cb(null, accessToken);
     return;
   }
 

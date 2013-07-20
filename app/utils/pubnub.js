@@ -1,7 +1,8 @@
 var config = require('../../config/config.js');
 var domain = require('domain');
 var events = require('events');
-var pubnubInit = (process.env.LEAPHOME_ENV === 'test' ? require('../../test/support/fake-pubnub.js') : require('pubnub')).init;
+var pubnubInit = require(config.ModulePaths.Pubnub).init
+
 
 var pubnubSubscriptions = {};
 var pubnub;

@@ -9,7 +9,7 @@ global._ = global._ || require('underscore');
 global.assert = require('assert');
 
 var ReportServerPort = 22001; // TODO: move to config file (used in socket-reporter.js)
-var IntegrationTestLoaderPath = path.resolve(__dirname, './preloader');
+var IntegrationTestLoaderPath = path.resolve(__dirname, './preloader.js');
 global.LeapHomeDir = global.LeapHomeDir || path.join(__dirname, '..', '..');
 var MaxTestTime = 1000 * 2000;
 
@@ -121,7 +121,7 @@ function setupLeapHomeTestApp(fileName) {
 
 function runApp(testFile, tearDown) {
   var targetEnv = _.extend({}, process.env, {
-    LEAPHOME_PRELOAD_SCRIPT_PATH: IntegrationTestLoaderPath,
+    BOOTSTRAP_SCRIPT_PATH: IntegrationTestLoaderPath,
     LEAPHOME_INTEGRATION_TEST_PATH: path.resolve(LeapHomeDir, testFile)
   });
   console.info('Starting integration test: ' + testFile);
@@ -147,6 +147,7 @@ function setTestOptions(opts) {
       alreadyDidFirstRun: true,
       hasEmbeddedLeapDevice: false,
       loginAs: 'pongo@twistleton.test',
+      isLeapEnabled: true,
       preInit: function() {}
     };
     global.testOptions = _.extend({}, defaults, opts);

@@ -3,10 +3,35 @@ var os = require('os');
 var api = require('./api.js');
 var MainPage = require('../views/main-page/main-page.js');
 var authorization = require('./authorization.js');
+var mixpanel = require('./mixpanel.js');
 
-uiGlobals.on(uiGlobals.Event.SignIn, function() {
-  rebuildMenuBar(true);
-});
+
+function appWindowBindings() {
+  mixpanel.trackOpen();
+
+  uiGlobals.on(uiGlobals.Event.SignIn, function() {
+    rebuildMenuBar(true);
+  });
+
+  // This code redirects links in app description/changelog
+  // markdown to open in the default browser, instead of
+  // trying to open in node-webkit.
+  $('body').on('click', 'a', function(evt) {
+    evt.preventDefault();
+    var href = $(this).attr('href');
+    if (href) {
+      nwGui.Shell.openExternal(href);
+    }
+  });
+
+  nwGui.Window.get().on('close', function() {
+    this.hide();
+    this.close(true);
+    process.exit();
+  });
+
+  process.on('exit', mixpanel.trackClose);
+}
 
 var PlatformControlPanelPaths = {
   win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\LeapControlPanel.exe'
@@ -86,7 +111,7 @@ function rebuildMenuBar(enableLogOut) {
   nwGui.Window.get().menu = mainMenu;
 }
 
-
+appWindowBindings();
 module.exports.maximizeWindow = maximizeWindow;
 module.exports.rebuildMenuBar = rebuildMenuBar;
 module.exports.paintMainPage = paintMainPage;
