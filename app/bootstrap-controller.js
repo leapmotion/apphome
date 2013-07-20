@@ -54,13 +54,14 @@ function checkLeapConnection(cb) {
     var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
     leapNotConnectedView.encourageConnectingLeap(function() {
       leapNotConnectedView.remove();
-      cb && cb(null);
     });
+    cb && cb(null);
   });
 }
 
-function startMainApp() {
+function startMainApp(cb) {
   AsyncTasks.authorizeAndPaintMainScreen();
+  cb && cb(null);
 }
 
 function afterwardsAsyncKickoffs(cb) {
