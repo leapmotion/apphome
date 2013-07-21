@@ -152,7 +152,7 @@ function handleAppJson(appJson) {
           delete appJson.state;
           existingApp.set(appJson);
         });
-      } else if (semver.isFirstGreaterThanSecond(app.get('version'), existingApp.get('version'))) {
+      } else if (app.get('versionId') > existingApp.get('versionId')) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpgrade', app);
         refreshAppDetails(app);
