@@ -60,11 +60,17 @@ AppController.prototype = {
 //        this._checkEulaState.bind(this),  to be restored after pongo/media launch
         this._showFirstRunSplash.bind(this),
         this._launchOrientation.bind(this)
-      ], this._setupWindow.bind(this));
+      ], function() {
+        setTimeout(this._initializeApp.bind(this), 5000);
+      }.bind(this));
     } else {
-      this._setupWindow();
+      this._initializeApp();
     }
 
+  },
+
+  _initializeApp: function() {
+    this._setupWindow();
     this._createMenu(false);
     api.getFrozenApps();
     this._scanFilesystem();
@@ -147,6 +153,7 @@ AppController.prototype = {
             $s.find('.eula').effect('highlight', '', 1000);
             return;
           }
+          $continueButton.addClass('disabled');
           this._markFirstRun();
           $s.find('.eula').css('visibility', 'hidden');
           // this._markEulaAsAgreed(); // todo: restore block when file eula check determines this value
@@ -190,6 +197,7 @@ AppController.prototype = {
         var $graphic = $s.hasClass('embedded') ? $s.find('#embedded-graphics') : $s.find('#peripheral-graphics');
         $graphic.hide();
         var $continueButton = $('#continue', this._firstRunSplash.window.document);
+        $continueButton.removeClass('disabled');
         $continueButton.text('Launch Airspace');
         $('h1', this._firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
         $('h2', this._firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
