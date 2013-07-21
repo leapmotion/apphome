@@ -8,7 +8,7 @@ function checkInternetConnection(cb) {
   if (lastCheck && (new Date()).getTime() - lastCheck < MinPollingIntervalMs) {
     cb && cb(lastIsConnected);
   } else {
-    var domain = Math.round(Math.random() * 99999999999) + '.leapmotion.com';
+    var domain = 'www.leapmotion.com';
     console.log('Checking Internet connection...');
     dns.resolve(domain, function(err) {
       lastCheck = (new Date()).getTime();
