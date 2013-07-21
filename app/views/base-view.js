@@ -4,6 +4,7 @@ var stylus = require('stylus');
 var jade = require('jade');
 var domInjection = require('../utils/dom-injection.js');
 
+var templateCache = {};
 
 var BaseView = window.Backbone.View.extend({
 
@@ -17,7 +18,11 @@ var BaseView = window.Backbone.View.extend({
     this._requireViewDir();
     if (!this.templateFn) {
       var templatePath = path.join(this.viewDir, path.basename(this.viewDir) + '.jade');
-      var src = fs.readFileSync(templatePath, 'utf8');
+      var src = templateCache[templatePath];
+      if (!src) {
+        src = fs.readFileSync(templatePath, 'utf8');
+        templateCache[templatePath] = src;
+      }
       this.templateFn = jade.compile(src, jadeOpts || {});
     }
     return this.templateFn(data);
