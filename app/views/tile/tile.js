@@ -37,7 +37,7 @@ module.exports = BaseView.extend({
     this.listenTo(leapApp, 'change:tilePath', function() {
       var tilePath = leapApp.get('tilePath');
       if (tilePath) {
-        this.$('.tile-bg').attr('src', this._makeFileUrl(leapApp.get('tilePath')));
+        this.$('.tile-bg').attr('src', this._makeFileUrl(leapApp.get('tilePath'), true));
       } else {
         this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
       }
@@ -45,7 +45,7 @@ module.exports = BaseView.extend({
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      this.$('.icon').attr('src', this._makeFileUrl(leapApp.get('iconPath')));
+      this.$('.icon').attr('src', this._makeFileUrl(leapApp.get('iconPath'), true));
       this._showOrHideIcon();
     }, this);
 
@@ -88,8 +88,8 @@ module.exports = BaseView.extend({
     this._setupDragging();
   },
 
-  _makeFileUrl: function(filePath) {
-    return 'file://' + filePath + '#' + (new Date).getTime();
+  _makeFileUrl: function(filePath, forceRefresh) {
+    return 'file://' + filePath + (forceRefresh ? '#' + (new Date).getTime() : '');
   },
 
   _setupDragging: function() {
