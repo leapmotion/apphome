@@ -49,7 +49,7 @@ function prerunAsyncKickoff(cb) {
   workingFile.buildCleanupList();
   LeapApp.hydrateCachedModels();
   embeddedLeap.embeddedLeapPromise();
-  AsyncTasks.localAppFileSystemScan();
+  LocalLeapApp.localManifestPromise();
   windowChrome.rebuildMenuBar(false);
   cb && cb(null);
 }
@@ -81,6 +81,17 @@ function checkLeapConnection(cb) {
   });
 }
 
+function localTiles(cb) {
+  LocalLeapApp.localManifestPromise().done(function(manifest) {
+    if (manifest) {
+      LocalLeapApp.explicitPathAppScan(manifest);
+    } else {
+      console.warn('Manifest missing, skipping local tiles');
+    }
+    cb && cb(null);
+  });
+}
+
 function startMainApp(cb) {
   AsyncTasks.authorizeAndPaintMainScreen();
   cb && cb(null);
@@ -96,6 +107,7 @@ function afterwardsAsyncKickoffs(cb) {
   };
   stacked(frozenApps.get, 10);
   stacked(workingFile.cleanup, 4000);
+  stacked(AsyncTasks.localAppFileScanning, 6000);
   cb && cb(null);
 }
 
@@ -107,6 +119,7 @@ function bootstrapAirspace() {
     firstRun,
     setupMainWindow,
     checkLeapConnection,
+    localTiles,
     startMainApp,
     afterwardsAsyncKickoffs
   ];
@@ -129,20 +142,14 @@ function bootstrapAirspace() {
 
 var AsyncTasks = {
 
-  registerLocalAppManifest: function() {
-
-  },
-
-  localAppFileSystemScan: function() {
-    console.log('Scanning filesystem for apps.');
-    api.getLocalAppManifest(function(err, manifest) {
-      if (err) {
-        return;
+  localAppFileScanning: function() {
+    LocalLeapApp.localManifestPromise().done(function(manifest) {
+      if (manifest) {
+        LocalLeapApp.localAppScan(manifest);
       }
-      LocalLeapApp.localAppScan(manifest);
-      LocalLeapApp.explicitPathAppScan(manifest);
     });
   },
+
 
   authorizeAndPaintMainScreen: function() {
     authorization.withAuthorization(function(err) {

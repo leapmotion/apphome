@@ -3,6 +3,7 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 
+var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var icns = require('../utils/icns.js');
 var ico = require('../utils/ico.js');
@@ -219,7 +220,27 @@ function localAppScan(manifest) {
   });
 }
 
+var _manifestPromise;
+
+function localManifestPromise() {
+  if (_manifestPromise) {
+    return _manifestPromise;
+  }
+  var defer = $.Deferred();
+  _manifestPromise = defer.promise();
+
+  api.getLocalAppManifest(function(err, manifest) {
+    if (err) {
+      console.error('Unable to fetch local app manifest: ' + (err.stack || err));
+      // todo: retry? (but bootstrap blocks on it)
+    }
+    defer.resolve(manifest);
+  });
+
+  return _manifestPromise;
+}
 
 module.exports = LocalLeapApp;
 module.exports.localAppScan = localAppScan;
 module.exports.explicitPathAppScan = explicitPathApps;
+module.exports.localManifestPromise = localManifestPromise;
