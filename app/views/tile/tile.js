@@ -16,8 +16,8 @@ module.exports = BaseView.extend({
     var leapApp = args.leapApp;
 
     var templateData = leapApp.toJSON();
-    templateData.iconPath = (templateData.iconPath ? 'file://' + templateData.iconPath : '');
-    templateData.tilePath = 'file://' + (templateData.tilePath || config.DefaultTilePath);
+    templateData.iconPath = (templateData.iconPath ? this._makeFileUrl(templateData.iconPath) : '');
+    templateData.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
     this.setElement($(this.templateHtml(templateData)));
 
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
@@ -37,15 +37,15 @@ module.exports = BaseView.extend({
     this.listenTo(leapApp, 'change:tilePath', function() {
       var tilePath = leapApp.get('tilePath');
       if (tilePath) {
-        this.$('.tile-bg').attr('src', 'file://' + tilePath);
+        this.$('.tile-bg').attr('src', this._makeFileUrl(leapApp.get('tilePath')));
       } else {
-        this.$('.tile-bg').attr('src', 'file://' + config.DefaultTilePath);
+        this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
       }
       this._showOrHideIcon();
     }, this);
 
     this.listenTo(leapApp, 'change:iconPath', function() {
-      this.$('.icon').attr('src', 'file://' + leapApp.get('iconPath'));
+      this.$('.icon').attr('src', this._makeFileUrl(leapApp.get('iconPath')));
       this._showOrHideIcon();
     }, this);
 
@@ -86,6 +86,10 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this._setupDragging();
+  },
+
+  _makeFileUrl: function(filePath) {
+    return 'file://' + filePath + '#' + (new Date).getTime();
   },
 
   _setupDragging: function() {

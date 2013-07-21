@@ -46,6 +46,7 @@ function AppController() {
 AppController.prototype = {
 
   restoreModels: function() {
+    workingFile.cleanup();
     LeapApp.hydrateCachedModels();
   },
 
@@ -66,7 +67,6 @@ AppController.prototype = {
 
     this._createMenu(false);
     api.getFrozenApps();
-    workingFile.cleanup();
     this._scanFilesystem();
     this._checkLeapConnection();
     this._authorizeAndShowMainScreen();
