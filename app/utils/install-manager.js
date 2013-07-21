@@ -45,6 +45,9 @@ function dequeue() {
 
 function cancelAll() {
   var currentInstall = installQueue[0];
+  installQueue.forEach(function(queueData) {
+    queueData.app.set('state', LeapApp.States.NotYetInstalled);
+  });
   installQueue = [];
   if (currentInstall) {
     currentInstall.app.trigger('cancel-download');
