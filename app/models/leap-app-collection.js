@@ -1,5 +1,3 @@
-var api = require('../utils/api.js');
-
 var LeapApp = require('./leap-app.js');
 var LocalLeapApp = require('./local-leap-app.js');
 var StoreLeapApp = require('./store-leap-app.js');
@@ -10,42 +8,14 @@ var installManager = require('../utils/install-manager.js');
 module.exports = window.Backbone.Collection.extend({
 
   initialize: function() {
-    this._appDetailsDownloadQueue = [];
-
     this.on('add', function(app) {
-      if (app.isStoreApp()) {
-        if (app.get('state') === LeapApp.States.NotYetInstalled &&
-            !app.get('noAutoInstall')) {
-          app.set('noAutoInstall', true);
-          installManager.enqueue(app);
-        }
-
-        if (!app.get('gotDetails')) {
-          this._enqueueAppForDetailsDownload(app);
-        }
+      if (app.isStoreApp() &&
+          app.get('state') === LeapApp.States.NotYetInstalled &&
+          !app.get('noAutoInstall')) {
+        app.set('noAutoInstall', true);
+        installManager.enqueue(app);
       }
-    }.bind(this));
-  },
-
-  _enqueueAppForDetailsDownload: function(app) {
-    this._appDetailsDownloadQueue.push(app);
-    if (this._appDetailsDownloadQueue.length === 1) {
-      this._downloadDetailsForNextAppInQueue();
-    }
-  },
-
-  _downloadDetailsForNextAppInQueue: function() {
-    var app = this._appDetailsDownloadQueue.shift();
-    if (app) {
-      api.getAppDetails(app, function(err) {
-        if (err) {
-          this._enqueueAppForDetailsDownload(app);
-        } else {
-          app.set('gotDetails', true);
-        }
-        this._downloadDetailsForNextAppInQueue();
-      }.bind(this));
-    }
+    });
   },
 
   model: function(attrs, options) {

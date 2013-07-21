@@ -159,33 +159,51 @@ function connectToStoreServer() {
   });
 }
 
+var appDetailsQueue = [];
+function getAppDetailsForNextInQueue() {
+  var queuedData = appDetailsQueue.shift();
+  if (queuedData) {
+    getAppDetails(queuedData.app, queuedData.cb);
+  }
+}
+
 function getAppDetails(app, cb) {
-  var appId = app.get('appId');
-  var platform = NodePlatformToServerPlatform[os.platform()];
-  if (appId && platform) {
-    oauth.getAccessToken(function(err, accessToken) {
-      if (err) {
-        return cb && cb(err);
-      }
-      var url = config.AppDetailsEndpoint;
-      url = url.replace(':id', appId);
-      url = url.replace(':platform', platform);
-      url += '?access_token=' + accessToken;
-      console.log('Refreshing app via url: ' + url);
-      httpHelper.getJson(url, function(err, appDetails) {
-        if (err) {
-          cb && cb(err);
-        } else {
-          app.set(cleanUpAppJson(appDetails && appDetails.app_version));
-          app.set('gotDetails', true);
-          app.save();
-          cb && cb(null);
-        }
-        cb = null;
-      });
+  if (appDetailsQueue.length > 0) {
+    appDetailsQueue.push({
+      app: app,
+      cb: cb
     });
   } else {
-    cb && cb(new Error('appId and platform must be valid'));
+    var appId = app.get('appId');
+    var platform = NodePlatformToServerPlatform[os.platform()];
+    if (appId && platform) {
+      oauth.getAccessToken(function(err, accessToken) {
+        if (err) {
+          cb && cb(err);
+          return getAppDetailsForNextInQueue();
+        }
+        var url = config.AppDetailsEndpoint;
+        url = url.replace(':id', appId);
+        url = url.replace(':platform', platform);
+        url += '?access_token=' + accessToken;
+        console.log('Getting app details via url: ' + url);
+        httpHelper.getJson(url, function(err, appDetails) {
+          if (err) {
+            cb && cb(err);
+          } else {
+            app.set(cleanUpAppJson(appDetails && appDetails.app_version));
+            app.set('gotDetails', true);
+            app.save();
+            cb && cb(null);
+          }
+          cb = null;
+          getAppDetailsForNextInQueue();
+        });
+      });
+    } else {
+      cb && cb(new Error('appId and platform must be valid'));
+      getAppDetailsForNextInQueue();
+    }
   }
 }
 
