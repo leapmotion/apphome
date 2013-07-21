@@ -73,7 +73,7 @@ function getToDisk(sourceUrl, opts, cb) {
 
     serverResponse.on('cancel', function() {
       cleanup();
-      destStream.close();
+      destStream.end();
       try {
         if (fs.existsSync(destPath)) {
           fs.unlinkSync(destPath);
@@ -107,6 +107,7 @@ function getToDisk(sourceUrl, opts, cb) {
   });
 
   request.on('error', function(err) {
+    destStream.end();
     destStream.removeAllListeners();
     request.removeAllListeners();
     cb && cb(err);
@@ -114,6 +115,8 @@ function getToDisk(sourceUrl, opts, cb) {
   });
 
   request.on('redirect', function(newUrl) {
+    destStream.end();
+    destStream.removeAllListeners();
     request.removeAllListeners();
     getToDisk(newUrl, _({ progressStreamOverride: progressStream }).extend(opts), cb);
   });
