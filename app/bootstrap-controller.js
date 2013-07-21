@@ -25,6 +25,7 @@ var firstRunView = require('./views/first-run/first-run.js');
 
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+  workfingFile.buildCleanupList();
   LeapApp.hydrateCachedModels();
   embeddedLeap.embeddedLeapPromise();
   AsyncTasks.localAppFileSystemScan();
@@ -73,7 +74,7 @@ function afterwardsAsyncKickoffs(cb) {
     }
   };
   stacked(frozenApps.get, 10);
-  stacked(workingFile.cleanup, 3000);
+  stacked(workingFile.cleanup, 4000);
   cb && cb(null);
 }
 
@@ -105,6 +106,10 @@ function bootstrapAirspace() {
 
 
 var AsyncTasks = {
+
+  registerLocalAppManifest: function() {
+
+  },
 
   localAppFileSystemScan: function() {
     console.log('Scanning filesystem for apps.');

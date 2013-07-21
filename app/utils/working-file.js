@@ -50,16 +50,22 @@ function _markAsDeleted(filePath) {
   db.saveObj(TempFilesNeedingDeletionKey, all);
 }
 
-function cleanup() {
-  var toDeleteNow = _(_.extend({}, _workingSet(), _deletionSet())).keys();
+function buildCleanupList() {
+  uiGlobals.toDeleteNow = _(_.extend({}, _workingSet(), _deletionSet())).keys();
   db.saveObj(ActiveTempFilesKey, {});
+}
+
+function cleanup() {
+  if (!uiGlobals.toDeleteNow) {
+    console.warn('workingFile.buildCleanupList() should have been called before now');
+    buildCleanupList();
+  }
 
   var sequentialRemove = function() {
-    if (!toDeleteNow.length) {
+    if (!uiGlobals.toDeleteNow.length) {
       return;
     }
-    var nextFile = toDeleteNow.shift();
-    _markAsDeleted(nextFile);
+    var nextFile = uiGlobals.toDeleteNow.shift();
 
     fs.exists(nextFile, function(doesExist) {
       if (doesExist) {
@@ -67,9 +73,11 @@ function cleanup() {
           if (err) {
             console.error('Unable to delete temp file ' + nextFile + ': ' + (err.stack || err));
           }
+          _markAsDeleted(nextFile);
           sequentialRemove();
         });
       } else {
+        _markAsDeleted(nextFile);
         sequentialRemove();
       }
     });
@@ -81,4 +89,5 @@ function cleanup() {
 
 module.exports.newTempFilePath = newTempFilePath;
 module.exports.newTempPlatformArchive = newTempPlatformArchive;
+module.exports.buildCleanupList = buildCleanupList;
 module.exports.cleanup = cleanup;
