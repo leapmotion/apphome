@@ -74,9 +74,9 @@ var config = {
   },
 
   PlatformTempDirs: {
-    win32:  process.env.TEMP,
-    darwin: '/tmp',
-    linux:  '/tmp'
+    win32:  process.env.TEMP + '\\LM_Airspace',
+    darwin: '/tmp/LM_Airspace',
+    linux:  '/tmp/LM_Airspace'
   },
 
   FrozenAppPaths: [

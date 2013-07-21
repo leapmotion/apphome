@@ -14,10 +14,6 @@ function getDir(subdir) {
     }
 
     appDataDir = path.join((config.PlatformDirs[os.platform()] || ''), 'Airspace', 'AppData');
-
-    if (!fs.existsSync(appDataDir)) {
-      fs.mkdirSync(appDataDir);
-    }
   }
 
   if (subdir && !appDataSubDirs[subdir]) {

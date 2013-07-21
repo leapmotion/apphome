@@ -8,6 +8,7 @@ var config = require('../../config/config.js');
 var ActiveTempFilesKey = 'active_temp_files';
 var TempFilesNeedingDeletionKey = 'temp_files_needing_deletion';
 
+
 function newTempFilePath(extension) {
   extension = extension || '';
   if (!config.PlatformTempDirs[os.platform()]) {
@@ -86,8 +87,21 @@ function cleanup() {
   sequentialRemove();
 }
 
+function ensureDir(dirpath, cb) {
+  fs.exists(dirpath, function(doesExist) {
+    if (!doesExist) {
+      fs.mkdirs(dirpath, function(mkdirErr) {
+        cb && cb(mkdirErr);
+      });
+    } else {
+      cb && cb(null);
+    }
+  });
+}
+
 
 module.exports.newTempFilePath = newTempFilePath;
 module.exports.newTempPlatformArchive = newTempPlatformArchive;
+module.exports.ensureDir = ensureDir;
 module.exports.buildCleanupList = buildCleanupList;
 module.exports.cleanup = cleanup;

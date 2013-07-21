@@ -23,9 +23,30 @@ var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connecte
 var firstRunView = require('./views/first-run/first-run.js');
 
 
+function ensureWorkingDirs(cb) {
+  var dirFn = function(dirpath) {
+    return function(next) {
+      workingFile.ensureDir(dirpath, next);
+    };
+  };
+
+  var appDataDir = path.join((config.PlatformDirs[os.platform()] || ''), 'Airspace', 'AppData');
+  var tempDir = config.PlatformTempDirs[os.platform()];
+  var leapSharedData = config.PlatformLeapDataDirs[os.platform()];
+  // todo: PlatformUserDataDirs, '__userDataDir' and '__userDataDir'  (cleanup store-leap-app.js)
+
+  async.series([
+    dirFn(appDataDir),
+    dirFn(tempDir),
+    dirFn(leapSharedData)
+  ], function(err) {
+    cb && cb(err);
+  });
+}
+
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-  workfingFile.buildCleanupList();
+  workingFile.buildCleanupList();
   LeapApp.hydrateCachedModels();
   embeddedLeap.embeddedLeapPromise();
   AsyncTasks.localAppFileSystemScan();
@@ -81,6 +102,7 @@ function afterwardsAsyncKickoffs(cb) {
 
 function bootstrapAirspace() {
   var steps = [
+    ensureWorkingDirs,
     prerunAsyncKickoff,
     firstRun,
     setupMainWindow,

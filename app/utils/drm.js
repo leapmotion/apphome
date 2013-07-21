@@ -44,7 +44,7 @@ function writeXml(authId, token) {
   }
 }
 
-
+// todo: refactor with workingFile.ensureDirectory
 function _ensureDirectory(ctx, next) {
   fs.exists(ctx.outputDir, function(doesExist) {
     if (!doesExist) {
