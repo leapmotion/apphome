@@ -1,4 +1,6 @@
 var fs = require('fs-extra');
+var os = require('os');
+var path = require('path');
 
 var api = require('./api.js');
 var config = require('../../config/config.js');

@@ -56,8 +56,8 @@ module.exports = LeapApp.extend({
       console.log('Upgrading: ' + this.get('name'));
 
       // refresh icon and tile
-      this.downloadIcon(true);
-      this.downloadTile(true);
+      this.downloadIcon();
+      this.downloadTile();
 
       this._installFromServer(function(err) {
         if (!err) {

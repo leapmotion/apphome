@@ -3,6 +3,7 @@ var fs = require('fs');
 var markdown = require('markdown').markdown;
 var os = require('os');
 var path = require('path');
+var url = require('url');
 
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
@@ -12,7 +13,7 @@ var enumerable = require('../utils/enumerable.js');
 var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
-var url = require('url');
+var workingFile = require('../utils/working-file.js');
 
 var BaseModel = require('./base-model.js');
 
@@ -55,25 +56,25 @@ var LeapApp = BaseModel.extend({
 
     this.on('change:iconUrl', function() {
       if (this.get('iconUrl')) {
-        this.downloadIcon(true);
+        this.downloadIcon();
       }
     }.bind(this));
 
     this.on('change:tileUrl', function() {
       if (this.get('tileUrl')) {
-        this.downloadTile(true);
+        this.downloadTile();
       }
     }.bind(this));
 
     this.on('add', function() {
-      if (!this.get('tilePath') && this.get('tileUrl')) {
-        this.downloadTile(true, function() {
-          if (!this.get('iconPath') && this.get('iconUrl')) {
-            this.downloadIcon(true);
+      if (this._shouldDownloadTile()) {
+        this.downloadTile(function() {
+          if (this._shouldDownloadIcon()) {
+            this.downloadIcon();
           }
         }.bind(this));
-      } else if (!this.get('iconPath') && this.get('iconUrl')) {
-        this.downloadIcon(true);
+      } else if (this._shouldDownloadIcon()) {
+        this.downloadIcon();
       }
     }.bind(this));
   },
@@ -156,6 +157,28 @@ var LeapApp = BaseModel.extend({
     }
   },
 
+  _shouldDownloadTile: function() {
+    try {
+      var tilePath = this.get('tilePath');
+      return this.get('tileUrl') &&
+             (!tilePath ||
+              !fs.existsSync(tilePath));
+    } catch(err) {
+      return true;
+    }
+  },
+
+  _shouldDownloadIcon: function() {
+    try {
+      var iconPath = this.get('iconPath');
+      return this.get('iconUrl') &&
+             (!iconPath ||
+              !fs.existsSync(iconPath));
+    } catch(err) {
+      return true;
+    }
+  },
+
   standardIconPath: function() {
     return this._standardAssetPath(config.AppSubdir.AppIcons);
   },
@@ -178,59 +201,48 @@ var LeapApp = BaseModel.extend({
     }
   },
 
-  downloadIcon: function(force, cb) {
-    this._downloadAsset(force, 'iconUrl', 'iconPath', this.standardIconPath(), cb);
+  downloadIcon: function(cb) {
+    this._downloadAsset('iconUrl', 'iconPath', this.standardIconPath(), cb);
   },
 
-  downloadTile: function(force, cb) {
-    this._downloadAsset(force, 'tileUrl', 'tilePath', this.standardTilePath(), cb);
+  downloadTile: function(cb) {
+    this._downloadAsset('tileUrl', 'tilePath', this.standardTilePath(), cb);
   },
 
-  _downloadAsset: function(force, urlAttrName, pathAttrName, destPath, cb) {
-    try {
-      if (!force && fs.existsSync(destPath)) {
-        this.set(pathAttrName, destPath);
-        this.save();
-        cb && cb(null);
+  _downloadAsset: function(urlAttrName, pathAttrName, destPath, cb) {
+    var assetUrl = this.get(urlAttrName);
+    if (assetUrl) {
+      console.log('Getting asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
+      if (url.parse(assetUrl).protocol == null) {
+        var sourcePath = path.join(config.PlatformTempDirs[os.platform()], 'frozen', assetUrl);
+        var err = this._moveAssetToAppDataDir(sourcePath, destPath, pathAttrName);
+        cb && cb(err);
       } else {
-        var assetUrl = this.get(urlAttrName);
-        if (assetUrl) {
-          console.log('Downloading asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
-          if (url.parse(assetUrl).protocol == null) {
-            var sourceFile = path.join(config.PlatformTempDirs[os.platform()], 'frozen', assetUrl);
-            console.log('local asset detected, copying from ', sourceFile, 'to', destPath);
-            fs.renameSync(sourceFile, destPath);
-            this.set(pathAttrName, destPath);
-            this.save();
-            cb && cb(null);
-            return;
+        var tempPath = workingFile.newTempFilePath('png');
+        httpHelper.getToDisk(assetUrl, { destPath: tempPath }, function(err) {
+          if (!err) {
+            err = this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName);
+          } else {
+            console.error(err.stack || err);
           }
-          httpHelper.getToDisk(assetUrl, { destPath: destPath }, function(err) {
-            try {
-              if (err && fs.existsSync(destPath)) {
-                try {
-                  fs.unlinkSync(destPath);
-                } catch (err2) {
-                  console.error('leap-app.js#_downloadAsset. unlinkSync failed. ' + (err2.stack || err2));
-                  return cb && cb(err2);
-                }
-              } else if (!err) {
-                this.set(pathAttrName, destPath);
-                this.save();
-              }
-            } catch (err3) { // todo: improve nested error catching.. in a hurry
-              console.error('leap-app.js#_downloadAsset failed during download ' + (err3.stack || err3));
-              err = err3;
-            }
-            cb && cb(err || null);
-          }.bind(this));
-        } else {
-          cb && cb(new Error('Asset url is undefined.'));
-        }
+          cb && cb(err);
+        }.bind(this));
       }
-    } catch (err) {
-      console.error('leap-app.js#_downloadAsset. Unknown error. ' + (err.stack || err));
-      cb && cb(err);
+    } else {
+      cb && cb(new Error('Asset url is undefined.'));
+    }
+  },
+
+  _moveAssetToAppDataDir: function(sourcePath, destPath, pathAttrName) {
+    try {
+      fs.renameSync(sourcePath, destPath);
+      this.set(pathAttrName, destPath, { silent: true });
+      this.trigger('change:' + pathAttrName);
+      this.save();
+      return null;
+    } catch(err) {
+      console.error('Failed to move asset to ' + this.get('name') + ' data dir: ' + (err.stack || err));
+      return err;
     }
   },
 

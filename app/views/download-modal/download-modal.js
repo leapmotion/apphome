@@ -36,7 +36,7 @@ module.exports = BaseView.extend({
     this.$('img').on('load error', function() {
       if (this.$('.icon').prop('naturalWidth') === 0) {
         leapApp.set('iconPath', '');
-        leapApp.downloadIcon(true);
+        leapApp.downloadIcon();
       }
     }.bind(this));
 

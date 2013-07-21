@@ -46,6 +46,7 @@ var FirstRunSequence = {
         var $graphic = $s.hasClass('embedded') ? $s.find('#embedded-graphics') : $s.find('#peripheral-graphics');
         $graphic.effect("blind");
         var $continueButton = $('#continue', firstRunSplash.window.document);
+        $continueButton.removeClass('disabled');
         $continueButton.text('Launch Airspace');
         $('h1', firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
         $('h2', firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
@@ -89,6 +90,7 @@ var WelcomeSplash = {
           $s.find('.eula').effect('highlight', '', 1000);
           return;
         }
+        $continueButton.addClass('disabled');
         db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
         $s.find('.eula').css('visibility', 'hidden');
         mixpanel.trackEvent('Finished First Run Panel', null, 'OOBE');
