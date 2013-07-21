@@ -168,7 +168,7 @@ var AsyncTasks = {
     $('body').addClass('loading');
     windowChrome.paintMainPage();
     crashCounter.reset();
-    setInterval(AsyncTasks.localAppFileSystemScan, config.FsScanIntervalMs);
+    setInterval(AsyncTasks.localAppFileScanning, config.FsScanIntervalMs);
 
     try {
       api.sendDeviceData();
