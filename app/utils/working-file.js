@@ -9,6 +9,8 @@ var ActiveTempFilesKey = 'active_temp_files';
 var TempFilesNeedingDeletionKey = 'temp_files_needing_deletion';
 
 function newTempFilePath(extension) {
+  // TODO: put all files in LM_Airspace subdir. (what the uninstaller looks for.)
+  // todo: create LM_Airspace if doesn't already exist
   extension = extension || '';
   if (!config.PlatformTempDirs[os.platform()]) {
     throw new Error('Unknown operating system: ' + os.platform());
