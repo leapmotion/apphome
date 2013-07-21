@@ -4,7 +4,6 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 
-var api = require('../utils/api.js');
 var config = require('../../config/config.js');
 var httpHelper = require('../utils/http-helper.js');
 var extract = require('../utils/extract.js');
@@ -36,12 +35,7 @@ module.exports = LeapApp.extend({
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
 
-    this.on('add', function() {
-      this.set('availableUpgrade', null);
-      if (!this.get('gotDetails')) {
-        api.getAppDetails(this);
-      }
-    }.bind(this));
+    this.set('availableUpgrade', null);
   },
 
   isStoreApp: function() {
