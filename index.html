@@ -41,25 +41,25 @@
 
     <script>
 
-    (function() {
-      var ctl = new Leap.Controller({enableGestures: true});
-      var swiper = ctl.gesture('swipe');
-
-      swiper.start(function(g) {
-        swiper.currentSwipe = g;
-      });
-
-      swiper.update(function(g) {
-        if (swiper.currentSwipe === true) return;
-        var pos = g.translation()[0];
-        if (Math.abs(pos) > 100) {
-          var isLeft = pos > 0;
-          global.uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
-        }
-      });
-
-      // ctl.connect() FIXME re-enable experimentally somehow
-    })();
+//    (function() {
+//      var ctl = new Leap.Controller({enableGestures: true});
+//      var swiper = ctl.gesture('swipe');
+//
+//      swiper.start(function(g) {
+//        swiper.currentSwipe = g;
+//      });
+//
+//      swiper.update(function(g) {
+//        if (swiper.currentSwipe === true) return;
+//        var pos = g.translation()[0];
+//        if (Math.abs(pos) > 100) {
+//          var isLeft = pos > 0;
+//          global.uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+//        }
+//      });
+//
+//      // ctl.connect() FIXME re-enable experimentally somehow
+//    })();
   </script>
 </body>
 </html>
