@@ -59,7 +59,7 @@ FsScanner.prototype = {
       }
       var plistPaths = stdout.toString().split('\n');
       plistPaths.pop(); // remove empty last path
-      async.mapLimit(plistPaths, 4, this._createLeapAppFromPlistPath.bind(this),
+      async.mapLimit(plistPaths, 1, this._createLeapAppFromPlistPath.bind(this),
         function(err, leapApps) {
           if (err) {
             return cb(err);
