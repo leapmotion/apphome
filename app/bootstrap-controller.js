@@ -23,6 +23,33 @@ var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connecte
 var firstRunView = require('./views/first-run/first-run.js');
 
 
+
+function bootstrapAirspace() {
+  var steps = [
+    ensureWorkingDirs,
+    prerunAsyncKickoff,
+    firstRun,
+    setupMainWindow,
+    checkLeapConnection,
+    localTiles,
+    startMainApp,
+    afterwardsAsyncKickoffs
+  ];
+
+  var wrappedSteps =  _(steps).map(function(fn, key) {
+    return function(cb) {
+      console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
+      fn.call(null, cb);
+    }
+  });
+  async.series(wrappedSteps, function(err) {
+    if (err) {
+      console.error('Error bootstrapping airspace: ' + (err.stack || err));
+      process.exit();
+    }
+  });
+}
+
 function ensureWorkingDirs(cb) {
   var dirFn = function(dirpath) {
     return function(next) {
@@ -110,34 +137,6 @@ function afterwardsAsyncKickoffs(cb) {
   stacked(AsyncTasks.localAppFileScanning, 6000);
   cb && cb(null);
 }
-
-
-function bootstrapAirspace() {
-  var steps = [
-    ensureWorkingDirs,
-    prerunAsyncKickoff,
-    firstRun,
-    setupMainWindow,
-    checkLeapConnection,
-    localTiles,
-    startMainApp,
-    afterwardsAsyncKickoffs
-  ];
-
-  var wrappedSteps =  _(steps).map(function(fn, key) {
-    return function(cb) {
-      console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
-      fn.call(null, cb);
-    }
-  });
-  async.series(wrappedSteps, function(err) {
-    if (err) {
-      console.error('Error bootstrapping airspace: ' + (err.stack || err));
-      process.exit();
-    }
-  });
-}
-
 
 
 var AsyncTasks = {
