@@ -180,5 +180,4 @@ var AsyncTasks = {
 
 };
 
-module.exports.tmpBah = 4;
 module.exports.run = bootstrapAirspace;
