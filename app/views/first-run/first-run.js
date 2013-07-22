@@ -40,9 +40,11 @@ var FirstRunSequence = {
   launchOrientation: function(cb) {
     var orientationPath = PlatformOrientationPaths[os.platform()];
     if (orientationPath) {
+      var $s = $('body', firstRunSplash.window.document);
+      $s.css('cursor', 'wait');
       mixpanel.trackEvent('Started Orientation', null, 'OOBE');
       setTimeout(function() {
-        var $s = $('body', firstRunSplash.window.document);
+        $s.css('cursor', 'default');
         var $graphic = $s.hasClass('embedded') ? $s.find('#embedded-graphics') : $s.find('#peripheral-graphics');
         $graphic.effect("blind");
         var $continueButton = $('#continue', firstRunSplash.window.document);
@@ -73,6 +75,7 @@ var WelcomeSplash = {
     firstRunSplash.on('loaded', function() {
       var splashWindow = firstRunSplash.window;
       var $s = $('body', splashWindow.document);
+      $s.css('cursor', 'default');
 
       var $continueButton = $s.find('#continue');
       if (isEmbeddedLeap) { // EULA required only on hardware embedded with leap. (user didn't run installer so we need to handle the license agreement.)
