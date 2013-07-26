@@ -2,7 +2,6 @@ var Spinner = require('spin');
 var urlParse = require('url').parse;
 
 var config = require('../../../config/config.js');
-var connection = require('../../utils/connection.js');
 var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
 var popupWindow = require('../../utils/popup-window.js');
@@ -31,42 +30,40 @@ module.exports = BaseView.extend({
     this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
-    connection.check(function(isConnected) {
-      if (isConnected) {
-        this.$iframe.attr('src', oauth.getAuthorizationUrl());
+    if (window.navigator.onLine) {
+      this.$iframe.attr('src', oauth.getAuthorizationUrl());
 
-        this._startLoadTimeout(cb);
+      this._startLoadTimeout(cb);
 
-        this.$iframe.load(function() {
-          try {
-            var iframeWindow = this.$iframe.prop('contentWindow');
+      this.$iframe.load(function() {
+        try {
+          var iframeWindow = this.$iframe.prop('contentWindow');
 
-            if (/^http/i.test(iframeWindow.location.href)) {
-              $(iframeWindow).unload(function() {
-                this.$iframe.css('visibility', 'hidden');
-                this._startLoadTimeout(cb);
-              }.bind(this));
-              this._interceptPopupLinks($('body', iframeWindow.document));
-              this._center();
-              this._clearLoadTimeout();
-              this._performActionBasedOnUrl(iframeWindow.location.href, cb);
-            } else {
-              this._clearLoadTimeout();
-              cb(new Error('Could not load auth page.'));
-            }
-          } catch (err2) {
-            console.error('Authorization error: ' + err2.stack);
-            cb(err2);
+          if (/^http/i.test(iframeWindow.location.href)) {
+            $(iframeWindow).unload(function() {
+              this.$iframe.css('visibility', 'hidden');
+              this._startLoadTimeout(cb);
+            }.bind(this));
+            this._interceptPopupLinks($('body', iframeWindow.document));
+            this._center();
+            this._clearLoadTimeout();
+            this._performActionBasedOnUrl(iframeWindow.location.href, cb);
+          } else {
+            this._clearLoadTimeout();
+            cb(new Error('Could not load auth page.'));
           }
-        }.bind(this));
-      } else {
-        if (!oauth.getRefreshToken()) {
-          this._waitForInternetConnection(cb);
-        } else {
-          cb(null);
+        } catch (err2) {
+          console.error('Authorization error: ' + err2.stack);
+          cb(err2);
         }
+      }.bind(this));
+    } else {
+      if (!oauth.getRefreshToken()) {
+        this._waitForInternetConnection(cb);
+      } else {
+        cb(null);
       }
-    }.bind(this));
+    }
   },
 
   logOut: function(cb) {
@@ -74,31 +71,27 @@ module.exports = BaseView.extend({
     this._center();
     oauth.logOut();
     this._showLoggingOutMessage();
-    connection.check(function(isConnected) {
-      if (isConnected) {
-        var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
-        $logoutFrame.load(function() {
-          $logoutFrame.remove();
-          cb(null);
-        })
-        $logoutFrame.appendTo('body');
-      }
-    }.bind(this));
+    if (window.navigator.onLine) {
+      var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
+      $logoutFrame.load(function() {
+        $logoutFrame.remove();
+        cb(null);
+      })
+      $logoutFrame.appendTo('body');
+    }
   },
 
   _waitForInternetConnection: function(cb) {
-    connection.check(function(isConnected) {
-      if (isConnected) {
-        this._showConnectingMessage();
-        this.authorize(cb);
-      } else {
-        this._center();
-        this._showNoInternetMessage();
-        setTimeout(function() {
-          this._waitForInternetConnection(cb);
-        }.bind(this), 250);
-      }
-    }.bind(this));
+    if (window.navigator.onLine) {
+      this._showConnectingMessage();
+      this.authorize(cb);
+    } else {
+      this._center();
+      this._showNoInternetMessage();
+      setTimeout(function() {
+        this._waitForInternetConnection(cb);
+      }.bind(this), 250);
+    }
   },
 
   _performActionBasedOnUrl: function(url, cb) {
