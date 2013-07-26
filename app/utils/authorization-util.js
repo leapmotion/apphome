@@ -24,14 +24,9 @@ function logOutUser() {
     uiGlobals.mainPageView.remove();
   }
 
-  if (uiGlobals.authView) {
-    uiGlobals.authView.remove();
-    uiGlobals.authView = null;
-  }
-  uiGlobals.authView = new AuthorizationView();
-  uiGlobals.authView.logOut(function() {
-    uiGlobals.authView.remove();
-    uiGlobals.authView = null;
+  var authView = new AuthorizationView();
+  authView.logOut(function() {
+    authView.remove();
     withAuthorization(function() {
       windowChrome.paintMainPage();
       api.connectToStoreServer();
