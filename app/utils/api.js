@@ -85,6 +85,7 @@ function handleAppJson(appJson) {
     } else {
       try {
         app.set('firstSeenAt', (new Date()).getTime());
+        getAppDetails(app);
         myApps.add(app);
       } catch (err) {
         console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
