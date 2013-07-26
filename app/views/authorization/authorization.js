@@ -71,7 +71,7 @@ module.exports = BaseView.extend({
     this._center();
     this._showLoggingOutMessage();
 
-    $.ajax(oauth.logOutUrl(), {
+    $.get(oauth.logOutUrl(), {
       error: function(xhr, err) {
         cb && cb(err);
       },
