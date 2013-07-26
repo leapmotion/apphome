@@ -4,7 +4,7 @@ var os = require('os');
 var path = require('path');
 
 var api = require('./utils/api.js');
-var authorization = require('./utils/authorization.js');
+var authorizationUtil = require('./utils/authorization-util.js');
 var config = require('../config/config.js');
 var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
@@ -151,7 +151,7 @@ var AsyncTasks = {
 
 
   authorizeAndPaintMainScreen: function() {
-    authorization.withAuthorization(function(err) {
+    authorizationUtil.withAuthorization(function(err) {
       if (err) {
         setTimeout(AsyncTasks.authorizeAndPaintMainScreen, 50); // Keep on trying...
       } else {

@@ -70,7 +70,8 @@ var config = {
 
   PlatformLeapDataDirs: {
     win32:  process.env.APPDATA + '\\Leap Motion',
-    darwin: process.env.HOME + '/Library/Application Support/Leap Motion'
+    darwin: process.env.HOME + '/Library/Application Support/Leap Motion',
+    linux:  process.env.HOME + '/.config/Leap Motion'
   },
 
   PlatformTempDirs: {

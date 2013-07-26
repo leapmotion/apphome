@@ -2,7 +2,7 @@ var os = require('os');
 
 var api = require('./api.js');
 var MainPage = require('../views/main-page/main-page.js');
-var authorization = require('./authorization.js');
+var authorizationUtil = require('./authorization-util.js');
 var mixpanel = require('./mixpanel.js');
 
 
@@ -81,7 +81,7 @@ function rebuildMenuBar(enableLogOut) {
   var accountMenu = new nwGui.Menu();
   accountMenu.append(new nwGui.MenuItem({
     label: 'Sign Out' + (enableLogOut ? ' ' + (uiGlobals.username || uiGlobals.email) : ''),
-    click: authorization.logOutUser,
+    click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
   }));
   mainMenu.append(new nwGui.MenuItem({

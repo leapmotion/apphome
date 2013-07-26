@@ -69,16 +69,17 @@ module.exports = BaseView.extend({
   logOut: function(cb) {
     this.$el.appendTo('body');
     this._center();
-    oauth.logOut();
     this._showLoggingOutMessage();
-    if (window.navigator.onLine) {
-      var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
-      $logoutFrame.load(function() {
-        $logoutFrame.remove();
-        cb(null);
-      })
-      $logoutFrame.appendTo('body');
-    }
+
+    $.ajax(oauth.logOutUrl(), {
+      error: function(xhr, err) {
+        cb && cb(err);
+      },
+      success: function() {
+        oauth.logOut();
+        cb && cb(null);
+      }
+    });
   },
 
   _waitForInternetConnection: function(cb) {
