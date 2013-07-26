@@ -39,5 +39,6 @@
   "scripts": {
     "test": "node bin/test"
   },
-  "engine": "node >= 0.10.0"
+  "engine": "node >= 0.10.0",
+  "nwVersion": "0.6.3"
 }

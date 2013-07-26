@@ -105,7 +105,7 @@ appZip.finalize(function(err, bytesWritten) {
   console.log(bytesWritten + ' total bytes written to ' + appZipOutputPath);
 
   if (os.platform() === 'win32') {
-    fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.6.0-win-ia32'), buildDir('windows'), function(err) {
+    fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion  +  '-win-ia32'), buildDir('windows'), function(err) {
       if (err) {
         throw err;
       }
@@ -147,7 +147,7 @@ appZip.finalize(function(err, bytesWritten) {
     console.log('Building for Windows must be done on Windows, unfortunately.');
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v0.6.0-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
     if (err) {
       throw err;
     }
