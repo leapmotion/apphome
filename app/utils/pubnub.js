@@ -50,7 +50,7 @@ function subscribe(channel, callback) {
         channel: channel,
         callback: function(data) {
           try {
-            callback(JSON.parse(data));
+            callback(data);
           } catch (err) {
             console.warn('Failed to handle PubNub message on channel "' + channel + '": ' + data);
           }
