@@ -90,10 +90,10 @@ var CarouselView = BaseView.extend({
       this._updateSlides();
     }, this);
 
-    this.listenTo(collection, 'change:state', function(tileModel) {
-      var previousState = tileModel && tileModel.previous('state');
-      if (previousState === LeapApp.States.NotYetInstalled || previousState === LeapApp.States.Uninstalled) {
-        this.switchToSlide(collection.whichPage(tileModel, this._tilesPerSlide));
+    this.listenTo(collection, 'change:state', function(leapApp) {
+      if (leapApp.get('state') === LeapApp.States.Connecting ||
+          (leapApp.isLocalApp() && leapApp.previous('state') === LeapApp.States.Uninstalled)) {
+        this.switchToSlide(collection.whichPage(leapApp, this._tilesPerSlide));
       }
     }, this);
   },
