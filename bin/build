@@ -131,7 +131,8 @@ appZip.finalize(function(err, bytesWritten) {
                                  ' /high /va ' + shell.escape(packageJson.version) +
                                  ' /s copyright ' + shell.escape((new Date).getFullYear()) +
                                  ' /s company ' + shell.escape(packageJson.company) +
-                                 ' /s product ' + shell.escape(packageJson.fullName);
+                                 ' /s product ' + shell.escape(packageJson.fullName) +
+                                 ' /s description ' + shell.escape(packageJson.description);
 
       async.series([
         getExecFn(clearIconCommand),
