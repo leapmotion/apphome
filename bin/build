@@ -73,31 +73,6 @@ while (appManifest.length > 0) {
   }
 }
 
-function changePlistString(plist, key, newValue) {
-  var searchRegex = new RegExp('(<key>' + key + '<\\/key>\\s*<string>)[^<]*(<\\/string>)');
-  return plist.replace(searchRegex, '$1' + newValue + '$2');
-}
-
-function addAirspaceProtocolHandler(plist) {
-  var plistEndRegex = /<\/dict>\s+<\/plist>/;
-  var r = [];
-  r.push('<key>CFBundleURLTypes</key>');
-  r.push('<array>');
-  r.push('  <dict>');
-  r.push('    <key>CFBundleURLName</key>');
-  r.push('    <string>Airspace</string>');
-  r.push('    <key>CFBundleURLSchemes</key>');
-  r.push('    <array>');
-  r.push('      <string>airspace</string>');
-  r.push('    </array>');
-  r.push('  </dict>');
-  r.push('</array>');
-  r.push('</dict>');
-  r.push('</plist>');
-
-  return plist.replace(plistEndRegex, r.join('\n'));
-}
-
 appZip.finalize(function(err, bytesWritten) {
   if (err) {
     throw err;
@@ -159,6 +134,31 @@ appZip.finalize(function(err, bytesWritten) {
     console.log('Building for Windows must be done on Windows, unfortunately.');
   }
 
+  function changePlistString(plist, key, newValue) {
+    var searchRegex = new RegExp('(<key>' + key + '<\\/key>\\s*<string>)[^<]*(<\\/string>)');
+    return plist.replace(searchRegex, '$1' + newValue + '$2');
+  }
+
+  function addAirspaceProtocolHandler(plist) {
+    var plistEndRegex = /<\/dict>\s+<\/plist>\s*$/;
+    var r = [];
+    r.push('  <key>CFBundleURLTypes</key>');
+    r.push('  <array>');
+    r.push('    <dict>');
+    r.push('      <key>CFBundleURLName</key>');
+    r.push('      <string>Airspace</string>');
+    r.push('      <key>CFBundleURLSchemes</key>');
+    r.push('      <array>');
+    r.push('        <string>airspace</string>');
+    r.push('      </array>');
+    r.push('    </dict>');
+    r.push('  </array>');
+    r.push('</dict>');
+    r.push('</plist>');
+
+    return plist.replace(plistEndRegex, r.join('\n'));
+  }
+
   fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
     if (err) {
       throw err;
@@ -185,6 +185,7 @@ appZip.finalize(function(err, bytesWritten) {
         plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
         plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
         plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit-no-gpu');
+        plist = changePlistString(plist, 'CFBundleIdentifier', 'com.leapmotion.airspace');
         plist = addAirspaceProtocolHandler(plist);
 
         fs.writeFileSync(infoPlistPath, plist);
