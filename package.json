@@ -3,6 +3,7 @@
   "fullName": "Airspace Home",
   "version": "1.0.0",
   "description": "Leap Motion Airspace Home",
+  "company": "Leap Motion, Inc.",
   "main": "index.html",
   "node-main": "node-main.js",
   "chromium-args": "--disable-gpu --disable-software-rasterizer",
