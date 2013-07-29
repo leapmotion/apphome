@@ -268,10 +268,10 @@ function sendDeviceData() {
     console.error('Leap Motion data dir unknown for operating system: ' + os.platform());
     return;
   }
-  
+
   var authDataFile = path.join(dataDir, AppDataFile);
-  if (!fs.existsSync(AppDataFile)) {
-    console.warn('Auth data not found: ' + AppDataFile);
+  if (!fs.existsSync(authDataFile)) {
+    console.warn('Auth data not found: ' + authDataFile);
     return;
   }
 
@@ -287,7 +287,7 @@ function sendDeviceData() {
     } else {
       httpHelper.post(config.DeviceDataEndpoint, { access_token: accessToken, data: authData }, function(err) {
         if (err) {
-          console.warn('Failed to send device data: ' + (err.stack || err));
+          console.error('Failed to send device data: ' + (err.stack || err));
         } else {
           console.log('Sent device data: ' + authData);
         }
