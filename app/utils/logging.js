@@ -1,10 +1,16 @@
 var fs = require('fs');
-var path = require('path');
+var path = require('path'); 
 var os = require('os');
 
 var config = require('../../config/config.js');
 
+var raven = new require('raven');
+
+var sentryClient = new raven.Client(config.SentryDSN);
+
 var log;
+
+var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
 if (/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
   log = console.log.bind(console);
@@ -20,15 +26,20 @@ if (/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
 
 function getLogger(level) {
   level = level || 'log';
+
   return function() {
     var sourceFile = ((new Error()).stack.split('\n')[2] || '').replace(/^\s+|\s+$/g, '');
-    log(level.toUpperCase() + ': ' + Array.prototype.slice.call(arguments).map(function(arg) {
+    var str = level.toUpperCase() + ': ' + Array.prototype.slice.call(arguments).map(function(arg) {
       try {
         return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
       } catch(e) {
         return String(arg);
       }
-    }).join(' ') + ' (' + sourceFile + ')');
+    }).join(' ') + ' (' + sourceFile + ')';
+    log(str);
+    if (isProduction && (level === 'warn' || level === 'error')) {
+      sentryClient.captureMessage(str);
+    }
   }
 }
 
