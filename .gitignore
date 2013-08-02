@@ -3,3 +3,4 @@
 *.log
 homebase-sublime.json
 build/
+/node_modules
