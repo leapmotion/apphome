@@ -18,9 +18,8 @@ global.isRunningTest = function() {
 };
 
 function runInApp(fileName, testFn) {
-  if (!global.isRunningTest()) {
-    setupLeapHomeTestApp(fileName, testFn);
-  } else {
+  if (global.isRunningTest()) {
+    // for child test
     console.info('Running integration test: ' + fileName);
     describe('integration test for ' + fileName, function() {
       this.timeout(MaxTestTime);
@@ -29,6 +28,9 @@ function runInApp(fileName, testFn) {
         done(null);
       });
     });
+  } else {
+    // set up the parent test environment
+    setupLeapHomeTestApp(fileName, testFn);
   }
 }
 
@@ -154,4 +156,4 @@ function setTestOptions(opts) {
   }
 }
 module.exports.runInApp = runInApp;
-module.exports.options = setTestOptions;
+module.exports.setTestOptions = setTestOptions;

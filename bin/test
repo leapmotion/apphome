@@ -1,9 +1,8 @@
 #!/usr/bin/env node
+// pull in all files we want tested and run them
 var fs = require('fs');
 var path = require('path');
 var Mocha = require('mocha');
-
-var fakeServers = require('../test/support/fake-servers.js');
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
 
@@ -41,10 +40,4 @@ var mocha = new Mocha();
 testFiles.forEach(function(testFile) {
   mocha.addFile(testFile);
 });
-fakeServers.start(function() {
-  mocha.run(function() {
-    fakeServers.stop();
-    process.exit();
-  });
-});
-
+mocha.run(process.exit);

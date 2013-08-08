@@ -94,15 +94,4 @@ var config = {
 
 };
 
-if (process.env.LEAPHOME_ENV === 'test') {
-  config.oauth.endpoint = 'http://localhost:9876/oauth/';
-  config.oauth.log_out_url = 'http://localhost:9876/users/sign_out';
-  config.AppListingEndpoint = 'http://localhost:9877/api/apps/myapps';
-  config.AppDetailsEndpoint = 'https://localhost:9877/api/apps/:id/homebase/:platform';
-  config.NonStoreAppManifestUrl = 'http://localhost:9878/non-store-app-manifest.json';
-
-//  config.ModulePaths.LeapJs = '../../test/support/fake-leap.js';
-  config.ModulePaths.Pubnub = '../../test/support/fake-pubnub.js';
-}
-
 module.exports = config;

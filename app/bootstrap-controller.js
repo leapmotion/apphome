@@ -36,10 +36,17 @@ function bootstrapAirspace() {
     afterwardsAsyncKickoffs
   ];
 
+  steps.forEach(function(step) {
+    uiGlobals.bootstrapPromises[step.name] = new $.Deferred();
+  });
+
   var wrappedSteps =  _(steps).map(function(fn, key) {
     return function(cb) {
       console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
-      fn.call(null, cb);
+      fn.call(null, function() {
+        uiGlobals.bootstrapPromises[fn.name].resolve();
+        cb.apply(this, arguments);
+      });
     }
   });
   async.series(wrappedSteps, function(err) {

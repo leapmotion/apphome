@@ -15,6 +15,8 @@ uiGlobals.Event = enumerable.make([
 
 uiGlobals.myApps = new LeapAppCollection();
 
+uiGlobals.bootstrapPromises = {};
+
 uiGlobals.scaling = 1;
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
