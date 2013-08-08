@@ -8,6 +8,7 @@ function DownloadProgressStream() {
 util.inherits(DownloadProgressStream, events.EventEmitter);
 
 DownloadProgressStream.prototype.listenTo = function(res) {
+  console.log('listenTo', res);
   this._res = res;
   this.totalBytes = Number(res.headers['content-length']) || 0;
 
@@ -22,7 +23,11 @@ DownloadProgressStream.prototype.listenTo = function(res) {
 };
 
 DownloadProgressStream.prototype.cancel = function() {
-  if (this._res) {
+  if (this.canceller) {
+    this.canceller();
+    this.canceller = null;
+    return true;
+  } else if (this._res) {
     this._res.emit('cancel');
     this._res = null;
     return true;
@@ -30,6 +35,10 @@ DownloadProgressStream.prototype.cancel = function() {
     return false;
   }
 };
+
+DownloadProgressStream.prototype.setCanceller = function(canceller) {
+  this.canceller = canceller;
+}
 
 DownloadProgressStream.prototype.isFullyDownloaded = function() {
   return (this.bytesSoFar === this.totalBytes);
