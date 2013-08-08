@@ -148,7 +148,6 @@ function setTestOptions(opts) {
     var defaults = {
       alreadyDidFirstRun: true,
       hasEmbeddedLeapDevice: false,
-      loginAs: 'pongo@twistleton.test',
       isLeapEnabled: true,
       preInit: function() {}
     };

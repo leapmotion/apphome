@@ -49,11 +49,6 @@ function initTestState(opts) {
   window.localStorage.clear();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, opts.alreadyDidFirstRun);
   db.setItem(config.DbKeys.HasEmbeddedLeapDevice, opts.hasEmbeddedLeapDevice);
-//  if (opts.loginAs) {
-//    var AuthTasks = bootstrapController.__get__('AuthTasks');
-//    AuthTasks.getAccessToken = function() { return 'abcdef0123456789'; };
-//    // todo: complete
-//  }
   if (_.isFunction(opts.preInit)) {
     opts.preInit();
   }
