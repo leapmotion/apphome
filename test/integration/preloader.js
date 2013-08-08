@@ -61,7 +61,6 @@ function initTestState(opts) {
 
 function runTestApp() {
   initTestState(global.testOptions);
-  console.log('tmp - bootstrapController.tmpBah: ' + bootstrapController.tmpBah);
   bootstrapController.run();
 }
 
