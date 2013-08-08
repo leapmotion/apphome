@@ -8,6 +8,9 @@ var popupWindow = require('../../utils/popup-window.js');
 
 var BaseView = require('../base-view.js');
 
+// true when logging out to log in as LEAPHOME_LOGIN_EMAIL...
+var didAutoLogout = false;
+
 module.exports = BaseView.extend({
 
   viewDir: __dirname,
@@ -26,6 +29,14 @@ module.exports = BaseView.extend({
   },
 
   authorize: function(cb) {
+    if (process.env.LEAPHOME_LOGIN_EMAIL && didAutoLogout === false) {
+      didAutoLogout = true;
+      // start logged out
+      this.logOut(function() {
+        this.authorize(cb);
+      }.bind(this));
+      return;
+    }
     this.$el.appendTo('body');
     this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
