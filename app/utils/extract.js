@@ -14,6 +14,10 @@ function unzip(src, dest, cb) {
     var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
     console.log('\n\nUsing shell to unzip: ' + command);
     exec(command, { maxBuffer: MaxChildProcessBufferSize }, cb);
+  } else if (os.platform() === 'darwin') {
+    var command = 'unzip -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+    console.log('\n\nUsing shell to unzip: ' + command);
+    exec(command, { maxBuffer: MaxChildProcessBufferSize }, cb);
   } else {
     cb && cb(new Error("Don't know how to unzip on platform: " + os.platform()));
   }
