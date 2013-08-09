@@ -6,7 +6,7 @@
   "company": "Leap Motion, Inc.",
   "main": "index.html",
   "node-main": "node-main.js",
-  "chromium-args": "--disable-gpu --disable-software-rasterizer",
+  "chromium-args": "--disable-gpu --disable-software-rasterizer --skip-gpu-data-loading",
   "window": {
     "title": "Airspace Home",
     "icon": "static/icon/icon.png",
