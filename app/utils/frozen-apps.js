@@ -7,9 +7,10 @@ var config = require('../../config/config.js');
 var db = require('./db.js');
 var extract = require('./extract.js');
 
-function getFrozenApps() {
+function getFrozenApps(cb) {
   if (db.getItem(config.PrebundlingComplete)) {
     console.log('Prebundled apps already extracted.');
+    cb && cb(null);
     return;
   }
 
@@ -37,9 +38,11 @@ function getFrozenApps() {
       } else {
         console.error('Found prebundle but manifest is missing.');
       }
+      cb && cb(null);
     });
   } else {
     console.log('No prebundle on this system.');
+    cb && cb(null);
   }
 }
 
@@ -50,6 +53,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
   extract.unzip(bundlePath, dest, function(err) {
     if (err) {
       console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
+      cb && cb(null, manifest);
     } else {
       console.info('Unzipped prebundled apps at ' + bundlePath + ' to ' + dest);
       try {
@@ -59,8 +63,8 @@ function _expandFreezeDriedApps(bundlePath, cb) {
           console.log('Caching prebundled manifest ' + JSON.stringify(manifest));
           // May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
           //    db.setItem(PreBundle.OriginalManifest, manifest);
-          cb && cb(null, manifest);
         }
+        cb && cb(null, manifest);
       } catch (err) {
         console.error('Corrupt myapps.json prebundled manifest: ' + (err.stack || err));
         cb && cb(err);

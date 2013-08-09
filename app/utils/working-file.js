@@ -58,7 +58,7 @@ function buildCleanupList() {
   db.saveObj(ActiveTempFilesKey, {});
 }
 
-function cleanup() {
+function cleanup(cb) {
   if (!uiGlobals.toDeleteNow) {
     console.warn('workingFile.buildCleanupList() should have been called before now');
     buildCleanupList();
@@ -66,6 +66,7 @@ function cleanup() {
 
   var sequentialRemove = function() {
     if (!uiGlobals.toDeleteNow.length) {
+      cb && cb(null);
       return;
     }
     var nextFile = uiGlobals.toDeleteNow.shift();
