@@ -1,3 +1,5 @@
+// This looks so wrong but it feels soooo right! Seriously, this allows us to override required includes, e.g. leap.js
+require = require('../../utils/wraprequire.js')(module);
 var config = require('../../../config/config.js');
 var leap = require('../../utils/leap.js'); // require(config.ModulePaths.LeapJs);
 

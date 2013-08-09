@@ -5,22 +5,11 @@ var assert = require('assert');
 
 var SocketReporter = require('./socket-reporter.js');
 var config = require('../../config/config.js');
-var db = require('../../app/utils/db.js');
+var wraprequire = require('../../app/utils/wraprequire.js');
 
 global.leapEnv = 'test';
 global.assert = assert;
 var scripts = _.compact(sources(path.join(__dirname, 'js_support')));
-var bootstrapController = require('../../app/bootstrap-controller.js');
-
-// tmp - todo: move to auth tests
-//setInterval(function() {
-//  var authIframeWindow = $('.authorization iframe').prop('contentWindow');
-//  if (authIframeWindow) {
-//    $('input[name=username]', authIframeWindow.document).val('blah');
-//    $('input[name=password]', authIframeWindow.document).val('blah');
-//    $('form#new_user', authIframeWindow.document).submit();
-//  }
-//}, 100);
 
 $(window).load(function() {
   console.info('\n\nInjecting Mocha and Test Scripts:\n' + scripts.join('\n'));
@@ -29,9 +18,11 @@ $(window).load(function() {
     $('<script src="' + src + '"></script>').appendTo('body');
   });
 
+  // This is _really_ @#$@#$& brittle - do not reorder this!
   var mocha = new Mocha();
   mocha.addFile(process.env.LEAPHOME_INTEGRATION_TEST_PATH);
   mocha.reporter(SocketReporter).run();
+  initTestState(global.testOptions);
 });
 
 function sources(dir) {
@@ -47,16 +38,22 @@ function sources(dir) {
 function initTestState(opts) {
   opts = opts || {};
   window.localStorage.clear();
-  db.setItem(config.DbKeys.AlreadyDidFirstRun, opts.alreadyDidFirstRun);
-  db.setItem(config.DbKeys.HasEmbeddedLeapDevice, opts.hasEmbeddedLeapDevice);
   if (_.isFunction(opts.preInit)) {
     opts.preInit();
   }
+  if (opts.isLeapEnabled) {
+    wraprequire.override('../../app/utils/leap.js', '../support/leap/connected.js', module);
+  }
+  var db = require('../../app/utils/db.js');
+  db.setItem(config.DbKeys.AlreadyDidFirstRun, opts.alreadyDidFirstRun);
+  db.setItem(config.DbKeys.HasEmbeddedLeapDevice, opts.hasEmbeddedLeapDevice);
 }
 
 function runTestApp() {
-  initTestState(global.testOptions);
-  bootstrapController.run();
+  setTimeout(function() {
+    var bootstrapController = require('../../app/bootstrap-controller.js');
+    bootstrapController.run();
+  });
 }
 
 
