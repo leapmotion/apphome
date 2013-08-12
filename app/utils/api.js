@@ -261,7 +261,6 @@ function getLocalAppManifest(cb) {
 }
 
 
-var AppDataFile = 'lastauth';
 function sendDeviceData() {
   var dataDir = config.PlatformLeapDataDirs[os.platform()];
   if (!dataDir) {
@@ -269,7 +268,7 @@ function sendDeviceData() {
     return;
   }
 
-  var authDataFile = path.join(dataDir, AppDataFile);
+  var authDataFile = path.join(dataDir, 'lastauth');
   if (!fs.existsSync(authDataFile)) {
     console.warn('Auth data not found: ' + authDataFile);
     return;

@@ -1,5 +1,7 @@
 var exec = require('child_process').exec;
 var os = require('os');
+var fs = require('fs');
+var path = require('path');
 
 var db = require('./db.js');
 var config = require('../../config/config.js');
@@ -17,25 +19,30 @@ function embeddedLeapCheck() {
   if (existingValue && existingValue.length) {
     defer.resolve(existingValue);
   } else {
+    var isEmbedded = false;
     if (os.platform() === 'win32') {
-      console.log('Checking registry for embedded leap');
-      exec('reg query HKLM\\HARDWARE\\DESCRIPTION\\System\\BIOS', function(err, stdoutBufferedResult, stderrBufferedResult) {
-        var isEmbedded;
-        if (err) {
-          isEmbedded = false;
+      try {
+        // look for the file named 'installtype' in PlatformProgramDataDir
+        var dirs = config.PlatformProgramDataDirs[os.platform()];
+        dirs.push('installtype');
+        var baseDir = path.join.apply(path, dirs);
+        if (!fs.existsSync(baseDir)) {
+          console.log('Device type data not found, assuming peripheral');
         } else {
-          var output = stdoutBufferedResult.toString();
-          // this is to detect HP pre-installed builds
-          isEmbedded = /BIOSVersion\s+REG_SZ\s+B.22/.test(output) &&
-            /BaseBoardManufacturer\s+REG_SZ\s+Hewlett-Packard/.test(output);
+          var devicetype = fs.readFileSync(baseDir).toString();
+          if (!devicetype) {
+            console.error('Unable to read Device type data');
+          } else {
+            console.log('Device type: ' + devicetype);
+            isEmbedded = (devicetype === "pongo" || devicetype === "hops");
+          }
         }
-        db.saveObj(config.DbKeys.HasEmbeddedLeapDevice, isEmbedded);
-        defer.resolve(isEmbedded);
-      });
-    } else {
-      db.saveObj(config.DbKeys.HasEmbeddedLeapDevice, false);
-      defer.resolve(false);
+      } catch(err) {
+        console.error('Error reading installtype: ' + err);
+      }
     }
+    db.saveObj(config.DbKeys.HasEmbeddedLeapDevice, isEmbedded);
+    defer.resolve(isEmbedded);
   }
   return promise;
 }

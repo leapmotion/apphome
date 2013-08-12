@@ -80,6 +80,10 @@ var config = {
     linux:  '/tmp/LM_Airspace'
   },
 
+  PlatformProgramDataDirs: {
+    win32:  [ process.env.PROGRAMDATA, 'Leap Motion' ]
+  },
+
   FrozenAppPaths: [
     '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
     './PreBundle.LeapMotion',
