@@ -9,51 +9,57 @@ var shell = require('./shell.js');
 var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 var MaxChildProcessBufferSize = 1024 * 1024 * 5; // 5 MB
 
-function unzip(src, dest, cb) {
+function unzip(src, dest, cb, legacy) {
   if (os.platform() === 'win32') {
-    var stats = fs.statSync(src);
-    if (stats.size > 290000000 || // 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
-        stats.size == 11247281    // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
-        ) {
+    if (! legacy) {
+      var stats = fs.statSync(src);
+      if (stats.size > 290000000 || // 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
+          stats.size == 11247281    // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
+          ) {
+        try {
+          console.log('Looking for unzip (chunked) package');
+          var NodeUnzip = require('unzip');
+          console.log('Found unzip package');
+          fs.createReadStream(src).pipe(NodeUnzip.Extract({ path: dest }))
+          .on('close', function() {
+            console.log('Extracted ' + src + ' to ' + dest + ' using unzip (chunked) package');
+            cb && cb(null);
+          })
+          .on('error', function(err) {
+            console.error('Late error running unzip (chunked), download may loop: ' + err);
+            cb && cb(err);
+          });
+          return;
+        } catch(err) {
+          console.error('Caught error: ' + err);
+          console.error('Error attempting to use unzip module, now trying adm-zip');
+        }
+      }
+
       try {
-        console.log('Looking for unzip (chunked) package');
-        var NodeUnzip = require('unzip');
-        console.log('Found unzip package');
-        fs.createReadStream(src).pipe(NodeUnzip.Extract({ path: dest }))
-        .on('close', function() {
-          console.log('Extracted ' + src + ' to ' + dest + ' using unzip (chunked) package');
-          cb && cb(null);
-        })
-        .on('error', function(err) {
-          console.error('Late error running unzip (chunked), download may loop: ' + err);
-          cb && cb(err);
+        console.log('Looking for adm-zip package');
+        var AdmZip = require('adm-zip');
+        console.log('Found adm-zip package');
+        var zip = new AdmZip(src);
+
+        var zipEntries = zip.getEntries(); // an array of ZipEntry records
+        zipEntries.forEach(function(zipEntry) {
+            console.log(zipEntry.toString()); // outputs zip entries information
         });
+
+        zip.extractAllTo(dest, true);
+        console.log('Extracted ' + src + ' to ' + dest + ' using the adm-zip package');
+        cb && cb(null);
         return;
       } catch(err) {
         console.error('Caught error: ' + err);
-        console.error('Error attempting to use unzip module, now trying adm-zip');
+        console.error('Error attempting to use adm-zip package, now trying command-line');
       }
     }
 
-    try {
-      console.log('Looking for adm-zip package');
-      var AdmZip = require('adm-zip');
-      console.log('Found adm-zip package');
-      var zip = new AdmZip(src);
-
-      var zipEntries = zip.getEntries(); // an array of ZipEntry records
-      zipEntries.forEach(function(zipEntry) {
-          console.log(zipEntry.toString()); // outputs zip entries information
-      });
-
-      zip.extractAllTo(dest, true);
-      console.log('Extracted ' + src + ' to ' + dest + ' using the adm-zip package');
-      cb && cb(null);
-      return;
-    } catch(err) {
-      console.error('Caught error: ' + err);
-      console.error('Error attempting to use adm-zip package, now trying command-line');
-    }
+    var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+    console.log('\n\nUsing shell to unzip: ' + command);
+    exec(command, { maxBuffer: 1024 * 1024 }, cb); 
   } else if (os.platform() === 'darwin') {
     var command = 'unzip -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
     console.log('\n\nUsing shell to unzip: ' + command);

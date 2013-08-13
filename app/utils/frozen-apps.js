@@ -70,7 +70,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
         cb && cb(err);
       }
     }
-  });
+  }, true);
 }
 
 module.exports.get = getFrozenApps;
