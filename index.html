@@ -49,11 +49,7 @@
         // console.log('postData', url, params, data);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
-
-        //Send the proper header information along with the request
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.setRequestHeader("Content-length", params.length);
-        xhr.setRequestHeader("Connection", "close");
         xhr.onload = function () {
           // console.log('posted to', url, this.responseText);
           cb && cb(null, this.responseText);
@@ -62,10 +58,10 @@
       }
 
       global.downloadFile = function(url, chunkcb, cb, chunksize, progresscb) {
-        var totalsize = chunksize;
+        var totalsize = 0;
         var cumulativedownload = 0;
         var progress = 0;
-        var offset = 0;
+        var startoffset = 0;
         var xhr;
 
         var getFileSize = function(url, sizecb) {
@@ -88,6 +84,7 @@
 
         var updateProgress = function(oEvent) {
           if (oEvent.lengthComputable) {
+            if (! totalsize) return;
             progress = (cumulativedownload + oEvent.loaded) / totalsize;
             // console.log('updateProgress', progress, totalsize);
             progresscb && progresscb(progress);
@@ -95,6 +92,7 @@
         }
 
         var transferFailed = function(error) {
+          if (xhr.canceled) return;
           cb && cb(error);
         }
 
@@ -112,15 +110,15 @@
         var downloadChunk = function(start, end, downloadcb) {
           // console.log('Downloading chunk', start, end);
           xhr = new XMLHttpRequest();
-          var transfercomplete = function() {
+          var transferComplete = function() {
             var data = _arrayBufferToBase64(xhr.response);
-            // console.log('transfercomplete', data.length);
+            // console.log('transfercomplete', url, data.length);
             downloadcb && downloadcb(data);
           }
 
           xhr.addEventListener("onreadystatechange", transferFailed, false);
           xhr.addEventListener("progress", updateProgress, false);
-          xhr.addEventListener("load", transfercomplete, false);
+          xhr.addEventListener("load", transferComplete, false);
           xhr.addEventListener("error", transferFailed, false);
           xhr.addEventListener("abort", transferFailed, false);
 
@@ -131,24 +129,27 @@
           xhr.send();
         }
 
-        var checkprogress = function(data) {
+        var checkProgress = function(data) {
           if (progress === 1) {
             // console.log('done downloading', data.length, url);
             chunkcb && chunkcb(null, data);
             cb && cb(null, data);
           } else {
-            // console.log('downloaded chunk for offset', offset, data.length, chunksize);
+            // console.log('downloaded chunk for startoffset', startoffset, data.length, chunksize);
             chunkcb && chunkcb(null, data);
-            offset += chunksize;
+            startoffset += chunksize;
             cumulativedownload += chunksize;
-            downloadChunk(offset, offset + chunksize - 1, checkprogress);
+            downloadChunk(startoffset, startoffset + chunksize - 1, checkProgress);
           }
         }
 
-        downloadChunk(offset, offset + chunksize - 1, checkprogress);
+        downloadChunk(startoffset, startoffset + chunksize - 1, checkProgress);
 
         var abortDownload = function() {
-          xhr && xhr.abort();
+          if (xhr) {
+            xhr.canceled = true;
+            xhr.abort();
+          }
         }
         return abortDownload;
       }

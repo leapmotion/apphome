@@ -288,7 +288,7 @@ function sendDeviceData() {
         if (err) {
           console.error('Failed to send device data: ' + (err.stack || err));
         } else {
-          console.log('Sent device data: ' + authData);
+          console.log('Sent device data.');
         }
       });
     }
