@@ -36,6 +36,122 @@
       window.onload = function() {
         airspace.run();
       };
+
+      var serialize = function(obj) {
+        var str = [];
+        for(var p in obj)
+           str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+      }
+
+      global.postData = function(url, data, cb) {
+        var params = serialize(data);
+        // console.log('postData', url, params, data);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-length", params.length);
+        xhr.setRequestHeader("Connection", "close");
+        xhr.onload = function () {
+          // console.log('posted to', url, this.responseText);
+          cb && cb(null, this.responseText);
+        };
+        xhr.send(params);
+      }
+
+      global.downloadFile = function(url, chunkcb, cb, chunksize, progresscb) {
+        var totalsize = chunksize;
+        var cumulativedownload = 0;
+        var progress = 0;
+        var offset = 0;
+        var xhr;
+
+        var getFileSize = function(url, sizecb) {
+          var http = new XMLHttpRequest();
+          http.open('GET', url);
+          http.onprogress = function(sizeEvent) {
+            // console.log('size event', sizeEvent.total);
+            this.abort();
+            sizecb(sizeEvent.total);
+          }
+          http.send();
+        }
+
+        getFileSize(url, function(size) {
+          // console.log('Got a size', size);
+          if (size) {
+            totalsize = size;
+          }
+        })
+
+        var updateProgress = function(oEvent) {
+          if (oEvent.lengthComputable) {
+            progress = (cumulativedownload + oEvent.loaded) / totalsize;
+            // console.log('updateProgress', progress, totalsize);
+            progresscb && progresscb(progress);
+          }
+        }
+
+        var transferFailed = function(error) {
+          cb && cb(error);
+        }
+
+        var _arrayBufferToBase64 = function ( buffer ) {
+          var binary = ''
+          var bytes = new Uint8Array( buffer )
+          var len = bytes.byteLength;
+          for (var i = 0; i < len; i++) {
+              binary += String.fromCharCode( bytes[ i ] )
+          }
+          return window.btoa( binary );
+        }
+
+
+        var downloadChunk = function(start, end, downloadcb) {
+          // console.log('Downloading chunk', start, end);
+          xhr = new XMLHttpRequest();
+          var transfercomplete = function() {
+            var data = _arrayBufferToBase64(xhr.response);
+            // console.log('transfercomplete', data.length);
+            downloadcb && downloadcb(data);
+          }
+
+          xhr.addEventListener("onreadystatechange", transferFailed, false);
+          xhr.addEventListener("progress", updateProgress, false);
+          xhr.addEventListener("load", transfercomplete, false);
+          xhr.addEventListener("error", transferFailed, false);
+          xhr.addEventListener("abort", transferFailed, false);
+
+          xhr.open('GET', url, true);
+          xhr.responseType = "arraybuffer";
+          // console.log('downloading', url, start, end);
+          xhr.setRequestHeader('range', 'bytes=' + start + '-' + end);
+          xhr.send();
+        }
+
+        var checkprogress = function(data) {
+          if (progress === 1) {
+            // console.log('done downloading', data.length, url);
+            chunkcb && chunkcb(null, data);
+            cb && cb(null, data);
+          } else {
+            // console.log('downloaded chunk for offset', offset, data.length, chunksize);
+            chunkcb && chunkcb(null, data);
+            offset += chunksize;
+            cumulativedownload += chunksize;
+            downloadChunk(offset, offset + chunksize - 1, checkprogress);
+          }
+        }
+
+        downloadChunk(offset, offset + chunksize - 1, checkprogress);
+
+        var abortDownload = function() {
+          xhr && xhr.abort();
+        }
+        return abortDownload;
+      }
     })();
   </script>
 
