@@ -13,12 +13,18 @@ export PATH=".:/bin:${PATH}"
 
 #find the required build tools
 export NODE
+export NPM
 export ZIP
 
 NODE=$(which node) || true
 if [ ! -x "${NODE}" ]; then
   NODE="${PROGRAMFILES//\\//}/nodejs/node.exe"
 fi
+NPM=$(which npm) || true
+if [ ! -x "${NPM}" ]; then
+  NPM="${PROGRAMFILES//\\//}/nodejs/npm.exe"
+fi
+
 
 #
 #common environment setup

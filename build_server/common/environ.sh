@@ -74,6 +74,10 @@ if [ ! -x "${NODE}" ]; then
   export NODE=$(which node)
 fi
 
+if [ ! -x "${NPM}" ]; then
+  export NPM=$(which npm)
+fi
+
 if [ ! -x "${TAR}" ]; then
   export TAR=$(which tar)
 fi
@@ -131,5 +135,6 @@ AIRSPACE_VERSION_STRING=${AIRSPACE_VERSION_STRING}
 
 BUILD_IDENTIFIER=${BUILD_IDENTIFIER}
 NODE=${NODE}
+NPM=${NPM}
 EOF
 }

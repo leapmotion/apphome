@@ -11,6 +11,11 @@ if [ ! -x "${TAR}" ]; then
   exit 1
 fi
 
+cd "${AIRSPACE_REPO_DIR}"
+mkdir -p node_modules
+"${NPM}" install archiver
+"${NPM}" update
+
 cd "${AIRSPACE_REPO_DIR}/bin"
 _winnode=$(echo "${NODE}" | sed 's/\//\\/g' | sed 's/\\c\\/C:\\/')
 "${_winnode}" build
