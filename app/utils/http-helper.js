@@ -5,7 +5,6 @@ var os = require('os');
 var path = require('path');
 var qs = require('querystring');
 var url = require('url');
-var req = require('request');
 
 var config = require('../../config/config.js');
 var DownloadProgressStream = require('./download-progress-stream.js');
