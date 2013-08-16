@@ -82,25 +82,14 @@ function getToDisk(sourceUrl, opts, cb) {
 }
 
 function getJson(url, cb) {
-  global.downloadFile(url, function(error, data) {
+  global.getData(url, function(error, data) {
     if (error) {
       console.error(error);
     } else {
-      var data = new Buffer(data, 'base64').toString();
       if (data) data = JSON.parse(data);
       // console.log('getJson', data)
       cb(error, data);
     }
-  }, function(error, data) {
-    if (error) {
-      if (! error.cancelled) {
-        console.error('Error downloading', url, error);
-      }
-    } else {
-      // fs.writeFile(destPath, data);
-    }
-  }, 1024 * 1024 * 10, function(progress) {
-    // console.log('progress', progress);
   });
 }
 

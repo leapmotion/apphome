@@ -57,6 +57,16 @@
         xhr.send(params);
       }
 
+      global.getData = function(url, cb) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onload = function () {
+          // console.log('getData', url, this.responseText);
+          cb && cb(null, this.responseText);
+        };
+        xhr.send(null);
+      }
+
       global.downloadFile = function(url, chunkcb, cb, chunksize, progresscb) {
         var totalsize = 0;
         var cumulativedownload = 0;

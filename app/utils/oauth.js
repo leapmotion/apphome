@@ -1,5 +1,4 @@
-var http = require('http');
-var https = require('https');
+var httpHelper = require('./http-helper.js');
 var qs = require('querystring');
 var url = require('url');
 
@@ -31,41 +30,15 @@ function oauthRequest(params, cb) {
     client_secret: config.oauth.client_key,
     redirect_uri: config.oauth.redirect_uri
   });
+
   var urlParts = url.parse(config.oauth.endpoint);
-  var options = {
-    hostname: urlParts.hostname,
-    path: urlParts.pathname + 'token',
-    port: urlParts.port,
-    auth: urlParts.auth,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  };
-  var protocolModule = (urlParts.protocol === 'https:' ? https : http);
-  var responseChunks = [];
-  console.log('Making oauth request: ' + JSON.stringify(options));
-  var req = protocolModule.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      responseChunks.push(chunk);
-    });
-    res.on('end', function() {
-      var result;
-      try {
-        result = JSON.parse(responseChunks.join(''));
-      } catch(e) {
-        return cb && cb(e);
-      }
-      cb && cb(null, result);
-    });
+  urlParts.pathname += 'token';
+  // console.log('oauthRequest', url.format(urlParts), params, cb);
+  httpHelper.post(url.format(urlParts), params, function(error, data) {
+    // console.log('got result', error, data);
+    data = JSON.parse(data);
+    cb && cb(error, data);
   });
-
-  req.on('error', function(err) {
-    cb && cb(err);
-  });
-
-  req.end(qs.stringify(params));
 }
 
 function authorizeWithCode(code, cb) {

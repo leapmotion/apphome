@@ -1,7 +1,5 @@
 var domain = require('domain');
 var fs = require('fs-extra');
-var http = require('http');
-var https = require('https');
 var os = require('os');
 var path = require('path');
 var qs = require('querystring');
