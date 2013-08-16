@@ -86,8 +86,7 @@ var config = {
 
   FrozenAppPaths: [
     '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
-    './PreBundle.LeapMotion',
-    './test/support/data/PreBundle.LeapMotion'
+    './PreBundle.LeapMotion'
   ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',

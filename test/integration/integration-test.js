@@ -148,7 +148,6 @@ function setTestOptions(opts) {
     var defaults = {
       alreadyDidFirstRun: true,
       hasEmbeddedLeapDevice: false,
-      prebundlingComplete: true,
       isLeapEnabled: true,
       preInit: function() {}
     };

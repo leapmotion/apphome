@@ -47,7 +47,6 @@ function initTestState(opts) {
   var db = require('../../app/utils/db.js');
   db.setItem(config.DbKeys.AlreadyDidFirstRun, opts.alreadyDidFirstRun);
   db.setItem(config.DbKeys.HasEmbeddedLeapDevice, opts.hasEmbeddedLeapDevice);
-  db.setItem(config.DbKeys.PrebundlingComplete, opts.prebundlingComplete);
 }
 
 function runTestApp() {

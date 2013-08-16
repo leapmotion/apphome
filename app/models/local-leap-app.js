@@ -181,14 +181,12 @@ function explicitPathApps(manifest) {
 
 var isScanningFileSystem = false;
 
-function localAppScan(manifest, cb) {
+function localAppScan(manifest) {
   if (!manifest) {
     isScanningFileSystem = false;
-    cb && cb(null);
     return;
   }
   if (isScanningFileSystem) {
-    cb && cb(null);
     return;
   }
   isScanningFileSystem = true;
@@ -219,7 +217,6 @@ function localAppScan(manifest, cb) {
         oldApp.save();
       });
     }
-    cb && cb(null);
   });
 }
 

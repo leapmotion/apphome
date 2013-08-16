@@ -132,30 +132,25 @@ function startMainApp(cb) {
 
 function afterwardsAsyncKickoffs(cb) {
   var stacked = function(task, ms) {
-    return function(donecb) {
-      setTimeout(function() {
-        try {
-          task(donecb);
-        } catch (err) {
-          console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
-        }
-      }, ms);
-    };
+    try {
+      setTimeout(task, ms);
+    } catch (err) {
+      console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
+    }
   };
-  var stackedMethods = [];
-  stackedMethods.push(stacked(frozenApps.get, 10));
-  stackedMethods.push(stacked(workingFile.cleanup, 4000));
-  stackedMethods.push(stacked(AsyncTasks.localAppFileScanning, 6000));
-  async.parallel(stackedMethods, cb);
+  stacked(frozenApps.get, 10);
+  stacked(workingFile.cleanup, 4000);
+  stacked(AsyncTasks.localAppFileScanning, 6000);
+  cb && cb(null);
 }
 
 
 var AsyncTasks = {
 
-  localAppFileScanning: function(cb) {
+  localAppFileScanning: function() {
     LocalLeapApp.localManifestPromise().done(function(manifest) {
       if (manifest) {
-        LocalLeapApp.localAppScan(manifest, cb);
+        LocalLeapApp.localAppScan(manifest);
       }
     });
   },
