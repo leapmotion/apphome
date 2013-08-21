@@ -4,7 +4,7 @@ var api = require('./api.js');
 var MainPage = require('../views/main-page/main-page.js');
 var authorizationUtil = require('./authorization-util.js');
 var mixpanel = require('./mixpanel.js');
-var popupWindow = require('../../utils/popup-window.js');
+var popupWindow = require('../utils/popup-window.js');
 
 
 function appWindowBindings() {
