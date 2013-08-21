@@ -22,10 +22,7 @@ process.on('uncaughtException', function(err) {
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
   if (isProduction) {
-    if (!sentryClient) {
-      sentryClient = new require('raven').Client(config.SentryDSN);
-    }
-    sentryClient.captureError(err);
+    window.Raven.captureError(err);
   }
   if (crashCounter.count() <= 2) {
     crashCounter.increment();

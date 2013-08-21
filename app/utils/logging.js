@@ -4,10 +4,6 @@ var os = require('os');
 
 var config = require('../../config/config.js');
 
-var raven = new require('raven');
-
-var sentryClient = new raven.Client(config.SentryDSN);
-
 var log;
 
 var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
@@ -38,7 +34,7 @@ function getLogger(level) {
     }).join(' ') + ' (' + sourceFile + ')';
     log(str);
     if (isProduction && (level === 'warn' || level === 'error')) {
-      sentryClient.captureMessage(str);
+      window.Raven.captureMessage(str);
     }
   }
 }
