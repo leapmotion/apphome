@@ -9,7 +9,6 @@ var config = require('../config/config.js');
 var db = require('./utils/db.js');
 var enumerable = require('./utils/enumerable.js');
 var frozenApps = require('./utils/frozen-apps.js');
-var mixpanel = require('./utils/mixpanel.js');
 var crashCounter = require('./utils/crash-counter.js');
 var shell = require('./utils/shell.js');
 var workingFile = require('./utils/working-file.js');
