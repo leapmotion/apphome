@@ -26,6 +26,8 @@ Object.keys(NodePlatformToServerPlatform).forEach(function(key) {
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key;
 });
 
+var appsAdded = 0;
+
 function cleanUpAppJson(appJson) {
   appJson = appJson || {};
   var releaseDate = appJson.certified_at || appJson.created_at;
@@ -81,10 +83,17 @@ function handleAppJson(appJson) {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
+      if (appsAdded >= 40) {
+        // workaround for v8 memory limit. If a user were to purchase so many apps, then
+        // switch to a second computer, must restart Airspace Home to obtain remaining apps
+        console.error('Downloaded metadata for too many apps. Please restart Airspace Home to see your remaining purchases.');
+        return;
+      }
       try {
         app.set('firstSeenAt', (new Date()).getTime());
         getAppDetails(app);
         myApps.add(app);
+        appsAdded += 1;
       } catch (err) {
         console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
       }
