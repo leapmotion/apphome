@@ -70,6 +70,7 @@
         xhr.onload = function () {
           // console.log('posted to', url, this.responseText);
           cb && cb(null, this.responseText);
+          global.nwGui.App.clearCache();
         };
         xhr.send(params);
       }
@@ -80,6 +81,7 @@
         xhr.onload = function () {
           // console.log('getData', url, this.responseText);
           cb && cb(null, this.responseText);
+          global.nwGui.App.clearCache()
         };
         xhr.send(null);
       }
@@ -96,17 +98,17 @@
           http.open('GET', url);
           http.onprogress = function(sizeEvent) {
             // console.log('size event', sizeEvent.total);
-            this.abort();
-            sizecb(sizeEvent.total);
+            if (sizeEvent.total) {
+              this.abort();
+              sizecb(sizeEvent.total);
+            }
           }
           http.send();
         }
 
         getFileSize(url, function(size) {
           // console.log('Got a size', size);
-          if (size) {
-            totalsize = size;
-          }
+          totalsize = size;
         })
 
         var updateProgress = function(oEvent) {
@@ -141,6 +143,8 @@
             var data = _arrayBufferToBase64(xhr.response);
             // console.log('transfercomplete', url, data.length);
             downloadcb && downloadcb(data);
+            data = null;
+            global.nwGui.App.clearCache();
           }
 
           xhr.addEventListener("onreadystatechange", transferFailed, false);

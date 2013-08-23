@@ -43,6 +43,7 @@ function getToDisk(sourceUrl, opts, cb) {
       // console.log('writing', buff.length, position, destPath);
       fs.writeSync(fd, buff, 0, buff.length, position);
       position += buff.length;
+      data = buff = null;
     }
   }, function(error, data) {
     if (error) {
@@ -89,6 +90,7 @@ function getJson(url, cb) {
       if (data) data = JSON.parse(data);
       // console.log('getJson', data)
       cb(error, data);
+      data = null;
     }
   });
 }
