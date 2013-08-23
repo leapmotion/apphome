@@ -14,7 +14,8 @@ function unzip(src, dest, cb, legacy) {
     if (! legacy) {
       var stats = fs.statSync(src);
       if (stats.size > 290000000 || // 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
-          stats.size == 11247281    // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
+          stats.size == 11247281 || // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
+          stats.size == 63477600    // special-case JungleJumper 1.0.11HP.zip avoid crash in adm-zip
           ) {
         try {
           console.log('Looking for unzip (chunked) package');
@@ -69,7 +70,7 @@ function unzip(src, dest, cb, legacy) {
   }
 }
 
-function extractAppZip(src, dest, cb) {
+function extractAppZip(src, dest, cb, legacy) {
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
@@ -104,7 +105,7 @@ function extractAppZip(src, dest, cb) {
       cb && cb(err);
     }
     cb(null);
-  });
+  }, legacy);
 }
 
 function extractAppDmg(src, dest, cb) {
