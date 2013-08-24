@@ -70,7 +70,7 @@ function rebuildMenuBar(enableLogOut) {
     fileMenu.append(new nwGui.MenuItem({
       label: 'Exit',
       click: function() {
-        window.close();
+        nwGui.Window.get().emit('close');
       }
     }));
     mainMenu.append(new nwGui.MenuItem({
