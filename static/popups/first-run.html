@@ -149,8 +149,11 @@
     <div id="container">
       <span class="close-app">&times;</span>
       <img id="logo" src="../images/leap-logo.png"/>
-      <h1>Welcome to a whole new world</h1>
-      <h2>Below are a few tips to get you started</h2>
+      <script>
+        var uiGlobals = require('./app/ui-globals.js');
+        document.writeln('<h1>' + uiGlobals.i18n.translate("Welcome to a whole new world").fetch() + '</h1>');
+        document.writeln('<h2>' + uiGlobals.i18n.translate("Below are a few tips to get you started").fetch() + '</h2>');
+      </script>
 
       <div id="embedded-graphics">
         <img class="graphic" id="graphic1" src="../images/first-run/embedded1.png"/>
@@ -172,7 +175,9 @@
           </label>
         </div>
 
-        <div id="continue">Continue</div>
+        <script>
+          document.writeln('<div id="continue">' + uiGlobals.i18n.translate("Continue").fetch() + '</div>');
+        </script>
       </div>
     </div>
   </body>

@@ -62,31 +62,31 @@ function rebuildMenuBar(enableLogOut) {
   if (os.platform() === 'win32') {
     var fileMenu = new nwGui.Menu();
     fileMenu.append(new nwGui.MenuItem({
-      label: 'Controller Settings',
+      label: uiGlobals.i18n.translate('Controller Settings').fetch(),
       click: function() {
         nwGui.Shell.openItem(PlatformControlPanelPaths.win32);
       }
     }));
     fileMenu.append(new nwGui.MenuItem({
-      label: 'Exit',
+      label: uiGlobals.i18n.translate('Exit').fetch(),
       click: function() {
         nwGui.Window.get().emit('close');
       }
     }));
     mainMenu.append(new nwGui.MenuItem({
-      label: 'File',
+      label: uiGlobals.i18n.translate('File').fetch(),
       submenu: fileMenu
     }));
   }
 
   var accountMenu = new nwGui.Menu();
   accountMenu.append(new nwGui.MenuItem({
-    label: 'Sign Out' + (enableLogOut ? ' ' + (uiGlobals.username || uiGlobals.email) : ''),
+    label: uiGlobals.i18n.translate('Sign out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
     click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
   }));
   mainMenu.append(new nwGui.MenuItem({
-    label: 'Account',
+    label: uiGlobals.i18n.translate('Account').fetch(),
     submenu: accountMenu
   }));
 
@@ -94,17 +94,17 @@ function rebuildMenuBar(enableLogOut) {
   if (os.platform() === 'win32') {
     var helpMenu = new nwGui.Menu();
     helpMenu.append(new nwGui.MenuItem({
-      label: 'About ' + uiGlobals.appName,
+      label: uiGlobals.i18n.translate('About Airspace Home').fetch(),
       click: function() {
         popupWindow.open('/static/popups/about.html', {
           width: 300,
           height: 150,
-          title: 'About ' + uiGlobals.appName
+          title: uiGlobals.i18n.translate('About Airspace Home').fetch()
         });
       }
     }));
     mainMenu.append(new nwGui.MenuItem({
-      label: 'Help',
+      label: uiGlobals.i18n.translate('Help').fetch(),
       submenu: helpMenu
     }));
   }

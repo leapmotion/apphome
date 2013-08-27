@@ -49,9 +49,9 @@ var FirstRunSequence = {
         $graphic.effect("blind");
         var $continueButton = $('#continue', firstRunSplash.window.document);
         $continueButton.removeClass('disabled');
-        $continueButton.text('Launch Airspace');
-        $('h1', firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
-        $('h2', firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
+        $continueButton.text(uiGlobals.i18n.translate('Launch Airspace').fetch());
+        $('h1', firstRunSplash.window.document).text(uiGlobals.i18n.translate('Airspace, the Leap Motion app store').fetch());
+        $('h2', firstRunSplash.window.document).text(uiGlobals.i18n.translate('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.').fetch());
 
         $continueButton.click(function() {
           firstRunSplash.close();
@@ -103,7 +103,7 @@ var WelcomeSplash = {
 
       $s.find('.eula-popup').click(function() {
         var eulaWindow = popupWindow.open('/static/popups/license-en.html', {
-          title: 'Leap Motion End User Software License Agreement',
+          title: uiGlobals.i18n.translate('Leap Motion End User Software License Agreement').fetch(),
           width: 640,
           height: 480,
           frame: true,

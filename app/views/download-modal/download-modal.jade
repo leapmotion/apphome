@@ -5,24 +5,24 @@
   .table-holder
     table.details
       tr
-        td.label Version
+        td.label #{app.version_label}
         td.value #{app.version}
       tr
-        td.label Release Date
+        td.label #{app.releaseDate_label}
         td.value #{app.releaseDate}
       if app.changelog
         tr
-          td.label What's New
+          td.label #{app.changelog_label}
           td.value
             !{app.changelog.replace(/\n/g, '<br/>')}
       if app.description
         tr
-          td.label Description
+          td.label #{app.description_label}
           td.value
             !{app.description.replace(/\n/g, '<br/>')}
 
   .footer
-    .button.cancel Cancel
-    .button.confirm.install Install #{app.name}
-    .button.confirm.upgrade Update App
-    .button.launch Launch App
+    .button.cancel #{app.cancel_label}
+    .button.confirm.install #{app.install_label}
+    .button.confirm.upgrade #{app.upgrade_label}
+    .button.launch #{app.launch_label}

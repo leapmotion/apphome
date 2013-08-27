@@ -29,7 +29,7 @@ module.exports = BaseView.extend({
       this.$('.skip-button').click(function() {
         clearInterval(checkInterval);
         cb && cb(null);
-      });
+      }).text(uiGlobals.i18n.translate('Continue with mouse only').fetch());
     } else {
       cb && cb(null);
     }

@@ -15,6 +15,7 @@ module.exports = BaseView.extend({
 
     this.injectCss();
     this.$el.append(this.templateHtml());
+    this.$el.find('#uninstalled-link').find('.label').text(uiGlobals.i18n.translate('Trash').fetch());
     this._linkMapping = {};
     this._initCarousels();
     this._setupResizeBehavior();

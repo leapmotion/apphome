@@ -20,6 +20,13 @@ module.exports = BaseView.extend({
     templateData.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
     this.setElement($(this.templateHtml(templateData)));
 
+    this.$el.find('.waiting').text(uiGlobals.i18n.translate('Waiting...').fetch());
+    this.$el.find('.connecting').text(uiGlobals.i18n.translate('Connecting...').fetch());
+    this.$el.find('.downloading').text(uiGlobals.i18n.translate('Downloading...').fetch());
+    this.$el.find('.installing').text(uiGlobals.i18n.translate('Installing...').fetch());
+    this.$el.find('.opening').text(uiGlobals.i18n.translate('Opening...').fetch());
+    this.$el.find('.install-overlay').text(uiGlobals.i18n.translate('Click to Install').fetch());
+
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
     if (leapApp.isUpgradable()) {

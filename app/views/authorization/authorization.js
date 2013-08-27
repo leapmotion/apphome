@@ -22,7 +22,12 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml());
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
+    this.$noInternet.find('h2').text(uiGlobals.i18n.translate('No internet connection').fetch());
+    this.$noInternet.find('.instruction').text(uiGlobals.i18n.translate('Please ensure your connection is working properly').fetch());
     this.$waiting = this.$('.waiting');
+    this.$waiting.find('.before').text(uiGlobals.i18n.translate('Connecting to authentication server...').fetch());
+    this.$waiting.find('.after').text(uiGlobals.i18n.translate('Preparing for launch...').fetch());
+    this.$waiting.find('.logout').text(uiGlobals.i18n.translate('Signing you out...').fetch());
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
     this._boundCenteringFn = this._center.bind(this);
     $(window).resize(this._boundCenteringFn);

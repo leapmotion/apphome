@@ -28,9 +28,9 @@
     <img src="../icon/icon.png" class="icon" />
     <script>
       var uiGlobals = require('./app/ui-globals.js');
-      document.writeln('<div class="app-name">' + uiGlobals.appName + '</div>');
+      document.writeln('<div class="app-name">' + uiGlobals.i18n.translate('Airspace Home').fetch() + '</div>');
       document.writeln('<div class="app-version">' + uiGlobals.appVersion + '</div>');
-      document.title = 'About ' + uiGlobals.appName;
+      document.title = uiGlobals.i18n.translate('About Airspace Home').fetch();
     </script>
   </body>
 </html>
