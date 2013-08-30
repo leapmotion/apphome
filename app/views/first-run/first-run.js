@@ -19,6 +19,7 @@ var PlatformOrientationPaths = {
 
 var firstRunSplash;
 var isEmbeddedLeap;
+var systemLang = 'en';
 
 var FirstRunSequence = {
   embeddedLeapCheck: function(cb) {
@@ -45,6 +46,7 @@ var FirstRunSequence = {
       }
       language = language.split('-')[0];
       console.log('Abbreviated language name: ' + language);
+      systemLang = ((language == '') ? 'en' : language);
       var staticHtml = StaticHtmlPrefix + (language === 'en' ? '' : '-' + language) + '.html';
       var fullStaticHtmlPath = path.join(__dirname, '..', '..', '..', staticHtml);
       if (!fs.existsSync(fullStaticHtmlPath)) {
@@ -73,6 +75,18 @@ var FirstRunSequence = {
 
   launchOrientation: function(cb) {
     var orientationPath = PlatformOrientationPaths[os.platform()];
+    // completely not scaleable
+    var launchLabels = {
+      "de": 'Airspace starten',
+      "en": 'Launch Airspace',
+      "es": 'Iniciar Airspace',
+      "fr": 'Lancer Airspace',
+      "ja": 'Airspace',
+      "pt": 'Iniciar Airspace',
+      "zh": 'Airspace'
+    };
+    var launchLabel = launchLabels[systemLang];
+    launchLabel = launchLabel ? launchLabel : 'Launch Airspace';
     if (orientationPath) {
       var $s = $('body', firstRunSplash.window.document);
       $s.css('cursor', 'wait');
@@ -80,12 +94,15 @@ var FirstRunSequence = {
       setTimeout(function() {
         $s.css('cursor', 'default');
         var $graphic = $s.hasClass('embedded') ? $s.find('#embedded-graphics') : $s.find('#peripheral-graphics');
-        $graphic.effect("blind");
+        //$graphic.effect("blind"); // don't hide 3 hint images -bherrera 8/29/2013
         var $continueButton = $('#continue', firstRunSplash.window.document);
+        
         $continueButton.removeClass('disabled');
-        $continueButton.text('Launch Airspace');
-        $('h1', firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
-        $('h2', firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
+        $continueButton.text(launchLabel);
+        
+        // don't change banner text - this has not been translated -bherrera 8/29/2013
+        //$('h1', firstRunSplash.window.document).text('Airspace, the Leap Motion app store');
+        //$('h2', firstRunSplash.window.document).text('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.');
 
         $continueButton.click(function() {
           firstRunSplash.close();
