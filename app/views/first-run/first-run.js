@@ -1,5 +1,8 @@
 var async = require('async');
 var os = require('os');
+var fs = require('fs');
+var path = require('path');
+var exec = require('child_process').exec;
 
 var popupWindow = require('../../utils/popup-window.js');
 var embeddedLeap = require('../../utils/embedded-leap.js');
@@ -7,7 +10,7 @@ var db = require('../../utils/db.js');
 var mixpanel = require('../../utils/mixpanel.js');
 var config = require('../../../config/config.js');
 
-var StaticHtml = '/static/popups/first-run.html';
+var StaticHtmlPrefix = '/static/popups/first-run';
 
 var PlatformOrientationPaths = {
   win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe',
@@ -26,15 +29,46 @@ var FirstRunSequence = {
   },
 
   showFirstRunSplash: function(cb) {
-    firstRunSplash = popupWindow.open(StaticHtml, {
-      width: 1080,
-      height: 638,
-      frame: false,
-      resizable: false,
-      show: false,
-      'always-on-top': false
-    });
-    WelcomeSplash.setupBindings(cb);
+    var readLocale = function(err, stdout, stderr) {
+      var language = window.navigator.language;
+      console.log('node-webkit reports language: ' + window.navigator.language);
+      if (err) {
+        console.log('Caught error: ' + err);
+      }
+      else {
+        var lines = stdout.split('\n');
+        if (lines.length >= 2) {
+          // Parse PowerShell output to obtain the language Name e.g. en-US or fr-FR
+          language = lines[0].replace(/\s/, ''); // trim CRLF
+          console.log('Identified language from system query: ' + language);
+        }
+      }
+      language = language.split('-')[0];
+      console.log('Abbreviated language name: ' + language);
+      var staticHtml = StaticHtmlPrefix + (language === 'en' ? '' : '-' + language) + '.html';
+      var fullStaticHtmlPath = path.join(__dirname, '..', '..', '..', staticHtml);
+      if (!fs.existsSync(fullStaticHtmlPath)) {
+        console.log('Defaulting to English after unable to find: ' + fullStaticHtmlPath);
+        staticHtml = StaticHtmlPrefix + '.html';
+      }
+      firstRunSplash = popupWindow.open(staticHtml, {
+        width: 1080,
+        height: 638,
+        frame: false,
+        resizable: false,
+        show: false,
+        'always-on-top': false
+      });
+      WelcomeSplash.setupBindings(cb);
+    };
+    if (os.platform() === 'win32') {
+      var command = 'powershell.exe -Command "(Get-ItemProperty \'HKCU:\\Control Panel\\International\').LocaleName"';
+      var child = exec(command, { maxBuffer: 1024 * 1024 }, readLocale);
+      child.stdin.end();
+    }
+    else {
+      readLocale(null, '', '');
+    }
   },
 
   launchOrientation: function(cb) {
