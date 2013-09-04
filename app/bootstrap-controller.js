@@ -21,11 +21,13 @@ var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connecte
 var firstRunView = require('./views/first-run/first-run.js');
 
 function wrappedSetTimeout(task, ms) {
-  try {
-    setTimeout(task, ms);
-  } catch (err) {
-    console.error('Asynchronous task failed: ' + (err.stack || err));
-  }
+  setTimeout(function() {
+    try {
+      task();
+    } catch (err) {
+      console.error('Asynchronous task failed: ' + (err.stack || err));
+    }
+  }, ms);
 }
 
 function bootstrapAirspace() {
@@ -141,7 +143,10 @@ var AsyncTasks = {
   scanForLocalApps: function() {
     LocalLeapApp.localManifestPromise().done(function(manifest) {
       if (manifest) {
+        // Fire this fast, so the Orientation tile shows up at the top of the list.
         LocalLeapApp.explicitPathAppScan(manifest);
+
+        // This is less urgent; give other bootstrap tasks a chance to complete.
         wrappedSetTimeout(function() {
           LocalLeapApp.localAppScan(manifest);
         }, 6000);
