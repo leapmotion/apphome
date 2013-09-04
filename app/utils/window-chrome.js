@@ -9,8 +9,6 @@ var config = require('../../config/config.js');
 
 
 function appWindowBindings() {
-  mixpanel.trackOpen();
-
   uiGlobals.on(uiGlobals.Event.SignIn, function() {
     rebuildMenuBar(true);
   });

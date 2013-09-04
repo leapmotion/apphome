@@ -6,19 +6,21 @@ var path = require('path');
 var api = require('./utils/api.js');
 var authorizationUtil = require('./utils/authorization-util.js');
 var config = require('../config/config.js');
-var db = require('./utils/db.js');
-var enumerable = require('./utils/enumerable.js');
-var frozenApps = require('./utils/frozen-apps.js');
 var crashCounter = require('./utils/crash-counter.js');
-var shell = require('./utils/shell.js');
-var workingFile = require('./utils/working-file.js');
-var eula = require('./utils/eula.js');
-var windowChrome = require('./utils/window-chrome.js');
+var db = require('./utils/db.js');
 var embeddedLeap = require('./utils/embedded-leap.js');
-var LeapApp = require('./models/leap-app.js');
-var LocalLeapApp = require('./models/local-leap-app.js');
-var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
+var enumerable = require('./utils/enumerable.js');
+var eula = require('./utils/eula.js');
 var firstRunView = require('./views/first-run/first-run.js');
+var frozenApps = require('./utils/frozen-apps.js');
+var mixpanel = require('./utils/mixpanel.js');
+var shell = require('./utils/shell.js');
+var windowChrome = require('./utils/window-chrome.js');
+var workingFile = require('./utils/working-file.js');
+
+var LeapApp = require('./models/leap-app.js');
+var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
+var LocalLeapApp = require('./models/local-leap-app.js');
 
 function wrappedSetTimeout(task, ms) {
   setTimeout(function() {
@@ -59,6 +61,10 @@ function bootstrapAirspace() {
     if (err) {
       console.error('Error bootstrapping airspace: ' + (err.stack || err));
       process.exit();
+    } else {
+      mixpanel.trackOpen({
+        bootstrapDurationMs: (new Date()).getTime() - window.appStartTime
+      });
     }
   });
 }
