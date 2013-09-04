@@ -50,6 +50,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
   extract.unzip(bundlePath, dest, function(err) {
     if (err) {
       console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
+      cb && cb(err);
     } else {
       console.info('Unzipped prebundled apps at ' + bundlePath + ' to ' + dest);
       try {
@@ -60,6 +61,8 @@ function _expandFreezeDriedApps(bundlePath, cb) {
           // May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
           //    db.setItem(PreBundle.OriginalManifest, manifest);
           cb && cb(null, manifest);
+        } else {
+          cb && cb(new Error('No freeze dried apps manifest found.'));
         }
       } catch (err) {
         console.error('Corrupt myapps.json prebundled manifest: ' + (err.stack || err));
