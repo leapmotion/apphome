@@ -20,11 +20,11 @@ var LocalLeapApp = require('./models/local-leap-app.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 var firstRunView = require('./views/first-run/first-run.js');
 
-function stacked(task, ms) {
+function wrappedSetTimeout(task, ms) {
   try {
     setTimeout(task, ms);
   } catch (err) {
-    console.error('stacked task failed: ' + (err.stack || err));
+    console.error('Asynchronous task failed: ' + (err.stack || err));
   }
 }
 
@@ -130,8 +130,8 @@ function startMainApp(cb) {
 }
 
 function afterwardsAsyncKickoffs(cb) {
-  stacked(frozenApps.get, 10);
-  stacked(workingFile.cleanup, 4000);
+  wrappedSetTimeout(frozenApps.get, 10);
+  wrappedSetTimeout(workingFile.cleanup, 4000);
   cb && cb(null);
 }
 
@@ -142,7 +142,7 @@ var AsyncTasks = {
     LocalLeapApp.localManifestPromise().done(function(manifest) {
       if (manifest) {
         LocalLeapApp.explicitPathAppScan(manifest);
-        stacked(function() {
+        wrappedSetTimeout(function() {
           LocalLeapApp.localAppScan(manifest);
         }, 6000);
       } else {
