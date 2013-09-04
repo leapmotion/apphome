@@ -120,8 +120,8 @@ function localTiles(cb) {
     } else {
       console.warn('Manifest missing, skipping local tiles');
     }
-    cb && cb(null);
   });
+  cb && cb(null);
 }
 
 function startMainApp(cb) {
