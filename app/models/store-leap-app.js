@@ -250,6 +250,8 @@ module.exports = LeapApp.extend({
         fs.removeSync(this.standardIconPath());
         fs.removeSync(this.standardTilePath());
       }
+
+      mixpanel.trackAppUninstall({ appName: this.get('name'), appVersion: this.get('version') });
       return cb && cb(null);
     } catch (err) {
       return this._failUninstallation(err, cb);
