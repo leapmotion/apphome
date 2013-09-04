@@ -20,7 +20,13 @@ var LocalLeapApp = require('./models/local-leap-app.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 var firstRunView = require('./views/first-run/first-run.js');
 
-
+function stacked(task, ms) {
+  try {
+    setTimeout(task, ms);
+  } catch (err) {
+    console.error('stacked task failed: ' + (err.stack || err));
+  }
+}
 
 function bootstrapAirspace() {
   var steps = [
@@ -114,13 +120,7 @@ function checkLeapConnection(cb) {
 }
 
 function localTiles(cb) {
-  LocalLeapApp.localManifestPromise().done(function(manifest) {
-    if (manifest) {
-      LocalLeapApp.explicitPathAppScan(manifest);
-    } else {
-      console.warn('Manifest missing, skipping local tiles');
-    }
-  });
+  AsyncTasks.scanForLocalApps();
   cb && cb(null);
 }
 
@@ -130,30 +130,26 @@ function startMainApp(cb) {
 }
 
 function afterwardsAsyncKickoffs(cb) {
-  var stacked = function(task, ms) {
-    try {
-      setTimeout(task, ms);
-    } catch (err) {
-      console.error('postStartAsyncKickoff stacked task failed: ' + (err.stack || err));
-    }
-  };
   stacked(frozenApps.get, 10);
   stacked(workingFile.cleanup, 4000);
-  stacked(AsyncTasks.localAppFileScanning, 6000);
   cb && cb(null);
 }
 
 
 var AsyncTasks = {
 
-  localAppFileScanning: function() {
+  scanForLocalApps: function() {
     LocalLeapApp.localManifestPromise().done(function(manifest) {
       if (manifest) {
-        LocalLeapApp.localAppScan(manifest);
+        LocalLeapApp.explicitPathAppScan(manifest);
+        stacked(function() {
+          LocalLeapApp.localAppScan(manifest);
+        }, 6000);
+      } else {
+        console.warn('Manifest missing, skipping local tiles.');
       }
     });
   },
-
 
   authorizeAndPaintMainScreen: function() {
     authorizationUtil.withAuthorization(function(err) {
