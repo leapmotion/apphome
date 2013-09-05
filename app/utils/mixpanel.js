@@ -19,6 +19,7 @@ module.exports = {
   trackSignIn: getTrackFn('Signed In'),
   trackAppUpgrade: getTrackFn('Started App Update'),
   trackAppUninstall: getTrackFn('App Uninstalled Successfully'),
+  trackAppReinstall: getTrackFn('Reinstalling App'),
   trackEvent: function(eventName, args, namespace) {
     (getTrackFn(eventName, namespace))(args);
   }
