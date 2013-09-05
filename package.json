@@ -1,7 +1,7 @@
 {
   "name": "Airspace",
   "fullName": "Airspace Home",
-  "version": "1.0.8",
+  "version": "1.0.9-pre",
   "description": "Airspace Home by Leap Motion, Inc.",
   "company": "Leap Motion, Inc.",
   "main": "index.html",
