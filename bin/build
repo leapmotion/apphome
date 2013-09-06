@@ -45,6 +45,8 @@ var appManifest = [
 if (os.platform() === 'win32') {
   appManifest.push('bin/IconExtractor.exe');
   appManifest.push('bin/unzip.exe');
+} else if (os.paltform() === 'darwin') {
+  appManifest.push('bin/PreferredLocalization');
 }
 
 fs.deleteSync(path.join(__dirname, '..', 'build'));

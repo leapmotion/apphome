@@ -9,6 +9,7 @@ var embeddedLeap = require('../../utils/embedded-leap.js');
 var db = require('../../utils/db.js');
 var mixpanel = require('../../utils/mixpanel.js');
 var config = require('../../../config/config.js');
+var shell = require('../../utils/shell.js');
 
 var StaticHtmlPrefix = '/static/popups/first-run';
 
@@ -67,6 +68,19 @@ var FirstRunSequence = {
       var command = 'powershell.exe -Command "(Get-ItemProperty \'HKCU:\\Control Panel\\International\').LocaleName"';
       var child = exec(command, { maxBuffer: 1024 * 1024 }, readLocale);
       child.stdin.end();
+    } else if (os.platform() == 'darwin') {
+      var supportedLanguages = Array();
+      supportedLanguages.push('en');
+      var popupsHtml = fs.readdirSync(path.dirname(path.join(__dirname, '..', '..', '..', StaticHtmlPrefix)));
+      for (var i = 0; i < popupsHtml.length; i++) {
+        // FIXME: When moved to ui-globals.js, this should iterate over the *.po files, not first-run-*.html
+        var langMatch = popupsHtml[i].match(/first-run-(.*).html/);
+        if (langMatch) {
+          supportedLanguages.push(langMatch[1]);
+        }
+      }
+      var command = shell.escape(path.join(__dirname, '..', '..', '..', 'bin', 'PreferredLocalization')) + ' ' + supportedLanguages.join(' ');
+      exec(command, { maxBuffer: 1024 * 1024 }, readLocale);
     }
     else {
       readLocale(null, '', '');
