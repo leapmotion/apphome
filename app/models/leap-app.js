@@ -81,6 +81,7 @@ var LeapApp = BaseModel.extend({
 
   save: function() {
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
+    db.saveObj(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps.toJSON());
     db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
   },
 
@@ -270,10 +271,21 @@ LeapApp.States = LeapAppStates;
 
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');
+
   var installedAppsJson = db.fetchObj(config.DbKeys.InstalledApps) || [];
   installedAppsJson.forEach(function(appJson) {
     try {
       uiGlobals.myApps.add(appJson);
+    } catch (err) {
+      console.error('corrupt app data in database: ' + appJson);
+      console.error('Error: ' + (err.stack || err));
+    }
+  });
+
+  var uninstalledAppsJson = db.fetchObj(config.DbKeys.UninstalledApps) || [];
+  uninstalledAppsJson.forEach(function(appJson) {
+    try {
+      uiGlobals.uninstalledApps.add(appJson);
     } catch (err) {
       console.error('corrupt app data in database: ' + appJson);
       console.error('Error: ' + (err.stack || err));

@@ -2,6 +2,7 @@ var config = require('../../../config/config.js');
 
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
+var TrashModalView = require('../trash-modal/trash-modal.js');
 
 module.exports = BaseView.extend({
 
@@ -109,13 +110,15 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     $trashCan.on('drop', function(evt) {
+      var leapApp;
+
       evt.stopPropagation();
 
       this.$('#uninstalled-link').removeClass('highlight');
 
       try {
         var transferredJson = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json'));
-        var leapApp = uiGlobals.myApps.get(transferredJson.appId || transferredJson.id);
+        leapApp = uiGlobals.myApps.get(transferredJson.appId || transferredJson.id);
       } catch (err) {
         console.error('received invalid json: ' + (err.stack || err));
       }
@@ -127,16 +130,20 @@ module.exports = BaseView.extend({
 
     $trashCan.on('click', function() {
       if (!$trashCan.hasClass('empty')) {
-        this.myAppsCarousel.switchToSlide(Infinity);
+        var trashcan = this;
+        var trashModal = new TrashModalView({
+          onClose: function() {
+            trashcan._updateTrashState();
+          }
+        });
+        trashModal.show();
       }
     }.bind(this));
 
-    if (uiGlobals.myApps.numUninstalled() > 0) {
-      $trashCan.removeClass('empty');
-    }
-
     uiGlobals.myApps.on('install', this._updateTrashState.bind(this));
-    uiGlobals.myApps.on('uninstall', this._updateTrashState.bind(this))
+    uiGlobals.uninstalledApps.on('install', this._updateTrashState.bind(this));
+    uiGlobals.myApps.on('uninstall', this._updateTrashState.bind(this));
+    uiGlobals.uninstalledApps.on('uninstall', this._updateTrashState.bind(this));
 
     uiGlobals.myApps.on('dragstart', function() {
       this.$('#uninstalled-link').addClass('highlight');
@@ -145,10 +152,21 @@ module.exports = BaseView.extend({
     uiGlobals.myApps.on('dragend', function() {
       this.$('#uninstalled-link').removeClass('highlight');
     }.bind(this));
+
+    this._updateTrashState();
   },
 
   _updateTrashState: function() {
-    this.$('#uninstalled-link').toggleClass('empty', uiGlobals.myApps.numUninstalled() === 0);
+    this.$('#uninstalled-link').toggleClass('empty', uiGlobals.uninstalledApps.length === 0);
+
+    if (uiGlobals.uninstalledApps.length > 0) {
+      this.$('#uninstalled-link').removeClass('empty');
+
+      this.$('#uninstalled-link .trashed-apps').show();
+      this.$('#uninstalled-link .trashed-apps .number').html(uiGlobals.uninstalledApps.length);
+    } else {
+      this.$('#uninstalled-link .trashed-apps').hide();
+    }
   },
 
   _setupResizeBehavior: function() {
