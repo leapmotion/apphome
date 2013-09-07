@@ -29,11 +29,8 @@ if [ -z "${LIBRARY_DIR}" ]; then
   LIBRARY_DIR=/opt/local/Libraries
 fi
 
-cp -rf "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents/Frameworks/node-webkit Framework.framework" osx/Airspace.app/Contents/Frameworks/
-cp -rf "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents/Frameworks/node-webkit Helper.app" osx/Airspace.app/Contents/Frameworks/
-cp -rf "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents/Frameworks/node-webkit Helper EH.app" osx/Airspace.app/Contents/Frameworks/
-cp -rf "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents/Frameworks/node-webkit Helper NP.app" osx/Airspace.app/Contents/Frameworks/
-cp -f "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents/MacOS/node-webkit" osx/Airspace.app/Contents/MacOS/
+# Assume OS X 10.6 build of node-webkit has been committed to homebase repo,
+# no need to copy from ${LIBRARY_DIR}/node-webkit-*
 cp -r osx build_products
 
 echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt
