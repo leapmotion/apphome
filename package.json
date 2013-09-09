@@ -1,12 +1,12 @@
 {
   "name": "Airspace",
   "fullName": "Airspace Home",
-  "version": "1.0.0",
+  "version": "1.0.9-pre",
   "description": "Airspace Home by Leap Motion, Inc.",
   "company": "Leap Motion, Inc.",
   "main": "index.html",
   "node-main": "node-main.js",
-  "chromium-args": "--disable-gpu --disable-software-rasterizer",
+  "chromium-args": "--disable-gpu --disable-software-rasterizer --skip-gpu-data-loading",
   "window": {
     "title": "Airspace Home",
     "icon": "static/icon/icon.png",
@@ -43,5 +43,5 @@
     "test": "node bin/test"
   },
   "engine": "node >= 0.10.0",
-  "nwVersion": "0.6.3"
+  "nwVersion": "0.7.2"
 }

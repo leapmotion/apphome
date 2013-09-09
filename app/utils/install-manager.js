@@ -1,3 +1,5 @@
+var mixpanel = require('../utils/mixpanel.js');
+
 var LeapApp = require('../models/leap-app.js');
 
 var MaxConsecutiveFailures = 3;
@@ -5,6 +7,9 @@ var MaxConsecutiveFailures = 3;
 var installQueue = [];
 
 function enqueue(app, cb, skipToFront) {
+  if (app.get('state') === LeapApp.States.Uninstalled) {
+    mixpanel.trackAppReinstall();
+  }
   app.set('state', LeapApp.States.Waiting);
   var queueData = {
     app: app,

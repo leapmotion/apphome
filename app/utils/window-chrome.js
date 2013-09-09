@@ -5,11 +5,10 @@ var MainPage = require('../views/main-page/main-page.js');
 var authorizationUtil = require('./authorization-util.js');
 var mixpanel = require('./mixpanel.js');
 var popupWindow = require('../utils/popup-window.js');
+var config = require('../../config/config.js');
 
 
 function appWindowBindings() {
-  mixpanel.trackOpen();
-
   uiGlobals.on(uiGlobals.Event.SignIn, function() {
     rebuildMenuBar(true);
   });
@@ -93,6 +92,12 @@ function rebuildMenuBar(enableLogOut) {
   // TODO: support website links on both OS X and Windows
   if (os.platform() === 'win32') {
     var helpMenu = new nwGui.Menu();
+    helpMenu.append(new nwGui.MenuItem({
+      label: 'Getting Started...',
+      click: function() {
+        nwGui.Shell.openExternal(config.GettingStartedUrl);
+      }
+    }));
     helpMenu.append(new nwGui.MenuItem({
       label: uiGlobals.i18n.translate('About Airspace Home').fetch(),
       click: function() {

@@ -21,9 +21,10 @@ process.on('uncaughtException', function(err) {
   installManager.cancelAll();
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
-  if (isProduction) {
-    window.Raven.captureError(err);
-  }
+  // FIXME: raven npm removed, what's the replacement for captureError()?
+  //if (isProduction) {
+  //  window.Raven.captureError(err);
+  //}
   if (crashCounter.count() <= 2) {
     crashCounter.increment();
     process.exit();

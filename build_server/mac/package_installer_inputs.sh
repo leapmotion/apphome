@@ -29,7 +29,8 @@ if [ -z "${LIBRARY_DIR}" ]; then
   LIBRARY_DIR=/opt/local/Libraries
 fi
 
-cp -rf "${LIBRARY_DIR}/node-webkit-0.6.3/node-webkit.app/Contents" osx/Airspace.app/
+# Assume OS X 10.6 build of node-webkit has been committed to homebase repo,
+# no need to copy from ${LIBRARY_DIR}/node-webkit-*
 cp -r osx build_products
 
 echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt

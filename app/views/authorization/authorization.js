@@ -87,15 +87,27 @@ module.exports = BaseView.extend({
     this._center();
     this._showLoggingOutMessage();
 
-    $.get(oauth.logOutUrl(), {
-      error: function(xhr, err) {
-        cb && cb(err);
-      },
-      success: function() {
-        oauth.logOut();
-        cb && cb(null);
-      }
-    });
+    oauth.logOut();
+    this._showLoggingOutMessage();
+    if (window.navigator.onLine) {
+      var $logoutFrame = $('<iframe src="' + oauth.logOutUrl() + '"/>').hide();
+      $logoutFrame.load(function() {
+        $logoutFrame.remove();
+        cb(null);
+      })
+      $logoutFrame.appendTo('body');
+    }
+
+    // FIXME: Why does PaulB's code sometimes cause immediate relogin?
+    //$.get(oauth.logOutUrl(), {
+    //  error: function(xhr, err) {
+    //    cb && cb(err);
+    //  },
+    //  success: function() {
+    //    oauth.logOut();
+    //    cb && cb(null);
+    //  }
+    //});
   },
 
   _waitForInternetConnection: function(cb) {
