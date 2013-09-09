@@ -1,5 +1,3 @@
-var leap = require('../../utils/leap.js');
-
 var Modal = require('../modal/modal.js');
 
 module.exports = Modal.extend({

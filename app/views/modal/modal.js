@@ -1,15 +1,10 @@
-var leap = require('../../utils/leap.js');
-
 var BaseView = require('../base-view.js');
-var TrashTileView = require('../trash-tile/trash-tile.js');
-
-var installManager = require('../../utils/install-manager.js');
 
 var Modal = BaseView.extend({
 
   viewDir: __dirname,
 
-  className: 'trash-modal',
+  className: 'modal',
 
   events: {
     'click .button.cancel': 'remove',

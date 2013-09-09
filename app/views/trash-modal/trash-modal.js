@@ -1,5 +1,3 @@
-var leap = require('../../utils/leap.js');
-
 var Modal = require('../modal/modal.js');
 var TrashTileView = require('../trash-tile/trash-tile.js');
 
