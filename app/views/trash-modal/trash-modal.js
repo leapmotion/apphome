@@ -23,41 +23,34 @@ module.exports = BaseView.extend({
 
     this.$el.append($(this.templateHtml()));
 
-    var target = this.$('.tile-holder');
-    var modal = this;
+    var target = this.$('.content');
 
-    uninstalledApps.forEach(function(app) {
+    uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({
         leapApp: app,
-        onReinstall: function() {
-          modal.remove();
+        onReinstall: (function() {
+          this.remove();
           uiGlobals.uninstalledApps.remove(app);
           uiGlobals.myApps.add(app);
           installManager.enqueue(app);
-          modal.options.onClose(true);
-        }});
+          this.options.onClose(true);
+        }).bind(this)
+      });
       target.append(view.$el);
+    }).bind(this));
 
-      /*
-        this.$('img').on('load error', function() {
-          if (this.$('.icon').prop('naturalWidth') === 0) {
-            leapApp.set('iconPath', '');
-            leapApp.downloadIcon();
-          }
-        }.bind(this));
-      */
-    });
-
-    this.$('.button.reinstall-all').click(function() {
-      uiGlobals.uninstalledApps.forEach(function(app) {
+    this.$('.button.reinstall-all').click((function() {
+      function reinstall(app) {
         uiGlobals.myApps.add(app);
         installManager.enqueue(app);
-        modal.options.onClose(true);
-      });
+        this.options.onClose(true);
+      }
 
-      modal.remove();
+      uiGlobals.uninstalledApps.forEach(reinstall.bind(this));
+
+      this.remove();
       uiGlobals.uninstalledApps.reset();
-    });
+    }).bind(this));
 
     // prevent swiping while modal is open
     this.$el.bind('mousedown mousemove', function(evt) {

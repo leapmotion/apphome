@@ -19,8 +19,7 @@ module.exports = BaseView.extend({
 
     this.injectCss();
 
-
-    var appJson = leapApp.toJSON()
+    var appJson = leapApp.toJSON();
     appJson.changelog = leapApp.getMarkdown('changelog');
     appJson.description = leapApp.getMarkdown('description');
 
