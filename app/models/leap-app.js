@@ -272,25 +272,22 @@ LeapApp.States = LeapAppStates;
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');
 
+  function populateList(apps, target) {
+    apps.forEach(function(app) {
+      try {
+        target.add(app);
+      } catch (err) {
+        console.error('corrupt app data in database: ' + app);
+        console.error('Error: ' + (err.stack || err));
+      }
+    });
+  }
+
   var installedAppsJson = db.fetchObj(config.DbKeys.InstalledApps) || [];
-  installedAppsJson.forEach(function(appJson) {
-    try {
-      uiGlobals.myApps.add(appJson);
-    } catch (err) {
-      console.error('corrupt app data in database: ' + appJson);
-      console.error('Error: ' + (err.stack || err));
-    }
-  });
+  populateList(installedAppsJson, uiGlobals.myApps);
 
   var uninstalledAppsJson = db.fetchObj(config.DbKeys.UninstalledApps) || [];
-  uninstalledAppsJson.forEach(function(appJson) {
-    try {
-      uiGlobals.uninstalledApps.add(appJson);
-    } catch (err) {
-      console.error('corrupt app data in database: ' + appJson);
-      console.error('Error: ' + (err.stack || err));
-    }
-  });
+  populateList(uninstalledAppsJson, uiGlobals.uninstalledApps);
 
 };
 
