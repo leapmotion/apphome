@@ -130,11 +130,8 @@ module.exports = BaseView.extend({
 
     $trashCan.on('click', function() {
       if (!$trashCan.hasClass('empty')) {
-        var trashcan = this;
         var trashModal = new TrashModalView({
-          onClose: function() {
-            trashcan._updateTrashState();
-          }
+          onClose: this._updateTrashState.bind(this)
         });
         trashModal.show();
       }
@@ -163,7 +160,7 @@ module.exports = BaseView.extend({
       this.$('#uninstalled-link').removeClass('empty');
 
       this.$('#uninstalled-link .trashed-apps').show();
-      this.$('#uninstalled-link .trashed-apps .number').html(uiGlobals.uninstalledApps.length);
+      this.$('#uninstalled-link .trashed-apps .number').text(uiGlobals.uninstalledApps.length);
     } else {
       this.$('#uninstalled-link .trashed-apps').hide();
     }
