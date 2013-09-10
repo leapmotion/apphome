@@ -1,28 +1,30 @@
-.modal
-  .header
-    img.icon(src=app.iconPath)
-    h1.name #{app.name}
-  .table-holder
-    table.details
-      tr
-        td.label #{app.version_label}
-        td.value #{app.version}
-      tr
-        td.label #{app.releaseDate_label}
-        td.value #{app.releaseDate}
-      if app.changelog
-        tr
-          td.label #{app.changelog_label}
-          td.value
-            !{app.changelog.replace(/\n/g, '<br/>')}
-      if app.description
-        tr
-          td.label #{app.description_label}
-          td.value
-            !{app.description.replace(/\n/g, '<br/>')}
+extends ../modal/modal
 
-  .footer
-    .button.cancel #{app.cancel_label}
-    .button.confirm.install #{app.install_label}
-    .button.confirm.upgrade #{app.upgrade_label}
-    .button.launch #{app.launch_label}
+append header
+  img.icon(src=app.iconPath)
+  h1.name #{app.name}
+
+append content
+  table.details
+    tr
+      td.label #{app.version_label}
+      td.value #{app.version}}
+    tr
+      td.label #{app.releaseDate_label}
+      td.value #{app.releaseDate}
+    if app.changelog
+      tr
+        td.label #{app.changelog_label}
+        td.value
+          !{app.changelog.replace(/\n/g, '<br/>')}
+    if app.description
+      tr
+        td.label #{app.description_label}
+        td.value
+          !{app.description.replace(/\n/g, '<br/>')}
+
+append footer
+  .button.cancel #{app.cancel_label}
+  .button.confirm.install #{app.install_label}
+  .button.confirm.upgrade #{app.upgrade_label}
+  .button.launch #{app.launch_label}

@@ -7,19 +7,46 @@ var installManager = require('../../utils/install-manager.js');
 var BaseView = require('../base-view.js');
 var DownloadModalView = require('../download-modal/download-modal.js');
 
-module.exports = BaseView.extend({
+var Tile = BaseView.extend({
 
   viewDir: __dirname,
 
-  initialize: function(args) {
+  initializeTile: function(app) {
     this.injectCss();
-    var leapApp = args.leapApp;
 
-    var templateData = leapApp.toJSON();
+    var templateData = app.toJSON();
     templateData.iconPath = (templateData.iconPath ? this._makeFileUrl(templateData.iconPath) : '');
     templateData.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
     this.setElement($(this.templateHtml(templateData)));
 
+    this.listenTo(app, 'change:iconPath', function() {
+      this.$('.icon').attr('src', this._makeFileUrl(app.get('iconPath'), true));
+      this._showOrHideIcon();
+    }, this);
+
+    this.listenTo(app, 'change:tilePath', function() {
+      var tilePath = app.get('tilePath');
+      if (tilePath) {
+        this.$('.tile-bg').attr('src', this._makeFileUrl(app.get('tilePath'), true));
+      } else {
+        this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
+      }
+      this._showOrHideIcon();
+    }, this);
+
+    this.listenTo(app, 'change:name', function() {
+      this.$('.name').text(app.get('name'));
+    }, this);
+
+    this.$el.attr('tile_id', app.id);
+  },
+
+  initialize: function(args) {
+    var leapApp = args.leapApp;
+
+    this.initializeTile(leapApp);
+
+    // Ew.
     this.$el.find('.waiting').text(uiGlobals.i18n.translate('Waiting...').fetch());
     this.$el.find('.connecting').text(uiGlobals.i18n.translate('Connecting...').fetch());
     this.$el.find('.downloading').text(uiGlobals.i18n.translate('Downloading...').fetch());
@@ -41,28 +68,9 @@ module.exports = BaseView.extend({
       this._setupDragging();
     }, this);
 
-    this.listenTo(leapApp, 'change:tilePath', function() {
-      var tilePath = leapApp.get('tilePath');
-      if (tilePath) {
-        this.$('.tile-bg').attr('src', this._makeFileUrl(leapApp.get('tilePath'), true));
-      } else {
-        this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
-      }
-      this._showOrHideIcon();
-    }, this);
-
-    this.listenTo(leapApp, 'change:iconPath', function() {
-      this.$('.icon').attr('src', this._makeFileUrl(leapApp.get('iconPath'), true));
-      this._showOrHideIcon();
-    }, this);
-
-    this.listenTo(leapApp, 'change:name', function() {
-      this.$('.name').text(leapApp.get('name'));
-    }, this);
-
     this.listenTo(leapApp, 'change:availableUpgrade', function() {
       this.$el.toggleClass('upgrade', leapApp.isUpgradable());
-    })
+    });
 
     this.listenTo(leapApp, 'progress', function(progress) {
       this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
@@ -96,7 +104,7 @@ module.exports = BaseView.extend({
   },
 
   _makeFileUrl: function(filePath, forceRefresh) {
-    return 'file://' + filePath + (forceRefresh ? '#' + (new Date).getTime() : '');
+    return 'file://' + filePath + (forceRefresh ? '#' + (new Date()).getTime() : '');
   },
 
   _setupDragging: function() {
@@ -192,3 +200,5 @@ module.exports = BaseView.extend({
   }
 
 });
+
+module.exports = Tile;

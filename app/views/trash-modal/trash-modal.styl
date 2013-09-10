@@ -1,0 +1,27 @@
+@import "../modal/modal"
+
+$borderColor = #3a3e48
+
+.trash-modal .modal-wrapper .modal
+    .footer
+      border-top 1px solid $borderColor
+      padding-top 24px
+      overflow auto
+
+      .button
+        border-radius 7px
+        color #ededed
+        cursor pointer
+        font-size 21px
+        font-weight bold
+        padding 12px 21px 16px
+        text-shadow 0 -1px 0 rgba(0,0,0,.55)
+
+        &.reinstall-all
+          background-color #60aee5 /* layer fill content */
+          background-clip padding-box
+          background -webkit-linear-gradient(top, #a2d16e 0%, #82b544 50%, #71a859 100%)
+          background linear-gradient(top, #a2d16e 0%, #82b544 50%, #71a859 100%)
+          float right
+          padding-left 40px
+          padding-right 40px

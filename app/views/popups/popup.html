@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/fonts.css"/>
+  <style>
+    * {
+      -webkit-user-select: none;
+    }
+
+    body {
+      color: #4b4c4c;
+      font-family: "freightsans_probook";
+      padding: 10px 50px;
+    }
+   </style>
+   <script>
+     (function() {
+       var name = require('nw.gui').Window.get().options.name;
+       var PopupView = require('./' + name + '/' + name + '.js');
+       new PopupView({ el: document.body });
+     })();
+   </script>
+</head>
+<body>
+</body>
+</html>

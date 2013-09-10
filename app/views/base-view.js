@@ -10,7 +10,7 @@ var BaseView = window.Backbone.View.extend({
 
   injectCss: function() {
     this._requireViewDir();
-    var cssPath = path.join(this.viewDir, path.basename(this.viewDir) + '.stylus');
+    var cssPath = path.join(this.viewDir, path.basename(this.viewDir) + '.styl');
     domInjection.applyStylus(cssPath);
   },
 
@@ -23,7 +23,9 @@ var BaseView = window.Backbone.View.extend({
         src = fs.readFileSync(templatePath, 'utf8');
         templateCache[templatePath] = src;
       }
-      this.templateFn = jade.compile(src, jadeOpts || {});
+      jadeOpts = _.extend(jadeOpts || {}, {filename: templatePath});
+      console.log('Compiling ' + templatePath);
+      this.templateFn = jade.compile(src, jadeOpts);
     }
     return this.templateFn(data);
   },

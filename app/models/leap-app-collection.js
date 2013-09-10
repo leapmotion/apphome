@@ -63,15 +63,4 @@ module.exports = window.Backbone.Collection.extend({
     ndx = Math.max(Math.min(ndx, this.length - 1), 0);
     return Math.floor(ndx / modelsPerPage);
   },
-
-  numUninstalled: function() {
-    var num = 0;
-    this.models.forEach(function(app) {
-      if (app.isUninstalled()) {
-        num++;
-      }
-    });
-    return num;
-  }
-
 });

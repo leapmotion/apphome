@@ -55,7 +55,7 @@ function bootstrapAirspace() {
         uiGlobals.bootstrapPromises[fn.name].resolve();
         cb.apply(this, arguments);
       });
-    }
+    };
   });
   async.series(wrappedSteps, function(err) {
     if (err) {

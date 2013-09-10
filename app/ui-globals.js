@@ -14,6 +14,7 @@ uiGlobals.Event = enumerable.make([
 ], 'UiGlobalEvent');
 
 uiGlobals.myApps = new LeapAppCollection();
+uiGlobals.uninstalledApps = new LeapAppCollection();
 
 uiGlobals.bootstrapPromises = {};
 
