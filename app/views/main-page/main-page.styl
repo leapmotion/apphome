@@ -1,0 +1,107 @@
+.main-page
+  position absolute
+  z-index 0
+  width 100%
+  height 100%
+
+  &.animating
+    .empty-message
+      display none !important
+
+  #airspace-logo-holder
+    height 28px
+    margin-top 40px
+    position absolute
+    width 100%
+
+    #airspace-logo
+      background-image url(static/images/airspace-logo.png)
+      height 28px
+      width 407px
+      margin 0 auto
+
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image url(static/images/airspace-logo@2x.png)
+        background-size 407px 28px
+      }
+
+  .page-container
+    width 100%
+    height 100%
+    //font-family Arial
+    .airspace-logo
+      background url(static/images/airspace-logo.png)
+      width 275px
+      height 30px
+      margin 30px auto
+
+  #uninstalled-link
+    bottom 0
+    color #4a4f59
+    cursor pointer
+    font-size 24px
+    height 46px
+    left auto
+    padding-right 28px
+    position absolute
+    right 0
+
+    &:hover
+      color #a1abc9
+      .icon
+        background url(static/images/trash-icon-current.png)
+
+    &.empty
+      cursor default
+
+      &:hover
+        color #4a4f59
+        .icon
+          background url(static/images/trash-icon.png)
+
+    &.current
+      color #a1abc9
+      cursor default
+
+      &:after
+        background -webkit-linear-gradient(left, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+        background linear-gradient(to right, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
+        bottom auto
+        top -15px
+        left 0
+      .icon
+        background url(static/images/trash-icon-current.png)
+
+    &.highlight
+      color #a1abc9
+      .icon
+        background url(static/images/trash-icon-current.png)
+
+    .label
+      float right
+      padding-right 10px
+    .trashed-apps
+      display none
+    .icon
+      background url(static/images/trash-icon.png)
+      float right
+      height 33px
+      width 27px
+
+  .app-list
+    list-style none
+
+    li
+      float left
+
+  .footer
+    background #070709
+    border-top 1px solid #353639
+    height 60px
+    position absolute
+    width 100%
+
+    &.initial
+      bottom -60px
+    &.loaded
+      bottom 0

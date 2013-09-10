@@ -67,9 +67,10 @@ function handleAppJson(appJson) {
   var app = createAppModel(appJson);
   if (app) {
     var myApps = uiGlobals.myApps;
-    var existingApp = myApps.get(app.get('appId'));
+    var uninstalledApps = uiGlobals.uninstalledApps;
+    var existingApp = myApps.get(app.get('appId')) || uninstalledApps.get(app.get('appId'));
     if (existingApp) {
-      if (!existingApp.isInstalled()) {
+      if (!existingApp.isInstalled() && !existingApp.isUninstalled()) {
         getAppDetails(app, function() {
           var appJson = app.toJSON();
           delete appJson.state;

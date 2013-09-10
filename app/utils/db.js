@@ -34,7 +34,7 @@ var db = module.exports = {
 _([ 'clear', 'key', 'length']).each(function(fnName) {
   module.exports[fnName] = function() {
     return window.localStorage[fnName].apply(null, arguments);
-  }
+  };
 });
 
 
