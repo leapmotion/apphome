@@ -13,28 +13,24 @@ function openPopup(popupName, options) {
       toolbar: false,
       frame: true,
       resizable: false,
-      icon: 'static/icon/icon.png',
-      'new-instance': options.openLinksInternally,
-      nodejs: !options.openLinksInternally
+      icon: 'static/icon/icon.png'
     }, options);
     popup = nwGui.Window.open('./app/views/popups/popup.html', popupOptions);
     popup.options = popupOptions;
     singletonPopups[popupName] = popup;
 
-    if (!options.openLinksInternally) {
-      popup.on('loaded', function() {
-        var popupDocument = popup.window && popup.window.document;
-        if (popupDocument) {
-          $('body', popupDocument).on('click', 'a', function(evt) {
-            evt.preventDefault();
-            var href = $(this).attr('href');
-            if (href) {
-              nwGui.Shell.openExternal(href);
-            }
-          });
-        }
-      });
-    }
+    popup.on('loaded', function() {
+      var popupDocument = popup.window && popup.window.document;
+      if (popupDocument) {
+        $('body', popupDocument).on('click', 'a', function(evt) {
+          evt.preventDefault();
+          var href = $(this).attr('href');
+          if (href) {
+            nwGui.Shell.openExternal(href);
+          }
+        });
+      }
+    });
 
     popup.on('close', function() {
       delete singletonPopups[popupName];

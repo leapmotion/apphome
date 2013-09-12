@@ -235,8 +235,15 @@ module.exports = BaseView.extend({
       evt.preventDefault();
       var href = $(this).attr('href');
       if (href) {
-        popup.open('external', {
-          href: href
+        nwGui.Window.open(href, {
+          width: 640,
+          height: 480,
+          x: 50,
+          y: 50,
+          toolbar: false,
+          icon: 'static/icon/icon.png',
+          'new-instance': true,
+          nodejs: false
         });
       }
     });
