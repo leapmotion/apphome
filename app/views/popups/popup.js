@@ -13,7 +13,9 @@ function openPopup(popupName, options) {
       toolbar: false,
       frame: true,
       resizable: false,
-      icon: 'static/icon/icon.png'
+      icon: 'static/icon/icon.png',
+      'new-instance': options.openLinksInternally,
+      nodejs: !options.openLinksInternally
     }, options);
     popup = nwGui.Window.open('./app/views/popups/popup.html', popupOptions);
     popup.options = popupOptions;
