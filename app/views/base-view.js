@@ -23,8 +23,7 @@ var BaseView = window.Backbone.View.extend({
         src = fs.readFileSync(templatePath, 'utf8');
         templateCache[templatePath] = src;
       }
-      jadeOpts = _.extend(jadeOpts || {}, {filename: templatePath});
-      console.log('Compiling ' + templatePath);
+      jadeOpts = _.extend(jadeOpts || {}, { filename: templatePath });
       try {
         this.templateFn = jade.compile(src, jadeOpts);
       } catch (err) {
