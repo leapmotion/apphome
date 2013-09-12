@@ -100,7 +100,7 @@ function ensureWorkingDirs(cb) {
 }
 
 function prerunAsyncKickoff(cb) {
-  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun)
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
   workingFile.buildCleanupList();
   LeapApp.hydrateCachedModels();
   embeddedLeap.embeddedLeapPromise();
