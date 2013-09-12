@@ -21,12 +21,12 @@
     <script>
       (function() {
         var nwWindow = require('nw.gui').Window.get();
-        var name = nwWindow.options.name;
-        var PopupView = require('./app/views/popups/' + name + '/' + name + '.js');
-        nwWindow.popupView = new PopupView({
-          el: document.getElementById('popup-contents'), // Must set element during initialization for CSS injection to work.
-          nwWindow: nwWindow
-        });
+        var options = nwWindow.options;
+        var PopupView = require('./app/views/popups/' + options.name + '/' + options.name + '.js');
+        options.el = document.getElementById('popup-contents'); // Must set element during initialization for CSS injection to work.
+        options.nwWindow = nwWindow;
+        document.title = options.title;
+        nwWindow.popupView = new PopupView(options);
       })();
     </script>
   </body>

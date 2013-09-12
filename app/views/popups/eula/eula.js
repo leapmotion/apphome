@@ -15,7 +15,7 @@ module.exports = BaseView.extend({
     height: 480,
     frame: true,
     resizable: true,
-    show: true,
+    show: false,
     x: 50,
     y: 50
   },
@@ -31,6 +31,7 @@ module.exports = BaseView.extend({
     var doc = this.$el.prop('ownerDocument');
     doc.write(fs.readFileSync(path.join(licenseDir, licenseFile), 'utf-8'));
     doc.title = this.options.title;
+    this.options.nwWindow.show();
   }
 
 });

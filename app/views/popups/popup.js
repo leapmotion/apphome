@@ -12,10 +12,6 @@ function openPopup(popupName, options) {
       name: popupName,
       toolbar: false,
       frame: true,
-      min_width: options.width,
-      min_height: options.height,
-      max_width: options.width,
-      max_height: options.height,
       resizable: false,
       icon: 'static/icon/icon.png'
     }, options);
@@ -41,6 +37,7 @@ function openPopup(popupName, options) {
     popup.on('close', function() {
       delete singletonPopups[popupName];
       popup.close(true);
+      popup = null;
     });
   } else {
     popup.focus();

@@ -16,8 +16,8 @@ var Tile = BaseView.extend({
     this.injectCss();
 
     var appJson = app.toJSON();
-    appJson.iconPath = (templateData.iconPath ? this._makeFileUrl(templateData.iconPath) : '');
-    appJson.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
+    appJson.iconPath = (appJson.iconPath ? this._makeFileUrl(appJson.iconPath) : '');
+    appJson.tilePath = this._makeFileUrl(appJson.tilePath || config.DefaultTilePath);
     this.setElement(this.templateHtml({
       app:                  appJson,
       waiting_label:        i18n.translate('Waiting...'),

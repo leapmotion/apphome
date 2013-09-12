@@ -3,9 +3,9 @@ var urlParse = require('url').parse;
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
-var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
-//TODO var popupWindow = require('../../utils/popup-window.js');
+var oauth = require('../../utils/oauth.js');
+var popup = require('../popups/popup.js');
 
 var BaseView = require('../base-view.js');
 
@@ -235,15 +235,8 @@ module.exports = BaseView.extend({
       evt.preventDefault();
       var href = $(this).attr('href');
       if (href) {
-        popupWindow.open(href, {
-          width: 640,
-          height: 480,
-          frame: true,
-          resizable: true,
-          show: true,
-          x: 50,
-          y: 50,
-          allowMultiple: false
+        popup.open('external', {
+          href: href
         });
       }
     });
