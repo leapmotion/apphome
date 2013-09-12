@@ -24,7 +24,6 @@ module.exports = BaseView.extend({
   viewDir: __dirname,
 
   options: {
-    toolbar: true,
     width: 1080,
     height: 638,
     frame: false,
@@ -46,7 +45,6 @@ module.exports = BaseView.extend({
     this.$el.addClass('stage1');
 
     embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
-      isEmbedded = true; //TEMP
       this.$el.toggleClass('embedded', isEmbedded);
       this.$('#continue').toggleClass('disabled', isEmbedded);
       this._setupBindings(isEmbedded);
