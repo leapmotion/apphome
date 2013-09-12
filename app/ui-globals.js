@@ -24,26 +24,7 @@ var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package
 uiGlobals.appName = packageJson.fullName;
 uiGlobals.appVersion = packageJson.version;
 
-var po2json = require('po2json');
-var language = window.navigator.language;
-var transJson = '';
-try {
-  transJson = po2json.parseSync(path.join(__dirname, '../config/locales', language + '.po'));
-} catch (e) {
-  // fall back to en-US
-  console.warn('Failed to find translation file for language', language);
-  language = 'en-US';
-  transJson = po2json.parseSync(path.join(__dirname, '../config/locales', language + '.po'));
-}
-
-var Jed = require('jed');
-global.i18n = uiGlobals.i18n = new Jed({
-  "domain": language,
-  "missing_key_callback" : function(key) {
-    console.warn('Missing translation key', key, 'for language', language);
-  },
-  locale_data: transJson
-});
+uiGlobals.i18n = require('./utils/i18n.js'); // TODO
 
 uiGlobals.sendNotification = function(header, body, icon) {
   var win = nwGui.Window.get();

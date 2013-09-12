@@ -4,7 +4,7 @@ var urlParse = require('url').parse;
 var config = require('../../../config/config.js');
 var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
-var popupWindow = require('../../utils/popup-window.js');
+//TODO var popupWindow = require('../../utils/popup-window.js');
 
 var BaseView = require('../base-view.js');
 

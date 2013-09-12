@@ -11,9 +11,10 @@ var db = require('./utils/db.js');
 var embeddedLeap = require('./utils/embedded-leap.js');
 var enumerable = require('./utils/enumerable.js');
 var eula = require('./utils/eula.js');
-var firstRunView = require('./views/first-run/first-run.js');
 var frozenApps = require('./utils/frozen-apps.js');
+var i18n = require('./utils/i18n.js');
 var mixpanel = require('./utils/mixpanel.js');
+var popup = require('./views/popups/popup.js');
 var shell = require('./utils/shell.js');
 var windowChrome = require('./utils/window-chrome.js');
 var workingFile = require('./utils/working-file.js');
@@ -34,6 +35,7 @@ function wrappedSetTimeout(task, ms) {
 
 function bootstrapAirspace() {
   var steps = [
+    initializeInternationalization,
     ensureWorkingDirs,
     prerunAsyncKickoff,
     firstRun,
@@ -69,6 +71,13 @@ function bootstrapAirspace() {
   });
 }
 
+function initializeInternationalization(cb) {
+  i18n.initialize(function(err, locale) {
+    console.log(err ? 'Error determining locale: ' + (err.stack || err) : 'Determined locale: ' + locale);
+    cb.apply(this, arguments);
+  });
+}
+
 function ensureWorkingDirs(cb) {
   var dirFn = function(dirpath) {
     return function(next) {
@@ -91,7 +100,7 @@ function ensureWorkingDirs(cb) {
 }
 
 function prerunAsyncKickoff(cb) {
-  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun)
   workingFile.buildCleanupList();
   LeapApp.hydrateCachedModels();
   embeddedLeap.embeddedLeapPromise();
@@ -104,7 +113,11 @@ function firstRun(cb) {
   if (!uiGlobals.isFirstRun) {
     cb && cb(null);
   } else {
-    firstRunView.showFirstRunSequence(cb);
+    var firstRunPopup = popup.open('first-run');
+    firstRunPopup.on('close', function() {
+      firstRunPopup.close(true);
+      cb && cb(null);
+    });
   }
 }
 

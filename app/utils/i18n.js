@@ -8,8 +8,9 @@ var Jed = require('jed');
 
 var DefaultLocale = 'en';
 
-var locale = process.env.LEAPHOME_LOCALE;
+module.exports.locale = process.env.LEAPHOME_LOCALE;
 function getLocale(cb) {
+  var locale = module.exports.locale;
   if (!locale) {
     if (os.platform() === 'win32') {
       exec('reg query "HKCU\\Control Panel\\International" /v LocaleName', function(err, stdout) {
@@ -17,7 +18,7 @@ function getLocale(cb) {
           cb && cb(err);
         } else {
           var fullLocale = stdout.split(/\s+/).pop() || DefaultLocale;
-          locale = fullLocale.split('-').shift();
+          locale = module.exports.locale = fullLocale.split('-').shift();
           cb && cb(null, locale);
         }
       });
@@ -26,12 +27,12 @@ function getLocale(cb) {
         if (err) {
           cb && cb(err);
         } else {
-          locale = stdout.replace(/^\s+|\s+$/g, '') || DefaultLocale;
+          locale = module.exports.locale = stdout.replace(/^\s+|\s+$/g, '') || DefaultLocale;
           cb && cb(null, locale);
         }
       });
     } else {
-      locale = 'en';
+      locale = module.exports.locale = 'en';
       cb && cb(null, locale);
     }
   } else {
@@ -78,7 +79,11 @@ function initialize(cb) {
 
 function translate(str) {
   if (i18n) {
-    return i18n.translate(str);
+    var translation = i18n.translate(str);
+    translation.toString = function() {
+      return translation.fetch();
+    };
+    return translation;
   } else {
     throw new Error('i18n must be initialized before use.');
   }

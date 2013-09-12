@@ -1,15 +1,15 @@
 var async = require('async');
-var os = require('os');
-var fs = require('fs');
-var path = require('path');
 var exec = require('child_process').exec;
+var fs = require('fs');
+var os = require('os');
+var path = require('path');
 
-var popupWindow = require('../../utils/popup-window.js');
+var config = require('../../config/config.js');
+var db = require('./db.js');
 var embeddedLeap = require('../../utils/embedded-leap.js');
-var db = require('../../utils/db.js');
-var mixpanel = require('../../utils/mixpanel.js');
-var config = require('../../../config/config.js');
-var shell = require('../../utils/shell.js');
+var mixpanel = require('./mixpanel.js');
+var popup = require('../views/popups/popup.js');
+var shell = require('./shell.js');
 
 var StaticHtmlPrefix = '/static/popups/first-run';
 
@@ -20,7 +20,6 @@ var PlatformOrientationPaths = {
 
 var firstRunSplash;
 var isEmbeddedLeap;
-var systemLang = 'en';
 
 var FirstRunSequence = {
   embeddedLeapCheck: function(cb) {
@@ -31,60 +30,16 @@ var FirstRunSequence = {
   },
 
   showFirstRunSplash: function(cb) {
-    var readLocale = function(err, stdout, stderr) {
-      var language = window.navigator.language;
-      console.log('node-webkit reports language: ' + window.navigator.language);
-      if (err) {
-        console.log('Caught error: ' + err);
-      }
-      else {
-        var lines = stdout.split('\n');
-        if (lines.length >= 2) {
-          // Parse PowerShell output to obtain the language Name e.g. en-US or fr-FR
-          language = lines[0].replace(/\s/, ''); // trim CRLF
-          console.log('Identified language from system query: ' + language);
-        }
-      }
-      language = language.split('-')[0];
-      console.log('Abbreviated language name: ' + language);
-      systemLang = ((language == '') ? 'en' : language);
-      var staticHtml = StaticHtmlPrefix + (language === 'en' ? '' : '-' + language) + '.html';
-      var fullStaticHtmlPath = path.join(__dirname, '..', '..', '..', staticHtml);
-      if (!fs.existsSync(fullStaticHtmlPath)) {
-        console.log('Defaulting to English after unable to find: ' + fullStaticHtmlPath);
-        staticHtml = StaticHtmlPrefix + '.html';
-      }
-      firstRunSplash = popupWindow.open(staticHtml, {
-        width: 1080,
-        height: 638,
-        frame: false,
-        resizable: false,
-        show: false,
-        'always-on-top': false
-      });
-      WelcomeSplash.setupBindings(cb);
-    };
-    if (os.platform() === 'win32') {
-      var command = 'powershell.exe -Command "(Get-ItemProperty \'HKCU:\\Control Panel\\International\').LocaleName"';
-      var child = exec(command, { maxBuffer: 1024 * 1024 }, readLocale);
-      child.stdin.end();
-    } else if (os.platform() == 'darwin') {
-      var supportedLanguages = Array();
-      supportedLanguages.push('en');
-      var popupsHtml = fs.readdirSync(path.dirname(path.join(__dirname, '..', '..', '..', StaticHtmlPrefix)));
-      for (var i = 0; i < popupsHtml.length; i++) {
-        // FIXME: When moved to ui-globals.js, this should iterate over the *.po files, not first-run-*.html
-        var langMatch = popupsHtml[i].match(/first-run-(.*).html/);
-        if (langMatch) {
-          supportedLanguages.push(langMatch[1]);
-        }
-      }
-      var command = shell.escape(path.join(__dirname, '..', '..', '..', 'bin', 'PreferredLocalization')) + ' ' + supportedLanguages.join(' ');
-      exec(command, { maxBuffer: 1024 * 1024 }, readLocale);
-    }
-    else {
-      readLocale(null, '', '');
-    }
+    firstRunSplash = popup.open(staticHtml, {
+      width: 1080,
+      height: 638,
+      frame: false,
+      resizable: false,
+      show: false,
+      'always-on-top': false
+    });
+    WelcomeSplash.setupBindings(cb);
+
   },
 
   launchOrientation: function(cb) {
@@ -102,8 +57,8 @@ var FirstRunSequence = {
         $continueButton.removeClass('disabled');
         $continueButton.text(uiGlobals.i18n.translate('Launch Airspace').fetch());
 
-        $('h1', firstRunSplash.window.document).text(uiGlobals.i18n.translate('Airspace, the Leap Motion app store').fetch());
-        $('h2', firstRunSplash.window.document).text(uiGlobals.i18n.translate('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.').fetch());
+        $('h1', firstRunSplash.window.document).text(uiGlobals.i18n.translate('').fetch());
+        $('h2', firstRunSplash.window.document).text(uiGlobals.i18n.translate('').fetch());
 
         $continueButton.click(function() {
           firstRunSplash.close();

@@ -4,7 +4,7 @@ var api = require('./api.js');
 var MainPage = require('../views/main-page/main-page.js');
 var authorizationUtil = require('./authorization-util.js');
 var mixpanel = require('./mixpanel.js');
-var popupWindow = require('../utils/popup-window.js');
+var popup = require('../views/popups/popup.js');
 var config = require('../../config/config.js');
 
 
@@ -101,11 +101,7 @@ function rebuildMenuBar(enableLogOut) {
     helpMenu.append(new nwGui.MenuItem({
       label: uiGlobals.i18n.translate('About Airspace Home').fetch(),
       click: function() {
-        popupWindow.open('/static/popups/about.html', {
-          width: 300,
-          height: 150,
-          title: uiGlobals.i18n.translate('About Airspace Home').fetch()
-        });
+        popup.open('about');
       }
     }));
     mainMenu.append(new nwGui.MenuItem({

@@ -1,30 +1,30 @@
 var singletonPopups = {};
 
-function openPopup(options) {
-  if (!options.name) {
-    throw new Error('Required popup option: name');
+function openPopup(popupName, options) {
+  if (!popupName) {
+    throw new Error('Required arg: popupName');
   }
-  var popup = singletonPopups[options.name];
+  var PopupView = require('./' + popupName + '/' + popupName + '.js');
+  options = _.extend({}, PopupView.prototype.options, options);
+  var popup = singletonPopups[popupName];
   if (!popup || options.allowMultiple) {
     var popupOptions = _.extend({
-      'name': name,
-      'toolbar': false,
-      'frame': true,
-      'min_width': options.width,
-      'min_height': options.height,
-      'max_width': options.width,
-      'max_height': options.height,
-      'always-on-top': true,
-      'icon': 'static/icon/icon.png',
-      'show': false
+      name: popupName,
+      toolbar: false,
+      frame: true,
+      min_width: options.width,
+      min_height: options.height,
+      max_width: options.width,
+      max_height: options.height,
+      resizable: false,
+      icon: 'static/icon/icon.png'
     }, options);
-    popup = nwGui.Window.open('static/popup.html', popupOptions);
+    popup = nwGui.Window.open('./app/views/popups/popup.html', popupOptions);
     popup.options = popupOptions;
-    singletonPopups[name] = popup;
+    singletonPopups[popupName] = popup;
 
     if (!options.openLinksInternally) {
       popup.on('loaded', function() {
-        popup.show();
         var popupDocument = popup.window && popup.window.document;
         if (popupDocument) {
           $('body', popupDocument).on('click', 'a', function(evt) {
@@ -39,11 +39,10 @@ function openPopup(options) {
     }
 
     popup.on('close', function() {
-      delete singletonPopups[name];
+      delete singletonPopups[popupName];
       popup.close(true);
     });
   } else {
-    popup.show();
     popup.focus();
   }
   return popup;
