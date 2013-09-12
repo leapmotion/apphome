@@ -1,0 +1,17 @@
+msgid "Welcome"
+msgstr "欢迎"
+
+msgid "Welcome to a whole new world"
+msgstr "欢迎来到崭新的世界"
+
+msgid "Below are a few tips to get you started"
+msgstr "以下为开始使用的小技巧"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "我同意接受Leap Motion %1$s"
+
+msgid "End User License Agreement"
+msgstr "最终用户软件许可协议。"
+
+msgid "Continue"
+msgstr "继续"

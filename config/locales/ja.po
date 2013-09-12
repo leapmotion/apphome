@@ -1,0 +1,14 @@
+msgid "Welcome to a whole new world"
+msgstr "新しい世界へようこそ。"
+
+msgid "Below are a few tips to get you started"
+msgstr "開始するにあたり、いくつかのヒントを示します。"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "私は、Leap Motion %1$s に同意します。"
+
+msgid "End User License Agreement"
+msgstr "エンドユーザー ソフトウェア使用許諾契約書"
+
+msgid "Continue"
+msgstr "続行"
