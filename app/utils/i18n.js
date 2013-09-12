@@ -80,9 +80,7 @@ function initialize(cb) {
 function translate(str) {
   if (i18n) {
     var translation = i18n.translate(str);
-    translation.toString = function() {
-      return translation.fetch();
-    };
+    translation.toString = translation.fetch;
     return translation;
   } else {
     throw new Error('i18n must be initialized before use.');

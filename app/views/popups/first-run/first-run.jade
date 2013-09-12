@@ -23,9 +23,7 @@
     #confirm-eula.ifStage1
       input(type="checkbox")
       .label
-        = iAgree_label
-        br
-        span.eula-popup-link= eula_label
+        !{iAgree_label}
 
     #continue.button.ifStage1= continue_label
     #launch-airspace.button.ifStage2= launchAirspace_label

@@ -38,8 +38,7 @@ module.exports = BaseView.extend({
       subheaderStage1_label: i18n.translate('Below are a few tips to get you started'),
       headerStage2_label:    i18n.translate('Airspace, the Leap Motion app store'),
       subheaderStage2_label: i18n.translate('Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps.'),
-      iAgree_label:          i18n.translate('I agree to the Leap Motion'),
-      eula_label:            i18n.translate('End User License Agreement'),
+      iAgree_label:          i18n.translate('I agree to the Leap Motion %1$s').fetch('<span class="eula-popup-link">' + i18n.translate('End User License Agreement') + '</span>'),
       continue_label:        i18n.translate('Continue'),
       launchAirspace_label:  i18n.translate('Launch Airspace')
     }));

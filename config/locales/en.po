@@ -1,8 +1,17 @@
+msgid "Welcome"
+msgstr "Welcome"
+
 msgid "Welcome to a whole new world"
 msgstr "Welcome to a whole new world"
 
 msgid "Below are a few tips to get you started"
 msgstr "Below are a few tips to get you started"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "I agree to the Leap Motion %1$s"
+
+msgid "End User License Agreement"
+msgstr "End User License Agreement"
 
 msgid "Continue"
 msgstr "Continue"
@@ -49,6 +58,9 @@ msgstr "No internet connection"
 msgid "Please ensure your connection is working properly"
 msgstr "Please ensure your connection is working properly"
 
+msgid "No apps to display."
+msgstr "No apps to display."
+
 msgid "Waiting..."
 msgstr "Waiting..."
 
@@ -63,6 +75,9 @@ msgstr "Installing..."
 
 msgid "Opening..."
 msgstr "Opening..."
+
+msgid "Launching..."
+msgstr "Launching..."
 
 msgid "Click to Install"
 msgstr "Click to Install"
