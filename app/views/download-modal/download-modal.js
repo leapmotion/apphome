@@ -25,7 +25,7 @@ module.exports = Modal.extend({
       }
     }
     this.$el.append(this.templateHtml({
-      app: appJson,
+      app:               appJson,
       version_label:     i18n.translate('Version'),
       releaseDate_label: i18n.translate('Release Date'),
       changelog_label:   i18n.translate("What's New"),

@@ -1,10 +1,10 @@
-li.tile(draggable="true")
-  img.tile-bg(src="#{ tilePath }")
-  img.icon(src="#{ iconPath }")
+li.tile(draggable=true)
+  img.tile-bg(src=app.tilePath)
+  img.icon(src=app.iconPath)
   .name-outer
     .name-inner
       .dot
-      h3.name #{ name }
+      h3.name= app.name
       .message
         h3.waiting= waiting_label
         h3.connecting= connecting_label

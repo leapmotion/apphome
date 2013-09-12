@@ -1,4 +1,5 @@
 var config = require('../../../config/config.js');
+var i18n = require('../../utils/i18n.js');
 
 var BaseView = require('../base-view.js');
 var Slide = require('../slide/slide.js');
@@ -26,7 +27,7 @@ var CarouselView = BaseView.extend({
     this._slides = [];
 
     var $emptyMessage = this.$('.empty-message');
-    $emptyMessage.text(opts.emptyMessage || 'No apps to display.');
+    $emptyMessage.text(opts.emptyMessage || i18n.translate('No apps to display.'));
     $emptyMessage.height(config.Layout.emptyMessageHeight);
 
     this._updateSlides();

@@ -22,10 +22,10 @@ module.exports = BaseView.extend({
     this.injectCss();
     this.$el.append(this.templateHtml({
       beforeMessage_label: i18n.translate('Connecting to authentication server...'),
-      afterMessage_label: i18n.translate('Preparing for launch...'),
+      afterMessage_label:  i18n.translate('Preparing for launch...'),
       logoutMessage_label: i18n.translate('Signing you out...'),
-      noInternet_label: i18n.translate('No internet connection'),
-      instruction_label: i18n.translate('Please ensure your connection is working properly')
+      noInternet_label:    i18n.translate('No internet connection'),
+      instruction_label:   i18n.translate('Please ensure your connection is working properly')
     }));
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
