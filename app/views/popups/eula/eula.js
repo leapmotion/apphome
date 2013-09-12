@@ -17,7 +17,8 @@ module.exports = BaseView.extend({
     resizable: true,
     show: false,
     x: 50,
-    y: 50
+    y: 50,
+    openLinksInternally: true
   },
 
   initialize: function() {
