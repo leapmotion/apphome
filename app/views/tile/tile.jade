@@ -6,12 +6,12 @@ li.tile(draggable="true")
       .dot
       h3.name #{ name }
       .message
-        h3.waiting
-        h3.connecting
-        h3.downloading
-        h3.installing
-        h3.launching
-  .install-overlay
+        h3.waiting= waiting_label
+        h3.connecting= connecting_label
+        h3.downloading= downloading_label
+        h3.installing= installing_label
+        h3.launching= launching_label
+  .install-overlay= clickToInstall_label
   .cancel
   .progress
     .bar

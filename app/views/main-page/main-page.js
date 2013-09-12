@@ -1,4 +1,5 @@
 var config = require('../../../config/config.js');
+var i18n = require('../../utils/i18n.js');
 
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
@@ -15,8 +16,9 @@ module.exports = BaseView.extend({
     window.ondrop = function(evt) { evt.preventDefault(); return false };
 
     this.injectCss();
-    this.$el.append(this.templateHtml());
-    this.$el.find('#uninstalled-link').find('.label').text(uiGlobals.i18n.translate('Trash').fetch());
+    this.$el.append(this.templateHtml({
+      trash_label: i18n.translate('Trash')
+    }));
     this._linkMapping = {};
     this._initCarousels();
     this._setupResizeBehavior();

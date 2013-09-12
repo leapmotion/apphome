@@ -1,12 +1,13 @@
 var os = require('os');
 
 var api = require('./api.js');
-var MainPage = require('../views/main-page/main-page.js');
 var authorizationUtil = require('./authorization-util.js');
+var config = require('../../config/config.js');
+var i18n = require('./i18n.js');
 var mixpanel = require('./mixpanel.js');
 var popup = require('../views/popups/popup.js');
-var config = require('../../config/config.js');
 
+var MainPage = require('../views/main-page/main-page.js');
 
 function appWindowBindings() {
   uiGlobals.on(uiGlobals.Event.SignIn, function() {
@@ -61,31 +62,31 @@ function rebuildMenuBar(enableLogOut) {
   if (os.platform() === 'win32') {
     var fileMenu = new nwGui.Menu();
     fileMenu.append(new nwGui.MenuItem({
-      label: uiGlobals.i18n.translate('Controller Settings').fetch(),
+      label: i18n.translate('Controller Settings'),
       click: function() {
         nwGui.Shell.openItem(PlatformControlPanelPaths.win32);
       }
     }));
     fileMenu.append(new nwGui.MenuItem({
-      label: uiGlobals.i18n.translate('Exit').fetch(),
+      label: i18n.translate('Exit'),
       click: function() {
         nwGui.Window.get().emit('close');
       }
     }));
     mainMenu.append(new nwGui.MenuItem({
-      label: uiGlobals.i18n.translate('File').fetch(),
+      label: i18n.translate('File'),
       submenu: fileMenu
     }));
   }
 
   var accountMenu = new nwGui.Menu();
   accountMenu.append(new nwGui.MenuItem({
-    label: uiGlobals.i18n.translate('Sign out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
+    label: i18n.translate('Sign out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
     click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
   }));
   mainMenu.append(new nwGui.MenuItem({
-    label: uiGlobals.i18n.translate('Account').fetch(),
+    label: i18n.translate('Account'),
     submenu: accountMenu
   }));
 
@@ -99,13 +100,13 @@ function rebuildMenuBar(enableLogOut) {
       }
     }));
     helpMenu.append(new nwGui.MenuItem({
-      label: uiGlobals.i18n.translate('About Airspace Home').fetch(),
+      label: i18n.translate('About Airspace Home'),
       click: function() {
         popup.open('about');
       }
     }));
     mainMenu.append(new nwGui.MenuItem({
-      label: uiGlobals.i18n.translate('Help').fetch(),
+      label: i18n.translate('Help'),
       submenu: helpMenu
     }));
   }

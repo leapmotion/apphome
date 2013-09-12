@@ -2,6 +2,7 @@ var Spinner = require('spin');
 var urlParse = require('url').parse;
 
 var config = require('../../../config/config.js');
+var i18n = require('../../utils/i18n.js');
 var oauth = require('../../utils/oauth.js');
 var mixpanel = require('../../utils/mixpanel.js');
 //TODO var popupWindow = require('../../utils/popup-window.js');
@@ -19,15 +20,16 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     this.injectCss();
-    this.$el.append(this.templateHtml());
+    this.$el.append(this.templateHtml({
+      beforeMessage_label: i18n.translate('Connecting to authentication server...'),
+      afterMessage_label: i18n.translate('Preparing for launch...'),
+      logoutMessage_label: i18n.translate('Signing you out...'),
+      noInternet_label: i18n.translate('No internet connection'),
+      instruction_label: i18n.translate('Please ensure your connection is working properly')
+    }));
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
-    this.$noInternet.find('h2').text(uiGlobals.i18n.translate('No internet connection').fetch());
-    this.$noInternet.find('.instruction').text(uiGlobals.i18n.translate('Please ensure your connection is working properly').fetch());
     this.$waiting = this.$('.waiting');
-    this.$waiting.find('.before').text(uiGlobals.i18n.translate('Connecting to authentication server...').fetch());
-    this.$waiting.find('.after').text(uiGlobals.i18n.translate('Preparing for launch...').fetch());
-    this.$waiting.find('.logout').text(uiGlobals.i18n.translate('Signing you out...').fetch());
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
     this._boundCenteringFn = this._center.bind(this);
     $(window).resize(this._boundCenteringFn);

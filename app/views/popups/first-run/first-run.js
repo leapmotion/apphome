@@ -24,6 +24,7 @@ module.exports = BaseView.extend({
   viewDir: __dirname,
 
   options: {
+    title: i18n.translate('Welcome'),
     width: 1080,
     height: 638,
     frame: false,

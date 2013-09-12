@@ -1,7 +1,8 @@
+var i18n = require('../../utils/i18n.js');
+var installManager = require('../../utils/install-manager.js');
+
 var Modal = require('../modal/modal.js');
 var TrashTileView = require('../trash-tile/trash-tile.js');
-
-var installManager = require('../../utils/install-manager.js');
 
 module.exports = Modal.extend({
 
@@ -12,7 +13,11 @@ module.exports = Modal.extend({
   initialize: function() {
     this.initializeModal();
 
-    this.$el.append($(this.templateHtml()));
+    this.$el.append(this.templateHtml({
+      trash_label:        i18n.translate('Trash'),
+      cancel_label:       i18n.translate('Cancel'),
+      reinstallAll_label: i18n.translate('Reinstall All')
+    }));
 
     var uninstalledApps = uiGlobals.uninstalledApps;
 

@@ -50,14 +50,6 @@ var CarouselView = BaseView.extend({
     this.$('.next-slide.right').click(function(evt) {
       this.next();
     }.bind(this));
-
-    /*$('body').mousedown(function(evt) {
-      if (this._isActive && !$(evt.target).parent('.tile').length) {
-        this._lastMouseDownEvent = evt.originalEvent;
-        this._setClearSwipeTimeout();
-      }
-    }.bind(this));
-    $('body').mousemove(this._handlePotentialSwipe.bind(this));*/
   },
 
   next: function() {
@@ -70,13 +62,13 @@ var CarouselView = BaseView.extend({
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
-    this.listenTo(collection, 'add', function(tileModel) {
+    this.listenTo(collection, 'add', function() {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
     }, this);
 
-    this.listenTo(collection, 'remove', function(tileModel) {
+    this.listenTo(collection, 'remove', function() {
       var slideCount = collection.pageCount(this._tilesPerSlide);
       this._updateSlides();
       this._updateEmptyState();
@@ -112,7 +104,7 @@ var CarouselView = BaseView.extend({
         if (i === this._currentSlideIndex) {
           $dot.addClass('current');
         }
-        $dot.click(function(evt) {
+        $dot.click(function() {
           if (!this._animating && !$dot.hasClass('current')) {
             this.switchToSlide(Number($dot.attr('slide_index')));
           }
@@ -261,47 +253,6 @@ var CarouselView = BaseView.extend({
     animate();
   },
 
-  _handlePotentialSwipe: function(evt) {
-    if (!this._lastMouseDownEvent || this._animating) {
-      return;
-    }
-
-    if (this._clearSwipeTimeoutId) {
-      window.clearTimeout(this._clearSwipeTimeoutId);
-    }
-
-    var startPos = {
-      x: this._lastMouseDownEvent.x,
-      y: this._lastMouseDownEvent.y
-    };
-    var endPos = {
-      x: evt.originalEvent.x,
-      y: evt.originalEvent.y
-    };
-
-    var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
-    if (!isNaN(slope) && Math.abs(endPos.x - startPos.x) > 50 &&
-        Math.abs(Math.atan(slope)) < Math.PI / 3) {
-      this._lastMouseDownEvent = null;
-      // Treat it as a swipe if the angle is less than 60 degrees from horizontal.
-      if (endPos.x > startPos.x) {
-        // swipe to the right
-        this.switchToSlide(this._currentSlideIndex - 1);
-      } else {
-        // swipe to the left
-        this.switchToSlide(this._currentSlideIndex + 1);
-      }
-    } else {
-      this._setClearSwipeTimeout();
-    }
-  },
-
-  _setClearSwipeTimeout: function() {
-    this._clearSwipeTimeoutId = window.setTimeout(function() {
-      this._lastMouseDownEvent = null;
-    }.bind(this), 200);
-  },
-
   rescale: function() {
     this._positionSlides();
     var $emptyMessage = this.$('.empty-message');
@@ -321,13 +272,10 @@ var CarouselView = BaseView.extend({
   },
 
   show: function() {
-    this._isActive = true;
     this.$el.show();
   },
 
   hide: function() {
-    this._lastMouseDownEvent = null;
-    this._isActive = false;
     this.$el.hide();
   }
 
