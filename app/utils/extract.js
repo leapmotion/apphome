@@ -195,13 +195,11 @@ function extractAppDmg(src, dest, cb) {
             cb && cb(err || err2 || null);
           });
         } else {
-          exec('xattr -rd com.apple.quarantine ' + shell.escape(dest), function(err2) {
-            if (err2) {
-              console.error('xattr exec error, ignoring: ' + err2);
+          exec('xattr -rd com.apple.quarantine ' + shell.escape(dest), function(err3) {
+            if (err3) {
+              console.warn('xattr exec error, ignoring: ' + err3);
             }
-            unmount(function(err3) {
-              cb && cb(err3 || null);
-            });
+            unmount(cb);
           });
         }
       });
