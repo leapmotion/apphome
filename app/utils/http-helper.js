@@ -39,7 +39,6 @@ function getFileSize(requestUrl, cb) {
 }
 
 function downloadChunk(requestUrl, start, end, cb) {
-  console.log('Downloading chunk: ' + start + ' - ' + end + ' from: ' + requestUrl);
   var xhr = new window.XMLHttpRequest();
   xhr.open('GET', requestUrl, true);
   xhr.responseType = 'arraybuffer';
