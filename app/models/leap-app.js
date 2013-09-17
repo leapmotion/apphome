@@ -278,7 +278,7 @@ LeapApp.hydrateCachedModels = function() {
       try {
         targetCollection.add(appJson);
       } catch (err) {
-        console.error('corrupt app data in database: ' + app);
+        console.error('corrupt app data in database: ' + appJson);
         console.error('Error: ' + (err.stack || err));
       }
     });
