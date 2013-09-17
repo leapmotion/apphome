@@ -148,24 +148,12 @@ function getToDisk(requestUrl, opts, cb) {
 }
 
 function getJson(requestUrl, cb) {
-  var xhr = new window.XMLHttpRequest();
-  xhr.open('GET', requestUrl);
-  xhr.onload = function () {
+  window.$.getJSON(requestUrl, null, function(json) {
     nwGui.App.clearCache();
-    try {
-      var result = JSON.parse(this.responseText);
-      cb && cb(null, result);
-    } catch(err) {
-      cb && cb(err);
-    } finally {
-      cb = null;
-    }
-  };
-  xhr.onerror = function(err) {
-    cb && cb(err);
-    cb = null;
-  };
-  xhr.send(null);
+    cb && cb(null, json);
+  }).fail(function() {
+    cb && cb(new Error('GET failed: ' + requestUrl));
+  });
 }
 
 function post(requestUrl, data, cb) {
