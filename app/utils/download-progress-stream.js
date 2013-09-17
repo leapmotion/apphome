@@ -16,7 +16,6 @@ DownloadProgressStream.prototype.cancel = function() {
   }
 };
 
-// 
 DownloadProgressStream.prototype.setCanceller = function(canceller) {
   this._canceller = canceller;
 }

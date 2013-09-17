@@ -58,7 +58,7 @@ module.exports = BaseView.extend({
     })
 
     this.listenTo(leapApp, 'progress', function(progress) {
-      this.$('.progress .bar').css('width', Math.round(progress * 100) + '%');
+      this.$('.progress .bar').css('width', Math.min(Math.round(progress * 100), 100) + '%');
     }, this);
 
     this.$el.click(function() {
