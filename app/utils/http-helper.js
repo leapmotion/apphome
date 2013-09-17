@@ -11,7 +11,7 @@ var config = require('../../config/config.js');
 var DownloadProgressStream = require('./download-progress-stream.js');
 var workingFile = require('./working-file.js');
 
-var DownloadChunkSize = 1024 * 1024 * 10; // 10 MB
+var DownloadChunkSize = 1024 * 1024 * 5; // 5 MB
 
 function getFileSize(requestUrl, cb) {
   var fileSize;
