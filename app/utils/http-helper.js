@@ -20,6 +20,7 @@ function getFileSize(requestUrl, cb) {
   xhr.onprogress = function(evt) {
     if (evt.total) {
       this.abort();
+      nwGui.App.clearCache();
       fileSize = evt.total;
       cb && cb(null, fileSize);
       cb = null;
@@ -139,6 +140,7 @@ function getToDisk(requestUrl, opts, cb) {
     }
     if (currentRequest) {
       currentRequest.abort();
+      nwGui.App.clearCache();
     }
     var err = new Error('Download cancelled.');
     err.cancelled = true;
