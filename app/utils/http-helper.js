@@ -87,6 +87,7 @@ function getToDisk(requestUrl, opts, cb) {
       cb && cb(err);
     } else {
       var numChunks = Math.ceil(fileSize / DownloadChunkSize);
+      console.warn('Downloading ' + fileSize + ' bytes in ' + numChunks + ' chunks (' + requestUrl + ')');
       var bytesSoFar = 0;
       // Called recursively to get and write all chunks.
       function downloadAllChunks(numRemainingChunks) {
@@ -96,6 +97,7 @@ function getToDisk(requestUrl, opts, cb) {
           var end = Math.min(start + DownloadChunkSize - 1, fileSize);
           currentRequest = downloadChunk(requestUrl, start, end, function(err, chunk) {
             if (err) {
+              console.warn('Downloading chunk failed: ' + start + ' - ' + end + ' of ' + fileSize + ' ' + (err.stack || err) + ' (' + requestUrl + ')');
               fs.closeSync(fd);
               cb && cb(err);
               cb = null;

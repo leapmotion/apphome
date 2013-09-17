@@ -106,7 +106,7 @@ module.exports = LeapApp.extend({
       }
       cb && cb(null);
     } else {
-      console.info('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
+      console.warn('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
       oauth.getAccessToken(function(err, accessToken) {
         if (err) {
           return cb(err);
