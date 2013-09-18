@@ -50,6 +50,6 @@ module.exports = Modal.extend({
 
       uiGlobals.uninstalledApps.reset();
     }).bind(this));
-  },
+  }
 
 });
