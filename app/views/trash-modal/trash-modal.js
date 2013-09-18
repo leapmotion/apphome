@@ -1,3 +1,5 @@
+var os = require('os');
+
 var Modal = require('../modal/modal.js');
 var TrashTileView = require('../trash-tile/trash-tile.js');
 
@@ -15,6 +17,10 @@ module.exports = Modal.extend({
     this.$el.append($(this.templateHtml()));
 
     var uninstalledApps = uiGlobals.uninstalledApps;
+
+    if (uninstalledApps.length > 2 && os.platform() === 'win32') {
+      this.$('.content').addClass('scroll');
+    }
 
     uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({
