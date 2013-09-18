@@ -18,6 +18,7 @@ module.exports = Modal.extend({
 
     var uninstalledApps = uiGlobals.uninstalledApps;
 
+    // Check for scrollbar on Windows
     if (uninstalledApps.length > 2 && os.platform() === 'win32') {
       this.$('.content').addClass('scroll');
     }
@@ -49,6 +50,6 @@ module.exports = Modal.extend({
 
       uiGlobals.uninstalledApps.reset();
     }).bind(this));
-  }
+  },
 
 });
