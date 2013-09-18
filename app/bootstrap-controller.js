@@ -69,6 +69,9 @@ function bootstrapAirspace() {
   });
 }
 
+/*
+ * Check if the main directories used by Airspace Home do, in fact, exist
+ */
 function ensureWorkingDirs(cb) {
   var dirFn = function(dirpath) {
     return function(next) {
@@ -92,10 +95,27 @@ function ensureWorkingDirs(cb) {
 
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  // Get all temp files that weren't cleaned up from last time
+  // (stored in uiGlobals.toDeleteNow)
   workingFile.buildCleanupList();
+
+  // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
+  // based on the json and information in the database.
+  // myApps tries to install everything that gets added (that has state NotYetInstalled)
   LeapApp.hydrateCachedModels();
+
+  // Check if device has an embedded leap or not.
+  // Checks db first to see if there's a stored value
   embeddedLeap.embeddedLeapPromise();
+
+  // Creates manifest promise for future use
+  // manifest is fetched from config.NonStoreAppManifestUrl
+  // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
+
+  // Builds the menu bar
+  // TODO move this to setupMainWindow?
   windowChrome.rebuildMenuBar(false);
   cb && cb(null);
 }
@@ -110,7 +130,9 @@ function firstRun(cb) {
 
 function setupMainWindow(cb) {
   windowChrome.maximizeWindow();
-  window.setTimeout(function() { // what's this for? todo: move to an explicit step at end?
+
+  // TODO: move to an explicit step at end?
+  window.setTimeout(function() {
     $('body').removeClass('startup');
   }, 50);
 
