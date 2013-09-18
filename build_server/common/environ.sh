@@ -36,9 +36,14 @@ fi
 
 _branch_basename="$(basename ${BUILD_BRANCH})"
 
+if [ -z "$AIRSPACE_OUT_DIR" ]; then
+  export AIRSPACE_OUT_DIR="$_branch_basename"
+  echo "Airspace output directory is not set. Defaulting to $_branch_basename."
+fi
+
 #airspace builds are always public
 export BUILD_SHARE
-BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Public/${BUILD_PLAT}/${_branch_basename}"
+BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Public/${BUILD_PLAT}/${AIRSPACE_OUT_DIR}"
 
 export AIRSPACE_REPO_DIR
 if [ -d "${WORKSPACE}" ]; then
