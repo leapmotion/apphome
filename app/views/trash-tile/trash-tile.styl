@@ -5,7 +5,7 @@ $progressBarColor = #e1e1e1
 $tileH = 148px
 $tileW = 268px
 
-.scroll .trash-tile:nth-child(even)
+.scroll .trash-tile
   margin-right 0
 
 .trash-tile
@@ -56,11 +56,19 @@ $tileW = 268px
     right 50%
     position relative
     margin-top 3px
+    max-width 100%
 
-  .name-inner
-    float right
-    right -50%
-    position relative
+    .name-inner
+      float right
+      right -50%
+      position relative
+      max-width 100%
+
+      .name
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        width 100%
 
   h3
     color #b2b2b2
