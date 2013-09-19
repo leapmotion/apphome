@@ -23,7 +23,7 @@ function getLocale(cb) {
         }
       });
     } else if (os.platform() === 'darwin') {
-      exec(path.join(__dirname, '..', '..', '..', 'bin', 'PreferredLocalization'), function(err, stdout) {
+      exec(path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization'), function(err, stdout) {
         if (err) {
           cb && cb(err);
         } else {
