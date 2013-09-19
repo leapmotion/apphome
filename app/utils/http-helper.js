@@ -11,7 +11,7 @@ var config = require('../../config/config.js');
 var DownloadProgressStream = require('./download-progress-stream.js');
 var workingFile = require('./working-file.js');
 
-var DownloadChunkSize = 1024 * 1024 * 10; // 10 MB
+var DownloadChunkSize = 1024 * 1024 * 5; // 5 MB
 
 function getFileSize(requestUrl, cb) {
   var fileSize;
@@ -20,6 +20,7 @@ function getFileSize(requestUrl, cb) {
   xhr.onprogress = function(evt) {
     if (evt.total) {
       this.abort();
+      nwGui.App.clearCache();
       fileSize = evt.total;
       cb && cb(null, fileSize);
       cb = null;
@@ -87,6 +88,7 @@ function getToDisk(requestUrl, opts, cb) {
       cb && cb(err);
     } else {
       var numChunks = Math.ceil(fileSize / DownloadChunkSize);
+      console.warn('Downloading ' + fileSize + ' bytes in ' + numChunks + ' chunks (' + requestUrl + ')');
       var bytesSoFar = 0;
       // Called recursively to get and write all chunks.
       function downloadAllChunks(numRemainingChunks) {
@@ -96,6 +98,7 @@ function getToDisk(requestUrl, opts, cb) {
           var end = Math.min(start + DownloadChunkSize - 1, fileSize);
           currentRequest = downloadChunk(requestUrl, start, end, function(err, chunk) {
             if (err) {
+              console.warn('Downloading chunk failed: ' + start + ' - ' + end + ' of ' + fileSize + ' ' + (err.stack || err) + ' (' + requestUrl + ')');
               fs.closeSync(fd);
               cb && cb(err);
               cb = null;
@@ -137,6 +140,7 @@ function getToDisk(requestUrl, opts, cb) {
     }
     if (currentRequest) {
       currentRequest.abort();
+      nwGui.App.clearCache();
     }
     var err = new Error('Download cancelled.');
     err.cancelled = true;
