@@ -24,6 +24,12 @@ function enqueue(app, cb, skipToFront) {
   if (installQueue.length === 1) {
     dequeue();
   }
+
+  if (installQueue.length > 0) {
+    console.log('Install Queue length greater than 0.  Showing "cancel all" button');
+    $('#download-all').hide();
+    $('#cancel-all').show();
+  }
 }
 
 function dequeue() {
@@ -43,8 +49,28 @@ function dequeue() {
       if (_.isFunction(queuedItem.cb)) {
         queuedItem.cb.apply(this, arguments);
       }
+      if (installQueue.length < 1) {
+        $('#cancel-all').hide();
+        maybeShowDownloadAll();
+      }
       dequeue();
     });
+  }
+}
+
+function maybeShowDownloadAll(fade) {
+  if (uiGlobals.myApps.filter(function(app) {
+    return app.get('state') === LeapApp.States.NotYetInstalled;
+  }).length > 1) {
+    $('#cancel-all').hide();
+    if (fade) {
+      $('#download-all').fadeIn('slow');
+    } else {
+      $('#download-all').show();
+    }
+  } else {
+    console.log('Hide download all');
+    $('#download-all').hide();
   }
 }
 
@@ -61,3 +87,4 @@ function cancelAll() {
 
 module.exports.enqueue = enqueue;
 module.exports.cancelAll = cancelAll;
+module.exports.maybeShowDownloadAll = maybeShowDownloadAll;

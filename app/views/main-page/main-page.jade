@@ -4,16 +4,21 @@
 #my-apps
 
 .footer.initial
-  #download-all
-    .icon
-    .label
+  #download-all.footer-link
+    i.icon-download
+    span.label
+      | Download All
 
-  #uninstalled-link.carousel-link.empty
-    span.icon
+  #cancel-all.footer-link
+    i.icon-remove-circle
+    span.label
+      | Cancel All
+
+  #trash.footer-link.carousel-link.empty
+    i.icon-trash
     span.label
       | Trash
       span.trashed-apps
         | (
         span.number 0
         | )
-    .divot.up
