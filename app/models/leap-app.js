@@ -276,11 +276,7 @@ LeapApp.hydrateCachedModels = function() {
     var appJsonList = db.fetchObj(dbKey) || [];
     appJsonList.forEach(function(appJson) {
       try {
-        if (appJson.state === LeapApp.States.Uninstalled) {
-          uiGlobals.uninstalledApps.add(appJson);
-        } else {
-          targetCollection.add(appJson);
-        }
+        targetCollection.add(appJson);
       } catch (err) {
         console.error('corrupt app data in database: ' + appJson);
         console.error('Error: ' + (err.stack || err));
