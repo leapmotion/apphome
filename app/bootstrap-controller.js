@@ -13,6 +13,7 @@ var enumerable = require('./utils/enumerable.js');
 var eula = require('./utils/eula.js');
 var firstRunView = require('./views/first-run/first-run.js');
 var frozenApps = require('./utils/frozen-apps.js');
+var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
 var shell = require('./utils/shell.js');
 var windowChrome = require('./utils/window-chrome.js');
@@ -35,6 +36,7 @@ function wrappedSetTimeout(task, ms) {
 function bootstrapAirspace() {
   var steps = [
     ensureWorkingDirs,
+    migrateDatabase,
     prerunAsyncKickoff,
     firstRun,
     setupMainWindow,
@@ -93,11 +95,19 @@ function ensureWorkingDirs(cb) {
   });
 }
 
+function migrateDatabase(cb) {
+  migrations.migrate();
+
+  cb && cb(null);
+}
+
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 
   // Get all temp files that weren't cleaned up from last time
   // (stored in uiGlobals.toDeleteNow)
+  // Need to get this list now so we don't delete partially downloaded files
+  // But don't want to actually delete them until much later (don't want to block anything)
   workingFile.buildCleanupList();
 
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
