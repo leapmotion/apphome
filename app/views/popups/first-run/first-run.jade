@@ -1,0 +1,29 @@
+#container
+  .close-app &times;
+
+  img#logo(src="../../../static/images/leap-logo.png")
+
+  h1.ifStage1= headerStage1_label
+  h2.ifStage1= subheaderStage1_label
+
+  h1.ifStage2= headerStage2_label
+  h2.ifStage2= subheaderStage2_label
+
+  #graphics.ifStage1
+    #embedded-graphics
+      img.graphic.first(src="../../../static/images/first-run/embedded1.png")
+      img.graphic.second(src="../../../static/images/first-run/embedded2.png")
+      img.graphic.third(src="../../../static/images/first-run/embedded3.png")
+    #peripheral-graphics
+      img.graphic.first(src="../../../static/images/first-run/peripheral1.png")
+      img.graphic.second(src="../../../static/images/first-run/peripheral2.png")
+      img.graphic.third(src="../../../static/images/first-run/peripheral3.png")
+
+  #actions
+    #confirm-eula.ifStage1
+      input(type="checkbox")
+      .label
+        !{iAgree_label}
+
+    #continue.button.ifStage1= continue_label
+    #launch-airspace.button.ifStage2= launchAirspace_label

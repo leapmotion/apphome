@@ -11,7 +11,7 @@ var BaseView = window.Backbone.View.extend({
   injectCss: function() {
     this._requireViewDir();
     var cssPath = path.join(this.viewDir, path.basename(this.viewDir) + '.styl');
-    domInjection.applyStylus(cssPath);
+    domInjection.applyStylus(cssPath, this.$el.prop('ownerDocument'));
   },
 
   templateHtml: function(data, jadeOpts) {
@@ -23,9 +23,15 @@ var BaseView = window.Backbone.View.extend({
         src = fs.readFileSync(templatePath, 'utf8');
         templateCache[templatePath] = src;
       }
-      jadeOpts = _.extend(jadeOpts || {}, {filename: templatePath});
-      console.log('Compiling ' + templatePath);
-      this.templateFn = jade.compile(src, jadeOpts);
+      jadeOpts = _.extend(jadeOpts || {}, { filename: templatePath });
+      try {
+        this.templateFn = jade.compile(src, jadeOpts);
+      } catch (err) {
+        console.error('Error compiling template "' + templatePath + '": ' + err);
+        this.templateFn = function() {
+          return '';
+        };
+      }
     }
     return this.templateFn(data);
   },

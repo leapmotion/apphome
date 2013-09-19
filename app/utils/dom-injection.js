@@ -1,28 +1,28 @@
-var stylus = require('stylus');
 var fs = require('fs');
+var stylus = require('stylus');
 
-
-function appendScript(src) {
-  $('body').append('<script src="' + src + '"></script>');
+function appendScript(src, contextDocument) {
+  $('body', contextDocument).append('<script src="' + src + '"></script>');
 }
 
-function appendStylesheet(href) {
-  $('body').append('<link rel="stylesheet" type="text/css" href="' + href + '"/>');
+function appendStylesheet(href, contextDocument) {
+  $('body', contextDocument).append('<link rel="stylesheet" type="text/css" href="' + href + '"/>');
 }
 
-var injectedCssFiles = {};
-
-// Renders stylus file into css and injects it into the DOM. Ignores repeat calls for the same file.
-//  @path: required. absolute path for desired .stylus file
-function applyStylus(path) {
-  if (!injectedCssFiles[path]) {
-    injectedCssFiles[path] = true;
-    var src = fs.readFileSync(path, 'utf8');
-    stylus.render(src, { filename: path }, function(err, css){
+// Renders stylus file into CSS and injects it into the DOM. Ignores repeat calls for the same file.
+//  @stylusPath: required. Absolute path for desired .styl file.
+//  @contextDocument: optional. Document into which to insert CSS.
+function applyStylus(stylusPath, contextDocument) {
+  contextDocument = contextDocument || window.document;
+  var injectedCssFiles = contextDocument._injectedCssFiles = contextDocument._injectedCssFiles || {};
+  if (!injectedCssFiles[stylusPath]) {
+    injectedCssFiles[stylusPath] = true;
+    var stylusSrc = fs.readFileSync(stylusPath, 'utf-8');
+    stylus.render(stylusSrc, { filename: stylusPath }, function(err, renderedCss){
       if (err) {
         throw err;
       } else {
-        $('<style/>').text(css).appendTo($('head'));
+        $('<style/>', contextDocument).text(renderedCss).appendTo($('head', contextDocument));
       }
     });
   }

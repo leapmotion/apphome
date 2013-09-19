@@ -2,9 +2,10 @@ var Spinner = require('spin');
 var urlParse = require('url').parse;
 
 var config = require('../../../config/config.js');
-var oauth = require('../../utils/oauth.js');
+var i18n = require('../../utils/i18n.js');
 var mixpanel = require('../../utils/mixpanel.js');
-var popupWindow = require('../../utils/popup-window.js');
+var oauth = require('../../utils/oauth.js');
+var popup = require('../popups/popup.js');
 
 var BaseView = require('../base-view.js');
 
@@ -19,7 +20,13 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     this.injectCss();
-    this.$el.append(this.templateHtml());
+    this.$el.append(this.templateHtml({
+      beforeMessage_label: i18n.translate('Connecting to authentication server...'),
+      afterMessage_label:  i18n.translate('Preparing for launch...'),
+      logoutMessage_label: i18n.translate('Signing you out...'),
+      noInternet_label:    i18n.translate('No internet connection'),
+      instruction_label:   i18n.translate('Please ensure your connection is working properly')
+    }));
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
     this.$waiting = this.$('.waiting');
@@ -228,15 +235,15 @@ module.exports = BaseView.extend({
       evt.preventDefault();
       var href = $(this).attr('href');
       if (href) {
-        popupWindow.open(href, {
+        nwGui.Window.open(href, {
           width: 640,
           height: 480,
-          frame: true,
-          resizable: true,
-          show: true,
           x: 50,
           y: 50,
-          allowMultiple: false
+          toolbar: false,
+          icon: 'static/icon/icon.png',
+          'new-instance': true,
+          nodejs: false
         });
       }
     });

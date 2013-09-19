@@ -1,4 +1,5 @@
 var config = require('../../../config/config.js');
+var i18n = require('../../utils/i18n.js');
 
 var installManager = require('../../utils/install-manager.js');
 var LeapApp = require('../../models/leap-app.js');
@@ -18,7 +19,9 @@ module.exports = BaseView.extend({
     window.ondrop = function(evt) { evt.preventDefault(); return false; };
 
     this.injectCss();
-    this.$el.append(this.templateHtml());
+    this.$el.append(this.templateHtml({
+      trash_label: i18n.translate('Trash')
+    }));
     this._initCarousel();
     this._initDownloadControls();
     this._initTrash();
@@ -45,7 +48,7 @@ module.exports = BaseView.extend({
       });
 
       $(this).hide();
-    })
+    });
 
     this.$('#download-all').click(function(evt) {
       uiGlobals.myApps.forEach(function(app) {

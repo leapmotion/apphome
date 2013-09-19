@@ -11,7 +11,7 @@ var BundleEulaAgreementKey = 'bundled_eula_agreement';
 var licenseName = 'license-en.html';
 var md5Name = 'eulahash.md5';
 var sharedLeapDir = path.join.apply(null, [ config.PlatformDirs[os.platform()], 'Leap Motion' ]);
-var licenseSourcePath = path.join.apply(null, [ __dirname, '..', '..', 'static', 'popups', licenseName ]);
+var licenseSourcePath = path.join.apply(null, [ __dirname, '..', '..', 'static', 'licenses', licenseName ]);
 
 
 

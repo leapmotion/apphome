@@ -1,0 +1,134 @@
+msgid "Welcome"
+msgstr "Welcome"
+
+msgid "Welcome to a whole new world"
+msgstr "Welcome to a whole new world"
+
+msgid "Below are a few tips to get you started"
+msgstr "Below are a few tips to get you started"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "I agree to the Leap Motion %1$s"
+
+msgid "End User License Agreement"
+msgstr "End User License Agreement"
+
+msgid "Continue"
+msgstr "Continue"
+
+msgid "Airspace, the Leap Motion app store"
+msgstr "Airspace, the Leap Motion app store"
+
+msgid "Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+
+msgid "Launch Airspace"
+msgstr "Launch Airspace"
+
+msgid "Leap Motion End User Software License Agreement"
+msgstr "Leap Motion End User Software License Agreement"
+
+msgid "Continue with mouse only"
+msgstr "Continue with mouse only"
+
+msgid "Find and launch your Leap Motion applications"
+msgstr "Find and launch your Leap Motion applications"
+
+msgid "Sync purchases across devices"
+msgstr "Sync purchases across devices"
+
+msgid "Discover games, utilities, music and more in our store!"
+msgstr "Discover games, utilities, music and more in our store!"
+
+msgid "Use the same login for purchases, support, and more!"
+msgstr "Use the same login for purchases, support, and more!"
+
+msgid "Connecting to authentication server..."
+msgstr "Connecting to authentication server..."
+
+msgid "Preparing for launch..."
+msgstr "Preparing for launch..."
+
+msgid "Signing you out..."
+msgstr "Signing you out..."
+
+msgid "No internet connection"
+msgstr "No internet connection"
+
+msgid "Please ensure your connection is working properly"
+msgstr "Please ensure your connection is working properly"
+
+msgid "No apps to display."
+msgstr "No apps to display."
+
+msgid "Waiting..."
+msgstr "Waiting..."
+
+msgid "Connecting..."
+msgstr "Connecting..."
+
+msgid "Downloading..."
+msgstr "Downloading..."
+
+msgid "Installing..."
+msgstr "Installing..."
+
+msgid "Opening..."
+msgstr "Opening..."
+
+msgid "Launching..."
+msgstr "Launching..."
+
+msgid "Click to Install"
+msgstr "Click to Install"
+
+msgid "Trash"
+msgstr "Trash"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Release Date"
+msgstr "Release Date"
+
+msgid "What's New"
+msgstr "What's New"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Install %1$s"
+msgstr "Install %1$s"
+
+msgid "Update App"
+msgstr "Update App"
+
+msgid "Launch App"
+msgstr "Launch App"
+
+msgid "Controller Settings"
+msgstr "Controller Settings"
+
+msgid "Exit"
+msgstr "Exit"
+
+msgid "File"
+msgstr "File"
+
+msgid "Sign out %1$s"
+msgstr "Sign out %1$s"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "About Airspace Home"
+msgstr "About Airspace Home"
+
+msgid "Airspace Home"
+msgstr "Airspace Home"
+
+msgid "Help"
+msgstr "Help"

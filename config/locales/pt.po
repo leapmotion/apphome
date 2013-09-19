@@ -1,0 +1,17 @@
+msgid "Welcome"
+msgstr "Bem-vindo"
+
+msgid "Welcome to a whole new world"
+msgstr "Bem-vindo a um mundo completamente novo"
+
+msgid "Below are a few tips to get you started"
+msgstr "Seguem abaixo algumas dicas para você começar"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "Concordo com a %1$s de Leap Motion."
+
+msgid "End User License Agreement"
+msgstr "Contrato de Licença do Usuário Final"
+
+msgid "Continue"
+msgstr "Continuar"

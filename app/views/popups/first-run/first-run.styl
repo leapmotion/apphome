@@ -1,0 +1,115 @@
+body
+  color #4b4c4c
+  padding 10px 50px
+  text-align center
+
+.launching-orientation
+  cursor wait
+
+#embedded-graphics, #confirm-eula
+  display none
+
+.embedded #embedded-graphics, .embedded #confirm-eula
+  display block
+
+.embedded #peripheral-graphics
+  display none
+
+.stage1 .ifStage2, .stage2 .ifStage1
+  display none !important
+
+#container
+  margin 0 auto
+  width 972px
+  overflow hidden
+
+.close-app
+  position absolute
+  top 0
+  right 6px
+  padding 2px
+  cursor pointer
+  font-weight bold
+
+#logo
+  left 24px
+  position absolute
+  top 24px
+  width 70px
+
+h1
+  font-weight bold
+  font-size 40px
+  line-height 40px
+  height 40px
+  margin-bottom 13px
+  margin-top 64px
+
+h2
+  font-weight normal
+  font-size 21px
+  line-height 21px
+  margin 0 auto 48px
+
+a
+  color #9ac948
+  text-decoration none
+
+#graphics
+  overflow hidden
+
+  .graphic
+    width 304px
+    height 234px
+    float left
+    margin-left 30px
+
+    &.first
+      margin-left 0
+
+#actions
+  position relative
+  margin 28px auto 0
+  text-align left
+  width 300px
+
+  #confirm-eula
+    padding 1px 30px
+    text-align left
+
+    .label
+      font-size 16px
+      line-height 1.5em
+
+    input[type=checkbox]
+      float left
+      margin 6px 0 0 -20px
+      padding 2px
+
+    .eula-popup-link
+      color #9ac948
+      cursor pointer
+
+  .button
+    background-clip padding-box // prevents bg color from leaking outside the border
+    background-image -webkit-linear-gradient(top, #bcdd41 0%, #aad029 100%)
+    border-radius 6px
+    color white
+    cursor pointer
+    height 48px
+    font-size 24px
+    line-height 46px
+    margin-top 16px
+    text-align center
+    text-shadow 0 -1px 0 rgba(1,1,1,.2)
+    width 304px
+
+    &:hover
+      background-image none
+      background-color rgb(173, 205, 116)
+
+    &.disabled, &.disabled:hover
+      cursor default
+      background-image -webkit-linear-gradient(top, #bcdd41 0%, #aad029 100%)
+      color rgba(255, 255, 255, 0.9)
+      opacity 0.6

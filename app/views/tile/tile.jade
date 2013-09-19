@@ -1,17 +1,17 @@
-li.tile(draggable="true")
-  img.tile-bg(src="#{ tilePath }")
-  img.icon(src="#{ iconPath }")
+li.tile(draggable=true)
+  img.tile-bg(src=app.tilePath)
+  img.icon(src=app.iconPath)
   .name-outer
     .name-inner
       .dot
-      h3.name #{ name }
+      h3.name= app.name
       .message
-        h3.waiting Waiting...
-        h3.connecting Connecting...
-        h3.downloading Downloading...
-        h3.installing Installing...
-        h3.launching Opening...
-  .install-overlay Click to Install
+        h3.waiting= waiting_label
+        h3.connecting= connecting_label
+        h3.downloading= downloading_label
+        h3.installing= installing_label
+        h3.launching= launching_label
+  .install-overlay= clickToInstall_label
   .cancel
   .progress
     .bar

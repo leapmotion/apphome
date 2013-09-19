@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../../static/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="../../../static/css/fonts.css"/>
+    <style>
+      * {
+        -webkit-user-select: none;
+      }
+
+      body {
+        color: #4b4c4c;
+        font-family: "freightsans_probook";
+        padding: 10px 50px;
+      }
+     </style>
+  </head>
+  <body>
+    <div id="popup-contents"></div>
+    <script>
+      (function() {
+        var nwWindow = require('nw.gui').Window.get();
+        var options = nwWindow.options;
+        var PopupView = require('./app/views/popups/' + options.name + '/' + options.name + '.js');
+        options.el = document.getElementById('popup-contents'); // Must set element during initialization for CSS injection to work.
+        options.nwWindow = nwWindow;
+        document.title = options.title;
+        nwWindow.popupView = new PopupView(options);
+      })();
+    </script>
+  </body>
+</html>

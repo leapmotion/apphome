@@ -13,11 +13,6 @@ var Modal = BaseView.extend({
 
   initializeModal: function() {
     this.injectCss();
-
-    // prevent swiping while modal is open
-    this.$el.bind('mousedown mousemove', function(evt) {
-      evt.stopPropagation();
-    });
   },
 
   _checkOutsideClick: function(evt){

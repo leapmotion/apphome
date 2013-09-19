@@ -2,6 +2,7 @@ var os = require('os');
 var Spinner = require('spin');
 
 var config = require('../../../config/config.js');
+var i18n = require('../../utils/i18n.js');
 var installManager = require('../../utils/install-manager.js');
 
 var BaseView = require('../base-view.js');
@@ -14,10 +15,19 @@ var Tile = BaseView.extend({
   initializeTile: function(app) {
     this.injectCss();
 
-    var templateData = app.toJSON();
-    templateData.iconPath = (templateData.iconPath ? this._makeFileUrl(templateData.iconPath) : '');
-    templateData.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
-    this.setElement($(this.templateHtml(templateData)));
+    var appJson = app.toJSON();
+    appJson.iconPath = (appJson.iconPath ? this._makeFileUrl(appJson.iconPath) : '');
+    appJson.tilePath = this._makeFileUrl(appJson.tilePath || config.DefaultTilePath);
+    this.setElement(this.templateHtml({
+      app:                  appJson,
+      waiting_label:        i18n.translate('Waiting...'),
+      connecting_label:     i18n.translate('Connecting...'),
+      downloading_label:    i18n.translate('Downloading...'),
+      installing_label:     i18n.translate('Installing...'),
+      opening_label:        i18n.translate('Opening...'),
+      launching_label:      i18n.translate('Launching...'),
+      clickToInstall_label: i18n.translate('Click to Install')
+    }));
 
     this.listenTo(app, 'change:iconPath', function() {
       this.$('.icon').attr('src', this._makeFileUrl(app.get('iconPath'), true));
