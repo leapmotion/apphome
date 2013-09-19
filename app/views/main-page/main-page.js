@@ -37,6 +37,16 @@ module.exports = BaseView.extend({
   },
 
   _initDownloadControls: function() {
+    this.$('#upgrade-all').click(function(evt) {
+      uiGlobals.myApps.forEach(function(app) {
+        if (app.isUpgradable()) {
+          installManager.enqueue(app);
+        }
+      });
+
+      $(this).hide();
+    })
+
     this.$('#download-all').click(function(evt) {
       uiGlobals.myApps.forEach(function(app) {
         if (app.get('state') === LeapApp.States.NotYetInstalled) {
@@ -55,12 +65,13 @@ module.exports = BaseView.extend({
       $(this).hide();
     });
 
+    this.$('#upgrade-all').hide();
     this.$('#download-all').hide();
     this.$('#cancel-all').hide();
 
     setTimeout(function() {
         // True makes it fade in
-        installManager.maybeShowDownloadAll(true);
+        installManager.showAppropriateDownloadControl(true);
     }, 1500);
   },
 

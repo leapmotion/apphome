@@ -25,11 +25,7 @@ function enqueue(app, cb, skipToFront) {
     dequeue();
   }
 
-  if (installQueue.length > 0) {
-    console.log('Install Queue length greater than 0.  Showing "cancel all" button');
-    $('#download-all').hide();
-    $('#cancel-all').show();
-  }
+  showAppropriateDownloadControl();
 }
 
 function dequeue() {
@@ -49,28 +45,39 @@ function dequeue() {
       if (_.isFunction(queuedItem.cb)) {
         queuedItem.cb.apply(this, arguments);
       }
-      if (installQueue.length < 1) {
-        $('#cancel-all').hide();
-        maybeShowDownloadAll();
-      }
+      showAppropriateDownloadControl();
       dequeue();
     });
   }
 }
 
-function maybeShowDownloadAll(fade) {
-  if (uiGlobals.myApps.filter(function(app) {
-    return app.get('state') === LeapApp.States.NotYetInstalled;
-  }).length > 1) {
-    $('#cancel-all').hide();
+function showAppropriateDownloadControl(fade) {
+  var upgrades = 0,
+      downloads = 0,
+      $control;
+
+  $('.download-control').hide();
+
+  uiGlobals.myApps.forEach(function(app) {
+    if (app.isUpgradable()) upgrades++;
+    if (app.get('state') === LeapApp.States.NotYetInstalled) downloads++;
+  });
+
+  if (installQueue.length > 0) {
+    $('#cancel-all').show();
+    return;
+  } else if (upgrades) {
+    $control = $('#upgrade-all');
+  } else if (downloads) {
+    $control = $('#download-all');
+  }
+
+  if ($control) {
     if (fade) {
-      $('#download-all').fadeIn('slow');
+      $control.fadeIn('slow');
     } else {
-      $('#download-all').show();
+      $control.show();
     }
-  } else {
-    console.log('Hide download all');
-    $('#download-all').hide();
   }
 }
 
@@ -87,4 +94,4 @@ function cancelAll() {
 
 module.exports.enqueue = enqueue;
 module.exports.cancelAll = cancelAll;
-module.exports.maybeShowDownloadAll = maybeShowDownloadAll;
+module.exports.showAppropriateDownloadControl = showAppropriateDownloadControl;
