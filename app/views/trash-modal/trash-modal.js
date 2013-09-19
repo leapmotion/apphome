@@ -1,3 +1,5 @@
+var os = require('os');
+
 var i18n = require('../../utils/i18n.js');
 var installManager = require('../../utils/install-manager.js');
 
@@ -20,6 +22,11 @@ module.exports = Modal.extend({
     }));
 
     var uninstalledApps = uiGlobals.uninstalledApps;
+
+    // Check for scrollbar on Windows
+    if (uninstalledApps.length > 2 && os.platform() === 'win32') {
+      this.$('.content').addClass('scroll');
+    }
 
     uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({

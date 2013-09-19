@@ -13,6 +13,7 @@ var enumerable = require('./utils/enumerable.js');
 var eula = require('./utils/eula.js');
 var frozenApps = require('./utils/frozen-apps.js');
 var i18n = require('./utils/i18n.js');
+var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
 var popup = require('./views/popups/popup.js');
 var shell = require('./utils/shell.js');
@@ -37,6 +38,7 @@ function bootstrapAirspace() {
   var steps = [
     initializeInternationalization,
     ensureWorkingDirs,
+    migrateDatabase,
     prerunAsyncKickoff,
     firstRun,
     setupMainWindow,
@@ -71,6 +73,9 @@ function bootstrapAirspace() {
   });
 }
 
+/*
+ * Figure out the user's locale
+ */
 function initializeInternationalization(cb) {
   i18n.initialize(function(err, locale) {
     console.log(err ? 'Error determining locale: ' + (err.stack || err) : 'Determined locale: ' + locale);
@@ -78,6 +83,9 @@ function initializeInternationalization(cb) {
   });
 }
 
+/*
+ * Check if the main directories used by Airspace Home do, in fact, exist
+ */
 function ensureWorkingDirs(cb) {
   var dirFn = function(dirpath) {
     return function(next) {
@@ -99,12 +107,37 @@ function ensureWorkingDirs(cb) {
   });
 }
 
+function migrateDatabase(cb) {
+  migrations.migrate();
+
+  cb && cb(null);
+}
+
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  // Get all temp files that weren't cleaned up from last time
+  // (stored in uiGlobals.toDeleteNow)
+  // Need to get this list now so we don't delete partially downloaded files
+  // But don't want to actually delete them until much later (don't want to block anything)
   workingFile.buildCleanupList();
+
+  // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
+  // based on the json and information in the database.
+  // myApps tries to install everything that gets added (that has state NotYetInstalled)
   LeapApp.hydrateCachedModels();
+
+  // Check if device has an embedded leap or not.
+  // Checks db first to see if there's a stored value
   embeddedLeap.embeddedLeapPromise();
+
+  // Creates manifest promise for future use
+  // manifest is fetched from config.NonStoreAppManifestUrl
+  // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
+
+  // Builds the menu bar
+  // TODO move this to setupMainWindow?
   windowChrome.rebuildMenuBar(false);
   cb && cb(null);
 }
@@ -123,7 +156,9 @@ function firstRun(cb) {
 
 function setupMainWindow(cb) {
   windowChrome.maximizeWindow();
-  window.setTimeout(function() { // what's this for? todo: move to an explicit step at end?
+
+  // TODO: move to an explicit step at end?
+  window.setTimeout(function() {
     $('body').removeClass('startup');
   }, 50);
 
