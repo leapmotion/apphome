@@ -85,6 +85,15 @@ msgstr "Click to Install"
 msgid "Trash"
 msgstr "Trash"
 
+msgid "Download All"
+msgstr "Download All"
+
+msgid "Upgrade All"
+msgstr "Upgrade All"
+
+msgid "Cancel All"
+msgstr "Cancel All"
+
 msgid "Version"
 msgstr "Version"
 
@@ -132,3 +141,4 @@ msgstr "Airspace Home"
 
 msgid "Help"
 msgstr "Help"
+

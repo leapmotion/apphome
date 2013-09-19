@@ -20,7 +20,10 @@ module.exports = BaseView.extend({
 
     this.injectCss();
     this.$el.append(this.templateHtml({
-      trash_label: i18n.translate('Trash')
+      trash_label: i18n.translate('Trash'),
+      download_label: i18n.translate('Download All'),
+      upgrade_label: i18n.translate('Upgrade All'),
+      cancel_label: i18n.translate('Cancel All')
     }));
     this._initCarousel();
     this._initDownloadControls();
