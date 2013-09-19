@@ -1,6 +1,9 @@
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
 
+var installManager = require('../../utils/install-manager.js');
+var LeapApp = require('../../models/leap-app.js');
+
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
 var TrashModalView = require('../trash-modal/trash-modal.js');
@@ -12,104 +15,76 @@ module.exports = BaseView.extend({
   className: 'main-page',
 
   initialize: function() {
-    window.ondragover = function(evt) { evt.preventDefault(); return false }; // ignore dragged in files
-    window.ondrop = function(evt) { evt.preventDefault(); return false };
+    window.ondragover = function(evt) { evt.preventDefault(); return false; }; // ignore dragged in files
+    window.ondrop = function(evt) { evt.preventDefault(); return false; };
 
     this.injectCss();
     this.$el.append(this.templateHtml({
-      trash_label: i18n.translate('Trash')
+      trash_label: i18n.translate('Trash'),
+      download_label: i18n.translate('Download All'),
+      upgrade_label: i18n.translate('Upgrade All'),
+      cancel_label: i18n.translate('Cancel All')
     }));
-    this._linkMapping = {};
-    this._initCarousels();
+    this._initCarousel();
+    this._initDownloadControls();
+    this._initTrash();
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
   },
 
-  _initCarousels: function() {
+  _initCarousel: function() {
     this.myAppsCarousel = new Carousel({
       collection: uiGlobals.myApps,
       position: 1
     });
-    this.myAppsCarousel.hide();
+
     this.$('#my-apps').append(this.myAppsCarousel.$el);
-    this._linkMapping['#my-apps-link'] = this.myAppsCarousel;
-
-    this._initCarouselLinks();
-    this._initTrash();
-
-    this._switchToCarousel(this.myAppsCarousel);
   },
 
-  _switchToCarousel: function(newCarousel) {
-    if (this._currentCarousel && this._currentCarousel !== newCarousel) {
-      Object.keys(this._linkMapping).forEach(function(selector) {
-        if (this._linkMapping[selector] === newCarousel) {
-          this.$('.carousel-link').removeClass('current');
-          this.$(selector).addClass('current');
+  _initDownloadControls: function() {
+    this.$('#upgrade-all').click(function(evt) {
+      uiGlobals.myApps.forEach(function(app) {
+        if (app.isUpgradable()) {
+          installManager.enqueue(app);
         }
-      }.bind(this));
-      var currentCarousel = this._currentCarousel;
-      // coefficient = -1 means slide down from top, coefficient = 1 means slide up from bottom
-      var coefficient = (currentCarousel.position() > newCarousel.position() ? -1 : 1);
-      var windowHeight = $(window).height();
-      var animating = true;
-      this.$el.addClass('animating');
+      });
 
-      newCarousel.setTop(coefficient * windowHeight);
-      if (!newCarousel.isEmpty()) {
-        newCarousel.show();
-      }
-      if (currentCarousel.isEmpty()) {
-        currentCarousel.hide();
-      }
-      new window.TWEEN.Tween({ x: 0, y: 0 })
-          .to({ x: windowHeight }, 500)
-          .easing(window.TWEEN.Easing.Quartic.Out)
-          .onUpdate(function() {
-            newCarousel.setTop(coefficient * (windowHeight - this.x));
-            currentCarousel.setTop(-coefficient * this.x);
-          }).onComplete(function() {
-            animating = false;
-            this.$el.removeClass('animating');
-            currentCarousel.setTop(0);
-            newCarousel.show();
-            currentCarousel.hide();
-            this._currentCarousel = newCarousel;
-          }.bind(this)).start();
+      $(this).hide();
+    });
 
-      function animate() {
-        if (animating) {
-          window.requestAnimationFrame(animate);
-          window.TWEEN.update();
+    this.$('#download-all').click(function(evt) {
+      uiGlobals.myApps.forEach(function(app) {
+        if (app.get('state') === LeapApp.States.NotYetInstalled) {
+          installManager.enqueue(app);
         }
-      }
-      animate();
-    } else {
-      if (this._currentCarousel) {
-        this._currentCarousel.hide();
-      }
-      this._currentCarousel = newCarousel;
-      this._currentCarousel.show();
-    }
+      });
+
+      $(this).hide();
+    });
+
+    this.$('#cancel-all').click(function(evt) {
+      uiGlobals.myApps.forEach(function(app) {
+        installManager.cancelAll();
+      });
+
+      $(this).hide();
+    });
+
+    this.$('#upgrade-all').hide();
+    this.$('#download-all').hide();
+    this.$('#cancel-all').hide();
+
+    setTimeout(function() {
+        // True makes it fade in
+        installManager.showAppropriateDownloadControl(true);
+    }, 1500);
   },
-
-  _initCarouselLinks: function() {
-    _(this._linkMapping).each(function(carousel, selector) {
-      this.$(selector).click(function() {
-        if (!$(selector).hasClass('current')) {
-          this._switchToCarousel(carousel);
-        }
-      }.bind(this));
-     }.bind(this));
-   },
 
   _initTrash: function() {
-    var $trashCan = this.$('#uninstalled-link');
+    var $trashCan = this.$('#trash');
     $trashCan.on('dragover', function(evt) {
-      if (this._currentCarousel === this.myAppsCarousel) {
-        evt.preventDefault();
-      }
+      evt.preventDefault();
     }.bind(this));
 
     $trashCan.on('drop', function(evt) {
@@ -117,7 +92,7 @@ module.exports = BaseView.extend({
 
       evt.stopPropagation();
 
-      this.$('#uninstalled-link').removeClass('highlight');
+      this.$('#trash').removeClass('highlight');
 
       try {
         var transferredJson = JSON.parse(evt.originalEvent.dataTransfer.getData('application/json'));
@@ -146,26 +121,26 @@ module.exports = BaseView.extend({
     uiGlobals.uninstalledApps.on('uninstall', this._updateTrashState.bind(this));
 
     uiGlobals.myApps.on('dragstart', function() {
-      this.$('#uninstalled-link').addClass('highlight');
+      this.$('#trash').addClass('highlight');
     }.bind(this));
 
     uiGlobals.myApps.on('dragend', function() {
-      this.$('#uninstalled-link').removeClass('highlight');
+      this.$('#trash').removeClass('highlight');
     }.bind(this));
 
     this._updateTrashState();
   },
 
   _updateTrashState: function() {
-    this.$('#uninstalled-link').toggleClass('empty', uiGlobals.uninstalledApps.length === 0);
+    this.$('#trash').toggleClass('empty', uiGlobals.uninstalledApps.length === 0);
 
     if (uiGlobals.uninstalledApps.length > 0) {
-      this.$('#uninstalled-link').removeClass('empty');
+      this.$('#trash').removeClass('empty');
 
-      this.$('#uninstalled-link .trashed-apps').show();
-      this.$('#uninstalled-link .trashed-apps .number').text(uiGlobals.uninstalledApps.length);
+      this.$('#trash .trashed-apps').show();
+      this.$('#trash .trashed-apps .number').text(uiGlobals.uninstalledApps.length);
     } else {
-      this.$('#uninstalled-link .trashed-apps').hide();
+      this.$('#trash .trashed-apps').hide();
     }
   },
 
@@ -180,8 +155,10 @@ module.exports = BaseView.extend({
   },
 
   animateIn: function(){
-    this.$('#header').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutCirc');
-    this.$('.footer.initial').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutCirc');
+    this.$('#header').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutQuad');
+
+    // hide().show() is fixing a ui bug where the top border would display across 2 pixels because of bad animation
+    this.$('.footer.initial').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutQuad').hide().show();
   }
 
 });

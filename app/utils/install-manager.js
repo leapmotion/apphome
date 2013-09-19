@@ -24,6 +24,8 @@ function enqueue(app, cb, skipToFront) {
   if (installQueue.length === 1) {
     dequeue();
   }
+
+  showAppropriateDownloadControl();
 }
 
 function dequeue() {
@@ -43,8 +45,39 @@ function dequeue() {
       if (_.isFunction(queuedItem.cb)) {
         queuedItem.cb.apply(this, arguments);
       }
+      showAppropriateDownloadControl();
       dequeue();
     });
+  }
+}
+
+function showAppropriateDownloadControl(fade) {
+  var upgrades = 0,
+      downloads = 0,
+      $control;
+
+  $('.download-control').hide();
+
+  uiGlobals.myApps.forEach(function(app) {
+    if (app.isUpgradable()) upgrades++;
+    if (app.get('state') === LeapApp.States.NotYetInstalled) downloads++;
+  });
+
+  if (installQueue.length > 0) {
+    $('#cancel-all').show();
+    return;
+  } else if (upgrades) {
+    $control = $('#upgrade-all');
+  } else if (downloads) {
+    $control = $('#download-all');
+  }
+
+  if ($control) {
+    if (fade) {
+      $control.fadeIn('slow');
+    } else {
+      $control.show();
+    }
   }
 }
 
@@ -61,3 +94,4 @@ function cancelAll() {
 
 module.exports.enqueue = enqueue;
 module.exports.cancelAll = cancelAll;
+module.exports.showAppropriateDownloadControl = showAppropriateDownloadControl;

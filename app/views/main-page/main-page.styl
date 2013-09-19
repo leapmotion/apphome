@@ -35,58 +35,56 @@
       height 30px
       margin 30px auto
 
-  #uninstalled-link
+  .footer-link
     bottom 0
     color #4a4f59
     cursor pointer
     font-size 24px
     height 46px
-    left auto
-    padding-right 28px
+    padding 0 28px
     position absolute
-    right 0
+
+    .label
+      float right
+      padding 0 8px
+
+    i
+      font-size 30px
+      height 33px
+      width 27px
+      float right
+
+    &.download-control
+      left 0
+      padding-right 0
+      right auto
+
+      .label
+        float left
+
+      i
+        float left
+
+    &#trash
+      left auto
+      padding-left 0
+      right 0
+
+      .trashed-apps
+        display none
 
     &:hover
       color #a1abc9
-      .icon
-        background url(static/images/trash-icon-current.png)
 
     &.empty
       cursor default
 
       &:hover
         color #4a4f59
-        .icon
-          background url(static/images/trash-icon.png)
-
-    &.current
-      color #a1abc9
-      cursor default
-
-      &:after
-        background -webkit-linear-gradient(left, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
-        background linear-gradient(to right, #38393c 0%,#5d5f69 30%,#5d5f69 100%)
-        bottom auto
-        top -15px
-        left 0
-      .icon
-        background url(static/images/trash-icon-current.png)
 
     &.highlight
       color #a1abc9
-      .icon
-        background url(static/images/trash-icon-current.png)
 
-    .label
-      float right
-      padding-right 10px
-    .trashed-apps
-      display none
-    .icon
-      background url(static/images/trash-icon.png)
-      float right
-      height 33px
-      width 27px
 
   .app-list
     list-style none
