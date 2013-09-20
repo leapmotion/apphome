@@ -1,17 +1,16 @@
 var db = require('./db.js');
-
-var Key = 'crashCount';
+var config = require('../../config/config.js');
 
 function count() {
-  return db.fetchObj(Key) || 0;
+  return db.fetchObj(config.DbKeys.CrashCount) || 0;
 }
 
 function increment() {
-  db.saveObj(Key, count() + 1);
+  db.saveObj(config.DbKeys.CrashCount, count() + 1);
 }
 
 function reset() {
-  db.saveObj(Key, 0);
+  db.saveObj(config.DbKeys.CrashCount, 0);
 }
 
 

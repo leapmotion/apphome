@@ -5,9 +5,6 @@ var fs = require('fs-extra');
 
 var config = require('../../config/config.js');
 
-var ActiveTempFilesKey = 'active_temp_files';
-var TempFilesNeedingDeletionKey = 'temp_files_needing_deletion';
-
 
 function newTempFilePath(extension) {
   // TODO: put all files in LM_Airspace subdir. (what the uninstaller looks for.)
@@ -28,11 +25,11 @@ function newTempPlatformArchive() {
 }
 
 function _workingSet() {
-  return db.fetchObj(ActiveTempFilesKey) || {};
+  return db.fetchObj(config.DbKeys.ActiveTempFilesKey) || {};
 }
 
 function _deletionSet() {
-  return db.fetchObj(TempFilesNeedingDeletionKey) || {};
+  return db.fetchObj(config.DbKeys.TempFilesNeedingDeletionKey) || {};
 }
 
 function _trackFile(filePath) {
@@ -41,7 +38,7 @@ function _trackFile(filePath) {
   }
   var all = _workingSet();
   all[filePath] = true;
-  db.saveObj(ActiveTempFilesKey, all);
+  db.saveObj(config.DbKeys.ActiveTempFilesKey, all);
 }
 
 function _markAsDeleted(filePath) {
@@ -50,12 +47,12 @@ function _markAsDeleted(filePath) {
   }
   var all = _deletionSet();
   delete all[filePath];
-  db.saveObj(TempFilesNeedingDeletionKey, all);
+  db.saveObj(config.DbKeys.TempFilesNeedingDeletionKey, all);
 }
 
 function buildCleanupList() {
   uiGlobals.toDeleteNow = _(_.extend({}, _workingSet(), _deletionSet())).keys();
-  db.saveObj(ActiveTempFilesKey, {});
+  db.saveObj(config.DbKeys.ActiveTempFilesKey, {});
 }
 
 function cleanup() {

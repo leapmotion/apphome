@@ -1,11 +1,21 @@
+var config = require('../../config/config.js');
+
 var dbPrefix;
 
 var db = module.exports = {
   saveObj: function(key, value) {
+    if (_(config.DbKeys).values().indexOf(key) === -1) {
+      throw new Error(key + ' not in ' + _(config.DbKeys).values());
+    }
+
     db.setItem(key, JSON.stringify(value));
   },
 
   fetchObj: function(key) {
+    if (_(config.DbKeys).values().indexOf(key) === -1) {
+      throw new Error(key + ' not in ' + _(config.DbKeys).values());
+    }
+
     var val = db.getItem(key);
     if (!val) {
       return void 0;

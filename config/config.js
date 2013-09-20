@@ -56,7 +56,10 @@ var config = {
     HasEmbeddedLeapDevice: 'HasEmbeddedLeapDevice',
     PrebundlingComplete: 'PrebundlingComplete',
     OriginalPrebundlingManifest: 'OriginalPrebundlingManifest',
-    DbVersion: 'DatabaseSchemaVersion'
+    DbVersion: 'DatabaseSchemaVersion',
+    CrashCount: 'crashCount',
+    ActiveTempFilesKey: 'active_temp_files',
+    TempFilesNeedingDeletionKey: 'temp_files_needing_deletion'
   },
 
   PlatformDirs: {
