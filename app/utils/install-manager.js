@@ -64,7 +64,11 @@ function showAppropriateDownloadControl(fade) {
   });
 
   if (installQueue.length > 0) {
-    $('#cancel-all').show();
+    if (fade) {
+      $('#cancel-all').fadeIn('slow');
+    } else {
+      $('#cancel-all').show();
+    }
     return;
   } else if (upgrades) {
     $control = $('#upgrade-all');
