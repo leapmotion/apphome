@@ -9,10 +9,7 @@ module.exports = Tile.extend({
 
     this.initializeTile(leapApp);
 
-    var templateData = leapApp.toJSON();
-    templateData.iconPath = (templateData.iconPath ? this._makeFileUrl(templateData.iconPath) : '');
-    templateData.tilePath = this._makeFileUrl(templateData.tilePath || config.DefaultTilePath);
-    this.setElement($(this.templateHtml(templateData)));
+    this.setElement($(this.templateHtml(this.appJson)));
 
     this._showOrHideIcon();
 
