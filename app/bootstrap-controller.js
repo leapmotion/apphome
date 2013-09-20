@@ -116,11 +116,9 @@ function migrateDatabase(cb) {
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 
-  // Get all temp files that weren't cleaned up from last time
-  // (stored in uiGlobals.toDeleteNow)
-  // Need to get this list now so we don't delete partially downloaded files
-  // But don't want to actually delete them until much later (don't want to block anything)
-  workingFile.buildCleanupList();
+  // Gather all temp files that weren't cleaned up from last time immediately
+  // and delete them once we're idle
+  workingFile.cleanupTempFiles();
 
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
   // based on the json and information in the database.
@@ -187,7 +185,6 @@ function startMainApp(cb) {
 
 function afterwardsAsyncKickoffs(cb) {
   wrappedSetTimeout(frozenApps.get, 10);
-  wrappedSetTimeout(workingFile.cleanup, 4000);
   cb && cb(null);
 }
 
