@@ -44,6 +44,7 @@ module.exports = Modal.extend({
 
     this.$('.button.reinstall-all').click((function() {
       function reinstall(app) {
+        uiGlobals.uninstalledApps.remove(app);
         uiGlobals.myApps.add(app);
         installManager.enqueue(app);
       }
