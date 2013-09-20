@@ -40,6 +40,10 @@ var Migrations = [
 // Migrate database to latest version
 // Should be idempotent
 function migrate() {
+  if (typeof config.DbKeys.DbVersion === 'undefined') {
+    throw "DbVersion is undefined";
+  }
+
   if (!db.fetchObj(config.DbKeys.DbVersion)) {
     db.saveObj(config.DbKeys.DbVersion, 0);
   }
