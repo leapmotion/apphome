@@ -54,7 +54,7 @@ function cleanupTempFiles() {
   var toDelete = _(_.extend({}, _workingSet(), _deletionSet())).keys();
   db.saveObj(config.DbKeys.ActiveTempFilesKey, {});
 
-  var sequentialRemove = function(toDelete) {
+  function sequentialRemove() {
     if (!toDelete.length) {
       return;
     }
@@ -74,12 +74,10 @@ function cleanupTempFiles() {
         sequentialRemove();
       }
     });
-  };
+  }
 
   //Don't want to actually clean up the files until we're idle
-  setTimeout(function() {
-    sequentialRemove(toDelete);
-  }, 5000);
+  setTimeout(sequentialRemove, 5000);
 }
 
 function ensureDir(dirpath, cb) {
