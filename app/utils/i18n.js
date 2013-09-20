@@ -6,6 +6,8 @@ var po2json = require('po2json');
 
 var Jed = require('jed');
 
+var registry = require('./registry.js');
+
 var DefaultLocale = 'en';
 
 module.exports.locale = process.env.LEAPHOME_LOCALE;
@@ -13,11 +15,11 @@ function getLocale(cb) {
   var locale = module.exports.locale;
   if (!locale) {
     if (os.platform() === 'win32') {
-      exec('reg query "HKCU\\Control Panel\\International" /v LocaleName', function(err, stdout) {
+      registry.readValue('HKCU\\Control Panel\\International', 'LocaleName', function(err, fullLocale) {
         if (err) {
           cb && cb(err);
         } else {
-          var fullLocale = stdout.split(/\s+/).pop() || DefaultLocale;
+          fullLocale = fullLocale || DefaultLocale;
           locale = module.exports.locale = fullLocale.split('-').shift();
           cb && cb(null, locale);
         }

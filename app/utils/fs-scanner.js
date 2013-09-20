@@ -6,6 +6,7 @@ var os = require('os');
 var path = require('path');
 
 var plist = require('./plist.js');
+var registry = require('./registry.js');
 var semver = require('./semver.js');
 var shell = require('./shell.js');
 
@@ -97,15 +98,15 @@ FsScanner.prototype = {
   _scanForWindowsApps: function(cb) {
     var registryQueries = [
       function(cb) { // system-wide apps for system architecture
-        exec('reg query HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
+        registry.readFullKey('HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', cb);
       },
       function(cb) { // user apps (32- and 64-bit)
-        exec('reg query HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
+        registry.readFullKey('HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', cb);
       }
     ];
     if (process.env.ProgramW6432) { // running on 64-bit Windows
       registryQueries.push(function(cb) { // system-wide 32-bit apps on 64-bit Windows
-        exec('reg query HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall /s', cb);
+        registry.readFullKey('HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall', cb);
       });
     }
     async.parallel(registryQueries, function(err, stdouts) {
