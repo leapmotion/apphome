@@ -15,19 +15,9 @@ var Tile = BaseView.extend({
   initializeTile: function(app) {
     this.injectCss();
 
-    var appJson = app.toJSON();
-    appJson.iconPath = (appJson.iconPath ? this._makeFileUrl(appJson.iconPath) : '');
-    appJson.tilePath = this._makeFileUrl(appJson.tilePath || config.DefaultTilePath);
-    this.setElement(this.templateHtml({
-      app:                  appJson,
-      waiting_label:        i18n.translate('Waiting...'),
-      connecting_label:     i18n.translate('Connecting...'),
-      downloading_label:    i18n.translate('Downloading...'),
-      installing_label:     i18n.translate('Installing...'),
-      opening_label:        i18n.translate('Opening...'),
-      launching_label:      i18n.translate('Launching...'),
-      clickToInstall_label: i18n.translate('Click to Install')
-    }));
+    this.appJson = app.toJSON();
+    this.appJson.iconPath = (this.appJson.iconPath ? this._makeFileUrl(this.appJson.iconPath) : '');
+    this.appJson.tilePath = this._makeFileUrl(this.appJson.tilePath || config.DefaultTilePath);
 
     this.listenTo(app, 'change:iconPath', function() {
       this.$('.icon').attr('src', this._makeFileUrl(app.get('iconPath'), true));
@@ -55,6 +45,17 @@ var Tile = BaseView.extend({
     var leapApp = args.leapApp;
 
     this.initializeTile(leapApp);
+
+    this.setElement(this.templateHtml({
+      app:                  this.appJson,
+      waiting_label:        i18n.translate('Waiting...'),
+      connecting_label:     i18n.translate('Connecting...'),
+      downloading_label:    i18n.translate('Downloading...'),
+      installing_label:     i18n.translate('Installing...'),
+      opening_label:        i18n.translate('Opening...'),
+      launching_label:      i18n.translate('Launching...'),
+      clickToInstall_label: i18n.translate('Click to Install')
+    }));
 
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
