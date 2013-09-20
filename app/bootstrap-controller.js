@@ -36,6 +36,7 @@ function wrappedSetTimeout(task, ms) {
 
 function bootstrapAirspace() {
   var steps = [
+    initializeMixpanel,
     initializeInternationalization,
     ensureWorkingDirs,
     migrateDatabase,
@@ -71,6 +72,13 @@ function bootstrapAirspace() {
       });
     }
   });
+}
+
+/*
+ * Get the mixpanel id written during install time and use it
+ */
+function initializeMixpanel(cb) {
+  mixpanel.initialize(cb);
 }
 
 /*
