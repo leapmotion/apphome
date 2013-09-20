@@ -50,22 +50,15 @@ function _markAsDeleted(filePath) {
   db.saveObj(config.DbKeys.TempFilesNeedingDeletionKey, all);
 }
 
-function buildCleanupList() {
-  uiGlobals.toDeleteNow = _(_.extend({}, _workingSet(), _deletionSet())).keys();
+function cleanupTempFiles() {
+  var toDelete = _(_.extend({}, _workingSet(), _deletionSet())).keys();
   db.saveObj(config.DbKeys.ActiveTempFilesKey, {});
-}
 
-function cleanup() {
-  if (!uiGlobals.toDeleteNow) {
-    console.warn('workingFile.buildCleanupList() should have been called before now');
-    buildCleanupList();
-  }
-
-  var sequentialRemove = function() {
-    if (!uiGlobals.toDeleteNow.length) {
+  var sequentialRemove = function(toDelete) {
+    if (!toDelete.length) {
       return;
     }
-    var nextFile = uiGlobals.toDeleteNow.shift();
+    var nextFile = toDelete.shift();
 
     fs.exists(nextFile, function(doesExist) {
       if (doesExist) {
@@ -83,7 +76,10 @@ function cleanup() {
     });
   };
 
-  sequentialRemove();
+  //Don't want to actually clean up the files until we're idle
+  setTimeout(function() {
+    sequentialRemove(toDelete);
+  }, 5000);
 }
 
 function ensureDir(dirpath, cb) {
@@ -102,5 +98,4 @@ function ensureDir(dirpath, cb) {
 module.exports.newTempFilePath = newTempFilePath;
 module.exports.newTempPlatformArchive = newTempPlatformArchive;
 module.exports.ensureDir = ensureDir;
-module.exports.buildCleanupList = buildCleanupList;
-module.exports.cleanup = cleanup;
+module.exports.cleanupTempFiles = cleanupTempFiles;
