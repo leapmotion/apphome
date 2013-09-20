@@ -55,7 +55,11 @@ var config = {
     UninstalledApps: 'UninstalledApps',
     HasEmbeddedLeapDevice: 'HasEmbeddedLeapDevice',
     PrebundlingComplete: 'PrebundlingComplete',
-    OriginalPrebundlingManifest: 'OriginalPrebundlingManifest'
+    OriginalPrebundlingManifest: 'OriginalPrebundlingManifest',
+    DbVersion: 'DatabaseSchemaVersion',
+    CrashCount: 'crashCount',
+    ActiveTempFilesKey: 'active_temp_files',
+    TempFilesNeedingDeletionKey: 'temp_files_needing_deletion'
   },
 
   PlatformDirs: {
