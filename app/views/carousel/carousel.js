@@ -53,9 +53,7 @@ var CarouselView = BaseView.extend({
         return;
       }
 
-      console.log($('#search').val());
-
-      if ($('#search').val() !== '') {
+      if (($('#search').val() !== '') || ($("#search").is(':focus'))) {
         $('#search').val('');
         this._updateSlides();
         this._updateEmptyState();
