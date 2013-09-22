@@ -112,7 +112,8 @@ function ensureWorkingDirs(cb) {
   async.series([
     dirFn(appDataDir),
     dirFn(tempDir),
-    dirFn(leapSharedData)
+    dirFn(leapSharedData),
+    workingFile.cleanupTempFiles
   ], function(err) {
     cb && cb(err);
   });
@@ -126,10 +127,6 @@ function migrateDatabase(cb) {
 
 function prerunAsyncKickoff(cb) {
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-
-  // Gather all temp files that weren't cleaned up from last time immediately
-  // and delete them once we're idle
-  workingFile.cleanupTempFiles();
 
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
   // based on the json and information in the database.

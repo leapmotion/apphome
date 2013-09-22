@@ -50,7 +50,7 @@ function _markAsDeleted(filePath) {
   db.saveObj(config.DbKeys.TempFilesNeedingDeletionKey, all);
 }
 
-function cleanupTempFiles() {
+function cleanupTempFiles(cb) {
   var toDelete = _(_.extend({}, _workingSet(), _deletionSet())).keys();
   db.saveObj(config.DbKeys.ActiveTempFilesKey, {});
 
@@ -78,6 +78,8 @@ function cleanupTempFiles() {
 
   //Don't want to actually clean up the files until we're idle
   setTimeout(sequentialRemove, 5000);
+
+  cb && cb(null);
 }
 
 function ensureDir(dirpath, cb) {
