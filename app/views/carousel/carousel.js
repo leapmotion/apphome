@@ -48,6 +48,13 @@ var CarouselView = BaseView.extend({
       this._updateSlideIndicator();
     }).bind(this));
 
+    $('body').on('focusout', '#search', (function(evt) {
+      $('#search').val('');
+      this._updateSlides();
+      this._updateEmptyState();
+      this._updateSlideIndicator();
+    }).bind(this));
+
     this._initAddRemoveRepainting();
 
     this.$('.next-slide.left').click(function(evt) {
@@ -92,8 +99,8 @@ var CarouselView = BaseView.extend({
       return Math.ceil(this._visibleApps().length / this._tilesPerSlide);
   },
 
-  _whichPage: function(leapApp) {
-    var index = this.visibleApps().indexOf(leapApp);
+  _whichSlide: function(leapApp) {
+    var index = this._visibleApps().indexOf(leapApp);
     index = Math.max(Math.min(index, this._visibleApps().length - 1), 0);
     return Math.floor(index / this._tilesPerSlide);
   },

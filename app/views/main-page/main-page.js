@@ -28,7 +28,7 @@ module.exports = BaseView.extend({
     this._initCarousel();
     this._initDownloadControls();
     this._initTrash();
-    this._initSearch();
+    this._initSearchField();
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
@@ -145,9 +145,23 @@ module.exports = BaseView.extend({
     }
   },
 
-  _initSearch: function() {
+  _initSearchField: function() {
     // Search filtering is initialized inside the carousel
-    $('body').keydown(function(evt) { $('#search').focus(); });
+    $('body').keypress(function(evt) { $('#search').focus(); });
+
+    $('body').keyup(function(evt) {
+      if (evt.which === 27) {
+        $('#search').blur();
+      }
+    });
+
+    $('body').on('focus', '#search', function() {
+      $('#search-form').addClass('active');
+    });
+
+    $('body').on('focusout', '#search', function() {
+      $('#search-form').removeClass('active');
+    });
   },
 
   _setupResizeBehavior: function() {

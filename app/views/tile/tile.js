@@ -87,6 +87,10 @@ var Tile = BaseView.extend({
       } else if (leapApp.isRunnable()) {
         this._launchApp();
       }
+
+      setTimeout(function() {
+        $('#search').blur();
+      }, 1000);
     }.bind(this));
 
     this.$('.cancel').click(function(evt) {
