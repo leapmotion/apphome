@@ -48,11 +48,24 @@ var CarouselView = BaseView.extend({
       this._updateSlideIndicator();
     }).bind(this));
 
-    $('body').on('focusout', '#search', (function(evt) {
-      $('#search').val('');
-      this._updateSlides();
-      this._updateEmptyState();
-      this._updateSlideIndicator();
+    $('body').on('click', (function(evt) {
+      if (evt.target.nodeName === 'input') {
+        return;
+      }
+
+      console.log($('#search').val());
+
+      if ($('#search').val() !== '') {
+        $('#search').val('');
+        this._updateSlides();
+        this._updateEmptyState();
+        this._updateSlideIndicator();
+        $('#search').blur();
+      } else {
+        if (evt.target.nodeName.toLowerCase() === 'i') {
+          $('#search').focus();
+        }
+      }
     }).bind(this));
 
     this._initAddRemoveRepainting();

@@ -149,9 +149,12 @@ module.exports = BaseView.extend({
     // Search filtering is initialized inside the carousel
     $('body').keypress(function(evt) { $('#search').focus(); });
 
+    // Body click sets blur on search
+    // Need to route through tile in some cases
+    // and blur event fires before click :-(
     $('body').keyup(function(evt) {
       if (evt.which === 27) {
-        $('#search').blur();
+        $('body').click();
       }
     });
 
