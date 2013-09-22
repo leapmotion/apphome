@@ -36,11 +36,17 @@ var CarouselView = BaseView.extend({
 
     uiGlobals.on('swipeleft', _.debounce(function() {
       this.next();
-    }.bind(this)))
+    }.bind(this)));
 
     uiGlobals.on('swiperight', _.debounce(function() {
       this.prev();
-    }.bind(this)))
+    }.bind(this)));
+
+    $('body').on('keyup', '#search', (function(evt) {
+      this._updateSlides();
+      this._updateEmptyState();
+      this._updateSlideIndicator();
+    }).bind(this));
 
     this._initAddRemoveRepainting();
 
@@ -61,6 +67,37 @@ var CarouselView = BaseView.extend({
     this.switchToSlide(this._currentSlideIndex - 1);
   },
 
+  _visibleApps: function() {
+    var visibleApps;
+
+    if ($('#search').val()) {
+      visibleApps = this.collection.filter(function(app) {
+        var sourceString = app.get('name').toLowerCase();
+        var searchString = $('#search').val().toLowerCase();
+        return sourceString.indexOf(searchString) !== -1;
+      });
+    } else {
+      visibleApps = this.collection.models;
+    }
+
+    return visibleApps;
+  },
+
+  _getSlideModels: function(slideNumber) {
+      var first = slideNumber * this._tilesPerSlide;
+      return this._visibleApps().slice(first, first + this._tilesPerSlide);
+  },
+
+  _slideCount: function() {
+      return Math.ceil(this._visibleApps().length / this._tilesPerSlide);
+  },
+
+  _whichPage: function(leapApp) {
+    var index = this.visibleApps().indexOf(leapApp);
+    index = Math.max(Math.min(index, this._visibleApps().length - 1), 0);
+    return Math.floor(index / this._tilesPerSlide);
+  },
+
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
     this.listenTo(collection, 'add', function() {
@@ -70,13 +107,9 @@ var CarouselView = BaseView.extend({
     }, this);
 
     this.listenTo(collection, 'remove', function() {
-      var slideCount = collection.pageCount(this._tilesPerSlide);
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-      if (this._currentSlideIndex >= slideCount) {
-        this.switchToSlide(this._currentSlideIndex - 1);
-      }
     }, this);
 
     this.listenTo(collection, 'sort', function() {
@@ -86,7 +119,7 @@ var CarouselView = BaseView.extend({
     this.listenTo(collection, 'change:state', function(leapApp) {
       if (leapApp.get('state') === LeapApp.States.Connecting ||
           (leapApp.isLocalApp() && leapApp.previous('state') === LeapApp.States.Uninstalled)) {
-        this.switchToSlide(collection.whichPage(leapApp, this._tilesPerSlide));
+        this.switchToSlide(this._whichSlide(leapApp));
       }
     }, this);
   },
@@ -122,7 +155,7 @@ var CarouselView = BaseView.extend({
   },
 
   _updateSlides: function() {
-    var slideCount = Math.max(this.collection.pageCount(this._tilesPerSlide), 1);
+    this._animating = false;
 
     this._slides.forEach(function(slide) {
       slide.remove();
@@ -132,7 +165,7 @@ var CarouselView = BaseView.extend({
 
     this.$('.slides-holder .slide').remove();
 
-    for (var i = 0; i < slideCount; i++) {
+    for (var i = 0; i < this._slideCount(); i++) {
       var slideView = new Slide({
         slideNum: i,
         onDisabledClick: function(slideNum) {
@@ -147,7 +180,7 @@ var CarouselView = BaseView.extend({
 
       this.$('.slides-holder').append(slideView.$el);
 
-      var leapApps = this.collection.getPageModels(i, this._tilesPerSlide);
+      var leapApps = this._getSlideModels(i);
       leapApps.forEach(function(leapApp) {
         slideView.addTile({ leapApp: leapApp });
       });
@@ -155,6 +188,10 @@ var CarouselView = BaseView.extend({
 
     this._positionSlides();
     this._updateNextSlideControls();
+
+    if (this._currentSlideIndex >= this._slideCount()) {
+      this.switchToSlide(this._currentSlideIndex - 1);
+    }
   },
 
   _positionSlides: function() {
@@ -269,7 +306,7 @@ var CarouselView = BaseView.extend({
   },
 
   isEmpty: function() {
-    return this.collection.length === 0;
+    return this._visibleApps().length === 0;
   },
 
   show: function() {
@@ -278,7 +315,7 @@ var CarouselView = BaseView.extend({
 
   hide: function() {
     this.$el.hide();
-  }
+  },
 
 });
 

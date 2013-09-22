@@ -28,6 +28,7 @@ module.exports = BaseView.extend({
     this._initCarousel();
     this._initDownloadControls();
     this._initTrash();
+    this._initSearch();
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
@@ -142,6 +143,11 @@ module.exports = BaseView.extend({
     } else {
       this.$('#trash .trashed-apps').hide();
     }
+  },
+
+  _initSearch: function() {
+    // Search filtering is initialized inside the carousel
+    $('body').keydown(function(evt) { $('#search').focus(); });
   },
 
   _setupResizeBehavior: function() {
