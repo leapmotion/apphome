@@ -1,3 +1,40 @@
+var exec = require('child_process').exec;
+var os = require('os');
+
+var config = require('../../config/config.js');
+var db = require('./db.js');
+var registry = require('./registry.js');
+
+function initialize(cb) {
+  var mixpanelDistinctId = db.getItem(config.DbKeys.MixpanelDistinctId);
+  function identifyIfPossible() {
+    if (mixpanelDistinctId) {
+      console.log('Using Mixpanel Distinct Id: ' + mixpanelDistinctId);
+      db.setItem(config.DbKeys.MixpanelDistinctId, mixpanelDistinctId);
+      window.mixpanel.identify(mixpanelDistinctId);
+    } else {
+      console.log('Auto-generating Mixpanel Distinct Id');
+    }
+    cb && cb(null);
+  }
+
+  if (mixpanelDistinctId) {
+    identifyIfPossible();
+  } else {
+    if (os.platform() === 'win32') {
+      var registryKey = (process.env.ProgramW6432 ? 'HKLM\\Software\\Wow6432Node\\LeapMotion' : 'HKLM\\Software\\LeapMotion');
+      registry.readValue(registryKey, 'MixPanelGUID', function(err, idFromRegistry) {
+        if (!err) {
+          mixpanelDistinctId = idFromRegistry;
+        }
+        identifyIfPossible();
+      });
+    } else {
+      identifyIfPossible();
+    }
+  }
+}
+
 function getTrackFn(eventName, namespace) {
   return function(args) {
     if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
@@ -13,6 +50,7 @@ function getTrackFn(eventName, namespace) {
 }
 
 module.exports = {
+  initialize: initialize,
   trackOpen: getTrackFn('Launched'),
   trackClose: getTrackFn('Closed Airspace'),
   trackSignUp: getTrackFn('Signed Up'),

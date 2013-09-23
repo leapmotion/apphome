@@ -59,7 +59,8 @@ var config = {
     DbVersion: 'DatabaseSchemaVersion',
     CrashCount: 'crashCount',
     ActiveTempFilesKey: 'active_temp_files',
-    TempFilesNeedingDeletionKey: 'temp_files_needing_deletion'
+    TempFilesNeedingDeletionKey: 'temp_files_needing_deletion',
+    MixpanelDistinctId: 'MixpanelDistinctId'
   },
 
   PlatformDirs: {
