@@ -146,24 +146,48 @@ module.exports = BaseView.extend({
   },
 
   _initSearchField: function() {
+    var $body = $('body');
+
     // Search filtering is initialized inside the carousel
-    $('body').keypress(function(evt) { $('#search').focus(); });
+    $body.keypress(function(evt) {
+      $('#search-form').addClass('active');
+      $('#search').focus();
+    });
 
     // Body click sets blur on search
     // Need to route through tile in some cases
     // and blur event fires before click :-(
-    $('body').keyup(function(evt) {
+    $body.keyup((function(evt) {
       if (evt.which === 27) {
-        $('body').click();
+        $body.click();
+      } else if (evt.which === 13) {
+        var visibleApps = this.myAppsCarousel.visibleApps();
+        if (visibleApps.length === 1) {
+          visibleApps[0].launch();
+          $('body').click();
+        }
       }
-    });
+    }).bind(this));
 
-    $('body').on('focus', '#search', function() {
-      $('#search-form').addClass('active');
-    });
+    $body.on('keyup', '#search', (function(evt) {
+      uiGlobals.trigger('search', $('#search').val());
+    }).bind(this));
 
-    $('body').on('focusout', '#search', function() {
-      $('#search-form').removeClass('active');
+    $body.on('click', function(evt) {
+      var $target = $(evt.target);
+      var $search = $('#search');
+
+      if ($target.is('#search')) {
+        return;
+      }
+
+      if (($search.val() !== '') || ($search.parent().is('.active'))) {
+        uiGlobals.trigger('search', false);
+        $('#search-form').removeClass('active');
+        $('#search').val('');
+      } else if ($target.is('.icon-search')) {
+        $search.focus();
+      }
     });
   },
 

@@ -36,30 +36,26 @@
       &.active
         color #a1abc9
 
-        i
+        input#search, input#search:focus
+          border-bottom 1px solid rgba(161, 171, 201, 1)
+          width 200px
+
+        .icon-search
           color white
 
-      i:hover
+      .icon-search:hover
         color #a1abc9
 
-      input, input:focus
+      input#search
         background none
         border none
         color white
         outline none
         text-align right
-
-      input
         border-bottom 1px solid rgba(161, 171, 201, 0)
         margin-right 10px
         width 0px
         -webkit-transition 0.5s
-
-      input:focus
-        border-bottom 1px solid rgba(161, 171, 201, 1)
-        width 200px
-
-
 
   .page-container
     width 100%

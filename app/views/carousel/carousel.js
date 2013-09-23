@@ -42,29 +42,12 @@ var CarouselView = BaseView.extend({
       this.prev();
     }.bind(this)));
 
-    $('body').on('keyup', '#search', (function(evt) {
+    uiGlobals.on('search', _.debounce((function(searchString) {
+      this.searchString = searchString;
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-    }).bind(this));
-
-    $('body').on('click', (function(evt) {
-      if (evt.target.nodeName === 'input') {
-        return;
-      }
-
-      if (($('#search').val() !== '') || ($("#search").is(':focus'))) {
-        $('#search').val('');
-        this._updateSlides();
-        this._updateEmptyState();
-        this._updateSlideIndicator();
-        $('#search').blur();
-      } else {
-        if (evt.target.nodeName.toLowerCase() === 'i') {
-          $('#search').focus();
-        }
-      }
-    }).bind(this));
+    }).bind(this)));
 
     this._initAddRemoveRepainting();
 
@@ -85,15 +68,14 @@ var CarouselView = BaseView.extend({
     this.switchToSlide(this._currentSlideIndex - 1);
   },
 
-  _visibleApps: function() {
+  visibleApps: function() {
     var visibleApps;
 
-    if ($('#search').val()) {
-      visibleApps = this.collection.filter(function(app) {
+    if (this.searchString) {
+      visibleApps = this.collection.filter((function(app) {
         var sourceString = app.get('name').toLowerCase();
-        var searchString = $('#search').val().toLowerCase();
-        return sourceString.indexOf(searchString) !== -1;
-      });
+        return sourceString.indexOf(this.searchString) !== -1;
+      }).bind(this));
     } else {
       visibleApps = this.collection.models;
     }
@@ -103,16 +85,16 @@ var CarouselView = BaseView.extend({
 
   _getSlideModels: function(slideNumber) {
       var first = slideNumber * this._tilesPerSlide;
-      return this._visibleApps().slice(first, first + this._tilesPerSlide);
+      return this.visibleApps().slice(first, first + this._tilesPerSlide);
   },
 
   _slideCount: function() {
-      return Math.ceil(this._visibleApps().length / this._tilesPerSlide);
+      return Math.ceil(this.visibleApps().length / this._tilesPerSlide);
   },
 
   _whichSlide: function(leapApp) {
-    var index = this._visibleApps().indexOf(leapApp);
-    index = Math.max(Math.min(index, this._visibleApps().length - 1), 0);
+    var index = this.visibleApps().indexOf(leapApp);
+    index = Math.max(Math.min(index, this.visibleApps().length - 1), 0);
     return Math.floor(index / this._tilesPerSlide);
   },
 
@@ -324,7 +306,7 @@ var CarouselView = BaseView.extend({
   },
 
   isEmpty: function() {
-    return this._visibleApps().length === 0;
+    return this.visibleApps().length === 0;
   },
 
   show: function() {
