@@ -79,7 +79,8 @@ var Tile = BaseView.extend({
       this.$('.progress .bar').css('width', Math.min(Math.round(progress * 100), 100) + '%');
     }, this);
 
-    this.$el.click(function() {
+    this.$el.click(function(evt) {
+
       if (leapApp.isInstallable()) {
         this._promptForInstall();
       } else if (leapApp.isUpgradable()) {
@@ -87,6 +88,12 @@ var Tile = BaseView.extend({
       } else if (leapApp.isRunnable()) {
         this._launchApp();
       }
+
+      evt.stopPropagation();
+
+      setTimeout(function() {
+        $('body').click();
+      }, 3000);
     }.bind(this));
 
     this.$('.cancel').click(function(evt) {

@@ -36,31 +36,4 @@ module.exports = window.Backbone.Collection.extend({
   comparator: function(leapApp) {
     return leapApp.sortScore();
   },
-
-  getPageModels: function(pageNumber, modelsPerPage) {
-    try {
-      var first = pageNumber * modelsPerPage;
-      return this.models.slice(first, first + modelsPerPage);
-    } catch (err) {
-      console.error('invalid getPageModels params: ' + [ pageNumber, modelsPerPage ]);
-      return [];
-    }
-  },
-
-  pageCount: function(modelsPerPage) {
-    if (!modelsPerPage || typeof modelsPerPage !== 'number') {
-      return 0;  // or throw an error?
-    }
-    return modelsPerPage && typeof modelsPerPage === 'number' ?
-      Math.ceil(this.length / modelsPerPage) : 0;
-  },
-
-  whichPage: function(modelOrNdx, modelsPerPage) {
-    if (!modelsPerPage) {
-      throw new Error('modelsPerPage required');
-    }
-    var ndx = typeof modelOrNdx === 'number' ? modelOrNdx : this.indexOf(modelOrNdx);
-    ndx = Math.max(Math.min(ndx, this.length - 1), 0);
-    return Math.floor(ndx / modelsPerPage);
-  },
 });
