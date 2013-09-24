@@ -182,9 +182,10 @@ module.exports = BaseView.extend({
       }
 
       if (($search.val() !== '') || ($search.parent().is('.active'))) {
-        uiGlobals.trigger('search', false);
+        uiGlobals.trigger('search', '');
         $('#search-form').removeClass('active');
         $('#search').val('');
+        $('#search').blur();
       } else if ($target.is('.icon-search')) {
         $search.focus();
       }
