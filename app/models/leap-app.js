@@ -80,6 +80,12 @@ var LeapApp = BaseModel.extend({
   },
 
   save: function() {
+    var uninstalledAppsJson = uiGlobals.uninstalledApps.toJSON();
+    var myAppsJson = uiGlobals.myApps.toJSON();
+
+    uninstalledAppsJson.forEach(LeapApp.abstractUserHomeDir);
+    myAppsJson.forEach(LeapApp.abstractUserHomeDir);
+
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
     db.saveObj(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps.toJSON());
     db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
@@ -286,6 +292,17 @@ LeapApp.hydrateCachedModels = function() {
 
   populateCollectionFromDb(config.DbKeys.InstalledApps, uiGlobals.myApps);
   populateCollectionFromDb(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps);
+
+  console.log('Done hydrating!');
+};
+
+LeapApp.abstractUserHomeDir = function(appJson) {
+  var userHomeDir = process.env.HOME || process.env.USERPROFILE;
+
+  // If user changes username, app directory prefix can change.
+  if (appJson.executable && appJson.executable.indexOf(userHomeDir) === 0) {
+    appJson.executable = appJson.executable.replace(userHomeDir, '%USER_DIR%');
+  }
 };
 
 module.exports = LeapApp;
