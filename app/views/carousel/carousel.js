@@ -43,7 +43,7 @@ var CarouselView = BaseView.extend({
     }.bind(this)));
 
     uiGlobals.on('search', _.debounce((function(searchString) {
-      this.searchString = searchString;
+      this._searchString = $.trim(searchString);
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
@@ -71,10 +71,10 @@ var CarouselView = BaseView.extend({
   visibleApps: function() {
     var visibleApps;
 
-    if (this.searchString) {
+    if (this._searchString) {
       visibleApps = this.collection.filter((function(app) {
         var sourceString = $.trim(app.get('name').toLowerCase());
-        return sourceString.indexOf($.trim(this.searchString)) !== -1;
+        return sourceString.indexOf(this._searchString) !== -1;
       }).bind(this));
     } else {
       visibleApps = this.collection.models;
@@ -315,7 +315,7 @@ var CarouselView = BaseView.extend({
 
   hide: function() {
     this.$el.hide();
-  },
+  }
 
 });
 
