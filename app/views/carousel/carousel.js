@@ -73,8 +73,8 @@ var CarouselView = BaseView.extend({
 
     if (this.searchString) {
       visibleApps = this.collection.filter((function(app) {
-        var sourceString = app.get('name').toLowerCase();
-        return sourceString.indexOf(this.searchString) !== -1;
+        var sourceString = $.trim(app.get('name').toLowerCase());
+        return sourceString.indexOf($.trim(this.searchString)) !== -1;
       }).bind(this));
     } else {
       visibleApps = this.collection.models;
