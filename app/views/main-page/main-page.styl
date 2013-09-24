@@ -54,7 +54,8 @@
         text-align right
         border-bottom 1px solid rgba(161, 171, 201, 0)
         margin-right 10px
-        width 0px
+        // Need one width because windows can't focus on a 0-width input.
+        width 1px
         -webkit-transition 0.5s
 
   .page-container
