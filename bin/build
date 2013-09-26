@@ -41,7 +41,7 @@ var appManifest = [
 if (os.platform() === 'win32') {
   appManifest.push('bin/IconExtractor.exe');
   appManifest.push('bin/unzip.exe');
-} else if (os.paltform() === 'darwin') {
+} else if (os.platform() === 'darwin') {
   appManifest.push('bin/PreferredLocalization');
 }
 
