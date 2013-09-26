@@ -88,7 +88,7 @@ function getToDisk(requestUrl, opts, cb) {
       cb && cb(err);
     } else {
       var numChunks = Math.ceil(fileSize / DownloadChunkSize);
-      console.warn('Downloading ' + fileSize + ' bytes in ' + numChunks + ' chunks (' + requestUrl + ')');
+      console.debug('Downloading ' + fileSize + ' bytes in ' + numChunks + ' chunks (' + requestUrl + ')');
       var bytesSoFar = 0;
       // Called recursively to get and write all chunks.
       function downloadAllChunks(numRemainingChunks) {
