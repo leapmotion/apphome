@@ -150,9 +150,11 @@ module.exports = BaseView.extend({
 
     // Search filtering is initialized inside the carousel
     $body.keypress(function(evt) {
-      $('#search-form').addClass('active');
-      $('#search').focus();
-    });
+      if (!this.myAppsCarousel.isAnimating()) {
+        $('#search-form').addClass('active');
+        $('#search').focus();
+      }
+    }.bind(this));
 
     // Body click sets blur on search
     // Need to route through tile in some cases
@@ -164,20 +166,26 @@ module.exports = BaseView.extend({
         var visibleApps = this.myAppsCarousel.visibleApps();
         if (visibleApps.length === 1) {
           visibleApps[0].launch();
-          $('body').click();
+          $body.click();
         }
       }
     }).bind(this));
+
+    $body.on('keydown', '#search', function(evt) {
+      if (this.myAppsCarousel.isAnimating()) {
+        evt.preventDefault();
+      }
+    }.bind(this));
 
     $body.on('keyup', '#search', (function(evt) {
       uiGlobals.trigger('search', $('#search').val());
     }).bind(this));
 
-    $body.on('click', function(evt) {
+    $body.click(function(evt) {
       var $target = $(evt.target);
       var $search = $('#search');
 
-      if ($target.is('#search')) {
+      if (!$target.is('.main-page')) {
         return;
       }
 
