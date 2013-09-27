@@ -33,30 +33,36 @@
       right 0
       top 0
 
+      .icon-search
+        cursor pointer
+
+        &:hover
+          color #a1abc9
+
+      input#search
+        background none
+        border none
+        border-bottom 1px solid rgba(161, 171, 201, 0)
+        color white
+        cursor default
+        margin-right 10px
+        outline none
+        text-align right
+        // Need one width because windows can't focus on a 0-width input.
+        width 1px
+        -webkit-transition 0.5s
+
       &.active
         color #a1abc9
 
         input#search, input#search:focus
           border-bottom 1px solid rgba(161, 171, 201, 1)
+          cursor auto
           width 200px
 
         .icon-search
           color white
-
-      .icon-search:hover
-        color #a1abc9
-
-      input#search
-        background none
-        border none
-        color white
-        outline none
-        text-align right
-        border-bottom 1px solid rgba(161, 171, 201, 0)
-        margin-right 10px
-        // Need one width because windows can't focus on a 0-width input.
-        width 1px
-        -webkit-transition 0.5s
+          cursor default
 
   .page-container
     width 100%

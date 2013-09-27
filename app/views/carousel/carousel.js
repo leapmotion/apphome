@@ -43,10 +43,12 @@ var CarouselView = BaseView.extend({
     }.bind(this)));
 
     uiGlobals.on('search', _.debounce((function(searchString) {
-      this._searchString = $.trim(searchString);
-      this._updateSlides();
-      this._updateEmptyState();
-      this._updateSlideIndicator();
+      if (!this._animating) {
+        this._searchString = $.trim(searchString);
+        this._updateSlides(true);
+        this._updateEmptyState();
+        this._updateSlideIndicator();
+      }
     }).bind(this)));
 
     this._initAddRemoveRepainting();
@@ -154,7 +156,7 @@ var CarouselView = BaseView.extend({
     this.$el.toggleClass('empty', this.isEmpty());
   },
 
-  _updateSlides: function() {
+  _updateSlides: function(noAnimation) {
     this._animating = false;
 
     this._slides.forEach(function(slide) {
@@ -190,7 +192,7 @@ var CarouselView = BaseView.extend({
     this._updateNextSlideControls();
 
     if (this._currentSlideIndex >= this._slideCount()) {
-      this.switchToSlide(this._currentSlideIndex - 1);
+      this.switchToSlide(this._currentSlideIndex - 1, noAnimation);
     }
   },
 
@@ -249,7 +251,7 @@ var CarouselView = BaseView.extend({
     }
   },
 
-  switchToSlide: function(slideNum) {
+  switchToSlide: function(slideNum, noAnimation) {
     slideNum = this._validSlideNum(slideNum);
 
     if (slideNum === this._currentSlideIndex || this._animating) {
@@ -265,30 +267,37 @@ var CarouselView = BaseView.extend({
     var animating = this._animating = true;
     this._updateNextSlideControls();
 
-    new window.TWEEN.Tween({ x: 0, y: 0 }, 350)
-        .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
-        .easing(window.TWEEN.Easing.Quartic.Out)
-        .onUpdate(function() {
-          $slidesHolder.css('left', currentPosition + this.x);
-        }).onComplete(function() {
-          animating = this._animating = false;
-          slideNum = this._validSlideNum(slideNum); // slides could have been removed during animation by add/remove bindings
-          distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled
-          this._currentSlideIndex = slideNum;
-          this._updateSlideIndicator();
-          this._updateNextSlideControls();
-          this._slides[slideNum].enable();
-          this._currentPosition += distanceToSlide;
-          this._positionSlides();
-        }.bind(this)).start();
+    var onComplete = function() {
+      animating = this._animating = false;
+      slideNum = this._validSlideNum(slideNum); // slides could have been removed during animation by add/remove bindings
+      distanceToSlide = (this._currentSlideIndex - slideNum) * this._slideSpacing; // unscaled
+      this._currentSlideIndex = slideNum;
+      this._updateSlideIndicator();
+      this._updateNextSlideControls();
+      this._slides[slideNum].enable();
+      this._currentPosition += distanceToSlide;
+      this._positionSlides();
+    }.bind(this);
 
-    function animate() {
-      if (animating) {
-        window.requestAnimationFrame(animate);
-        window.TWEEN.update();
+    if (noAnimation) {
+      $slidesHolder.css('left', currentPosition + distanceToSlide * uiGlobals.scaling);
+      onComplete();
+    } else {
+      new window.TWEEN.Tween({ x: 0, y: 0 }, 350)
+          .to({ x: distanceToSlide * uiGlobals.scaling }, Math.max(1000, Math.abs(this._currentSlideIndex - slideNum) * 333))
+          .easing(window.TWEEN.Easing.Quartic.Out)
+          .onUpdate(function() {
+            $slidesHolder.css('left', currentPosition + this.x);
+          }).onComplete(onComplete).start();
+
+      function animate() {
+        if (animating) {
+          window.requestAnimationFrame(animate);
+          window.TWEEN.update();
+        }
       }
+      animate();
     }
-    animate();
   },
 
   rescale: function() {
@@ -315,6 +324,10 @@ var CarouselView = BaseView.extend({
 
   hide: function() {
     this.$el.hide();
+  },
+
+  isAnimating: function() {
+    return this._animating;
   }
 
 });
