@@ -17,7 +17,8 @@ function getLocale(cb) {
     if (os.platform() === 'win32') {
       registry.readValue('HKCU\\Control Panel\\International', 'LocaleName', function(err, fullLocale) {
         if (err) {
-          cb && cb(err);
+          console.warn(err.stack || err);
+          cb && cb(null, DefaultLocale);
         } else {
           fullLocale = fullLocale || DefaultLocale;
           locale = module.exports.locale = fullLocale.split('-').shift();
@@ -25,9 +26,17 @@ function getLocale(cb) {
         }
       });
     } else if (os.platform() === 'darwin') {
-      exec(path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization'), function(err, stdout) {
+      var executable = path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization');
+      try {
+        fs.chmodSync(executable, 0755);
+      } catch (err) {
+        console.warn(err.stack || err);
+        return cb && cb(null, DefaultLocale);
+      }
+      exec(executable, function(err, stdout) {
         if (err) {
-          cb && cb(err);
+          console.warn(err.stack || err);
+          cb && cb(null, DefaultLocale);
         } else {
           locale = module.exports.locale = stdout.replace(/^\s+|\s+$/g, '') || DefaultLocale;
           cb && cb(null, locale);
