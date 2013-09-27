@@ -22,7 +22,7 @@ var Migrations = [
     var uninstalledAppsJsonList = [];
     var myAppsJsonList = [];
 
-    var appJsonList = db.fetchObj(config.DbKeys.InstalledApps);
+    var appJsonList = db.fetchObj(config.DbKeys.InstalledApps) || [];
 
     appJsonList.forEach(function sortApp(appJson) {
       if (appJson.state === LeapApp.States.Uninstalled) {
