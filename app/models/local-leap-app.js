@@ -67,6 +67,8 @@ var LocalLeapApp = LeapApp.extend({
       args.tilePath = config.LocalAppTilePath;
     }
 
+    args.deletable = false;
+
     LeapApp.prototype.constructor.call(this, args);
   },
 
