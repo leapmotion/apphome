@@ -34,11 +34,12 @@
   <!--<script src="./static/js/leap.min.js"></script>-->
 </head>
 <body class="startup">
+
+
   <script>
     (function() {
       process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'production';
       var path = require('path');
-      global.window = window;
       global.$ = window.$;
       global._ = window._;
       global.LeapHomeDir = path.resolve('.');
