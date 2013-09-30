@@ -9,6 +9,7 @@
   "chromium-args": "--disable-gpu --disable-software-rasterizer --skip-gpu-data-loading",
   "window": {
     "title": "Airspace Home",
+    "icon": "static/icon/icon.png",
     "show": true,
     "toolbar": false,
     "width": 640,
