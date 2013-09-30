@@ -95,6 +95,15 @@ var config = {
   ModulePaths: {
 //    LeapJs: '../../utils/leap.js',
     Pubnub: 'pubnub'
+  },
+
+  mainWindowOptions: {
+    "title": "Airspace Home",
+    "icon": "static/icon/icon.png",
+    "show": false,
+    "toolbar": process.env.LEAPHOME_ENV === 'development',
+    "min_width": 932,
+    "min_height": 699
   }
 
 };

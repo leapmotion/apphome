@@ -41,8 +41,8 @@ var PlatformControlPanelPaths = {
 
 function maximizeWindow() {
   var win = nwGui.Window.get();
-  win.show();
   win.maximize();
+  win.show();
   win.setAlwaysOnTop(true);
   win.setAlwaysOnTop(false);
 }

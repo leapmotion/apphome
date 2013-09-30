@@ -161,12 +161,15 @@ function firstRun(cb) {
 }
 
 function setupMainWindow(cb) {
+  if (global.splashWindow) {
+    global.splashWindow.hide();
+  }
   windowChrome.maximizeWindow();
 
   // TODO: move to an explicit step at end?
   window.setTimeout(function() {
     $('body').removeClass('startup');
-  }, 50);
+  }, 0);
 
   cb && cb(null);
 }
