@@ -1,76 +1,74 @@
+var AdmZip = require('adm-zip');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var plist = require('plist');
+var unzip = require('unzip');
 
 var shell = require('./shell.js');
 
 var IgnoredWindowsFileRegex = /^\.|^__macosx$/i;
 var MaxChildProcessBufferSize = 1024 * 1024 * 5; // 5 MB
 
-function unzip(src, dest, cb, legacy) {
-  if (os.platform() === 'win32') {
-    if (! legacy) {
-      var stats = fs.statSync(src);
-      if (stats.size > 290000000 || // 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
-          stats.size == 11247281 || // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
-          path.basename(dest).match(/JungleJumper/) // special-case JungleJumper 1.0.xHP.zip avoid crash in adm-zip
-          ) {
-        try {
-          console.log('Looking for unzip (chunked) package');
-          var NodeUnzip = require('unzip');
-          console.log('Found unzip package');
-          fs.createReadStream(src).pipe(NodeUnzip.Extract({ path: dest }))
-          .on('close', function() {
-            console.log('Extracted ' + src + ' to ' + dest + ' using unzip (chunked) package');
-            cb && cb(null);
-          })
-          .on('error', function(err) {
-            console.error('Late error running unzip (chunked), download may loop: ' + err);
-            cb && cb(err);
-          });
-          return;
-        } catch(err) {
-          console.error('Caught error: ' + err);
-          console.error('Error attempting to use unzip module, now trying adm-zip');
-        }
-      }
+function unzipViaNodeUnzip(src, dest, cb) {
+  var inputStream = fs.createReadStream(src);
+  var outputStream = unzip.Extract({ path: dest });
 
-      try {
-        console.log('Looking for adm-zip package');
-        var AdmZip = require('adm-zip');
-        console.log('Found adm-zip package');
-        var zip = new AdmZip(src);
+  outputStream.on('close', function() {
+    cb && cb(null);
+    cb = null;
+  });
+  outputStream.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
+  console.log('Unzipping '+ src + ' to ' + dest + ' with node-unzip.');
+  inputStream.pipe(outputStream);
+}
 
-        var zipEntries = zip.getEntries(); // an array of ZipEntry records
-        zipEntries.forEach(function(zipEntry) {
-            console.log(zipEntry.toString()); // outputs zip entries information
-        });
-
-        zip.extractAllTo(dest, true);
-        console.log('Extracted ' + src + ' to ' + dest + ' using the adm-zip package');
-        cb && cb(null);
-        return;
-      } catch(err) {
-        console.error('Caught error: ' + err);
-        console.error('Error attempting to use adm-zip package, now trying command-line');
-      }
-    }
-
-    var command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
-    console.log('\n\nUsing shell to unzip: ' + command);
-    exec(command, { maxBuffer: 1024 * 1024 }, cb); 
-  } else if (os.platform() === 'darwin') {
-    var command = 'unzip -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
-    console.log('\n\nUsing shell to unzip: ' + command);
-    exec(command, { maxBuffer: MaxChildProcessBufferSize }, cb);
-  } else {
-    cb && cb(new Error("Don't know how to unzip on platform: " + os.platform()));
+function unzipViaAdmZip(src, dest, cb) {
+  try {
+    var zip = new AdmZip(src);
+    console.log('Unzipping ' + src + ' to ' + dest + ' with AdmZip.');
+    zip.extractAllTo(dest, true);
+    cb && cb(null);
+  } catch(err) {
+    cb && cb(err);
   }
 }
 
-function extractAppZip(src, dest, cb, legacy) {
+function unzipViaShell(src, dest, cb) {
+  var command;
+  if (os.platform() === 'win32') {
+    command = shell.escape(path.join(__dirname, '..', '..', 'bin', 'unzip.exe')) + ' -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+  } else {
+    command = 'unzip -o ' + shell.escape(src) + ' -d ' + shell.escape(dest);
+  }
+  console.log('Unzipping with command: ' + command);
+  exec(command, { maxBuffer: MaxChildProcessBufferSize }, cb);
+}
+
+function unzipFile(src, dest, shellUnzipOnly, cb) {
+  console.log('Unzipping ' + src);
+  unzipViaShell(src, dest, function(err) {
+    if (err && !shellUnzipOnly) {
+      var stats = fs.statSync(src);
+      if (os.platform() === 'win32' &&
+          (stats.size > 290000000 || // 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
+           stats.size == 11247281 || // special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
+           path.basename(dest).match(/JungleJumper/))) { // special-case JungleJumper 1.0.xHP.zip avoid crash in adm-zip
+        unzipViaNodeUnzip(src, dest, cb);
+      } else {
+        unzipViaAdmZip(src, dest, cb);
+      }
+    } else {
+      cb && cb(err);
+    }
+  });
+}
+
+function extractAppZip(src, dest, shellUnzipOnly, cb) {
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
@@ -81,7 +79,7 @@ function extractAppZip(src, dest, cb, legacy) {
     return cb && cb(err);
   }
 
-  unzip(src, dest, function(err) {
+  unzipFile(src, dest, shellUnzipOnly, function(err) {
     if (err) {
       return cb && cb(err);
     }
@@ -105,7 +103,7 @@ function extractAppZip(src, dest, cb, legacy) {
       cb && cb(err);
     }
     cb(null);
-  }, legacy);
+  });
 }
 
 function extractAppDmg(src, dest, cb) {
@@ -207,7 +205,7 @@ function extractAppDmg(src, dest, cb) {
   });
 }
 
-module.exports.unzip = unzip;
+module.exports.unzip = unzipFile;
 module.exports.unzipApp = extractAppZip;
 module.exports.undmgApp = extractAppDmg;
 
