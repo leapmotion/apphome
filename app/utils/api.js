@@ -1,16 +1,16 @@
+var async = require('async');
 var domain = require('domain');
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 var qs = require('querystring');
 var url = require('url');
-var db = require('./db.js');
-var enumerable = require('./enumerable.js');
-var async = require('async');
 
 var config = require('../../config/config.js');
-var httpHelper = require('./http-helper.js');
+var db = require('./db.js');
 var drm = require('./drm.js');
+var enumerable = require('./enumerable.js');
+var httpHelper = require('./http-helper.js');
 var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
@@ -303,20 +303,27 @@ function sendDeviceData() {
   });
 }
 
-function parsePrebundledManifest(manifest) {
+function parsePrebundledManifest(manifest, cb) {
   console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 2));
+
+  var installationFns = [];
 
   manifest.forEach(function (appJson) {
     var app = handleAppJson(appJson);
     if (app && !uiGlobals.myApps.get(app.get('appId'))) {
-      console.log('Installing prebundled app: ' + app.get('name'));
-      app.install(function (err) {
-        if (err) {
-          console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
-        }
+      installationFns.push(function(callback) {
+        console.log('Installing prebundled app: ' + app.get('name'));
+        app.install(function (err) {
+          if (err) {
+            console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
+          } else {
+            subscribeToAppChannel(app.get('appId'));
+          }
+          callback(null);
+        });
       });
-      subscribeToAppChannel(app.get('appId'));
     }
+    async.parallelLimit(installationFns, 2, cb);
   });
 }
 
