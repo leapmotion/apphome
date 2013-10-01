@@ -112,6 +112,8 @@ module.exports = LeapApp.extend({
           return cb(err);
         }
         var downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
+          this.off('cancel-download');
+
           if (err) {
             return cb(err);
           }
@@ -134,11 +136,7 @@ module.exports = LeapApp.extend({
               downloadProgress = null;
               this.set('noAutoInstall', true);
               this.off('cancel-download', cancelDownload);
-              if (this.isUpdatable() && this.get('state') === LeapApp.States.Waiting) {
-                this.set('state', LeapApp.States.Ready);
-              } else {
-                this.set('state', LeapApp.States.NotYetInstalled);
-              }
+              this.set('state', LeapApp.States.NotYetInstalled);
             }
           } else {
             this.off('cancel-download', cancelDownload);

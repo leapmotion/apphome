@@ -42,42 +42,52 @@ function dequeue() {
         }
         installQueue.shift();
       }
+      queuedItem.app.off('change:state', showAppropriateDownloadControl);
+      showAppropriateDownloadControl();
       if (_.isFunction(queuedItem.cb)) {
         queuedItem.cb.apply(this, arguments);
       }
-      showAppropriateDownloadControl();
       dequeue();
     });
+    queuedItem.app.on('change:state', showAppropriateDownloadControl);
   }
 }
 
 function showAppropriateDownloadControl(fade) {
-  var updates = 0,
-      downloads = 0,
-      $control;
+  var updates = 0;
+  var downloads = 0;
+  var downloading = 0;
+  var $control;
 
   $('.download-control').hide();
 
   uiGlobals.myApps.forEach(function(app) {
-    if (app.isUpdatable()) updates++;
-    if (app.get('state') === LeapApp.States.NotYetInstalled) downloads++;
+    var appState = app.get('state');
+    if (app.isUpdatable()) {
+      updates++;
+    } else if (appState === LeapApp.States.NotYetInstalled) {
+      downloads++;
+    } else if (appState === LeapApp.States.Downloading) {
+      downloading++;
+    }
   });
 
   if (installQueue.length > 0) {
-    if (fade) {
-      $('#cancel-all').fadeIn('slow');
-    } else {
-      $('#cancel-all').show();
+    if (downloading > 0) {
+      if (fade === true) {
+        $('#cancel-all').fadeIn('slow');
+      } else {
+        $('#cancel-all').show();
+      }
     }
-    return;
-  } else if (updates) {
+  } else if (updates > 0) {
     $control = $('#update-all');
-  } else if (downloads) {
+  } else if (downloads > 0) {
     $control = $('#download-all');
   }
 
   if ($control) {
-    if (fade) {
+    if (fade === true) {
       $control.fadeIn('slow');
     } else {
       $control.show();
@@ -86,10 +96,18 @@ function showAppropriateDownloadControl(fade) {
 }
 
 function cancelAll() {
-  installQueue.forEach(function(queueData) {
-    queueData.app.trigger('cancel-download');
-  });
-  installQueue = [];
+  // Reset waiting apps
+  for (var i = 0, len = installQueue.length; i < len - 1; i++) {
+    var app = installQueue.pop().app;
+    if (app.isUpdatable() && app.get('state') === LeapApp.States.Waiting) {
+      app.set('state', LeapApp.States.Ready);
+    } else {
+      app.set('state', LeapApp.States.NotYetInstalled);
+    }
+  }
+
+  // Cancel current download, if possible
+  installQueue[0].app.trigger('cancel-download');
 }
 
 module.exports.enqueue = enqueue;
