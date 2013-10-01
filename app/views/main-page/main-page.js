@@ -148,6 +148,13 @@ module.exports = BaseView.extend({
   _initSearchField: function() {
     var $body = $('body');
 
+    function clearSearch() {
+      uiGlobals.trigger('search', '');
+      $('#search-form').removeClass('active');
+      $('#search').val('');
+      $('#search').blur();
+    }
+
     // Search filtering is initialized inside the carousel
     $body.keypress(function(evt) {
       if (!this.myAppsCarousel.isAnimating()) {
@@ -161,12 +168,12 @@ module.exports = BaseView.extend({
     // and blur event fires before click :-(
     $body.keyup((function(evt) {
       if (evt.which === 27) {
-        $body.click();
+        clearSearch();
       } else if (evt.which === 13) {
         var visibleApps = this.myAppsCarousel.visibleApps();
         if (visibleApps.length === 1) {
           visibleApps[0].launch();
-          $body.click();
+          clearSearch();
         }
       }
     }).bind(this));
@@ -190,10 +197,7 @@ module.exports = BaseView.extend({
       }
 
       if (($search.val() !== '') || ($search.parent().is('.active'))) {
-        uiGlobals.trigger('search', '');
-        $('#search-form').removeClass('active');
-        $('#search').val('');
-        $('#search').blur();
+        clearSearch();
       } else if ($target.is('.icon-search')) {
         $search.focus();
       }
