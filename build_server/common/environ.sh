@@ -34,16 +34,17 @@ if [ ! -n "${BUILD_BRANCH}" ]; then
   echo "Warning: GIT_BRANCH and BUILD_BRANCH were not set. Defaulting to ${BUILD_BRANCH}"
 fi
 
-_branch_basename=$(basename "${BUILD_BRANCH}")
+BRANCH_NAME=$(basename "${BUILD_BRANCH}")
+BRANCH_BASENAME=${BRANCH_NAME}
 
-case "${_branch_basename}" in
-release-*) _branch_basename=release ;;
-hotfix-*) _branch_basename=hotfix ;;
+case "${BRANCH_NAME}" in
+release-*) BRANCH_BASENAME=release ;;
+hotfix-*) BRANCH_BASENAME=hotfix ;;
 esac
 
 if [ -z "$AIRSPACE_OUT_DIR" ]; then
-  export AIRSPACE_OUT_DIR="$_branch_basename"
-  echo "Airspace output directory is not set. Defaulting to $_branch_basename."
+  export AIRSPACE_OUT_DIR="${BRANCH_BASENAME}"
+  #echo "Airspace output directory is not set. Defaulting to $BRANCH_NAME."
 fi
 
 #airspace builds are always public
@@ -75,7 +76,7 @@ _audience=public
 
 #final archive name will be <product>_${BUILD_IDENTIFIER}.<archive_format_ext>
 #e.g. Platform_master_public_win_x86_0.8.1+5912.zip
-export BUILD_IDENTIFIER="${_branch_basename}_${_audience}_${BUILD_PLAT}_${BUILD_ARCH}_${AIRSPACE_VERSION_STRING}"
+export BUILD_IDENTIFIER="${BRANCH_NAME}_${_audience}_${BUILD_PLAT}_${BUILD_ARCH}_${AIRSPACE_VERSION_STRING}"
 
 unset _audience
 
