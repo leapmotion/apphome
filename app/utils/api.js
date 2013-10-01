@@ -306,12 +306,11 @@ function sendDeviceData() {
 function parsePrebundledManifest(manifest, cb) {
   console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 2));
 
-  var installationFns = [];
-
+  var installationFunctions = [];
   manifest.forEach(function (appJson) {
     var app = handleAppJson(appJson);
     if (app && !uiGlobals.myApps.get(app.get('appId'))) {
-      installationFns.push(function(callback) {
+      installationFunctions.push(function(callback) {
         console.log('Installing prebundled app: ' + app.get('name'));
         app.install(function (err) {
           if (err) {
@@ -323,8 +322,9 @@ function parsePrebundledManifest(manifest, cb) {
         });
       });
     }
-    async.parallelLimit(installationFns, 2, cb);
   });
+
+  async.parallelLimit(installationFunctions, 2, cb);
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
