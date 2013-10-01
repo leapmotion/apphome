@@ -17,11 +17,11 @@ module.exports = Modal.extend({
     appJson.changelog = leapApp.getMarkdown('changelog');
     appJson.description = leapApp.getMarkdown('description');
 
-    if (leapApp.isUpgradable()) {
-      var upgradeApp = leapApp.get('availableUpgrade');
-      if (_.isFunction(upgradeApp.toJSON)) {
-        _(appJson).extend(upgradeApp.toJSON());
-        appJson.changelog = upgradeApp.getMarkdown('changelog');
+    if (leapApp.isUpdatable()) {
+      var updateApp = leapApp.get('availableUpdate');
+      if (_.isFunction(updateApp.toJSON)) {
+        _(appJson).extend(updateApp.toJSON());
+        appJson.changelog = updateApp.getMarkdown('changelog');
       }
     }
     this.$el.append(this.templateHtml({
@@ -32,7 +32,7 @@ module.exports = Modal.extend({
       description_label: i18n.translate('Description'),
       cancel_label:      i18n.translate('Cancel'),
       install_label:     i18n.translate('Install %1$s').fetch(appJson.name),
-      upgrade_label:     i18n.translate('Update App'),
+      update_label:     i18n.translate('Update App'),
       launch_label:      i18n.translate('Launch App')
     }));
 
@@ -45,9 +45,9 @@ module.exports = Modal.extend({
 
     this.$('.button.confirm').hide().click(this.options.onConfirm);
     this.$('.button.launch').hide().click(this.options.onLaunch);
-    if (leapApp.isUpgradable()) {
+    if (leapApp.isUpdatable()) {
       this.$('.button.launch').show();
-      this.$('.button.confirm.upgrade').show();
+      this.$('.button.confirm.update').show();
     } else {
       this.$('.button.confirm.install').show();
     }

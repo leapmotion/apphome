@@ -59,8 +59,8 @@ var Tile = BaseView.extend({
 
     this.$el.addClass(this._stateToClass(leapApp.get('state')));
 
-    if (leapApp.isUpgradable()) {
-      this.$el.addClass('upgrade');
+    if (leapApp.isUpdatable()) {
+      this.$el.addClass('update');
     }
 
     this._showOrHideIcon();
@@ -71,8 +71,8 @@ var Tile = BaseView.extend({
       this._setupDragging();
     }, this);
 
-    this.listenTo(leapApp, 'change:availableUpgrade', function() {
-      this.$el.toggleClass('upgrade', leapApp.isUpgradable());
+    this.listenTo(leapApp, 'change:availableUpdate', function() {
+      this.$el.toggleClass('update', leapApp.isUpdatable());
     });
 
     this.listenTo(leapApp, 'progress', function(progress) {
@@ -83,8 +83,8 @@ var Tile = BaseView.extend({
 
       if (leapApp.isInstallable()) {
         this._promptForInstall();
-      } else if (leapApp.isUpgradable()) {
-        this._promptForUpgrade();
+      } else if (leapApp.isUpdatable()) {
+        this._promptForUpdate();
       } else if (leapApp.isRunnable()) {
         this._launchApp();
       }
@@ -167,13 +167,13 @@ var Tile = BaseView.extend({
     }
   },
 
-  _promptForUpgrade: function() {
+  _promptForUpdate: function() {
     var leapApp = this.options.leapApp;
 
     var downloadModal = new DownloadModalView({
       leapApp: leapApp,
       onConfirm: function() {
-        this.$el.removeClass('upgrade');
+        this.$el.removeClass('update');
         downloadModal.remove();
         installManager.enqueue(leapApp, null, true);
       }.bind(this),

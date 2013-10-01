@@ -22,7 +22,7 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml({
       trash_label: i18n.translate('Trash'),
       download_label: i18n.translate('Download All'),
-      upgrade_label: i18n.translate('Upgrade All'),
+      update_label: i18n.translate('Update All'),
       cancel_label: i18n.translate('Cancel All')
     }));
     this._initCarousel();
@@ -44,9 +44,9 @@ module.exports = BaseView.extend({
   },
 
   _initDownloadControls: function() {
-    this.$('#upgrade-all').click(function(evt) {
+    this.$('#update-all').click(function(evt) {
       uiGlobals.myApps.forEach(function(app) {
-        if (app.isUpgradable()) {
+        if (app.isUpdatable()) {
           installManager.enqueue(app);
         }
       });
@@ -65,14 +65,11 @@ module.exports = BaseView.extend({
     });
 
     this.$('#cancel-all').click(function(evt) {
-      uiGlobals.myApps.forEach(function(app) {
-        installManager.cancelAll();
-      });
-
+      installManager.cancelAll();
       $(this).hide();
     });
 
-    this.$('#upgrade-all').hide();
+    this.$('#update-all').hide();
     this.$('#download-all').hide();
     this.$('#cancel-all').hide();
 

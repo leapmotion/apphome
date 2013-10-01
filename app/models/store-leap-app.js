@@ -35,7 +35,7 @@ module.exports = LeapApp.extend({
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
 
-    this.set('availableUpgrade', null);
+    this.set('availableUpdate', null);
   },
 
   isStoreApp: function() {
@@ -44,9 +44,9 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
-    if (this.isUpgradable()) {
+    if (this.isUpdatable()) {
       mixpanel.trackAppUpgrade();
-      this.set(this.get('availableUpgrade').toJSON());
+      this.set(this.get('availableUpdate').toJSON());
       console.log('Upgrading: ' + this.get('name'));
 
       // refresh icon and tile
@@ -55,7 +55,7 @@ module.exports = LeapApp.extend({
 
       this._installFromServer(function(err) {
         if (!err) {
-          this.set('availableUpgrade', null);
+          this.set('availableUpdate', null);
         }
         cb && cb(err);
       }.bind(this));
@@ -134,7 +134,11 @@ module.exports = LeapApp.extend({
               downloadProgress = null;
               this.set('noAutoInstall', true);
               this.off('cancel-download', cancelDownload);
-              this.set('state', LeapApp.States.NotYetInstalled);
+              if (this.isUpdatable() && this.get('state') === LeapApp.States.Waiting) {
+                this.set('state', LeapApp.States.Ready);
+              } else {
+                this.set('state', LeapApp.States.NotYetInstalled);
+              }
             }
           } else {
             this.off('cancel-download', cancelDownload);

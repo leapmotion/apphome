@@ -10,6 +10,7 @@ var async = require('async');
 
 var config = require('../../config/config.js');
 var httpHelper = require('./http-helper.js');
+var installManager = require('./install-manager.js');
 var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
@@ -78,7 +79,7 @@ function handleAppJson(appJson) {
         });
       } else if (app.get('versionId') > existingApp.get('versionId')) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
-        existingApp.set('availableUpgrade', app);
+        existingApp.set('availableUpdate', app);
         getAppDetails(app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));
@@ -162,6 +163,8 @@ function connectToStoreServer() {
               }
             }
           });
+
+          installManager.showAppropriateDownloadControl();
         }
       });
     }
