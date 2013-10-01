@@ -78,7 +78,7 @@ function handleAppJson(appJson) {
         });
       } else if (app.get('versionId') > existingApp.get('versionId')) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
-        existingApp.set('availableUpgrade', app);
+        existingApp.set('availableUpdate', app);
         getAppDetails(app);
       } else {
         existingApp.set('binaryUrl', app.get('binaryUrl'));

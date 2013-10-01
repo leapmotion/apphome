@@ -88,8 +88,8 @@ msgstr "Trash"
 msgid "Download All"
 msgstr "Download All"
 
-msgid "Upgrade All"
-msgstr "Upgrade All"
+msgid "Update All"
+msgstr "Update All"
 
 msgid "Cancel All"
 msgstr "Cancel All"
