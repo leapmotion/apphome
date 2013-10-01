@@ -32,7 +32,7 @@ module.exports = Modal.extend({
       description_label: i18n.translate('Description'),
       cancel_label:      i18n.translate('Cancel'),
       install_label:     i18n.translate('Install %1$s').fetch(appJson.name),
-      update_label:     i18n.translate('Update App'),
+      update_label:      i18n.translate('Update App'),
       launch_label:      i18n.translate('Launch App')
     }));
 
