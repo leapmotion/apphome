@@ -34,7 +34,12 @@ if [ ! -n "${BUILD_BRANCH}" ]; then
   echo "Warning: GIT_BRANCH and BUILD_BRANCH were not set. Defaulting to ${BUILD_BRANCH}"
 fi
 
-_branch_basename="$(basename ${BUILD_BRANCH})"
+_branch_basename=$(basename "${BUILD_BRANCH}")
+
+case "${_branch_basename}" in
+release-*) _branch_basename=release ;;
+hotfix-*) _branch_basename=hotfix ;;
+esac
 
 if [ -z "$AIRSPACE_OUT_DIR" ]; then
   export AIRSPACE_OUT_DIR="$_branch_basename"
