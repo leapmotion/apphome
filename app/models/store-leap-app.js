@@ -81,7 +81,7 @@ module.exports = LeapApp.extend({
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
 
     var tempFilename;
-    var cleanupTempfileAndContinue = function(err) {
+    function cleanupTempfileAndContinue(err) {
       try {
         if (tempFilename && fs.existsSync(tempFilename)) {
           fs.deleteSync(tempFilename);
@@ -98,7 +98,7 @@ module.exports = LeapApp.extend({
       console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
 
       if (os.platform() === 'win32') {
-        extract.unzipApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+        extract.unzipApp(tempFilename, this._appDir(), true, cleanupTempfileAndContinue);
       } else if (os.platform() === 'darwin') {
         extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
       } else {
@@ -119,7 +119,7 @@ module.exports = LeapApp.extend({
           console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
           if (os.platform() === 'win32') {
-            extract.unzipApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
+            extract.unzipApp(tempFilename, this._appDir(), false, cleanupTempfileAndContinue);
           } else if (os.platform() === 'darwin') {
             extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
           } else {

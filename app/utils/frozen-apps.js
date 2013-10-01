@@ -47,7 +47,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
   var dest = path.join(config.PlatformTempDirs[os.platform()], 'frozen');
   var manifest;
 
-  extract.unzip(bundlePath, dest, function(err) {
+  extract.unzip(bundlePath, dest, true, function(err) {
     if (err) {
       console.error('Failed to unzip ' + bundlePath + ': ' + (err.stack || err));
       cb && cb(err);
@@ -69,7 +69,7 @@ function _expandFreezeDriedApps(bundlePath, cb) {
         cb && cb(err);
       }
     }
-  }, true);
+  });
 }
 
 module.exports.get = getFrozenApps;
