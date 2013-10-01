@@ -10,6 +10,7 @@ var async = require('async');
 
 var config = require('../../config/config.js');
 var httpHelper = require('./http-helper.js');
+var installManager = require('./install-manager.js');
 var drm = require('./drm.js');
 var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
@@ -162,6 +163,8 @@ function connectToStoreServer() {
               }
             }
           });
+
+          installManager.showAppropriateDownloadControl();
         }
       });
     }
