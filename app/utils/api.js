@@ -45,7 +45,8 @@ function cleanUpAppJson(appJson) {
     version: appJson.version_number,
     changelog: appJson.changelog,
     description: appJson.description,
-    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null
+    releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null,
+    noAutoInstall: appJson.noAutoInstall
   };
   Object.keys(cleanAppJson).forEach(function(key) {
     if (!cleanAppJson[key]) {
@@ -312,19 +313,22 @@ function parsePrebundledManifest(manifest, cb) {
 
   var installationFunctions = [];
   manifest.forEach(function (appJson) {
-    var app = handleAppJson(appJson);
-    if (app && !uiGlobals.myApps.get(app.get('appId'))) {
-      installationFunctions.push(function(callback) {
-        console.log('Installing prebundled app: ' + app.get('name'));
-        app.install(function (err) {
-          if (err) {
-            console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
-          } else {
-            subscribeToAppChannel(app.get('appId'));
-          }
-          callback(null);
+    appJson.noAutoInstall = true;
+    if (!uiGlobals.myApps.get(appJson.app_id)) {
+      var app = handleAppJson(appJson);
+      if (app) {
+        installationFunctions.push(function(callback) {
+          console.log('Installing prebundled app: ' + app.get('name'));
+          app.install(function (err) {
+            if (err) {
+              console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
+            } else {
+              subscribeToAppChannel(app.get('appId'));
+            }
+            callback(null);
+          });
         });
-      });
+      }
     }
   });
 

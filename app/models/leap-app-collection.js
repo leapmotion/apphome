@@ -35,5 +35,5 @@ module.exports = window.Backbone.Collection.extend({
 
   comparator: function(leapApp) {
     return leapApp.sortScore();
-  },
+  }
 });
