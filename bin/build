@@ -138,23 +138,21 @@ function buildForWindows(cb) {
     async.series([
       getExecFn(clearIconCommand),
       getExecFn(setIconCommand),
-      getExecFn(setExeDetailsCommand)
+      getExecFn(setExeDetailsCommand),
+      function (cb) {
+        fs.copy(path.join(buildDir(), archiveName), path.join(buildDir('windows'), 'package.nw'), cb);
+      },
+      function (cb) {
+        fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir('windows'), 'Airspace_NoGPU.cmd'), cb);
+      }
     ], function(err) {
       if (err) {
         return cb(err);
       }
 
-      var executable = fs.readFileSync(exePath);
-      var nwArchive = fs.readFileSync(path.join(buildDir(), archiveName));
-      fs.writeFileSync(path.join(buildDir('windows'), packageJson.name + '.exe'), Buffer.concat([ executable, nwArchive ]));
-      fs.unlinkSync(path.join(buildDir('windows'), 'nw.exe'));
-      fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir('windows'), 'Airspace_NoGPU.cmd'), function(err) {
-        if (err) {
-          return cb(err);
-        }
-        console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
-        cb(null);
-      });
+      fs.renameSync(exePath, path.join(buildDir('windows'), packageJson.name + '.exe'));
+      console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
+      cb(null);
     });
   });
 }
