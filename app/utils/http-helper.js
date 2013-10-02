@@ -98,15 +98,23 @@ function getToDisk(requestUrl, opts, cb) {
           var end = Math.min(start + DownloadChunkSize - 1, fileSize);
           currentRequest = downloadChunk(requestUrl, start, end, function(err, chunk) {
             if (err) {
-              console.warn('Downloading chunk failed: ' + start + ' - ' + end + ' of ' + fileSize + ' ' + (err.stack || err) + ' (' + requestUrl + ')');
-              fs.closeSync(fd);
+              console.info('Downloading chunk failed: ' + start + ' - ' + end + ' of ' + fileSize + ' ' + (err.stack || err) + ' (' + requestUrl + ')');
+              fs.close(fd);
               cb && cb(err);
               cb = null;
             } else {
               bytesSoFar += chunk.length;
-              fs.writeSync(fd, chunk, 0, chunk.length, start);
-              chunk = null;
-              downloadAllChunks(numRemainingChunks - 1);
+              fs.write(fd, chunk, 0, chunk.length, start, function(err) {
+                chunk = null;
+                if (err) {
+                  console.info('Writing chunk failed: ' + start + ' - ' + end + ' of ' + fileSize + ' ' + (err.stack || err) + ' (' + requestUrl + ')');
+                  fs.close(fd);
+                  cb && cb(err);
+                  cb = null;
+                } else {
+                  downloadAllChunks(numRemainingChunks - 1);
+                }
+              });
             }
           });
           currentRequest.onprogress = function(evt) {
@@ -115,13 +123,16 @@ function getToDisk(requestUrl, opts, cb) {
             }
           };
         } else {
-          fs.closeSync(fd);
-          if (bytesSoFar !== fileSize) {
-            cb && cb(new Error('Expected file of size: ' + fileSize + ' but got: ' + bytesSoFar));
-          } else {
-            cb && cb(null, destPath);
-          }
-          cb = null;
+          fs.close(fd, function(err) {
+            if (err) {
+              cb && cb(err);
+            } else if (bytesSoFar !== fileSize) {
+              cb && cb(new Error('Expected file of size: ' + fileSize + ' but got: ' + bytesSoFar));
+            } else {
+              cb && cb(null, destPath);
+            }
+            cb = null;
+          });
         }
       }
       downloadAllChunks(numChunks);

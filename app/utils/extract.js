@@ -15,6 +15,10 @@ function unzipViaNodeUnzip(src, dest, cb) {
   var inputStream = fs.createReadStream(src);
   var outputStream = unzip.Extract({ path: dest });
 
+  inputStream.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
   outputStream.on('close', function() {
     cb && cb(null);
     cb = null;
