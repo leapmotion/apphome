@@ -67,7 +67,7 @@ function showAppropriateDownloadControl(fade) {
       updates++;
     } else if (appState === LeapApp.States.NotYetInstalled) {
       downloads++;
-    } else if (appState === LeapApp.States.Downloading) {
+    } else if (appState === LeapApp.States.Connecting || appState === LeapApp.States.Downloading) {
       downloading++;
     }
   });

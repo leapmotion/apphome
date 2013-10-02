@@ -106,12 +106,29 @@ module.exports = LeapApp.extend({
       }
       cb && cb(null);
     } else {
+      var downloadProgress;
+
+      function cancelDownload() {
+        if (downloadProgress && downloadProgress.cancel()) {
+          this.off('cancel-download', cancelDownload);
+          downloadProgress.removeAllListeners();
+          downloadProgress = null;
+          this.set('noAutoInstall', true);
+          this.set('state', LeapApp.States.NotYetInstalled);
+          this._shouldCancelDownload = false;
+        } else {
+          this._shouldCancelDownload = true;
+        }
+      }
+
+      this.on('cancel-download', cancelDownload, this);
+
       console.warn('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
       oauth.getAccessToken(function(err, accessToken) {
         if (err) {
           return cb(err);
         }
-        var downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
+        downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
           this.off('cancel-download');
 
           if (err) {
@@ -129,26 +146,18 @@ module.exports = LeapApp.extend({
           }
         }.bind(this));
 
-        function cancelDownload() {
-          if (downloadProgress) {
-            var cancelled = downloadProgress.cancel();
-            if (cancelled) {
-              downloadProgress = null;
-              this.set('noAutoInstall', true);
-              this.off('cancel-download', cancelDownload);
-              this.set('state', LeapApp.States.NotYetInstalled);
+        if (this._shouldCancelDownload) {
+          cancelDownload();
+        } else {
+          downloadProgress.on('progress', function(progress) {
+            if (this._shouldCancelDownload) {
+              cancelDownload();
+            } else {
+              this.set('state', LeapApp.States.Downloading);
+              this.trigger('progress', progress);
             }
-          } else {
-            this.off('cancel-download', cancelDownload);
-          }
+          }.bind(this));
         }
-
-        this.on('cancel-download', cancelDownload, this);
-
-        downloadProgress.on('progress', function(progress) {
-          this.set('state', LeapApp.States.Downloading);
-          this.trigger('progress', progress);
-        }.bind(this));
       }.bind(this));
     }
   },
