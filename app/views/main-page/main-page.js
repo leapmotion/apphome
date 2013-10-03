@@ -189,13 +189,14 @@ module.exports = BaseView.extend({
       var $target = $(evt.target);
       var $search = $('#search');
 
-      if (!$target.is('.main-page')) {
+      if (!$target.is('.main-page') && !$target.is('.icon-search')) {
         return;
       }
 
       if (($search.val() !== '') || ($search.parent().is('.active'))) {
         clearSearch();
       } else if ($target.is('.icon-search')) {
+        $('#search-form').addClass('active');
         $search.focus();
       }
     });
