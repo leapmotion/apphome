@@ -1,4 +1,4 @@
-msgid "Welcome"
+﻿msgid "Welcome"
 msgstr "Willkommen"
 
 msgid "Welcome to a whole new world"
@@ -8,10 +8,408 @@ msgid "Below are a few tips to get you started"
 msgstr "Nachfolgend finden Sie einige Tipps als Starthilfe"
 
 msgid "I agree to the Leap Motion %1$s"
-msgstr "Ich habe die im Leap Motion %1$s festgelegten bestimmungen gelesen und stimme zu."
+msgstr "Ich stimme der Leap Motion %1$s"
 
 msgid "End User License Agreement"
-msgstr "Endbenutzer-Lizenzvertrag"
+msgstr "Endbenutzer-Lizenzvereinbarung"
 
 msgid "Continue"
 msgstr "Weiter"
+
+msgid "Airspace, the Leap Motion app store"
+msgstr "Airspace, der App Store von Leap Motion"
+
+msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "Auf Airspace, dem allerersten Ort für die brandneusten Apps, können Sie Ihr Leap Motion-Apps nicht nur finden sondern auch herunterladen und starten."
+
+msgid "Launch Airspace"
+msgstr "Airspace starten"
+
+msgid "Leap Motion End User Software License Agreement"
+msgstr "Leap Motion-Endbenutzer-Softwarelizenzvereinbarung"
+
+msgid "Continue with mouse only"
+msgstr "Nur mit Maus fortfahren"
+
+msgid "Find and launch your Leap Motion apps"
+msgstr "Leap Motion-Apps finden und starten"
+
+msgid "Sync purchases across devices"
+msgstr "Erworbene Produkte gerätübergreifend synchronisieren"
+
+msgid "Discover games, utilities, music, and more in our store!"
+msgstr "Entdecken Sie Spiele, Dienstprogramme, Musik und vieles mehr in unserem Store!"
+
+msgid "Use the same login for purchases, support, and more!"
+msgstr "Nutzen Sie denselben Login für Einkäufe, Support uvm.!"
+
+msgid "Connecting to authentication server..."
+msgstr "Verbindung zum Authentifizierungsserver wird hergestellt ..."
+
+msgid "Preparing for launch..."
+msgstr "Startvorbereitung wird ausgeführt ..."
+
+msgid "Signing you out..."
+msgstr "Sie werden abgemeldet ..."
+
+msgid "No Internet connection"
+msgstr "Keine Internetverbindung"
+
+msgid "Please ensure your Internet connection is working properly."
+msgstr "Vergewisern Sie sich, dass Ihre Internetverbindung einwandfrei funktioniert."
+
+msgid "No apps to display."
+msgstr "Keine Apps zum Anzeigen."
+
+msgid "Waiting..."
+msgstr "Wird gewartet ..."
+
+msgid "Connecting..."
+msgstr "Verbindet ..."
+
+msgid "Downloading..."
+msgstr "Wird heruntergeladen ..."
+
+msgid "Installing..."
+msgstr "Wird installiert ..."
+
+msgid "Opening..."
+msgstr "Wird geöffnet ..."
+
+msgid "Launching..."
+msgstr "Wird gestartet ..."
+
+msgid "Click to Install"
+msgstr "Zum Installieren klicken"
+
+msgid "Trash"
+msgstr "Papierkorb"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Release Date"
+msgstr "Freigabedatum"
+
+msgid "What's New"
+msgstr "Neue Funktionen"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Install %1$s"
+msgstr "%1$s installieren"
+
+msgid "Update App"
+msgstr "App aktualisieren"
+
+msgid "Launch App"
+msgstr "Anwendung starten"
+
+msgid "Controller Settings"
+msgstr "Controller-Einstellungen"
+
+msgid "Exit"
+msgstr "Beenden"
+
+msgid "File"
+msgstr "Datei"
+
+msgid "Sign out %1$s"
+msgstr "%1$s abmelden"
+
+msgid "Account"
+msgstr "Konto"
+
+msgid "About Airspace Home"
+msgstr "Über Airspace Home"
+
+msgid "Airspace Home"
+msgstr "Airspace Home"
+
+msgid "Help"
+msgstr "Hilfe"
+
+msgid "Home"
+msgstr "Startseite"
+
+msgid "Store"
+msgstr "Store"
+
+msgid "You need to sign in or sign up before continuing."
+msgstr "sie müssen sich anmelden oder registrieren, bevor Sie fortfahren können."
+
+msgid "account email"
+msgstr "Konto-E-Mail"
+
+msgid "password"
+msgstr "Password"
+
+msgid "Sign In"
+msgstr "Anmelden"
+
+msgid "Sign Up"
+msgstr "Registrieren"
+
+msgid "Forgot password?"
+msgstr "Passwort vergessen?"
+
+msgid "Invalid email or password."
+msgstr "Ungültige(s) E-Mail oder Passwort."
+
+msgid "account email"
+msgstr "Konto-E-Mail"
+
+msgid "Please enter an email address."
+msgstr "Bitte geben Sie eine E-Mail-Adresse ein."
+
+msgid "Email can't be blank"
+msgstr "Das E-Mail-Feld darf nicht leer sein"
+
+msgid "Send Instructions"
+msgstr "Anweisungen senden"
+
+msgid "Get Started"
+msgstr "Erste Schritte"
+
+msgid "Create username"
+msgstr "Benutzernamen erstellen"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Create password"
+msgstr "Passwort erstellen"
+
+msgid "Confirm password"
+msgstr "Passwort bestätigen"
+
+msgid "Birthdate"
+msgstr "Geburtsdatum"
+
+msgid "Month"
+msgstr "Monat"
+
+msgid "January"
+msgstr "Januar"
+
+msgid "February"
+msgstr "Februar"
+
+msgid "March"
+msgstr "März"
+
+msgid "April"
+msgstr "April"
+
+msgid "May"
+msgstr "Mai"
+
+msgid "June"
+msgstr "Juni"
+
+msgid "July"
+msgstr "Juli"
+
+msgid "August"
+msgstr "August"
+
+msgid "September"
+msgstr "September"
+
+msgid "October"
+msgstr "Oktober"
+
+msgid "November"
+msgstr "November"
+
+msgid "December"
+msgstr "Dezember"
+
+msgid "I agree to the Airspace Terms of Service"
+msgstr "I stimme den Airspace-Servicebedingungen zu"
+
+msgid "Email me Leap Motion news and updates."
+msgstr "Ich möchte Neuigkeiten und Updates von Leap Motion per E-Mail erhalten."
+
+msgid "Sign in to an existing account"
+msgstr "Bei bestehendem Konto anmelden"
+
+msgid "Email can't be blank"
+msgstr "Das E-Mail-Feld darf nicht leer sein"
+
+msgid "Setting a password is required"
+msgstr "Es muss ein Passwort festgelegt werden"
+
+msgid "Username can't be blank"
+msgstr "Das Benutzernamen-Feld darf nicht leer sein"
+
+msgid "Birthdate is required"
+msgstr "Geburtsdatum ist erforderlich"
+
+msgid "You must accept the Terms of Service"
+msgstr "Sie müssen die Servicebedingungen akzeptieren"
+
+msgid "Password entries do not match"
+msgstr "Passworteinträge stimmen nicht überein"
+
+msgid "Username has already been taken"
+msgstr "Benutzername ist bereits vorhanden"
+
+msgid "Setting a password is required"
+msgstr "Es muss ein Passwort festgelegt werden"
+
+msgid "Your username contains invalid characters"
+msgstr "Ihr Benutzername enthält ungültige Zeichen"
+
+msgid "A complete birthdate is required"
+msgstr "Das Geburtsdatum muss vollständig sein"
+
+msgid "Password is too short (minimum is 6 characters)"
+msgstr "Passwort ist zu kurz (mindstens 6 Zeichen)"
+
+msgid "About Airspace"
+msgstr "Über Airspace"
+
+msgid "Hide Airspace"
+msgstr "Airspace ausblenden"
+
+msgid "Hide Others"
+msgstr "Andere ausblenden"
+
+msgid "Show All"
+msgstr "Alles anzeigen"
+
+msgid "Quit Airspace"
+msgstr "Airspace verlassen"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Undo"
+msgstr "Rückgängig"
+
+msgid "Redo"
+msgstr "Wiederholen"
+
+msgid "Cut"
+msgstr "Ausschneiden"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "Paste"
+msgstr "Einfügen"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Select All"
+msgstr "Alles auswählen"
+
+msgid "Account"
+msgstr "Konto"
+
+msgid "Sign Out ##"
+msgstr "## abmelden"
+
+msgid "Window"
+msgstr "Fenster"
+
+msgid "Minimize"
+msgstr "Minimieren"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Bring All to Front"
+msgstr "Alles in den Vordergrund bringen"
+
+msgid "Changes will take effect on relaunch"
+msgstr "Änderungen werden nach einem Neustart wirksam"
+
+msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgstr "Die Ausrichtung ist fehlgeschlagen. Stellen Sie bitte sicher, dass die aktuellen Grafiktreiber installiert sind."
+
+msgid "Error Report"
+msgstr "Fehlerbericht"
+
+msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgstr "Beim letzten Mal waren die Leap Motion Service oder eines der zugehörigen Programme abgestürzt. Wenn Sie uns den Fehlerbericht zusenden, würde uns das bei der Verbesserung der Software helfen."
+
+msgid "Send Error Report"
+msgstr "Fehlerbericht senden"
+
+msgid "Don't Send"
+msgstr "Nicht senden"
+
+msgid "Airspace Store"
+msgstr "Airspace Store"
+
+msgid "App Store"
+msgstr "App Store"
+
+msgid "Download all"
+msgstr "Alle herunterladen"
+
+msgid "Download all applications"
+msgstr "Alle Anwendungen herunterladen"
+
+msgid "Download all apps"
+msgstr "Alle Apps herunterladen"
+
+msgid "Install all"
+msgstr "Alle installieren"
+
+msgid "Install all applications"
+msgstr "Alle Anwendungen installieren"
+
+msgid "Install all apps"
+msgstr "Alle Apps installieren"
+
+msgid "Upgrade all"
+msgstr "Alle upgraden"
+
+msgid "Upgrade all applications"
+msgstr "Alle Anwendungen upgraden"
+
+msgid "Upgrade all apps"
+msgstr "Alle Apps upgraden"
+
+msgid "Update all"
+msgstr "Alle aktualisieren"
+
+msgid "Update all applications"
+msgstr "Alle Anwendungen aktualisieren"
+
+msgid "Update all apps"
+msgstr "Alle Apps aktualisieren"
+
+msgid "Cancel all"
+msgstr "Alle abbrechen"
+
+msgid "Cancel all downloads"
+msgstr "Alle Downloads abbrechen"
+
+msgid "Cancel all pending downloads"
+msgstr "Alle ausstehenden Downloads abbrechen"
+
+msgid "Recycle Bin"
+msgstr "Papierkorb"
+
+msgid "Archive"
+msgstr "Archivieren"
+
+msgid "Reinstall All"
+msgstr "Alles neu installieren"
+
+msgid "Restore All"
+msgstr "Alles wiederherstellen"
+
+msgid "Unarchive All"
+msgstr "Alle nicht archivieren"
+
+

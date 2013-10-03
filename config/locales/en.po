@@ -19,8 +19,8 @@ msgstr "Continue"
 msgid "Airspace, the Leap Motion app store"
 msgstr "Airspace, the Leap Motion app store"
 
-msgid "Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
-msgstr "Discover, download and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
 
 msgid "Launch Airspace"
 msgstr "Launch Airspace"
@@ -31,14 +31,14 @@ msgstr "Leap Motion End User Software License Agreement"
 msgid "Continue with mouse only"
 msgstr "Continue with mouse only"
 
-msgid "Find and launch your Leap Motion applications"
-msgstr "Find and launch your Leap Motion applications"
+msgid "Find and launch your Leap Motion apps"
+msgstr "Find and launch your Leap Motion apps"
 
 msgid "Sync purchases across devices"
 msgstr "Sync purchases across devices"
 
-msgid "Discover games, utilities, music and more in our store!"
-msgstr "Discover games, utilities, music and more in our store!"
+msgid "Discover games, utilities, music, and more in our store!"
+msgstr "Discover games, utilities, music, and more in our store!"
 
 msgid "Use the same login for purchases, support, and more!"
 msgstr "Use the same login for purchases, support, and more!"
@@ -52,11 +52,11 @@ msgstr "Preparing for launch..."
 msgid "Signing you out..."
 msgstr "Signing you out..."
 
-msgid "No internet connection"
-msgstr "No internet connection"
+msgid "No Internet connection"
+msgstr "No Internet connection"
 
-msgid "Please ensure your connection is working properly"
-msgstr "Please ensure your connection is working properly"
+msgid "Please ensure your Internet connection is working properly."
+msgstr "Please ensure your Internet connection is working properly."
 
 msgid "No apps to display."
 msgstr "No apps to display."
@@ -84,15 +84,6 @@ msgstr "Click to Install"
 
 msgid "Trash"
 msgstr "Trash"
-
-msgid "Download All"
-msgstr "Download All"
-
-msgid "Update All"
-msgstr "Update All"
-
-msgid "Cancel All"
-msgstr "Cancel All"
 
 msgid "Version"
 msgstr "Version"
@@ -141,4 +132,284 @@ msgstr "Airspace Home"
 
 msgid "Help"
 msgstr "Help"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Store"
+msgstr "Store"
+
+msgid "You need to sign in or sign up before continuing."
+msgstr "You need to sign in or sign up before continuing."
+
+msgid "account email"
+msgstr "account email"
+
+msgid "password"
+msgstr "password"
+
+msgid "Sign In"
+msgstr "Sign In"
+
+msgid "Sign Up"
+msgstr "Sign Up"
+
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+msgid "Invalid email or password."
+msgstr "Invalid email or password."
+
+msgid "account email"
+msgstr "account email"
+
+msgid "Please enter an email address."
+msgstr "Please enter an email address."
+
+msgid "Email can't be blank"
+msgstr "Email can't be blank"
+
+msgid "Send Instructions"
+msgstr "Send Instructions"
+
+msgid "Get Started"
+msgstr "Get Started"
+
+msgid "Create username"
+msgstr "Create username"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Create password"
+msgstr "Create password"
+
+msgid "Confirm password"
+msgstr "Confirm password"
+
+msgid "Birthdate"
+msgstr "Birthdate"
+
+msgid "Month"
+msgstr "Month"
+
+msgid "January"
+msgstr "January"
+
+msgid "February"
+msgstr "February"
+
+msgid "March"
+msgstr "March"
+
+msgid "April"
+msgstr "April"
+
+msgid "May"
+msgstr "May"
+
+msgid "June"
+msgstr "June"
+
+msgid "July"
+msgstr "July"
+
+msgid "August"
+msgstr "August"
+
+msgid "September"
+msgstr "September"
+
+msgid "October"
+msgstr "October"
+
+msgid "November"
+msgstr "November"
+
+msgid "December"
+msgstr "December"
+
+msgid "I agree to the Airspace Terms of Service"
+msgstr "I agree to the Airspace Terms of Service"
+
+msgid "Email me Leap Motion news and updates."
+msgstr "Email me Leap Motion news and updates."
+
+msgid "Sign in to an existing account"
+msgstr "Sign in to an existing account"
+
+msgid "Email can't be blank"
+msgstr "Email can't be blank"
+
+msgid "Setting a password is required"
+msgstr "Setting a password is required"
+
+msgid "Username can't be blank"
+msgstr "Username can't be blank"
+
+msgid "Birthdate is required"
+msgstr "Birthdate is required"
+
+msgid "You must accept the Terms of Service"
+msgstr "You must accept the Terms of Service"
+
+msgid "Password entries do not match"
+msgstr "Password entries do not match"
+
+msgid "Username has already been taken"
+msgstr "Username has already been taken"
+
+msgid "Setting a password is required"
+msgstr "Setting a password is required"
+
+msgid "Your username contains invalid characters"
+msgstr "Your username contains invalid characters"
+
+msgid "A complete birthdate is required"
+msgstr "A complete birthdate is required"
+
+msgid "Password is too short (minimum is 6 characters)"
+msgstr "Password is too short (minimum is 6 characters)"
+
+msgid "About Airspace"
+msgstr "About Airspace"
+
+msgid "Hide Airspace"
+msgstr "Hide Airspace"
+
+msgid "Hide Others"
+msgstr "Hide Others"
+
+msgid "Show All"
+msgstr "Show All"
+
+msgid "Quit Airspace"
+msgstr "Quit Airspace"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Undo"
+msgstr "Undo"
+
+msgid "Redo"
+msgstr "Redo"
+
+msgid "Cut"
+msgstr "Cut"
+
+msgid "Copy"
+msgstr "Copy"
+
+msgid "Paste"
+msgstr "Paste"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Select All"
+msgstr "Select All"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Sign Out ##"
+msgstr "Sign Out ##"
+
+msgid "Window"
+msgstr "Window"
+
+msgid "Minimize"
+msgstr "Minimize"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Bring All to Front"
+msgstr "Bring All to Front"
+
+msgid "Changes will take effect on relaunch"
+msgstr "Changes will take effect on relaunch"
+
+msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgstr "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+
+msgid "Error Report"
+msgstr "Error Report"
+
+msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgstr "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+
+msgid "Send Error Report"
+msgstr "Send Error Report"
+
+msgid "Don't Send"
+msgstr "Don't Send"
+
+msgid "Airspace Store"
+msgstr "Airspace Store"
+
+msgid "App Store"
+msgstr "App Store"
+
+msgid "Download all"
+msgstr "Download all"
+
+msgid "Download all applications"
+msgstr "Download all applications"
+
+msgid "Download all apps"
+msgstr "Download all apps"
+
+msgid "Install all"
+msgstr "Install all"
+
+msgid "Install all applications"
+msgstr "Install all applications"
+
+msgid "Install all apps"
+msgstr "Install all apps"
+
+msgid "Upgrade all"
+msgstr "Upgrade all"
+
+msgid "Upgrade all applications"
+msgstr "Upgrade all applications"
+
+msgid "Upgrade all apps"
+msgstr "Upgrade all apps"
+
+msgid "Update all"
+msgstr "Update all"
+
+msgid "Update all applications"
+msgstr "Update all applications"
+
+msgid "Update all apps"
+msgstr "Update all apps"
+
+msgid "Cancel all"
+msgstr "Cancel all"
+
+msgid "Cancel all downloads"
+msgstr "Cancel all downloads"
+
+msgid "Cancel all pending downloads"
+msgstr "Cancel all pending downloads"
+
+msgid "Recycle Bin"
+msgstr "Recycle Bin"
+
+msgid "Archive"
+msgstr "Archive"
+
+msgid "Reinstall All"
+msgstr "Reinstall All"
+
+msgid "Restore All"
+msgstr "Restore All"
+
+msgid "Unarchive All"
+msgstr "Unarchive All"
+
 
