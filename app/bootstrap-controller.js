@@ -43,7 +43,7 @@ function bootstrapAirspace() {
     prerunAsyncKickoff,
     firstRun,
     setupMainWindow,
-    checkLeapConnection,
+    //checkLeapConnection,
     localTiles,
     startMainApp,
     afterwardsAsyncKickoffs
