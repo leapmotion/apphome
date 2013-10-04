@@ -49,12 +49,14 @@ module.exports = Modal.extend({
         installManager.enqueue(app);
       }
 
-      uiGlobals.uninstalledApps.forEach(reinstall);
+      while(uiGlobals.uninstalledApps.length) {
+        var app = uiGlobals.uninstalledApps.shift();
+        uiGlobals.myApps.add(app);
+        installManager.enqueue(app);
+      }
 
       this.options.onClose(true);
       this.remove();
-
-      uiGlobals.uninstalledApps.reset();
     }).bind(this));
   }
 
