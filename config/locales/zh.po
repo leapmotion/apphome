@@ -1,17 +1,274 @@
-msgid "Welcome"
-msgstr "欢迎"
+msgid "You need to sign in or sign up before continuing."
+msgstr "您需要先登录或注销，然后才能继续操作。"
 
-msgid "Welcome to a whole new world"
-msgstr "欢迎来到崭新的世界"
+msgid "account email"
+msgstr "帐户电子邮件"
 
-msgid "Below are a few tips to get you started"
-msgstr "以下为开始使用的小技巧"
+msgid "password"
+msgstr "密码"
 
-msgid "I agree to the Leap Motion %1$s"
-msgstr "我同意接受Leap Motion %1$s"
+msgid "Sign In"
+msgstr "登录"
 
-msgid "End User License Agreement"
-msgstr "最终用户软件许可协议。"
+msgid "Sign Up"
+msgstr "注册"
 
-msgid "Continue"
-msgstr "继续"
+msgid "Forgot password?"
+msgstr "忘记密码?"
+
+msgid "Invalid email or password."
+msgstr "电子邮件或密码无效。"
+
+msgid "account email"
+msgstr "帐户电子邮件"
+
+msgid "Please enter an email address."
+msgstr "请输入电子邮件地址。"
+
+msgid "Email can't be blank"
+msgstr "电子邮件不得为空"
+
+msgid "Send Instructions"
+msgstr "发送说明"
+
+msgid "Get Started"
+msgstr "开始使用"
+
+msgid "Create username"
+msgstr "创建用户名"
+
+msgid "Email"
+msgstr "电子邮件"
+
+msgid "Create password"
+msgstr "创建密码"
+
+msgid "Confirm password"
+msgstr "确认密码"
+
+msgid "Birthdate"
+msgstr "生日"
+
+msgid "Month"
+msgstr "月份"
+
+msgid "January"
+msgstr "1 月"
+
+msgid "February"
+msgstr "2 月"
+
+msgid "March"
+msgstr "3 月"
+
+msgid "April"
+msgstr "4 月"
+
+msgid "May"
+msgstr "5 月"
+
+msgid "June"
+msgstr "6 月"
+
+msgid "July"
+msgstr "7 月"
+
+msgid "August"
+msgstr "8 月"
+
+msgid "September"
+msgstr "9 月"
+
+msgid "October"
+msgstr "10 月"
+
+msgid "November"
+msgstr "11 月"
+
+msgid "December"
+msgstr "12 月"
+
+msgid "I agree to the Airspace Terms of Service"
+msgstr "我同意 Airspace 服务条款"
+
+msgid "Email me Leap Motion news and updates."
+msgstr "向我发送包含 Leap Motion 新闻和更新的电子邮件。"
+
+msgid "Sign in to an existing account"
+msgstr "登录现有帐户"
+
+msgid "Email can't be blank"
+msgstr "电子邮件不得为空"
+
+msgid "Setting a password is required"
+msgstr "需要设置密码"
+
+msgid "Username can't be blank"
+msgstr "用户名不得为空"
+
+msgid "Birthdate is required"
+msgstr "生日为必填项"
+
+msgid "You must accept the Terms of Service"
+msgstr "您必须接受服务条款"
+
+msgid "Password entries do not match"
+msgstr "密码条目不匹配"
+
+msgid "Username has already been taken"
+msgstr "用户名已被占用"
+
+msgid "Setting a password is required"
+msgstr "需要设置密码"
+
+msgid "Your username contains invalid characters"
+msgstr "您的用户名包含无效字符"
+
+msgid "A complete birthdate is required"
+msgstr "需要填写完整生日"
+
+msgid "Password is too short (minimum is 6 characters)"
+msgstr "密码太短(最少 6 个字符)"
+
+msgid "About Airspace"
+msgstr "关于 Airspace"
+
+msgid "Hide Airspace"
+msgstr "隐藏 Airspace"
+
+msgid "Hide Others"
+msgstr "隐藏其他内容"
+
+msgid "Show All"
+msgstr "全部显示"
+
+msgid "Quit Airspace"
+msgstr "退出 Airspace"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Undo"
+msgstr "撤消"
+
+msgid "Redo"
+msgstr "恢复"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Select All"
+msgstr "全选"
+
+msgid "Account"
+msgstr "帐户"
+
+msgid "Sign Out %1$s"
+msgstr "注销 %1$s"
+
+msgid "Window"
+msgstr "窗口"
+
+msgid "Minimize"
+msgstr "最小化"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Bring All to Front"
+msgstr "全部置顶"
+
+msgid "Changes will take effect on relaunch"
+msgstr "更改将在重新启动后生效"
+
+msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgstr "定位已崩溃。请确保您已安装了最新的显卡驱动程序。"
+
+msgid "Error Report"
+msgstr "错误报告"
+
+msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgstr "Leap Motion Service 或其关联的程序之一在上次崩溃。请向我们发送此错误报告以帮助改进软件。"
+
+msgid "Send Error Report"
+msgstr "发送错误报告"
+
+msgid "Don't Send"
+msgstr "不要发送"
+
+msgid "Airspace Store"
+msgstr "Airspace 商店"
+
+msgid "App Store"
+msgstr "应用商店"
+
+msgid "Download all"
+msgstr "全部下载"
+
+msgid "Download all applications"
+msgstr "下载所有应用"
+
+msgid "Download all apps"
+msgstr "下载所有应用"
+
+msgid "Install all"
+msgstr "全部安装"
+
+msgid "Install all applications"
+msgstr "安装所有应用"
+
+msgid "Install all apps"
+msgstr "安装所有应用"
+
+msgid "Upgrade all"
+msgstr "全部升级"
+
+msgid "Upgrade all applications"
+msgstr "升级所有应用"
+
+msgid "Upgrade all apps"
+msgstr "升级所有应用"
+
+msgid "Update all"
+msgstr "全部更新"
+
+msgid "Update all applications"
+msgstr "更新所有应用"
+
+msgid "Update all apps"
+msgstr "更新所有应用"
+
+msgid "Cancel all"
+msgstr "全部取消"
+
+msgid "Cancel all downloads"
+msgstr "取消所有下载"
+
+msgid "Cancel all pending downloads"
+msgstr "取消所有挂起的下载"
+
+msgid "Recycle Bin"
+msgstr "回收站"
+
+msgid "Archive"
+msgstr "归档"
+
+msgid "Reinstall All"
+msgstr "全部重新安装"
+
+msgid "Restore All"
+msgstr "全部还原"
+
+msgid "Unarchive All"
+msgstr "全部解档"
+
+

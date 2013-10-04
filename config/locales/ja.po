@@ -1,14 +1,413 @@
+msgid "Welcome"
+msgstr "ようこそ"
+
 msgid "Welcome to a whole new world"
-msgstr "新しい世界へようこそ。"
+msgstr "新しい世界へようこそ"
 
 msgid "Below are a few tips to get you started"
-msgstr "開始するにあたり、いくつかのヒントを示します。"
+msgstr "開始するにあたり、いくつかのヒントを示します"
 
 msgid "I agree to the Leap Motion %1$s"
-msgstr "私は、Leap Motion %1$s に同意します。"
+msgstr "Leap Motionの%1$sに同意します"
 
 msgid "End User License Agreement"
-msgstr "エンドユーザー ソフトウェア使用許諾契約書"
+msgstr "ソフトウェア使用許諾契約書"
 
 msgid "Continue"
 msgstr "続行"
+
+msgid "Airspace, the Leap Motion app store"
+msgstr "Airspaceは、Leap Motionのアプリ ストアです"
+
+msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "Airspaceでは、Leap Motionのアプリを探し、ダウンロードして利用できます。他にはないアプリが揃った今までにないストアです。"
+
+msgid "Launch Airspace"
+msgstr "Airspaceの起動"
+
+msgid "Leap Motion End User Software License Agreement"
+msgstr "Leap Motionソフトウェア使用許諾契約書"
+
+msgid "Continue with mouse only"
+msgstr "マウスのみで続行する"
+
+msgid "Find and launch your Leap Motion apps"
+msgstr "Leap Motionアプリを探して利用する"
+
+msgid "Sync purchases across devices"
+msgstr "購入したアプリをデバイス間で同期する"
+
+msgid "Discover games, utilities, music, and more in our store!"
+msgstr "ゲーム、ユーティリティ、音楽などをAirspaceストアで見つける"
+
+msgid "Use the same login for purchases, support, and more!"
+msgstr "1つのログイン アカウントで、アプリの購入やサポート情報の入手などが可能"
+
+msgid "Connecting to authentication server..."
+msgstr "認証サーバーに接続中..."
+
+msgid "Preparing for launch..."
+msgstr "起動の準備中..."
+
+msgid "Signing you out..."
+msgstr "サインアウト中..."
+
+msgid "No Internet connection"
+msgstr "インターネット接続がありません"
+
+msgid "Please ensure your Internet connection is working properly."
+msgstr "インターネット接続が正常に機能していることを確認してください。"
+
+msgid "No apps to display."
+msgstr "表示するアプリがありません。"
+
+msgid "Waiting..."
+msgstr "待機中..."
+
+msgid "Connecting..."
+msgstr "接続中..."
+
+msgid "Downloading..."
+msgstr "ダウンロード中..."
+
+msgid "Installing..."
+msgstr "インストール中..."
+
+msgid "Opening..."
+msgstr "表示中..."
+
+msgid "Launching..."
+msgstr "起動中..."
+
+msgid "Click to Install"
+msgstr "クリックしてインストール"
+
+msgid "Trash"
+msgstr "ごみ箱"
+
+msgid "Version"
+msgstr "バージョン"
+
+msgid "Release Date"
+msgstr "リリース日"
+
+msgid "What's New"
+msgstr "新機能"
+
+msgid "Description"
+msgstr "説明"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Install %1$s"
+msgstr "%1$sをインストール"
+
+msgid "Update App"
+msgstr "アプリを更新"
+
+msgid "Launch App"
+msgstr "アプリを起動"
+
+msgid "Controller Settings"
+msgstr "コントローラーの設定"
+
+msgid "Exit"
+msgstr "終了"
+
+msgid "File"
+msgstr "ファイル"
+
+msgid "Sign out %1$s"
+msgstr "%1$sからサインアウト"
+
+msgid "Account"
+msgstr "アカウント"
+
+msgid "About Airspace Home"
+msgstr "Airspace Homeについて"
+
+msgid "Airspace Home"
+msgstr "Airspace Home"
+
+msgid "Help"
+msgstr "ヘルプ"
+
+msgid "Home"
+msgstr "ホーム"
+
+msgid "Store"
+msgstr "ストア"
+
+msgid "You need to sign in or sign up before continuing."
+msgstr "続行する前にサインインまたはサインアップする必要があります。"
+
+msgid "account email"
+msgstr "アカウントの電子メール"
+
+msgid "password"
+msgstr "パスワード"
+
+msgid "Sign In"
+msgstr "サインイン"
+
+msgid "Sign Up"
+msgstr "サインアップ"
+
+msgid "Forgot password?"
+msgstr "パスワードをお忘れですか?"
+
+msgid "Invalid email or password."
+msgstr "無効な電子メールまたはパスワードです。"
+
+msgid "account email address"
+msgstr "アカウントの電子メール アドレス"
+
+msgid "Please enter an email address."
+msgstr "電子メール アドレスを入力してください。"
+
+msgid "Email can't be blank"
+msgstr "電子メールを空白にすることはできません"
+
+msgid "Send Instructions"
+msgstr "手順を送信"
+
+msgid "Get Started"
+msgstr "作業の開始"
+
+msgid "Create username"
+msgstr "ユーザー名の作成"
+
+msgid "Email"
+msgstr "電子メール"
+
+msgid "Create password"
+msgstr "パスワードの作成"
+
+msgid "Confirm password"
+msgstr "パスワードの確認"
+
+msgid "Birthdate"
+msgstr "生年月日"
+
+msgid "Month"
+msgstr "月"
+
+msgid "January"
+msgstr "1月"
+
+msgid "February"
+msgstr "2月"
+
+msgid "March"
+msgstr "3月"
+
+msgid "April"
+msgstr "4月"
+
+msgid "May"
+msgstr "5月"
+
+msgid "June"
+msgstr "6月"
+
+msgid "July"
+msgstr "7月"
+
+msgid "August"
+msgstr "8月"
+
+msgid "September"
+msgstr "9月"
+
+msgid "October"
+msgstr "10月"
+
+msgid "November"
+msgstr "11月"
+
+msgid "December"
+msgstr "12月"
+
+msgid "I agree to the Airspace Terms of Service"
+msgstr "Airspaceのサービス利用条件に同意します。"
+
+msgid "Email me Leap Motion news and updates."
+msgstr "Leap Motionのニュースや更新情報の電子メールを受け取ります。"
+
+msgid "Sign in to an existing account"
+msgstr "既存のアカウントにサインイン"
+
+msgid "Email can't be blank"
+msgstr "電子メールを空白にすることはできません"
+
+msgid "Setting a password is required"
+msgstr "パスワードの設定が必要です"
+
+msgid "Username can't be blank"
+msgstr "ユーザー名を空白にすることはできません"
+
+msgid "Birthdate is required"
+msgstr "生年月日が必要です"
+
+msgid "You must accept the Terms of Service"
+msgstr "サービス利用条件に同意する必要があります"
+
+msgid "Password entries do not match"
+msgstr "入力されたパスワードが一致しません"
+
+msgid "Username has already been taken"
+msgstr "ユーザー名がすでに使われています"
+
+msgid "Setting a password is required"
+msgstr "パスワードの設定が必要です"
+
+msgid "Your username contains invalid characters"
+msgstr "ユーザー名に無効な文字が含まれています"
+
+msgid "A complete birthdate is required"
+msgstr "生年月日を正しく入力する必要があります"
+
+msgid "Password is too short (minimum is 6 characters)"
+msgstr "パスワードが短すぎます（6文字以上必要）"
+
+msgid "About Airspace"
+msgstr "Airspaceについて"
+
+msgid "Hide Airspace"
+msgstr "Airspaceを表示しない"
+
+msgid "Hide Others"
+msgstr "その他を表示しない"
+
+msgid "Show All"
+msgstr "すべてを表示"
+
+msgid "Quit Airspace"
+msgstr "Airspaceを終了"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Undo"
+msgstr "元に戻す"
+
+msgid "Redo"
+msgstr "やり直し"
+
+msgid "Cut"
+msgstr "切り取り"
+
+msgid "Copy"
+msgstr "コピー"
+
+msgid "Paste"
+msgstr "貼り付け"
+
+msgid "Delete"
+msgstr "削除"
+
+msgid "Select All"
+msgstr "すべて選択"
+
+msgid "Account"
+msgstr "アカウント"
+
+msgid "Sign Out ##"
+msgstr "##からサインアウト"
+
+msgid "Window"
+msgstr "ウィンドウ"
+
+msgid "Minimize"
+msgstr "最小化"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Bring All to Front"
+msgstr "すべてを前面に表示"
+
+msgid "Changes will take effect on relaunch"
+msgstr "変更した内容は再起動後に有効になります"
+
+msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgstr "画面の向きに問題が発生しました。最新のグラフィックス ドライバーがインストールされていることを確認してください。"
+
+msgid "Error Report"
+msgstr "エラー レポート"
+
+msgid "Last time, the Leap Motion Core Services or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgstr "前回、Leap Motionのコア サービスまたはその関連プログラムの1つがクラッシュしました。ソフトウェアの品質向上に役立てるために、このエラー レポートをお送りください。"
+
+msgid "Send Error Report"
+msgstr "エラー レポートを送信する"
+
+msgid "Don't Send"
+msgstr "送信しない"
+
+msgid "Airspace Store"
+msgstr "Airspace Store"
+
+msgid "App Store"
+msgstr "アプリ ストア"
+
+msgid "Download all"
+msgstr "すべてをダウンロード"
+
+msgid "Download all applications"
+msgstr "すべてのアプリケーションをダウンロード"
+
+msgid "Download all apps"
+msgstr "すべてのアプリをダウンロード"
+
+msgid "Install all"
+msgstr "すべてをインストール"
+
+msgid "Install all applications"
+msgstr "すべてのアプリケーションをインストール"
+
+msgid "Install all apps"
+msgstr "すべてのアプリをインストール"
+
+msgid "Upgrade all"
+msgstr "すべてをアップグレード"
+
+msgid "Upgrade all applications"
+msgstr "すべてのアプリケーションをアップグレード"
+
+msgid "Upgrade all apps"
+msgstr "すべてのアプリをアップグレード"
+
+msgid "Update all"
+msgstr "すべてを更新"
+
+msgid "Update all applications"
+msgstr "すべてのアプリケーションを更新"
+
+msgid "Update all apps"
+msgstr "すべてのアプリを更新"
+
+msgid "Cancel all"
+msgstr "すべてをキャンセル"
+
+msgid "Cancel all downloads"
+msgstr "すべてのダウンロードをキャンセル"
+
+msgid "Cancel all pending downloads"
+msgstr "保留中のすべてのダウンロードをキャンセル"
+
+msgid "Recycle Bin"
+msgstr "ごみ箱"
+
+msgid "Archive"
+msgstr "圧縮"
+
+msgid "Reinstall All"
+msgstr "すべてを再インストール"
+
+msgid "Restore All"
+msgstr "すべてを復元"
+
+msgid "Unarchive All"
+msgstr "すべてを展開"

@@ -25,7 +25,11 @@ module.exports = BaseView.extend({
       afterMessage_label:  i18n.translate('Preparing for launch...'),
       logoutMessage_label: i18n.translate('Signing you out...'),
       noInternet_label:    i18n.translate('No internet connection'),
-      instruction_label:   i18n.translate('Please ensure your connection is working properly')
+      instruction_label:   i18n.translate('Please ensure your connection is working properly'),
+      findAndLaunch_label: i18n.translate('Find and launch your Leap Motion apps'),
+      syncPurchases_label: i18n.translate('Sync purchases across devices'),
+      discoverGames_label: i18n.translate('Discover games, utilities, music, and more in our store!'),
+      sameLogin_label:     i18n.translate('Use the same login for purchases, support, and more!')
     }));
     this.$iframe = this.$('iframe.oauth');
     this.$noInternet = this.$('.no-internet');
