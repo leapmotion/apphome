@@ -43,18 +43,14 @@ module.exports = Modal.extend({
     }).bind(this));
 
     this.$('.button.reinstall-all').click((function() {
-      function reinstall(app) {
-        uiGlobals.uninstalledApps.remove(app);
+      while(uiGlobals.uninstalledApps.length) {
+        var app = uiGlobals.uninstalledApps.shift();
         uiGlobals.myApps.add(app);
         installManager.enqueue(app);
       }
 
-      uiGlobals.uninstalledApps.forEach(reinstall);
-
       this.options.onClose(true);
       this.remove();
-
-      uiGlobals.uninstalledApps.reset();
     }).bind(this));
   }
 
