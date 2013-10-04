@@ -352,43 +352,43 @@ msgstr "Airspace Store"
 msgid "App Store"
 msgstr "アプリ ストア"
 
-msgid "Download all"
+msgid "Download All"
 msgstr "すべてをダウンロード"
 
-msgid "Download all applications"
+msgid "Download All Applications"
 msgstr "すべてのアプリケーションをダウンロード"
 
-msgid "Download all apps"
+msgid "Download All Apps"
 msgstr "すべてのアプリをダウンロード"
 
-msgid "Install all"
+msgid "Install All"
 msgstr "すべてをインストール"
 
-msgid "Install all applications"
+msgid "Install All Applications"
 msgstr "すべてのアプリケーションをインストール"
 
-msgid "Install all apps"
+msgid "Install All Apps"
 msgstr "すべてのアプリをインストール"
 
-msgid "Upgrade all"
+msgid "Upgrade All"
 msgstr "すべてをアップグレード"
 
-msgid "Upgrade all applications"
+msgid "Upgrade All Applications"
 msgstr "すべてのアプリケーションをアップグレード"
 
-msgid "Upgrade all apps"
+msgid "Upgrade All Apps"
 msgstr "すべてのアプリをアップグレード"
 
-msgid "Update all"
+msgid "Update All"
 msgstr "すべてを更新"
 
-msgid "Update all applications"
+msgid "Update All Applications"
 msgstr "すべてのアプリケーションを更新"
 
-msgid "Update all apps"
+msgid "Update All Apps"
 msgstr "すべてのアプリを更新"
 
-msgid "Cancel all"
+msgid "Cancel All"
 msgstr "すべてをキャンセル"
 
 msgid "Cancel all downloads"
