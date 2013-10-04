@@ -44,7 +44,7 @@ var CarouselView = BaseView.extend({
 
     uiGlobals.on('search', _.debounce((function(searchString) {
       if (!this._animating) {
-        this._searchString = $.trim(searchString);
+        this._searchString = $.trim(searchString).toLowerCase();
         this._updateSlides(true);
         this._updateEmptyState();
         this._updateSlideIndicator();
