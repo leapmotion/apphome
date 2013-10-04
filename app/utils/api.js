@@ -311,6 +311,55 @@ function sendDeviceData() {
   });
 }
 
+function sendAppVersionData() {
+  console.log(uiGlobals.myApps.length + ' ' + uiGlobals.uninstalledApps.length);
+
+  var myAppsVersionData = uiGlobals.myApps.filter(function(app) {
+    return app.isStoreApp();
+  }).map(function(app) {
+    return {
+      app_id: app.get('id'),
+      version_number: app.get('versionId'),
+      installed: true
+    };
+  });
+
+  console.log(myAppsVersionData);
+
+  var uninstalledAppsVersionData = uiGlobals.uninstalledApps.filter(function(app) {
+    return app.isStoreApp();
+  }).map(function(app) {
+    return {
+      app_id: app.get('id'),
+      version_number: app.get('versionId'),
+      installed: false
+    };
+  });
+
+  var appVersionData = myAppsVersionData.concat(uninstalledAppsVersionData);
+
+  console.log('Sending App Version Data:' + JSON.stringify(appVersionData, null, 2));
+
+  oauth.getAccessToken(function(err, accessToken) {
+    if (err) {
+      console.warn('Failed to get an access token: ' + (err.stack || err));
+    } else {
+      httpHelper.post(config.AppVersionDataEndpoint,
+                      {
+                        access_token: accessToken,
+                        data: appVersionData
+                      },
+                      function(err) {
+                        if (err) {
+                          console.error('Failed to send app version data: ' + (err.stack || err));
+                        } else {
+                          console.log('Sent app version data.');
+                        }
+                      });
+    }
+  });
+}
+
 function parsePrebundledManifest(manifest, cb) {
   console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 2));
 
@@ -342,4 +391,5 @@ module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.getAppDetails = getAppDetails;
 module.exports.sendDeviceData = sendDeviceData;
+module.exports.sendAppVersionData = sendAppVersionData;
 module.exports.parsePrebundledManifest = parsePrebundledManifest;

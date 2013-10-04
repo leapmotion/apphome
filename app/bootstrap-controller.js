@@ -236,6 +236,7 @@ var AsyncTasks = {
 
     try {
       api.sendDeviceData();
+      api.sendAppVersionData();
     } catch (err) {
       console.error('Failed to send device data: ' + (err.stack + err));
     }

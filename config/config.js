@@ -24,6 +24,8 @@ var config = {
 
   DeviceDataEndpoint: 'https://central.leapmotion.com/users/device',
 
+  AppVersionDataEndpoint: 'https://www.google.com',
+
   AppSubdir: {
     AppIcons: 'app_icons',
     AppTiles: 'app_tiles'
