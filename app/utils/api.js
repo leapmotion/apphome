@@ -118,7 +118,10 @@ function subscribeToUserChannel(userId) {
 }
 
 function subscribeToAppChannel(appId) {
-  pubnub.subscribe(appId + '.app.updated', handleAppJson);
+  pubnub.subscribe(appId + '.app.updated', function(appJson) {
+    handleAppJson(appJson);
+    installManager.showAppropriateDownloadControl();
+  });
 }
 
 var reconnectionTimeoutId;
