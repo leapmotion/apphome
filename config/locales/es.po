@@ -352,43 +352,43 @@ msgstr "Tienda Airspace"
 msgid "App Store"
 msgstr "Tienda de aplicaciones"
 
-msgid "Download all"
+msgid "Download All"
 msgstr "Descargar todo"
 
-msgid "Download all applications"
+msgid "Download All Applications"
 msgstr "Descargar todas las aplicaciones"
 
-msgid "Download all apps"
+msgid "Download All Apps"
 msgstr "Descargar todas las aplicaciones"
 
-msgid "Install all"
+msgid "Install All"
 msgstr "Instalar todo"
 
-msgid "Install all applications"
+msgid "Install All Applications"
 msgstr "Instalar todas las aplicaciones"
 
-msgid "Install all apps"
+msgid "Install All Apps"
 msgstr "Instalar todas las aplicaciones"
 
-msgid "Upgrade all"
+msgid "Upgrade All"
 msgstr "Actualizar la versión de todo"
 
-msgid "Upgrade all applications"
+msgid "Upgrade All Applications"
 msgstr "Actualizar la versión de todas las aplicaciones"
 
-msgid "Upgrade all apps"
+msgid "Upgrade All Apps"
 msgstr "Actualizar la versión de todas las aplicaciones"
 
-msgid "Update all"
+msgid "Update All"
 msgstr "Actualizar todo"
 
-msgid "Update all applications"
+msgid "Update All Applications"
 msgstr "Actualizar todas las aplicaciones"
 
-msgid "Update all apps"
+msgid "Update All Apps"
 msgstr "Actualizar todas las aplicaciones"
 
-msgid "Cancel all"
+msgid "Cancel All"
 msgstr "Cancelar todo"
 
 msgid "Cancel all downloads"
