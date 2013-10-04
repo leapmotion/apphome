@@ -80,7 +80,7 @@ msgid "Launching..."
 msgstr "Lancement..."
 
 msgid "Click to Install"
-msgstr "Cliquez pour lancer l'installation"
+msgstr "Cliquez pour installer"
 
 msgid "Trash"
 msgstr "Corbeille"
@@ -107,7 +107,7 @@ msgid "Update App"
 msgstr "Mettre à jour l'application"
 
 msgid "Launch App"
-msgstr "Lancer l'application"
+msgstr "Lancer"
 
 msgid "Controller Settings"
 msgstr "Paramètres du contrôleur"
