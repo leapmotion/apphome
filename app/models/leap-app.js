@@ -283,7 +283,7 @@ LeapApp.hydrateCachedModels = function() {
     appJsonList.forEach(function(appJson) {
       try {
         if (appJson.executable) {
-          appJson.executable = appJson.executable.replace(/'^%USER_DIR%'/, userHomeDir);
+          appJson.executable = appJson.executable.replace(/^%USER_DIR%/, userHomeDir);
         }
         if (appJson.state === LeapApp.States.Uninstalled) {
           uiGlobals.uninstalledApps.add(appJson);
