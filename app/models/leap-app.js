@@ -278,6 +278,8 @@ LeapApp.States = LeapAppStates;
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');
 
+  var userHomeDir = config.UserHomeDirs[os.platform()];
+
   function populateCollectionFromDb(dbKey, targetCollection) {
     var appJsonList = db.fetchObj(dbKey) || [];
     appJsonList.forEach(function(appJson) {
@@ -304,12 +306,7 @@ LeapApp.hydrateCachedModels = function() {
 };
 
 LeapApp.abstractUserHomeDir = function(appJson) {
-  var userHomeDir;
-  if (os.platform === 'darwin') {
-    userHomeDir = process.env.HOME;
-  } else if (os.platform === 'win32') {
-    userHomeDir = process.env.USERPROFILE;
-  }
+  var userHomeDir = config.UserHomeDirs[os.platform()];
 
   // If user changes username, app directory prefix can change.
   if (appJson.executable && appJson.executable.indexOf(userHomeDir) === 0) {
