@@ -282,7 +282,14 @@ LeapApp.hydrateCachedModels = function() {
     var appJsonList = db.fetchObj(dbKey) || [];
     appJsonList.forEach(function(appJson) {
       try {
-        targetCollection.add(appJson);
+        if (appJson.executable) {
+          appJson.executable = appJson.executable.replace(/'^%USER_DIR%'/, userHomeDir);
+        }
+        if (appJson.state === LeapApp.States.Uninstalled) {
+          uiGlobals.uninstalledApps.add(appJson);
+        } else {
+          targetCollection.add(appJson);
+        }
       } catch (err) {
         console.error('corrupt app data in database: ' + appJson);
         console.error('Error: ' + (err.stack || err));
@@ -297,7 +304,12 @@ LeapApp.hydrateCachedModels = function() {
 };
 
 LeapApp.abstractUserHomeDir = function(appJson) {
-  var userHomeDir = process.env.HOME || process.env.USERPROFILE;
+  var userHomeDir;
+  if (os.platform === 'darwin') {
+    userHomeDir = process.env.HOME;
+  } else if (os.platform === 'win32') {
+    userHomeDir = process.env.USERPROFILE;
+  }
 
   // If user changes username, app directory prefix can change.
   if (appJson.executable && appJson.executable.indexOf(userHomeDir) === 0) {
