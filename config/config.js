@@ -86,9 +86,9 @@ var config = {
   },
 
   UserHomeDirs: {
-    'win32': process.env.USERPROFILE,
-    'darwin': process.env.HOME,
-    'linux': process.env.HOME
+    win32: process.env.USERPROFILE,
+    darwin: process.env.HOME,
+    linux: process.env.HOME
   },
 
   FrozenAppPaths: [
