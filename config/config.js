@@ -87,6 +87,12 @@ var config = {
     win32:  [ process.env.PROGRAMDATA, 'Leap Motion' ]
   },
 
+  UserHomeDirs: {
+    win32: process.env.USERPROFILE,
+    darwin: process.env.HOME,
+    linux: process.env.HOME
+  },
+
   FrozenAppPaths: [
     '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
     './PreBundle.LeapMotion'

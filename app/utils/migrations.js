@@ -19,21 +19,33 @@ need to be run in order.
 var Migrations = [
   // Move single myApp Collection to myApp and uninstalledApps collections
   function v0_to_v1() {
-    var uninstalledAppsJsonList = [];
-    var myAppsJsonList = [];
+    var uninstalledAppsJson = [];
+    var myAppsJson = [];
 
     var appJsonList = db.fetchObj(config.DbKeys.InstalledApps) || [];
 
     appJsonList.forEach(function sortApp(appJson) {
       if (appJson.state === LeapApp.States.Uninstalled) {
-        uninstalledAppsJsonList.push(appJson);
+        uninstalledAppsJson.push(appJson);
       } else {
-        myAppsJsonList.push(appJson);
+        myAppsJson.push(appJson);
       }
     });
 
-    db.saveObj(config.DbKeys.InstalledApps, myAppsJsonList);
-    db.saveObj(config.DbKeys.UninstalledApps, uninstalledAppsJsonList);
+    db.saveObj(config.DbKeys.InstalledApps, myAppsJson);
+    db.saveObj(config.DbKeys.UninstalledApps, uninstalledAppsJson);
+  },
+
+  // Factor out home directory from user apps, so we check home dir on startup
+  function v1_to_v2() {
+    var myAppsJson = db.fetchObj(config.DbKeys.InstalledApps);
+    var uninstalledAppsJson = db.fetchObj(config.DbKeys.UninstalledApps);
+
+    uninstalledAppsJson.forEach(LeapApp.abstractUserHomeDir);
+    myAppsJson.forEach(LeapApp.abstractUserHomeDir);
+
+    db.saveObj(config.DbKeys.InstalledApps, myAppsJson);
+    db.saveObj(config.DbKeys.UninstalledApps, uninstalledAppsJson);
   }
 ];
 

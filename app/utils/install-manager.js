@@ -109,7 +109,9 @@ function cancelAll() {
   }
 
   // Cancel current download, if possible
-  installQueue[0].app.trigger('cancel-download');
+  if (installQueue.length) {
+    installQueue[0].app.trigger('cancel-download');
+  }
 }
 
 module.exports.enqueue = enqueue;

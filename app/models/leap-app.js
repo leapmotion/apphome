@@ -80,6 +80,12 @@ var LeapApp = BaseModel.extend({
   },
 
   save: function() {
+    var uninstalledAppsJson = uiGlobals.uninstalledApps.toJSON();
+    var myAppsJson = uiGlobals.myApps.toJSON();
+
+    uninstalledAppsJson.forEach(LeapApp.abstractUserHomeDir);
+    myAppsJson.forEach(LeapApp.abstractUserHomeDir);
+
     // note: persisting all apps for now, each time save is called. Perhaps later we'll save models independently (and maintain a list of each)
     db.saveObj(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps.toJSON());
     db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
@@ -272,11 +278,20 @@ LeapApp.States = LeapAppStates;
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');
 
+  var userHomeDir = config.UserHomeDirs[os.platform()];
+
   function populateCollectionFromDb(dbKey, targetCollection) {
     var appJsonList = db.fetchObj(dbKey) || [];
     appJsonList.forEach(function(appJson) {
       try {
-        targetCollection.add(appJson);
+        if (appJson.executable) {
+          appJson.executable = appJson.executable.replace(/^%USER_DIR%/, userHomeDir);
+        }
+        if (appJson.state === LeapApp.States.Uninstalled) {
+          uiGlobals.uninstalledApps.add(appJson);
+        } else {
+          targetCollection.add(appJson);
+        }
       } catch (err) {
         console.error('corrupt app data in database: ' + appJson);
         console.error('Error: ' + (err.stack || err));
@@ -286,6 +301,17 @@ LeapApp.hydrateCachedModels = function() {
 
   populateCollectionFromDb(config.DbKeys.InstalledApps, uiGlobals.myApps);
   populateCollectionFromDb(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps);
+
+  console.log('Done hydrating!');
+};
+
+LeapApp.abstractUserHomeDir = function(appJson) {
+  var userHomeDir = config.UserHomeDirs[os.platform()];
+
+  // If user changes username, app directory prefix can change.
+  if (appJson.executable && appJson.executable.indexOf(userHomeDir) === 0) {
+    appJson.executable = appJson.executable.replace(userHomeDir, '%USER_DIR%');
+  }
 };
 
 module.exports = LeapApp;
