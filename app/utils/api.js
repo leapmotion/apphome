@@ -320,7 +320,7 @@ function sendAppVersionData() {
     return {
       app_id: app.get('id'),
       version_number: app.get('versionId'),
-      installed: true
+      trashed: false
     };
   });
 
@@ -332,7 +332,7 @@ function sendAppVersionData() {
     return {
       app_id: app.get('id'),
       version_number: app.get('versionId'),
-      installed: false
+      trashed: true
     };
   });
 
