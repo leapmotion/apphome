@@ -5,6 +5,7 @@ var os = require('os');
 var path = require('path');
 
 var config = require('../../config/config.js');
+var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
 var extract = require('../utils/extract.js');
 var oauth = require('../utils/oauth.js');
@@ -262,7 +263,12 @@ module.exports = LeapApp.extend({
 
   _appDir: function() {
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
-    return this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+    var userSetInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
+    if (userSetInstallDir) {
+      return path.join(userSetInstallDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
+    } else {
+      return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+    }
   },
 
   _userDataDir: function() {
@@ -280,7 +286,7 @@ module.exports = LeapApp.extend({
         throw new Error('No app name specified.');
       }
       var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
-      dir = path.join(baseDir, this.cleanAppName() + suffix);
+      dir = path.join(baseDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
       this[attributeName] = dir;
     }
     return dir;

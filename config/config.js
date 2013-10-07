@@ -63,7 +63,8 @@ var config = {
     CrashCount: 'crashCount',
     ActiveTempFilesKey: 'active_temp_files',
     TempFilesNeedingDeletionKey: 'temp_files_needing_deletion',
-    MixpanelDistinctId: 'MixpanelDistinctId'
+    MixpanelDistinctId: 'MixpanelDistinctId',
+    AppInstallDir: 'AppInstallDir'
   },
 
   PlatformDirs: {

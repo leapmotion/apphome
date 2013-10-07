@@ -412,4 +412,5 @@ msgstr "Restore All"
 msgid "Unarchive All"
 msgstr "Unarchive All"
 
-
+msgid "Set install directory..."
+msgstr "Set install directory..."

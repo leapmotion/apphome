@@ -1,5 +1,8 @@
 var config = require('../../../config/config.js');
+var db = require('../../utils/db.js');
+var os = require('os');
 var i18n = require('../../utils/i18n.js');
+var path = require('path');
 
 var installManager = require('../../utils/install-manager.js');
 var LeapApp = require('../../models/leap-app.js');
@@ -18,12 +21,23 @@ module.exports = BaseView.extend({
     window.ondragover = function(evt) { evt.preventDefault(); return false; }; // ignore dragged in files
     window.ondrop = function(evt) { evt.preventDefault(); return false; };
 
+    var nwworkingdir;
+    userAppInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
+    if (userAppInstallDir) {
+      nwworkingdir = userAppInstallDir;
+    } else {
+      nwworkingdir = path.join.apply(null, config.PlatformAppDirs[os.platform()]);
+    }
+
+    console.log('Current install directory: ' + nwworkingdir);
+
     this.injectCss();
     this.$el.append(this.templateHtml({
       trash_label: i18n.translate('Trash'),
       download_label: i18n.translate('Download All'),
       update_label: i18n.translate('Update All'),
-      cancel_label: i18n.translate('Cancel All')
+      cancel_label: i18n.translate('Cancel All'),
+      nwworkingdir: nwworkingdir
     }));
     this._initCarousel();
     this._initDownloadControls();

@@ -3,6 +3,7 @@ var os = require('os');
 var api = require('./api.js');
 var authorizationUtil = require('./authorization-util.js');
 var config = require('../../config/config.js');
+var db = require('./db.js');
 var i18n = require('./i18n.js');
 var mixpanel = require('./mixpanel.js');
 var popup = require('../views/popups/popup.js');
@@ -85,10 +86,22 @@ function rebuildMenuBar(enableLogOut) {
     click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
   }));
+  accountMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Set install directory...'),
+    click: function() {
+      $('input#installLocation').trigger('click');
+    }
+  }));
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Account'),
     submenu: accountMenu
   }));
+
+  $('input#installLocation').change(function() {
+    console.log('Changed app install location to ' + $(this).val());
+    db.saveObj(config.DbKeys.AppInstallDir, $(this).val());
+    $('input#installLocation').attr('nwdirectory', $(this).val());
+  });
 
   // TODO: support website links on both OS X and Windows
   if (os.platform() === 'win32') {
