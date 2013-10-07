@@ -2,6 +2,9 @@ var path = require('path');
 
 var enumerable = require('../app/utils/enumerable.js');
 
+var AppsDir = 'AirspaceApps';
+var AppsUserDataDir = 'AirspaceApps';
+
 var config = {
 
   oauth: {
@@ -83,6 +86,18 @@ var config = {
 
   PlatformProgramDataDirs: {
     win32:  [ process.env.PROGRAMDATA, 'Leap Motion' ]
+  },
+
+  PlatformAppDirs: {
+    win32:  [ process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir ],
+    darwin: [ process.env.HOME, 'Applications', AppsDir ],
+    linux:  [ process.env.HOME, AppsDir ]
+  },
+
+  PlatformUserDataDirs: {
+    win32:  [ process.env.APPDATA, AppsUserDataDir ],
+    darwin: [ process.env.HOME, 'Library', 'Application Support', AppsUserDataDir ],
+    linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
   },
 
   FrozenAppPaths: [

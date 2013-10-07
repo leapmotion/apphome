@@ -14,20 +14,6 @@ var url = require('url');
 
 var LeapApp = require('./leap-app.js');
 
-var AppsDir = 'AirspaceApps';
-var PlatformAppDirs = {
-  win32:  [ process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir ],
-  darwin: [ process.env.HOME, 'Applications', AppsDir ],
-  linux:  [ process.env.HOME, AppsDir ]
-};
-
-var AppsUserDataDir = 'AirspaceApps';
-var PlatformUserDataDirs = {
-  win32:  [ process.env.APPDATA, AppsUserDataDir ],
-  darwin: [ process.env.HOME, 'Library', 'Application Support', AppsUserDataDir ],
-  linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
-};
-
 module.exports = LeapApp.extend({
 
   idAttribute: 'appId',
@@ -276,11 +262,11 @@ module.exports = LeapApp.extend({
 
   _appDir: function() {
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
-    return this._getDir(PlatformAppDirs, '__appDir', suffix);
+    return this._getDir(config.PlatformAppDirs, '__appDir', suffix);
   },
 
   _userDataDir: function() {
-    return this._getDir(PlatformUserDataDirs, '__userDataDir');
+    return this._getDir(config.PlatformUserDataDirs, '__userDataDir');
   },
 
   _getDir: function(dirsByPlatform, attributeName, suffix) {
