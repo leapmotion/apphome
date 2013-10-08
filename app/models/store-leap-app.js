@@ -1,6 +1,7 @@
 var async = require('async');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
+var mv = require('mv');
 var os = require('os');
 var path = require('path');
 
@@ -206,22 +207,33 @@ module.exports = LeapApp.extend({
   },
 
   move: function(targetDirectory, cb) {
-    var currentExe = this.get('executable');
-    var targetExe = currentExe.replace(path.dirname(currentExe), targetDirectory);
-
-    var is = fs.createReadStream(currentExe);
-    var os = fs.createWriteStream(targetExe);
-
-    // Force regeneration of app dir
-    if (os.platform() === 'darwin') {
-      delete this['__appDir'];
+    var sourceExe = this.get('executable');
+    if (!sourceExe) {
+      return;
     }
 
-    is.pipe(os);
-    is.on('end', function() {
-      fs.unlinkSync(currentExe);
+    var sourceDirectory = path.dirname(sourceExe);
+
+    targetDirectory = path.join(targetDirectory, String(uiGlobals.user_id));
+    var targetExe = sourceExe.replace(sourceDirectory, targetDirectory);
+
+    mv(sourceExe, targetExe, {mkdirp: true}, (function(err) {
+      if (err) {
+        cb && cb(err);
+        return;
+      }
+
+      // Force regeneration of app dir
+      if (os.platform() === 'darwin') {
+        delete this['__appDir'];
+      }
+
+      this.set('executable', targetExe);
+
+      console.log('Moved ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
+
       cb && cb(null);
-    });
+    }).bind(this));
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
