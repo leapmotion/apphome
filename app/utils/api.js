@@ -319,7 +319,7 @@ function sendAppVersionData() {
   }).map(function(app) {
     return {
       app_id: app.get('id'),
-      version_number: app.get('versionId'),
+      app_version_id: app.get('versionId'),
       trashed: false
     };
   });
@@ -331,7 +331,7 @@ function sendAppVersionData() {
   }).map(function(app) {
     return {
       app_id: app.get('id'),
-      version_number: app.get('versionId'),
+      app_version_id: app.get('versionId'),
       trashed: true
     };
   });
