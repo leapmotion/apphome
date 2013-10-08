@@ -22,6 +22,10 @@ module.exports = LeapApp.extend({
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
 
+    if ((this.get('state') === LeapApp.States.Ready) && !fs.existsSync(this.get('executable'))) {
+      this.set('state', LeapApp.States.NotYetInstalled);
+    }
+
     this.set('availableUpdate', null);
   },
 
