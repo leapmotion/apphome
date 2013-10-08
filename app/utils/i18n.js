@@ -32,9 +32,9 @@ function getLocale(cb) {
 
       var poFileNames = fs.readdirSync(path.join(__dirname, '..', '..', 'config', 'locales'));
       for (var i = 0; i < poFileNames.length; i++) {
-        var langMatch = poFileNames[i].match(/(.*).po/);
+        var langMatch = poFileNames[i].match(/(.*)\.po/i);
         if (langMatch) {
-          supportedLanguages.push(langMatch[1]);
+          supportedLanguages.push(langMatch[1].toLowerCase());
         }
       }
 
