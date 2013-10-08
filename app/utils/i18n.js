@@ -7,6 +7,7 @@ var po2json = require('po2json');
 var Jed = require('jed');
 
 var registry = require('./registry.js');
+var shell = require('./shell.js');
 
 var DefaultLocale = 'en';
 
@@ -26,14 +27,31 @@ function getLocale(cb) {
         }
       });
     } else if (os.platform() === 'darwin') {
+      var supportedLanguages = Array();
+      supportedLanguages.push(DefaultLocale);
+
+      var poFileNames = fs.readdirSync(path.join(__dirname, '..', '..', 'config', 'locales'));
+      for (var i = 0; i < poFileNames.length; i++) {
+        var langMatch = poFileNames[i].match(/(.*)\.po/i);
+        if (langMatch) {
+          supportedLanguages.push(langMatch[1].toLowerCase());
+        }
+      }
+
+      console.log('Supported languages: ' + supportedLanguages);
+
       var executable = path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization');
+
       try {
         fs.chmodSync(executable, 0755);
       } catch (err) {
         console.warn(err.stack || err);
         return cb && cb(null, DefaultLocale);
       }
-      exec(executable, function(err, stdout) {
+
+      var command = shell.escape(executable) + ' ' + supportedLanguages.join(' ');
+
+      exec(command, function(err, stdout) {
         if (err) {
           console.warn(err.stack || err);
           cb && cb(null, DefaultLocale);
