@@ -1,4 +1,6 @@
+var fs = require('fs');
 var os = require('os');
+var path = require('path');
 
 var api = require('./api.js');
 var authorizationUtil = require('./authorization-util.js');
@@ -98,9 +100,17 @@ function rebuildMenuBar(enableLogOut) {
   }));
 
   $('input#installLocation').change(function() {
-    console.log('Changed app install location to ' + $(this).val());
-    db.saveObj(config.DbKeys.AppInstallDir, $(this).val());
-    $('input#installLocation').attr('nwdirectory', $(this).val());
+    var newAppDir = $(this).val();
+
+    uiGlobals.myApps.filter(function(app) {
+      return app.isStoreApp();
+    }).forEach(function(app) {
+      app.move(newAppDir);
+    });
+
+    console.log('Changed app install location to ' + newAppDir);
+    db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
+    $('input#installLocation').attr('nwdirectory', newAppDir);
   });
 
   // TODO: support website links on both OS X and Windows

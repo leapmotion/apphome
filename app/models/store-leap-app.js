@@ -201,6 +201,25 @@ module.exports = LeapApp.extend({
     cb && cb(err);
   },
 
+  move: function(targetDirectory, cb) {
+    var currentExe = this.get('executable');
+    var targetExe = currentExe.replace(path.dirname(currentExe), targetDirectory);
+
+    var is = fs.createReadStream(currentExe);
+    var os = fs.createWriteStream(targetExe);
+
+    // Force regeneration of app dir
+    if (os.platform() === 'darwin') {
+      delete this['__appDir'];
+    }
+
+    is.pipe(os);
+    is.on('end', function() {
+      fs.unlinkSync(currentExe);
+      cb && cb(null);
+    });
+  },
+
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
