@@ -347,7 +347,7 @@ function sendAppVersionData() {
       httpHelper.post(config.AppVersionDataEndpoint,
                       {
                         access_token: accessToken,
-                        data: appVersionData
+                        installations: appVersionData
                       },
                       function(err) {
                         if (err) {
