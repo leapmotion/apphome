@@ -28,7 +28,7 @@ function getLocale(cb) {
       });
     } else if (os.platform() === 'darwin') {
       var supportedLanguages = Array();
-      supportedLanguages.push('en');
+      supportedLanguages.push(DefaultLocale);
 
       var poFileNames = fs.readdirSync(path.join(__dirname, '..', '..', 'config', 'locales'));
       for (var i = 0; i < poFileNames.length; i++) {
