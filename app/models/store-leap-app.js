@@ -224,9 +224,7 @@ module.exports = LeapApp.extend({
       }
 
       // Force regeneration of app dir
-      if (os.platform() === 'darwin') {
-        delete this['__appDir'];
-      }
+      delete this.__appDir;
 
       this.set('executable', targetExe);
 
