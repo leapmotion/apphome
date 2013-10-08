@@ -19,7 +19,7 @@ module.exports = window.Backbone.Collection.extend({
   },
 
   model: function(attrs, options) {
-    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs));
+    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs, null, 2));
     if (attrs.urlToLaunch) {
       return new WebLinkApp(attrs, options);
     } else if (attrs.appId) {
@@ -29,7 +29,7 @@ module.exports = window.Backbone.Collection.extend({
     } else if (attrs.name) {
       return new LocalLeapApp(attrs, options);
     } else {
-      console.error('unknown app type: ' + JSON.stringify(attrs));
+      console.error('unknown app type: ' + JSON.stringify(attrs, null, 2));
     }
   },
 

@@ -228,6 +228,8 @@ module.exports = LeapApp.extend({
 
       this.set('executable', targetExe);
 
+      this.save();
+
       console.log('Moved ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
 
       cb && cb(null);
