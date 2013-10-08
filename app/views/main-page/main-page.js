@@ -21,13 +21,7 @@ module.exports = BaseView.extend({
     window.ondragover = function(evt) { evt.preventDefault(); return false; }; // ignore dragged in files
     window.ondrop = function(evt) { evt.preventDefault(); return false; };
 
-    var nwworkingdir;
-    userAppInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
-    if (userAppInstallDir) {
-      nwworkingdir = userAppInstallDir;
-    } else {
-      nwworkingdir = path.join.apply(null, config.PlatformAppDirs[os.platform()]);
-    }
+    var nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) || path.join.apply(null, config.PlatformAppDirs[os.platform()]);
 
     console.log('Current install directory: ' + nwworkingdir);
 
