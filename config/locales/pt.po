@@ -175,6 +175,9 @@ msgstr "Enviar instruções"
 msgid "Get Started"
 msgstr "Começar"
 
+msgid "Getting Started..."
+msgstr "Começando..."
+
 msgid "Create username"
 msgstr "Criar nome de usuário"
 
