@@ -312,8 +312,6 @@ function sendDeviceData() {
 }
 
 function sendAppVersionData() {
-  console.log(uiGlobals.myApps.length + ' ' + uiGlobals.uninstalledApps.length);
-
   var myAppsVersionData = uiGlobals.myApps.filter(function(app) {
     return app.isStoreApp();
   }).map(function(app) {
@@ -323,8 +321,6 @@ function sendAppVersionData() {
       trashed: false
     };
   });
-
-  console.log(myAppsVersionData);
 
   var uninstalledAppsVersionData = uiGlobals.uninstalledApps.filter(function(app) {
     return app.isStoreApp();
