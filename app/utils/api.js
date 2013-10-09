@@ -347,13 +347,13 @@ function sendAppVersionData() {
       httpHelper.post(config.AppVersionDataEndpoint,
                       {
                         access_token: accessToken,
-                        installations: appVersionData
+                        installations: JSON.stringify(appVersionData)
                       },
-                      function(err) {
+                      function(err, res) {
                         if (err) {
                           console.error('Failed to send app version data: ' + (err.stack || err));
                         } else {
-                          console.log('Sent app version data.');
+                          console.log('Sent app version data.  Got ' + res);
                         }
                       });
     }
