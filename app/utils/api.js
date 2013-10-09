@@ -311,6 +311,51 @@ function sendDeviceData() {
   });
 }
 
+function sendAppVersionData() {
+  var myAppsVersionData = uiGlobals.myApps.filter(function(app) {
+    return app.isStoreApp();
+  }).map(function(app) {
+    return {
+      app_id: app.get('id'),
+      app_version_id: app.get('versionId'),
+      trashed: false
+    };
+  });
+
+  var uninstalledAppsVersionData = uiGlobals.uninstalledApps.filter(function(app) {
+    return app.isStoreApp();
+  }).map(function(app) {
+    return {
+      app_id: app.get('id'),
+      app_version_id: app.get('versionId'),
+      trashed: true
+    };
+  });
+
+  var appVersionData = myAppsVersionData.concat(uninstalledAppsVersionData);
+
+  console.log('Sending App Version Data:' + JSON.stringify(appVersionData, null, 2));
+
+  oauth.getAccessToken(function(err, accessToken) {
+    if (err) {
+      console.warn('Failed to get an access token: ' + (err.stack || err));
+    } else {
+      httpHelper.post(config.AppVersionDataEndpoint,
+                      {
+                        access_token: accessToken,
+                        installations: JSON.stringify(appVersionData)
+                      },
+                      function(err, res) {
+                        if (err) {
+                          console.error('Failed to send app version data: ' + (err.stack || err));
+                        } else {
+                          console.log('Sent app version data.  Got ' + res);
+                        }
+                      });
+    }
+  });
+}
+
 function parsePrebundledManifest(manifest, cb) {
   console.log('\n\n\nExamining prebundle manifest \n' + JSON.stringify(manifest || {}, null, 2));
 
@@ -342,4 +387,5 @@ module.exports.connectToStoreServer = connectToStoreServer;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.getAppDetails = getAppDetails;
 module.exports.sendDeviceData = sendDeviceData;
+module.exports.sendAppVersionData = sendAppVersionData;
 module.exports.parsePrebundledManifest = parsePrebundledManifest;
