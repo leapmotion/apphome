@@ -175,6 +175,9 @@ msgstr "手順を送信"
 msgid "Get Started"
 msgstr "作業の開始"
 
+msgid "Getting Started..."
+msgstr "ソフトを起動しています..."
+
 msgid "Create username"
 msgstr "ユーザー名の作成"
 

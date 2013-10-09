@@ -1,3 +1,144 @@
+msgid "Welcome"
+msgstr "欢迎使用"
+
+msgid "Welcome to a whole new world"
+msgstr "欢迎来到新领域"
+
+msgid "Below are a few tips to get you started"
+msgstr "下面是一些可帮助您使用产品的小提示"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "我同意 Leap Motion %1$s"
+
+msgid "End User License Agreement"
+msgstr "最终用户许可协议"
+
+msgid "Continue"
+msgstr "继续"
+
+msgid "Airspace, the Leap Motion app store"
+msgstr "Airspace，Leap Motion 应用商店"
+
+msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "在 Airspace (提供顶尖应用的首创应用商店)中探索、下载和启动 Leap Motion 应用。"
+
+msgid "Launch Airspace"
+msgstr "启动 Airspace"
+
+msgid "Leap Motion End User Software License Agreement"
+msgstr "Leap Motion 最终用户软件许可协议"
+
+msgid "Continue with mouse only"
+msgstr "仅使用鼠标继续操作"
+
+msgid "Find and launch your Leap Motion apps"
+msgstr "查找并启动 Leap Motion 应用"
+
+msgid "Sync purchases across devices"
+msgstr "在设备间同步购买的应用"
+
+msgid "Discover games, utilities, music, and more in our store!"
+msgstr "在我们的商店中探索游戏、实用程序、音乐及更多内容!"
+
+msgid "Use the same login for purchases, support, and more!"
+msgstr "使用同一登录名购买应用、获取支持及更多服务!"
+
+msgid "Connecting to authentication server..."
+msgstr "正在连接身份验证服务器..."
+
+msgid "Preparing for launch..."
+msgstr "正在准备启动..."
+
+msgid "Signing you out..."
+msgstr "正在注销..."
+
+msgid "No Internet connection"
+msgstr "无 Internet 连接"
+
+msgid "Please ensure your Internet connection is working properly."
+msgstr "请确保 Internet 连接正常。"
+
+msgid "No apps to display."
+msgstr "没有要显示的应用。"
+
+msgid "Waiting..."
+msgstr "请稍候..."
+
+msgid "Connecting..."
+msgstr "正在连接..."
+
+msgid "Downloading..."
+msgstr "正在下载..."
+
+msgid "Installing..."
+msgstr "正在安装..."
+
+msgid "Opening..."
+msgstr "正在打开..."
+
+msgid "Launching..."
+msgstr "正在启动..."
+
+msgid "Click to Install"
+msgstr "单击以安装"
+
+msgid "Trash"
+msgstr "垃圾桶"
+
+msgid "Version"
+msgstr "版本"
+
+msgid "Release Date"
+msgstr "发行日期"
+
+msgid "What's New"
+msgstr "新增功能"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Install %1$s"
+msgstr "安装 %1$s"
+
+msgid "Update App"
+msgstr "更新应用"
+
+msgid "Launch App"
+msgstr "启动应用"
+
+msgid "Controller Settings"
+msgstr "控制器设置"
+
+msgid "Exit"
+msgstr "退出"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Sign out %1$s"
+msgstr "注销 %1$s"
+
+msgid "Account"
+msgstr "帐户"
+
+msgid "About Airspace Home"
+msgstr "关于 Airspace 主页"
+
+msgid "Airspace Home"
+msgstr "Airspace 主页"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "Home"
+msgstr "主页"
+
+msgid "Store"
+msgstr "商店"
+
 msgid "You need to sign in or sign up before continuing."
 msgstr "您需要先登录或注销，然后才能继续操作。"
 
@@ -33,6 +174,9 @@ msgstr "发送说明"
 
 msgid "Get Started"
 msgstr "开始使用"
+
+msgid "Getting Started..."
+msgstr "现在开始吧..."
 
 msgid "Create username"
 msgstr "创建用户名"

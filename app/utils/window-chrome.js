@@ -94,7 +94,7 @@ function rebuildMenuBar(enableLogOut) {
   if (os.platform() === 'win32') {
     var helpMenu = new nwGui.Menu();
     helpMenu.append(new nwGui.MenuItem({
-      label: 'Getting Started...',
+      label: i18n.translate('Getting Started...'),
       click: function() {
         nwGui.Shell.openExternal(config.GettingStartedUrl);
       }
