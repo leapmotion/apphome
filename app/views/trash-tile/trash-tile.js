@@ -9,7 +9,10 @@ module.exports = Tile.extend({
 
     this.initializeTile(leapApp);
 
-    this.setElement($(this.templateHtml(this.appJson)));
+    this.setElement($(this.templateHtml({
+        app: this.appJson,
+        reinstall_label: i18n.translate('Click to Reinstall')
+    })));
 
     this._showOrHideIcon();
 

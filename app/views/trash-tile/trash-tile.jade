@@ -1,8 +1,8 @@
 li.trash-tile
-  img.tile-bg(src="#{ tilePath }")
-  img.icon(src="#{ iconPath }")
+  img.tile-bg(src="#{ app.tilePath }")
+  img.icon(src="#{ app.iconPath }")
   .name-outer
     .name-inner
       .dot
       h3.name #{ name }
-  .install-overlay Click to Reinstall
+  .install-overlay= reinstall_label
