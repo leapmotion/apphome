@@ -209,16 +209,24 @@ module.exports = LeapApp.extend({
   move: function(targetDirectory, cb) {
     var sourceExe = this.get('executable');
     if (!sourceExe) {
+      cb && cb(null);
       return;
     }
 
     var sourceDirectory = path.dirname(sourceExe);
 
-    targetDirectory = path.join(targetDirectory, String(uiGlobals.user_id));
+    if (sourceDirectory == targetDirectory) {
+      cb && cb(null);
+      return;
+    }
+
     var targetExe = sourceExe.replace(sourceDirectory, targetDirectory);
+
+    console.log('Moving ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
 
     mv(sourceExe, targetExe, {mkdirp: true}, (function(err) {
       if (err) {
+        console.log('Error moving ' + this.get('name'));
         cb && cb(err);
         return;
       }
@@ -229,6 +237,12 @@ module.exports = LeapApp.extend({
       this.set('executable', targetExe);
 
       this.save();
+
+      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetExe), function(err3) {
+        if (err3) {
+          console.warn('xattr exec error, ignoring: ' + err3);
+        }
+      });
 
       console.log('Moved ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
 

@@ -1,3 +1,5 @@
+var async = require('async');
+
 var LeapApp = require('./leap-app.js');
 var LocalLeapApp = require('./local-leap-app.js');
 var StoreLeapApp = require('./store-leap-app.js');
@@ -35,5 +37,21 @@ module.exports = window.Backbone.Collection.extend({
 
   comparator: function(leapApp) {
     return leapApp.sortScore();
+  },
+
+  move: function(newAppDirectory) {
+    var appMoveQueue = async.queue(function(app, cb) {
+      app.move(newAppDirectory, cb);
+    }, 5);
+
+    appMoveQueue.drain = function() {
+      console.log('All apps moved to ' + newAppDirectory + ' successfully.');
+    };
+
+    this.filter(function(app) {
+      return app.isStoreApp() && app.get('state') === LeapApp.States.Ready;
+    }).forEach(function(app) {
+      appMoveQueue.push(app);
+    });
   }
 });

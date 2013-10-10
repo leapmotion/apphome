@@ -102,14 +102,11 @@ function rebuildMenuBar(enableLogOut) {
   $('input#installLocation').change(function() {
     var newAppDir = $(this).val();
 
-    uiGlobals.myApps.filter(function(app) {
-      return app.isStoreApp();
-    }).forEach(function(app) {
-      app.move(newAppDir);
-    });
-
     console.log('Changed app install location to ' + newAppDir);
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
+
+    uiGlobals.myApps.move(path.join(newAppDir, String(uiGlobals.user_id)));
+
     $('input#installLocation').attr('nwdirectory', newAppDir);
   });
 
