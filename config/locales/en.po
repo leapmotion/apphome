@@ -118,8 +118,8 @@ msgstr "Exit"
 msgid "File"
 msgstr "File"
 
-msgid "Sign out %1$s"
-msgstr "Sign out %1$s"
+msgid "Sign Out %1$s"
+msgstr "Sign Out %1$s"
 
 msgid "Account"
 msgstr "Account"
@@ -412,5 +412,5 @@ msgstr "Restore All"
 msgid "Unarchive All"
 msgstr "Unarchive All"
 
-msgid "Set install directory..."
-msgstr "Set install directory..."
+msgid "Set Install Directory..."
+msgstr "Set Install Directory..."

@@ -118,7 +118,7 @@ msgstr "Beenden"
 msgid "File"
 msgstr "Datei"
 
-msgid "Sign out %1$s"
+msgid "Sign Out %1$s"
 msgstr "%1$s abmelden"
 
 msgid "Account"
@@ -412,4 +412,5 @@ msgstr "Alles wiederherstellen"
 msgid "Unarchive All"
 msgstr "Alle nicht archivieren"
 
-
+msgid "Set Install Directory..."
+msgstr "Installationsverzeichnis angeben..."

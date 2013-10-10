@@ -271,4 +271,5 @@ msgstr "全部还原"
 msgid "Unarchive All"
 msgstr "全部解档"
 
-
+msgid "Set Install Directory..."
+msgstr "设置安装目录..."

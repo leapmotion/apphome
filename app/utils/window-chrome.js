@@ -84,12 +84,12 @@ function rebuildMenuBar(enableLogOut) {
 
   var accountMenu = new nwGui.Menu();
   accountMenu.append(new nwGui.MenuItem({
-    label: i18n.translate('Sign out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
+    label: i18n.translate('Sign Out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
     click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
   }));
   accountMenu.append(new nwGui.MenuItem({
-    label: i18n.translate('Set install directory...'),
+    label: i18n.translate('Set Install Directory...'),
     click: function() {
       $('input#installLocation').trigger('click');
     }
