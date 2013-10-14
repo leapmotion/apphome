@@ -95,7 +95,7 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     text-align center
 
   .icon
-    position: absolute;
+    position absolute
     width 96px
     height 96px
     left 111px
@@ -119,20 +119,19 @@ messageState(state, showSpinner = false, tileOpacity = .7)
       display none
       width 100%
 
-  .dot
-    background -webkit-linear-gradient(top, #c5e171 0%, #bee267 50%, #95bf48 100%)
-    border 1px solid #161719
-    border-radius 8px
-    background-clip padding-box
-    box-shadow 0 0 10px rgba(154,201,72,1)
-    content ""
+  .update-notification
+    background-color #222
+    border-radius 12px
+    color #98cff8
     display none
-    left -26px
-    float left
-    height 14px
-    margin-top 6px
-    margin-right 12px
-    width 14px
+    font-size 28px
+    height 24px
+    line-height 25px
+    position absolute
+    right -8px
+    text-shadow 0 0 10px rgba(15,20,7,0.8)
+    top -8px
+    vertical-align text-top
 
   .install-overlay
     background -webkit-linear-gradient(top, #272c31 0%, #141719 100%)
@@ -195,10 +194,8 @@ messageState(state, showSpinner = false, tileOpacity = .7)
         display block
 
   &.ready.update
-    .dot
+    .update-notification
       display block
-      background -webkit-linear-gradient(top, #a5d9f9 0%, #98cff8 50%, #90c9f3 100%)
-      box-shadow 0 0 10px rgba(67,131,181,1)
 
   &.uninstalled
     opacity 0.4
