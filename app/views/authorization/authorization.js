@@ -254,6 +254,8 @@ module.exports = BaseView.extend({
   },
 
   _center: function() {
+    var $frbg = this.$('.first-run-background');
+
     var iframeWindow = this.$iframe.prop('contentWindow');
     if (iframeWindow) {
       this.$iframe.css('visibility', 'hidden');
@@ -269,7 +271,11 @@ module.exports = BaseView.extend({
 
     this._centerElement(this.$noInternet);
     this._centerElement(this.$waiting);
-    this._centerElement(this.$('.first-run-background'));
+    this._centerElement($frbg);
+
+    // 1440 comes from the image width declared in authorization.styl
+    var scale = Math.min($(window).width(), 1440) / 1440;
+    $frbg.css('transform', 'scaleX(' + scale + ') scaleY(' + scale + ')');
   },
 
   _centerElement: function($element) {
