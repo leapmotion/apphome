@@ -1,7 +1,7 @@
 var config = require('../../config/config.js');
 var domain = require('domain');
 var events = require('events');
-var pubnubInit = require(config.ModulePaths.Pubnub).init
+var pubnubInit = window.PUBNUB.init;
 
 
 var pubnubSubscriptions = {};
