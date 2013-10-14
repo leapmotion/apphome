@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-
-var archiver = require('archiver');
 var async = require('async');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
@@ -14,11 +12,13 @@ packageJson.window.toolbar = false;
 if (process.argv[2]) {
   packageJson.version = process.argv[2];
 }
+delete packageJson.devDependencies;
+delete packageJson.scripts;
 
 function buildDir(subdir) {
   var buildDir = path.join(__dirname, '..', 'build', subdir || '');
   if (!fs.existsSync(buildDir)) {
-    fs.mkdirSync(buildDir);
+    fs.mkdirpSync(buildDir);
   }
   return buildDir;
 }
@@ -51,8 +51,6 @@ fs.deleteSync(buildDir());
 var pngIconPath = path.join.apply(path, [ __dirname, '..' ].concat(packageJson.window.icon.split('/')));
 var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
-var archiveName = packageJson.name + '.nw';
-var appZipOutputPath = path.join(buildDir(), archiveName);
 
 function setFullVersionNumber(cb) {
   if (!/-/.test(packageJson.version)) { // if there's no patch metadata already, add the git hash id
@@ -70,62 +68,71 @@ function setFullVersionNumber(cb) {
   }
 }
 
-function createAppZip(cb) {
-  var appZip = archiver('zip');
-  var output = fs.createWriteStream(appZipOutputPath);
-  appZip.pipe(output);
+function copyFileSync(source, dest) {
+  fs.mkdirpSync(path.dirname(dest));
+  fs.writeFileSync(dest, fs.readFileSync(source), { mode: fs.statSync(source).mode });
+}
+
+function copyFilesToDir(dir) {
+  var copiedManifest = appManifest.slice(0);
 
   console.log('package.json');
-  appZip.append(JSON.stringify(packageJson), { name: 'package.json', store: true });
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(packageJson, null, 2));
 
-  while (appManifest.length > 0) {
-    var fileToInclude = appManifest.shift();
+  while (copiedManifest.length > 0) {
+    var fileToInclude = copiedManifest.shift();
     var fullPath = path.join(__dirname, '..', fileToInclude);
     if (fs.statSync(fullPath).isDirectory()) {
-      fs.readdirSync(fullPath).forEach(function(file) {
-        appManifest.push(path.join(fileToInclude, file));
-      });
+      if (path.basename(fileToInclude) !== 'test') {
+        fs.readdirSync(fullPath).forEach(function(file) {
+          copiedManifest.push(path.join(fileToInclude, file));
+        });
+      }
     } else {
-      var normalizedFilename = fileToInclude.replace(/\\/g, '/');
-      console.log(normalizedFilename);
-      appZip.append(fs.readFileSync(fullPath), { name: normalizedFilename, store: true });
+      console.log(fileToInclude);
+      copyFileSync(fullPath, path.join(dir, fileToInclude));
     }
   }
-
-  appZip.finalize(function(err, bytesWritten) {
-    if (err) {
-      return cb(err);
-    }
-    console.log(bytesWritten + ' total bytes written to ' + appZipOutputPath);
-    cb(null);
-  });
 }
 
 function buildForWindows(cb) {
+  var platform = 'windows';
+
   if (os.platform() !== 'win32') {
     console.log('Building for Windows must be done on Windows, unfortunately.');
     return cb(null);
   }
   function getExecFn(command) {
-    return function(cb) {
+    return function execFn(cb, retriesLeft) {
+      if (typeof retriesLeft === 'undefined') {
+        retriesLeft = 2;
+      }
       console.log(command);
       exec(command, function(err, stdout, stderr) {
         if (err) {
-          console.log('stdout: ' + stdout);
-          console.log('stderr: ' + stderr);
-          return cb(err);
+          if (retriesLeft > 0) {
+            execFn(cb, retriesLeft - 1);
+          } else {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            return cb(err);
+          }
         }
         cb(null);
       });
     };
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion  +  '-win-ia32'), buildDir('windows'), function(err) {
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion  +  '-win-ia32'), buildDir(platform), function(err) {
     if (err) {
       return cb(err);
     }
-    fs.unlinkSync(path.join(buildDir('windows'), 'nwsnapshot.exe'));
-    var exePath = path.join(buildDir('windows'), 'nw.exe');
+    copyFilesToDir(buildDir(platform));
+    if (fs.existsSync(path.join(buildDir(platform), 'debug.log'))) {
+      fs.unlinkSync(path.join(buildDir(platform), 'debug.log'));
+    }
+    fs.unlinkSync(path.join(buildDir(platform), 'nwsnapshot.exe'));
+    var exePath = path.join(buildDir(platform), 'nw.exe');
     var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
     var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
     var setExeDetailsCommand = shell.escape(path.join(__dirname, 'verpatch.exe')) + ' ' + shell.escape(exePath) +
@@ -140,24 +147,23 @@ function buildForWindows(cb) {
       getExecFn(setIconCommand),
       getExecFn(setExeDetailsCommand),
       function (cb) {
-        fs.copy(path.join(buildDir(), archiveName), path.join(buildDir('windows'), 'package.nw'), cb);
-      },
-      function (cb) {
-        fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir('windows'), 'Airspace_NoGPU.cmd'), cb);
+        fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir(platform), 'Airspace_NoGPU.cmd'), cb);
       }
     ], function(err) {
       if (err) {
         return cb(err);
       }
 
-      fs.renameSync(exePath, path.join(buildDir('windows'), packageJson.name + '.exe'));
-      console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir('windows'));
+      fs.renameSync(exePath, path.join(buildDir(platform), packageJson.name + '.exe'));
+      console.log('Wrote Windows version ' + packageJson.version + ' to: ' + buildDir(platform));
       cb(null);
     });
   });
 }
 
 function buildForMac(cb) {
+  var platform = 'osx';
+
   function changePlistString(plist, key, newValue) {
     var searchRegex = new RegExp('(<key>' + key + '<\\/key>\\s*<string>)[^<]*(<\\/string>)');
     return plist.replace(searchRegex, '$1' + newValue + '$2');
@@ -183,49 +189,46 @@ function buildForMac(cb) {
     return plist.replace(plistEndRegex, r.join('\n'));
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir('osx'), packageJson.name + '.app'), function(err) {
+  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir(platform), packageJson.name + '.app'), function(err) {
     if (err) {
       return cb(err);
     }
 
-    fs.copy(appZipOutputPath, path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'app.nw'), function(err) {
+    var outputDir = path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Resources', 'app.nw');
+    fs.mkdirpSync(outputDir);
+    copyFilesToDir(outputDir);
+
+    var icon = fs.readFileSync(icnsIconPath);
+    fs.writeFileSync(path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Resources', packageJson.name + '.icns'), icon);
+    fs.unlinkSync(path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
+    fs.copy(path.join(__dirname, '..', 'script', 'node-webkit-no-gpu'), path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'MacOS', 'node-webkit-no-gpu'), function(err) {
       if (err) {
         return cb(err);
       }
 
-      var icon = fs.readFileSync(icnsIconPath);
-      fs.writeFileSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', packageJson.name + '.icns'), icon);
-      fs.unlinkSync(path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
-      fs.copy(path.join(__dirname, '..', 'script', 'node-webkit-no-gpu'), path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'MacOS', 'node-webkit-no-gpu'), function(err) {
-        if (err) {
-          return cb(err);
-        }
+      var infoPlistPath = path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Info.plist');
+      var plist = fs.readFileSync(infoPlistPath, 'utf-8');
+      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
+      plist = changePlistString(plist, 'CFBundleName', packageJson.name);
+      plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
+      plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
+      plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
+      plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit-no-gpu');
+      plist = changePlistString(plist, 'CFBundleIdentifier', 'com.leapmotion.airspace');
+      plist = addAirspaceProtocolHandler(plist);
 
-        var infoPlistPath = path.join(buildDir('osx'), packageJson.name + '.app', 'Contents', 'Info.plist');
-        var plist = fs.readFileSync(infoPlistPath, 'utf-8');
-        plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
-        plist = changePlistString(plist, 'CFBundleName', packageJson.name);
-        plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
-        plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
-        plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
-        plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit-no-gpu');
-        plist = changePlistString(plist, 'CFBundleIdentifier', 'com.leapmotion.airspace');
-        plist = addAirspaceProtocolHandler(plist);
+      fs.writeFileSync(infoPlistPath, plist);
 
-        fs.writeFileSync(infoPlistPath, plist);
-
-        console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir('osx'));
-        cb(null);
-      });
+      console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir(platform));
+      cb(null);
     });
   });
 }
 
 async.series([
   setFullVersionNumber,
-  createAppZip,
   function(cb) {
-    async.parallel([
+    async.series([
       buildForWindows,
       buildForMac
     ], cb);
