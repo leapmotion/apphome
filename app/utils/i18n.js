@@ -15,6 +15,19 @@ module.exports.locale = process.env.LEAPHOME_LOCALE;
 function getLocale(cb) {
   var locale = module.exports.locale;
   if (!locale) {
+    var supportedLanguages = Array();
+    supportedLanguages.push(DefaultLocale);
+
+    var poFileNames = fs.readdirSync(path.join(__dirname, '..', '..', 'config', 'locales'));
+    for (var i = 0; i < poFileNames.length; i++) {
+      var langMatch = poFileNames[i].match(/(.*)\.po/i);
+      if (langMatch) {
+        supportedLanguages.push(langMatch[1].toLowerCase());
+      }
+    }
+
+    console.log('Supported languages: ' + supportedLanguages);
+
     if (os.platform() === 'win32') {
       registry.readValue('HKCU\\Control Panel\\International', 'LocaleName', function(err, fullLocale) {
         if (err) {
@@ -22,24 +35,17 @@ function getLocale(cb) {
           cb && cb(null, DefaultLocale);
         } else {
           fullLocale = fullLocale || DefaultLocale;
-          locale = module.exports.locale = fullLocale.split('-').shift();
+
+          if (fullLocale in supportedLanguages) {
+            locale = fullLocale;
+          } else {
+            locale = module.exports.locale = fullLocale.split('-').shift();
+          }
+
           cb && cb(null, locale);
         }
       });
     } else if (os.platform() === 'darwin') {
-      var supportedLanguages = Array();
-      supportedLanguages.push(DefaultLocale);
-
-      var poFileNames = fs.readdirSync(path.join(__dirname, '..', '..', 'config', 'locales'));
-      for (var i = 0; i < poFileNames.length; i++) {
-        var langMatch = poFileNames[i].match(/(.*)\.po/i);
-        if (langMatch) {
-          supportedLanguages.push(langMatch[1].toLowerCase());
-        }
-      }
-
-      console.log('Supported languages: ' + supportedLanguages);
-
       var executable = path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization');
 
       try {
