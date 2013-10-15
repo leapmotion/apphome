@@ -36,7 +36,7 @@ function getLocale(cb) {
         } else {
           fullLocale = fullLocale || DefaultLocale;
 
-          if (fullLocale in supportedLanguages) {
+          if (supportedLanguages.indexOf(fullLocale) !== -1) {
             locale = fullLocale;
           } else {
             locale = module.exports.locale = fullLocale.split('-').shift();
