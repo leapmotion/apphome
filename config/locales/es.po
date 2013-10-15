@@ -414,3 +414,6 @@ msgstr "Restaurar todo"
 
 msgid "Unarchive All"
 msgstr "Desarchivar todo"
+
+msgid "Click to Reinstall"
+msgstr "Haga clic para reinstalar"
