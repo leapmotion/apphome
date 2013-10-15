@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+var fs = require('fs');
 var os = require('os');
 
 var config = require('../../config/config.js');
@@ -26,6 +26,13 @@ function initialize(cb) {
       registry.readValue(registryKey, 'MixPanelGUID', function(err, idFromRegistry) {
         if (!err) {
           mixpanelDistinctId = idFromRegistry;
+        }
+        identifyIfPossible();
+      });
+    } else if (os.platform() === 'darwin') {
+      fs.readFile('/Library/Application Support/Leap Motion/mpguid', { encoding: 'utf-8' }, function(err, idFromFile) {
+        if (!err) {
+          mixpanelDistinctId = idFromFile;
         }
         identifyIfPossible();
       });
