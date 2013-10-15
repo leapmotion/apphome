@@ -38,6 +38,8 @@ function getLocale(cb) {
 
           if (supportedLanguages.indexOf(fullLocale) !== -1) {
             locale = fullLocale;
+          } else if (fullLocale.indexOf('zh') === 0) {
+            locale = 'zh-CN';
           } else {
             locale = module.exports.locale = fullLocale.split('-').shift();
           }
@@ -55,14 +57,14 @@ function getLocale(cb) {
         return cb && cb(null, DefaultLocale);
       }
 
-      var command = shell.escape(executable) + ' ' + supportedLanguages.join(' ');
+      var command = shell.escape(executable) + ' ' + supportedLanguages.join(' ').replace(/-/g, '_');
 
       exec(command, function(err, stdout) {
         if (err) {
           console.warn(err.stack || err);
           cb && cb(null, DefaultLocale);
         } else {
-          locale = module.exports.locale = stdout.replace(/^\s+|\s+$/g, '') || DefaultLocale;
+          locale = module.exports.locale = window.$.trim(stdout).replace('_', '-') || DefaultLocale;
           cb && cb(null, locale);
         }
       });
