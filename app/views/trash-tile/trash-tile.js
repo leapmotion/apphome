@@ -1,3 +1,5 @@
+var i18n = require('../../utils/i18n.js');
+
 var Tile = require('../tile/tile.js');
 
 module.exports = Tile.extend({
