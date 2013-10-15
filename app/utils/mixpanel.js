@@ -30,7 +30,7 @@ function initialize(cb) {
         identifyIfPossible();
       });
     } else if (os.platform() === 'darwin') {
-      fs.readFile('/Library/Application Support/Leap Motion/mpguid', function(err, idFromFile) {
+      fs.readFile('/Library/Application Support/Leap Motion/mpguid', { encoding: 'utf-8' }, function(err, idFromFile) {
         if (!err) {
           mixpanelDistinctId = idFromFile;
         }
