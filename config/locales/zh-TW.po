@@ -355,43 +355,43 @@ msgstr "Airspace 商店"
 msgid "App Store"
 msgstr "應用商店"
 
-msgid "Download all"
+msgid "Download All"
 msgstr "全部下載"
 
-msgid "Download all applications"
+msgid "Download All Applications"
 msgstr "下載所有應用"
 
-msgid "Download all apps"
+msgid "Download All Apps"
 msgstr "下載所有應用"
 
-msgid "Install all"
+msgid "Install All"
 msgstr "全部安裝"
 
-msgid "Install all applications"
+msgid "Install All Applications"
 msgstr "安裝所有應用"
 
-msgid "Install all apps"
+msgid "Install All Apps"
 msgstr "安裝所有應用"
 
-msgid "Upgrade all"
+msgid "Upgrade All"
 msgstr "全部升級"
 
-msgid "Upgrade all applications"
+msgid "Upgrade All Applications"
 msgstr "升級所有應用"
 
-msgid "Upgrade all apps"
+msgid "Upgrade All Apps"
 msgstr "升級所有應用"
 
-msgid "Update all"
+msgid "Update All"
 msgstr "全部更新"
 
-msgid "Update all applications"
+msgid "Update All Applications"
 msgstr "更新所有應用"
 
-msgid "Update all apps"
+msgid "Update All Apps"
 msgstr "更新所有應用"
 
-msgid "Cancel all"
+msgid "Cancel All"
 msgstr "全部取消"
 
 msgid "Cancel all downloads"
