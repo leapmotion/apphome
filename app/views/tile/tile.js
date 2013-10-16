@@ -1,5 +1,6 @@
 var os = require('os');
 var Spinner = require('spin');
+var urlify = require('django-urlify');
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
@@ -48,6 +49,7 @@ var Tile = BaseView.extend({
 
     this.setElement(this.templateHtml({
       app:                  this.appJson,
+      app_slug:             urlify(this.appJson.name),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
       downloading_label:    i18n.translate('Downloading...'),

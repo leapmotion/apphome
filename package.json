@@ -20,6 +20,7 @@
     "adm-zip": "0.4.3",
     "async": "0.2.8",
     "backbone": "1.0.0",
+    "django-urlify": "0.0.1",
     "fs-extra": "0.6.1",
     "jade": "0.30.0",
     "jed": "0.5.4",
