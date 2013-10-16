@@ -414,3 +414,6 @@ msgstr "すべてを復元"
 
 msgid "Unarchive All"
 msgstr "すべてを展開"
+
+msgid "Click to Reinstall"
+msgstr "クリックして再インストール"

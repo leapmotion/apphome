@@ -415,4 +415,5 @@ msgstr "全部还原"
 msgid "Unarchive All"
 msgstr "全部解档"
 
-
+msgid "Click to Reinstall"
+msgstr "单击以重新安装"

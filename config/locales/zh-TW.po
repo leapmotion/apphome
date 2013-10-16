@@ -1,0 +1,419 @@
+msgid "Welcome"
+msgstr "歡迎使用"
+
+msgid "Welcome to a whole new world"
+msgstr "歡迎來到新領域"
+
+msgid "Below are a few tips to get you started"
+msgstr "下面是一些可幫助您使用產品的小提示"
+
+msgid "I agree to the Leap Motion %1$s"
+msgstr "我同意 Leap Motion %1$s"
+
+msgid "End User License Agreement"
+msgstr "最終用戶許可協議"
+
+msgid "Continue"
+msgstr "繼續"
+
+msgid "Airspace, the Leap Motion app store"
+msgstr "Airspace，Leap Motion 應用商店"
+
+msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgstr "在 Airspace (提供頂尖應用的首創應用商店)中探索、下載和啓動 Leap Motion 應用。"
+
+msgid "Launch Airspace"
+msgstr "啓動 Airspace"
+
+msgid "Leap Motion End User Software License Agreement"
+msgstr "Leap Motion 最終用戶軟件許可協議"
+
+msgid "Continue with mouse only"
+msgstr "僅使用鼠標繼續操作"
+
+msgid "Find and launch your Leap Motion apps"
+msgstr "查找並啓動 Leap Motion 應用"
+
+msgid "Sync purchases across devices"
+msgstr "在設備間同步購買的應用"
+
+msgid "Discover games, utilities, music, and more in our store!"
+msgstr "在我們的商店中探索游戲、實用程序、音樂及更多內容!"
+
+msgid "Use the same login for purchases, support, and more!"
+msgstr "使用同一登錄名購買應用、獲取支持及更多服務!"
+
+msgid "Connecting to authentication server..."
+msgstr "正在連接身份驗證服務器..."
+
+msgid "Preparing for launch..."
+msgstr "正在準備啓動..."
+
+msgid "Signing you out..."
+msgstr "正在註銷..."
+
+msgid "No Internet connection"
+msgstr "無 Internet 連接"
+
+msgid "Please ensure your Internet connection is working properly."
+msgstr "請確保 Internet 連接正常。"
+
+msgid "No apps to display."
+msgstr "沒有要顯示的應用。"
+
+msgid "Waiting..."
+msgstr "請稍候..."
+
+msgid "Connecting..."
+msgstr "正在連接..."
+
+msgid "Downloading..."
+msgstr "正在下載..."
+
+msgid "Installing..."
+msgstr "正在安裝..."
+
+msgid "Opening..."
+msgstr "正在打開..."
+
+msgid "Launching..."
+msgstr "正在啓動..."
+
+msgid "Click to Install"
+msgstr "單擊以安裝"
+
+msgid "Trash"
+msgstr "垃圾桶"
+
+msgid "Version"
+msgstr "版本"
+
+msgid "Release Date"
+msgstr "發行日期"
+
+msgid "What's New"
+msgstr "新增功能"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Install %1$s"
+msgstr "安裝 %1$s"
+
+msgid "Update App"
+msgstr "更新應用"
+
+msgid "Launch App"
+msgstr "啓動應用"
+
+msgid "Controller Settings"
+msgstr "控制器設置"
+
+msgid "Exit"
+msgstr "退出"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Sign out %1$s"
+msgstr "註銷 %1$s"
+
+msgid "Account"
+msgstr "帳戶"
+
+msgid "About Airspace Home"
+msgstr "關於 Airspace 主頁"
+
+msgid "Airspace Home"
+msgstr "Airspace 主頁"
+
+msgid "Help"
+msgstr "幫助"
+
+msgid "Home"
+msgstr "主頁"
+
+msgid "Store"
+msgstr "商店"
+
+msgid "You need to sign in or sign up before continuing."
+msgstr "您需要先登錄或註銷，然後才能繼續操作。"
+
+msgid "account email"
+msgstr "帳戶電子郵件"
+
+msgid "password"
+msgstr "密碼"
+
+msgid "Sign In"
+msgstr "登錄"
+
+msgid "Sign Up"
+msgstr "註冊"
+
+msgid "Forgot password?"
+msgstr "忘記密碼?"
+
+msgid "Invalid email or password."
+msgstr "電子郵件或密碼無效。"
+
+msgid "account email"
+msgstr "帳戶電子郵件"
+
+msgid "Please enter an email address."
+msgstr "請輸入電子郵件地址。"
+
+msgid "Email can't be blank"
+msgstr "電子郵件不得為空"
+
+msgid "Send Instructions"
+msgstr "發送說明"
+
+msgid "Get Started"
+msgstr "開始使用"
+
+msgid "Getting Started..."
+msgstr "新手上路..."
+
+msgid "Create username"
+msgstr "創建用戶名"
+
+msgid "Email"
+msgstr "電子郵件"
+
+msgid "Create password"
+msgstr "創建密碼"
+
+msgid "Confirm password"
+msgstr "確認密碼"
+
+msgid "Birthdate"
+msgstr "生日"
+
+msgid "Month"
+msgstr "月份"
+
+msgid "January"
+msgstr "1 月"
+
+msgid "February"
+msgstr "2 月"
+
+msgid "March"
+msgstr "3 月"
+
+msgid "April"
+msgstr "4 月"
+
+msgid "May"
+msgstr "5 月"
+
+msgid "June"
+msgstr "6 月"
+
+msgid "July"
+msgstr "7 月"
+
+msgid "August"
+msgstr "8 月"
+
+msgid "September"
+msgstr "9 月"
+
+msgid "October"
+msgstr "10 月"
+
+msgid "November"
+msgstr "11 月"
+
+msgid "December"
+msgstr "12 月"
+
+msgid "I agree to the Airspace Terms of Service"
+msgstr "我同意 Airspace 服務條款"
+
+msgid "Email me Leap Motion news and updates."
+msgstr "向我發送包含 Leap Motion 新聞和更新的電子郵件。"
+
+msgid "Sign in to an existing account"
+msgstr "登錄現有帳戶"
+
+msgid "Email can't be blank"
+msgstr "電子郵件不得為空"
+
+msgid "Setting a password is required"
+msgstr "需要設置密碼"
+
+msgid "Username can't be blank"
+msgstr "用戶名不得為空"
+
+msgid "Birthdate is required"
+msgstr "生日為必填項"
+
+msgid "You must accept the Terms of Service"
+msgstr "您必須接受服務條款"
+
+msgid "Password entries do not match"
+msgstr "密碼條目不匹配"
+
+msgid "Username has already been taken"
+msgstr "用戶名已被占用"
+
+msgid "Setting a password is required"
+msgstr "需要設置密碼"
+
+msgid "Your username contains invalid characters"
+msgstr "您的用戶名包含無效字符"
+
+msgid "A complete birthdate is required"
+msgstr "需要填寫完整生日"
+
+msgid "Password is too short (minimum is 6 characters)"
+msgstr "密碼太短(最少 6 個字符)"
+
+msgid "About Airspace"
+msgstr "關於 Airspace"
+
+msgid "Hide Airspace"
+msgstr "隱藏 Airspace"
+
+msgid "Hide Others"
+msgstr "隱藏其他內容"
+
+msgid "Show All"
+msgstr "全部顯示"
+
+msgid "Quit Airspace"
+msgstr "退出 Airspace"
+
+msgid "Edit"
+msgstr "編輯"
+
+msgid "Undo"
+msgstr "撤消"
+
+msgid "Redo"
+msgstr "恢復"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "Copy"
+msgstr "複製"
+
+msgid "Paste"
+msgstr "粘貼"
+
+msgid "Delete"
+msgstr "刪除"
+
+msgid "Select All"
+msgstr "全選"
+
+msgid "Account"
+msgstr "帳戶"
+
+msgid "Sign Out ##"
+msgstr "註銷 ##"
+
+msgid "Window"
+msgstr "窗口"
+
+msgid "Minimize"
+msgstr "最小化"
+
+msgid "Close"
+msgstr "關閉"
+
+msgid "Bring All to Front"
+msgstr "全部置頂"
+
+msgid "Changes will take effect on relaunch"
+msgstr "更改將在重新啓動後生效"
+
+msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgstr "定位已崩潰。請確保您已安裝了最新的顯卡驅動程序。"
+
+msgid "Error Report"
+msgstr "錯誤報告"
+
+msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgstr "Leap Motion Service 或其關聯的程序之一在上次崩潰。請向我們發送此錯誤報告以幫助改進軟件。"
+
+msgid "Send Error Report"
+msgstr "發送錯誤報告"
+
+msgid "Don't Send"
+msgstr "不要發送"
+
+msgid "Airspace Store"
+msgstr "Airspace 商店"
+
+msgid "App Store"
+msgstr "應用商店"
+
+msgid "Download All"
+msgstr "全部下載"
+
+msgid "Download All Applications"
+msgstr "下載所有應用"
+
+msgid "Download All Apps"
+msgstr "下載所有應用"
+
+msgid "Install All"
+msgstr "全部安裝"
+
+msgid "Install All Applications"
+msgstr "安裝所有應用"
+
+msgid "Install All Apps"
+msgstr "安裝所有應用"
+
+msgid "Upgrade All"
+msgstr "全部升級"
+
+msgid "Upgrade All Applications"
+msgstr "升級所有應用"
+
+msgid "Upgrade All Apps"
+msgstr "升級所有應用"
+
+msgid "Update All"
+msgstr "全部更新"
+
+msgid "Update All Applications"
+msgstr "更新所有應用"
+
+msgid "Update All Apps"
+msgstr "更新所有應用"
+
+msgid "Cancel All"
+msgstr "全部取消"
+
+msgid "Cancel all downloads"
+msgstr "取消所有下載"
+
+msgid "Cancel all pending downloads"
+msgstr "取消所有掛起的下載"
+
+msgid "Recycle Bin"
+msgstr "回收站"
+
+msgid "Archive"
+msgstr "歸檔"
+
+msgid "Reinstall All"
+msgstr "全部重新安裝"
+
+msgid "Restore All"
+msgstr "全部還原"
+
+msgid "Unarchive All"
+msgstr "全部解檔"
+
+msgid "Click to Reinstall"
+msgstr "點擊以重新安裝"
