@@ -24,6 +24,7 @@ module.exports = Modal.extend({
         appJson.changelog = updateApp.getMarkdown('changelog');
       }
     }
+
     this.$el.append(this.templateHtml({
       app:               appJson,
       version_label:     i18n.translate('Version'),
@@ -55,6 +56,14 @@ module.exports = Modal.extend({
     this.listenTo(leapApp, 'change:iconPath', function() {
       this.$('.icon').attr('src', leapApp.get('iconPath'));
     }.bind(this));
+  },
+
+  show: function() {
+    Modal.prototype.show.bind(this)();
+
+    this.$('.button.confirm.install').css({
+      'max-width': this.$('.footer').innerWidth() - this.$('.button.cancel').outerWidth() - 50
+    });
   }
 
 });
