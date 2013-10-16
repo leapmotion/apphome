@@ -48,14 +48,9 @@ function getLocale(cb) {
         }
       });
     } else if (os.platform() === 'darwin') {
+      // This is only ok because we're just copying, not zipping up the app, so permissions are preserved
+      // If we want to zip this up again, we'll need to chmod it to executable
       var executable = path.join(__dirname, '..', '..', 'bin', 'PreferredLocalization');
-
-      try {
-        fs.chmodSync(executable, 0755);
-      } catch (err) {
-        console.warn(err.stack || err);
-        return cb && cb(null, DefaultLocale);
-      }
 
       var command = shell.escape(executable) + ' ' + supportedLanguages.join(' ').replace(/-/g, '_');
 
