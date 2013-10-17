@@ -84,12 +84,12 @@ function copyFilesToDir(dir) {
     var fileToInclude = copiedManifest.shift();
     var fullPath = path.join(__dirname, '..', fileToInclude);
     if (fs.statSync(fullPath).isDirectory()) {
-      if (path.basename(fileToInclude) !== 'test') {
+      if (fullPath.toLowerCase().indexOf("test") == -1) {
         fs.readdirSync(fullPath).forEach(function(file) {
           copiedManifest.push(path.join(fileToInclude, file));
         });
       }
-    } else {
+    } else if (path.basename(fileToInclude).toLowerCase().indexOf("test") == -1) {
       console.log(fileToInclude);
       copyFileSync(fullPath, path.join(dir, fileToInclude));
     }
