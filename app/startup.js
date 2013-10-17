@@ -16,7 +16,11 @@ var i18n = require('./utils/i18n.js');
 var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
 var shell = require('./utils/shell.js');
+<<<<<<< HEAD:app/startup.js
 var oauth = require('./utils/oauth.js');
+=======
+var tutorial = require('./utils/tutorial.js');
+>>>>>>> d89d1a0... First run at some guiders:app/bootstrap-controller.js
 var windowChrome = require('./utils/window-chrome.js');
 var workingFile = require('./utils/working-file.js');
 
@@ -165,6 +169,7 @@ function setupMainWindow(cb) {
 }
 
 function doFirstRun(cb) {
+  tutorial.makeGuides();
   if (!uiGlobals.isFirstRun) {
     cb && cb(null);
   } else {
