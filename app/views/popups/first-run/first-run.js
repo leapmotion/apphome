@@ -44,12 +44,11 @@ module.exports = BaseView.extend({
     }));
     this.$el.addClass('stage1');
 
-    embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
-      this.$el.toggleClass('embedded', isEmbedded);
-      this.$('#continue').toggleClass('disabled', isEmbedded);
-      this._setupBindings(isEmbedded);
-      this.options.nwWindow.show();
-    }.bind(this));
+    this.$el.toggleClass('embedded', uiGlobals.isEmbedded);
+    this.$('#continue').toggleClass('disabled', uiGlobals.isEmbedded);
+    this._setupBindings(uiGlobals.isEmbedded);
+
+    this.options.nwWindow.show();
   },
 
   _setupBindings: function(isEmbedded) {

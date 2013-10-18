@@ -36,6 +36,7 @@ function wrappedSetTimeout(task, ms) {
 
 function run() {
   var steps = [
+    getConfiguration,
     initializeMixpanel,
     initializeInternationalization,
     ensureWorkingDirs,
@@ -95,6 +96,19 @@ function initializeInternationalization(cb) {
 }
 
 /*
+ * Get global config variables
+ */
+function getConfiguration(cb) {
+  // Check if device has an embedded leap or not.
+  // Checks db first to see if there's a stored value
+  uiGlobals.isEmbedded = embeddedLeap.isLeapEmbedded();
+
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  cb && cb(null);
+}
+
+/*
  * Check if the main directories used by Airspace Home do, in fact, exist
  */
 function ensureWorkingDirs(cb) {
@@ -126,16 +140,10 @@ function migrateDatabase(cb) {
 }
 
 function prerunAsyncKickoff(cb) {
-  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
   // based on the json and information in the database.
   // myApps tries to install everything that gets added (that has state NotYetInstalled)
   LeapApp.hydrateCachedModels();
-
-  // Check if device has an embedded leap or not.
-  // Checks db first to see if there's a stored value
-  embeddedLeap.embeddedLeapPromise();
 
   // Creates manifest promise for future use
   // manifest is fetched from config.NonStoreAppManifestUrl
@@ -172,13 +180,13 @@ function setupMainWindow(cb) {
 }
 
 function checkLeapConnection(cb) {
-  embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
-    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
+  if (uiGlobals.isEmbedded) {
+    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: uiGlobals.isEmbedded });
     leapNotConnectedView.encourageConnectingLeap(function() {
       leapNotConnectedView.remove();
     });
     cb && cb(null);
-  });
+  }
 }
 
 function localTiles(cb) {
