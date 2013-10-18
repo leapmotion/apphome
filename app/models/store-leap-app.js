@@ -104,7 +104,6 @@ module.exports = LeapApp.extend({
       } else {
         return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
       }
-      cb && cb(null);
     } else {
       var downloadProgress;
 

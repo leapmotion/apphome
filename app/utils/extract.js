@@ -106,7 +106,7 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
     } catch (err) {
       cb && cb(err);
     }
-    cb(null);
+    cb && cb(null);
   });
 }
 
