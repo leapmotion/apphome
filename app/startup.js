@@ -44,10 +44,10 @@ function run() {
     prerunAsyncKickoff,
     firstRun,
     setupMainWindow,
-    //checkLeapConnection,
-    localTiles,
+    handleLocalTiles,
+    authorize,
     startMainApp,
-    afterwardsAsyncKickoffs
+    cleanup
   ];
 
   steps.forEach(function(step) {
@@ -182,68 +182,58 @@ function checkLeapConnection(cb) {
   }
 }
 
-function localTiles(cb) {
-  AsyncTasks.scanForLocalApps();
+function handleLocalTiles(cb) {
+  LocalLeapApp.localManifestPromise().done(function(manifest) {
+    if (manifest) {
+      // Fire this fast, so the Orientation tile shows up at the top of the list.
+      LocalLeapApp.explicitPathAppScan(manifest);
+
+      // This is less urgent; give other bootstrap tasks a chance to complete.
+      wrappedSetTimeout(function() {
+        setInterval(function() {
+          LocalLeapApp.localAppScan(manifest);
+        }, config.FsScanIntervalMs);
+      }, 6000);
+    } else {
+      console.warn('Manifest missing, skipping local tiles.');
+    }
+  });
   cb && cb(null);
+}
+
+function authorize(cb) {
+  authorizationUtil.withAuthorization(function(err) {
+    if (err) {
+      setTimeout(authorize, 50); // Keep on trying...
+    } else {
+      cb && cb(null);
+    }
+  });
 }
 
 function startMainApp(cb) {
-  AsyncTasks.authorizeAndPaintMainScreen();
+  $('body').removeClass('startup');
+  $('body').addClass('loading');
+  windowChrome.paintMainPage();
+  api.connectToStoreServer(); // Put callback in here?
+
   cb && cb(null);
 }
 
-function afterwardsAsyncKickoffs(cb) {
-  wrappedSetTimeout(frozenApps.get, 10);
-  cb && cb(null);
-}
+function cleanup(cb) {
+  crashCounter.reset();
+  db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-
-var AsyncTasks = {
-
-  scanForLocalApps: function() {
-    LocalLeapApp.localManifestPromise().done(function(manifest) {
-      if (manifest) {
-        // Fire this fast, so the Orientation tile shows up at the top of the list.
-        LocalLeapApp.explicitPathAppScan(manifest);
-
-        // This is less urgent; give other bootstrap tasks a chance to complete.
-        wrappedSetTimeout(function() {
-          LocalLeapApp.localAppScan(manifest);
-        }, 6000);
-      } else {
-        console.warn('Manifest missing, skipping local tiles.');
-      }
-    });
-  },
-
-  authorizeAndPaintMainScreen: function() {
-    authorizationUtil.withAuthorization(function(err) {
-      if (err) {
-        setTimeout(AsyncTasks.authorizeAndPaintMainScreen, 50); // Keep on trying...
-      } else {
-        AsyncTasks.afterAuthorizionComplete();
-      }
-    });
-  },
-
-  afterAuthorizionComplete: function() {
-    console.log('Authorization complete. Painting main page');
-    uiGlobals.isFirstRun = false; // todo: remove this. First run should remain constant throughout app's first run. check AlreadyDidFirstRun elsewhere if needed
-    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
-    $('body').addClass('loading');
-    windowChrome.paintMainPage();
-    crashCounter.reset();
-    setInterval(AsyncTasks.scanForLocalApps, config.FsScanIntervalMs);
-
-    try {
-      api.sendDeviceData();
-      api.sendAppVersionData();
-    } catch (err) {
-      console.error('Failed to send device data: ' + (err.stack + err));
-    }
-    api.connectToStoreServer();
+  try {
+    api.sendDeviceData();
+    api.sendAppVersionData();
+  } catch (err) {
+    console.error('Failed to send device data: ' + (err.stack + err));
   }
 
-};
+  wrappedSetTimeout(frozenApps.get, 10);
+
+  cb && cb(null);
+}
 
 module.exports.run = run;
