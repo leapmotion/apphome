@@ -30,15 +30,16 @@ if [ ! -n "${BUILD_ARCH}" ]; then
 fi
 
 if [ ! -n "${BUILD_BRANCH}" ]; then
-  export BUILD_BRANCH="origin/master"
+  export BUILD_BRANCH="origin/develop"
   echo "Warning: GIT_BRANCH and BUILD_BRANCH were not set. Defaulting to ${BUILD_BRANCH}"
 fi
 
 _branch_basename=$(basename "${BUILD_BRANCH}")
 
 case "${_branch_basename}" in
-release-*) _branch_basename=release ;;
-hotfix-*) _branch_basename=hotfix ;;
+release-*) _branch_basename=release; _access=public; _Access=Public ;;
+hotfix-*) _branch_basename=hotfix; _access=public; _Access=Public ;;
+*) _access=internal; _Access=Internal;;
 esac
 
 if [ -z "$AIRSPACE_OUT_DIR" ]; then
@@ -46,9 +47,8 @@ if [ -z "$AIRSPACE_OUT_DIR" ]; then
   echo "Airspace output directory is not set. Defaulting to $_branch_basename."
 fi
 
-#airspace builds are always public
 export BUILD_SHARE
-BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/Public/${BUILD_PLAT}/${AIRSPACE_OUT_DIR}"
+BUILD_SHARE="${SHARE_ROOT}/Builds/BuildProducts/${_Access}/${BUILD_PLAT}/${AIRSPACE_OUT_DIR}"
 
 export AIRSPACE_REPO_DIR
 if [ -d "${WORKSPACE}" ]; then
@@ -71,11 +71,9 @@ AIRSPACE_VERSION=$(cat "${AIRSPACE_REPO_DIR}/package.json" | grep "version" | aw
 AIRSPACE_BUILD=$("${BUILD_SCRIPT_COMMON_DIR}"/get-build-number.sh)
 AIRSPACE_VERSION_STRING="${AIRSPACE_VERSION}+${AIRSPACE_BUILD}"
 
-_audience=public
-
 #final archive name will be <product>_${BUILD_IDENTIFIER}.<archive_format_ext>
 #e.g. Platform_master_public_win_x86_0.8.1+5912.zip
-export BUILD_IDENTIFIER="${_branch_basename}_${_audience}_${BUILD_PLAT}_${BUILD_ARCH}_${AIRSPACE_VERSION_STRING}"
+export BUILD_IDENTIFIER="${_branch_basename}_${_access}_${BUILD_PLAT}_${BUILD_ARCH}_${AIRSPACE_VERSION_STRING}"
 
 unset _audience
 
