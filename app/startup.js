@@ -79,6 +79,19 @@ function run() {
 }
 
 /*
+ * Get global config variables
+ */
+function getConfiguration(cb) {
+  // Check if device has an embedded leap or not.
+  // Checks db first to see if there's a stored value
+  uiGlobals.isEmbedded = embeddedLeap.isLeapEmbedded();
+
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  cb && cb(null);
+}
+
+/*
  * Get the mixpanel id written during install time and use it
  */
 function initializeMixpanel(cb) {
@@ -93,19 +106,6 @@ function initializeInternationalization(cb) {
     console.log(err ? 'Error determining locale: ' + (err.stack || err) : 'Determined locale: ' + locale);
     cb.apply(this, arguments);
   });
-}
-
-/*
- * Get global config variables
- */
-function getConfiguration(cb) {
-  // Check if device has an embedded leap or not.
-  // Checks db first to see if there's a stored value
-  uiGlobals.isEmbedded = embeddedLeap.isLeapEmbedded();
-
-  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-
-  cb && cb(null);
 }
 
 /*
@@ -149,10 +149,6 @@ function prerunAsyncKickoff(cb) {
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
-
-  // Builds the menu bar
-  // TODO move this to setupMainWindow?
-  windowChrome.rebuildMenuBar(false);
   cb && cb(null);
 }
 
@@ -169,6 +165,8 @@ function firstRun(cb) {
 }
 
 function setupMainWindow(cb) {
+  // Builds the menu bar
+  windowChrome.rebuildMenuBar(false);
   windowChrome.maximizeWindow();
 
   // TODO: move to an explicit step at end?
