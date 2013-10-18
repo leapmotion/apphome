@@ -1,14 +1,14 @@
 var config = require('../config/config.js');
 var installManager = require('./utils/install-manager.js');
 
-var bootstrapController = require('./bootstrap-controller.js');
+var startup = require('./startup.js');
 var crashCounter = require('./utils/crash-counter.js');
 
 var IgnoredErrorRegex = /ECONNRESET|ECONNREFUSED|ECONNABORTED|ETIMEOUT|ETIMEDOUT|ENOTFOUND/;
 
 
 function run() {
-  bootstrapController.run();
+  startup.run();
 }
 
 process.on('uncaughtException', function(err) {

@@ -34,7 +34,7 @@ function wrappedSetTimeout(task, ms) {
   }, ms);
 }
 
-function bootstrapAirspace() {
+function run() {
   var steps = [
     initializeMixpanel,
     initializeInternationalization,
@@ -245,4 +245,4 @@ var AsyncTasks = {
 
 };
 
-module.exports.run = bootstrapAirspace;
+module.exports.run = run;
