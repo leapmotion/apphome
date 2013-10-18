@@ -169,11 +169,6 @@ function setupMainWindow(cb) {
   windowChrome.rebuildMenuBar(false);
   windowChrome.maximizeWindow();
 
-  // TODO: move to an explicit step at end?
-  window.setTimeout(function() {
-    $('body').removeClass('startup');
-  }, 50);
-
   cb && cb(null);
 }
 
