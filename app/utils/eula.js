@@ -7,20 +7,20 @@ var config = require('../../config/config.js');
 
 var sharedLeapDir = config.PlatformLeapDataDirs[os.platform()];
 
-var possibleLicenseNames = [/eulahash-\w\w\.md5/, /license\.version/];
+var possibleLicenseNames = [/eulahash-.+\.md5/, /license\.version/];
 
 function hasBeenAgreedTo(cb) {
   fs.exists(sharedLeapDir, function(doesExist) {
     if (doesExist) {
       fs.readdir(path, function(err, files) {
+        var match = false;
         files.forEach(function(file) {
           possibleLicenseNames.forEach(function(name) {
-            if (file.search(name) !== -1) {
-              return cb && (cb(true));
-            }
+            match = match || (file.search(name) !== -1);
           });
         });
-        return cb && cb(false);
+
+        return cb && cb(match);
       });
     } else {
       cb && cb(false);
