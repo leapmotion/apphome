@@ -26,7 +26,7 @@ function hasBeenAgreedTo(cb) {
   });
 }
 
-function watchForLicense(cb) {
+function waitForLicense(cb) {
   var watch = setInterval(function() {
     fs.existsSync(path.join(sharedLeapDir, 'license.version'), function(exists) {
       if (exists) {
@@ -38,3 +38,4 @@ function watchForLicense(cb) {
 }
 
 module.exports.hasBeenAgreedTo = hasBeenAgreedTo;
+module.exports.waitForLicense = waitForLicense;
