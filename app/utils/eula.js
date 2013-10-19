@@ -1,10 +1,11 @@
+var async = require('async');
 var path = require('path');
 var os = require('os');
 var fs = require('fs-extra');
 
 var config = require('../../config/config.js');
 
-var sharedLeapDir = path.join.apply(null, [ config.PlatformDirs[os.platform()], 'Leap Motion' ]);
+var sharedLeapDir = config.PlatformLeapDataDirs[os.platform()];
 
 var possibleLicenseNames = [/eulahash-\w\w\.md5/, /license\.version/];
 
@@ -25,6 +26,12 @@ function hasBeenAgreedTo(cb) {
       cb && cb(false);
     }
   });
+}
+
+function watchForLicense(cb) {
+  var watch = setInterval(function() {
+
+  })
 }
 
 module.exports.hasBeenAgreedTo = hasBeenAgreedTo;
