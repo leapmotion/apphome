@@ -172,16 +172,6 @@ function setupMainWindow(cb) {
   cb && cb(null);
 }
 
-function checkLeapConnection(cb) {
-  if (uiGlobals.isEmbedded) {
-    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: uiGlobals.isEmbedded });
-    leapNotConnectedView.encourageConnectingLeap(function() {
-      leapNotConnectedView.remove();
-    });
-    cb && cb(null);
-  }
-}
-
 function handleLocalTiles(cb) {
   LocalLeapApp.localManifestPromise().done(function(manifest) {
     if (manifest) {
