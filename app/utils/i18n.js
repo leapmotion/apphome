@@ -29,12 +29,8 @@ function getLocale(cb) {
     console.log('Supported languages: ' + supportedLanguages);
 
     if (os.platform() === 'win32') {
-      registry.readValue('HKCU\\Control Panel\\International', 'LocaleName', function(err, fullLocale) {
-        if (err) {
-          console.warn(err.stack || err);
-          cb && cb(null, DefaultLocale);
-        } else {
-          fullLocale = fullLocale || DefaultLocale;
+      function sanitizeLocale(fullLocale, cb) {
+        fullLocale = fullLocale || DefaultLocale;
 
           if (supportedLanguages.indexOf(fullLocale) !== -1) {
             locale = fullLocale;
@@ -45,8 +41,32 @@ function getLocale(cb) {
           }
 
           cb && cb(null, locale);
+      }
+
+      registry.readValue('HKCU\\Control Panel\\Desktop', 'PreferredUILanguages', function(err, fullLocale) {
+        if (err) {
+          console.warn(err.stack || err);
+          cb && cb(null, DefaultLocale);
+        } else {
+          if (fullLocale) {
+            sanitizeLocale(fullLocale, cb);
+          } else {
+            registry.readValue('HKCU\\Control Panel\\Desktop\\MuiCached', 'MachinePreferredUILanguages', function(err, fullLocale) {
+              if (err) {
+                console.warn(err.stack || err);
+                cb && cb(null, DefaultLocale);
+              } else {
+                if (fullLocale) {
+                  sanitizeLocale(fullLocale, cb);
+                } else {
+                  cb && cb(null, DefaultLocale);
+                }
+              }
+            });
+          }
         }
       });
+
     } else if (os.platform() === 'darwin') {
       // This is only ok because we're just copying, not zipping up the app, so permissions are preserved
       // If we want to zip this up again, we'll need to chmod it to executable
