@@ -10,26 +10,30 @@ var sharedLeapDir = config.PlatformLeapDataDirs[os.platform()];
 var possibleLicenseNames = [/eulahash-.+\.md5/, /license\.version/];
 
 function hasBeenAgreedTo(cb) {
-  fs.readdir(path, function(err, files) {
+  fs.readdir(sharedLeapDir, function(err, files) {
     if (err) {
       cb && cb(err);
     }
 
-    var match = false;
+    var found = false;
     files.forEach(function(file) {
       possibleLicenseNames.forEach(function(name) {
-        match = match || (file.search(name) !== -1);
+        found = found || (file.search(name) !== -1);
       });
     });
 
-    cb && cb(null, match);
+    cb && cb(null, found);
   });
 }
 
 function waitForLicense(cb) {
+  console.log('Checking for signed EULA...');
   var watch = setInterval(function() {
-    fs.existsSync(path.join(sharedLeapDir, 'license.version'), function(exists) {
-      if (exists) {
+    hasBeenAgreedTo(function(err, exists) {
+      if (err) {
+        console.warn('Error searching for signed EULA: ' + err);
+      } else if (exists) {
+        console.log('...signed EULA found.');
         clearInterval(watch);
         cb && cb(null);
       }
