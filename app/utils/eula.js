@@ -12,7 +12,7 @@ var possibleLicenseNames = [/eulahash-.+\.md5/, /license\.version/];
 function hasBeenAgreedTo(cb) {
   fs.readdir(sharedLeapDir, function(err, files) {
     if (err) {
-      cb && cb(err);
+      cb && cb(false);
     }
 
     var found = false;
@@ -22,17 +22,15 @@ function hasBeenAgreedTo(cb) {
       });
     });
 
-    cb && cb(null, found);
+    cb && cb(found);
   });
 }
 
 function waitForLicense(cb) {
   console.log('Checking for signed EULA...');
   var watch = setInterval(function() {
-    hasBeenAgreedTo(function(err, exists) {
-      if (err) {
-        console.warn('Error searching for signed EULA: ' + err);
-      } else if (exists) {
+    hasBeenAgreedTo(function(exists) {
+      if (exists) {
         console.log('...signed EULA found.');
         clearInterval(watch);
         cb && cb(null);
