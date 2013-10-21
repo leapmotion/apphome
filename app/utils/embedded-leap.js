@@ -10,12 +10,12 @@ var defer = $.Deferred();
 var promise;
 
 function isLeapEmbedded() {
-  if (typeof uiGlobals.isEmbedded !== undefined) {
+  if (typeof uiGlobals.isEmbedded !== 'undefined') {
     return uiGlobals.isEmbedded;
   }
 
   var existingValue = db.fetchObj(config.DbKeys.HasEmbeddedLeapDevice);
-  if (typeof existingValue !== undefined) {
+  if (typeof existingValue !== 'undefined') {
     return existingValue;
   }
 
