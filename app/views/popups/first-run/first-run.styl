@@ -6,16 +6,16 @@ body
 .launching-orientation
   cursor wait
 
-#embedded-graphics, #confirm-eula
+#embedded-graphics
   display none
 
-.embedded #embedded-graphics, .embedded #confirm-eula
+.embedded #embedded-graphics
   display block
 
 .embedded #peripheral-graphics
   display none
 
-.stage1 .ifStage2, .stage2 .ifStage1
+.stage1 .ifStage2, .stage2 .ifStage1, .embedded .ifPeripheral
   display none !important
 
 #container
@@ -58,6 +58,11 @@ a
 #graphics
   overflow hidden
 
+  #embedded-graphics
+    .graphic
+      float none
+      margin 20px auto
+
   .graphic
     width 304px
     height 234px
@@ -72,23 +77,6 @@ a
   margin 28px auto 0
   text-align left
   width 300px
-
-  #confirm-eula
-    padding 1px 30px
-    text-align left
-
-    .label
-      font-size 16px
-      line-height 1.5em
-
-    input[type=checkbox]
-      float left
-      margin 6px 0 0 -20px
-      padding 2px
-
-    .eula-popup-link
-      color #9ac948
-      cursor pointer
 
   .button
     background-clip padding-box // prevents bg color from leaking outside the border
