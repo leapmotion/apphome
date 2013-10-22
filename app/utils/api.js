@@ -277,7 +277,7 @@ function getLocalAppManifest(cb) {
 }
 
 
-function sendDeviceData() {
+function sendDeviceData(cb) {
   var dataDir = config.PlatformLeapDataDirs[os.platform()];
   if (!dataDir) {
     console.error('Leap Motion data dir unknown for operating system: ' + os.platform());
@@ -285,33 +285,39 @@ function sendDeviceData() {
   }
 
   var authDataFile = path.join(dataDir, 'lastauth');
-  if (!fs.existsSync(authDataFile)) {
-    console.warn('Auth data not found: ' + authDataFile);
-    return;
-  }
 
-  var authData = fs.readFileSync(authDataFile, 'utf-8');
-  if (!authData) {
-    console.warn('Auth data file is empty.');
-    return;
-  }
-
-  oauth.getAccessToken(function(err, accessToken) {
+  fs.readFileSync(authDataFile, 'utf-8', function(err, authData) {
     if (err) {
-      console.warn('Failed to get an access token: ' + (err.stack || err));
-    } else {
+      console.warn('Error reading auth data file.');
+      return cb && cb(err);
+    }
+
+    if (!authData) {
+      console.warn('Auth data file is empty.');
+      cb && cb(null);
+      return;
+    }
+
+    oauth.getAccessToken(function(err, accessToken) {
+      if (err) {
+        console.warn('Failed to get an access token: ' + (err.stack || err));
+        return cb && cb(err);
+      }
+
       httpHelper.post(config.DeviceDataEndpoint, { access_token: accessToken, data: authData }, function(err) {
         if (err) {
           console.error('Failed to send device data: ' + (err.stack || err));
+          return cb && cb(err);
         } else {
           console.log('Sent device data.');
+          return cb && cb(null);
         }
       });
-    }
+    });
   });
 }
 
-function sendAppVersionData() {
+function sendAppVersionData(cb) {
   var myAppsVersionData = uiGlobals.myApps.filter(function(app) {
     return app.isStoreApp();
   }).map(function(app) {

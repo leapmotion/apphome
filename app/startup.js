@@ -214,14 +214,15 @@ function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-  try {
-    api.sendDeviceData();
-    api.sendAppVersionData();
-  } catch (err) {
-    console.error('Failed to send device data: ' + (err.stack + err));
-  }
-
-  wrappedSetTimeout(frozenApps.get, 10);
+  async.parallel([
+    api.sendDeviceData,
+    api.sendAppVersionData
+  ], function(err, result) {
+    if (err) {
+      // We don't actually care if either of these calls throw errors.
+      console.warn(err);
+    }
+  });
 
   cb && cb(null);
 }
