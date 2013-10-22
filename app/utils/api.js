@@ -345,6 +345,7 @@ function sendAppVersionData(cb) {
   oauth.getAccessToken(function(err, accessToken) {
     if (err) {
       console.warn('Failed to get an access token: ' + (err.stack || err));
+      return cb && cb(err);
     } else {
       httpHelper.post(config.AppVersionDataEndpoint,
                       {
@@ -354,8 +355,10 @@ function sendAppVersionData(cb) {
                       function(err, res) {
                         if (err) {
                           console.error('Failed to send app version data: ' + (err.stack || err));
+                          return cb && cb(err);
                         } else {
                           console.log('Sent app version data.  Got ' + res);
+                          return cb && cb(null, res);
                         }
                       });
     }
