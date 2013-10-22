@@ -54,15 +54,14 @@ function run() {
     uiGlobals.bootstrapPromises[step.name] = new $.Deferred();
   });
 
-  var startupTimings = {}
+  var startupTimings = {};
 
   var wrappedSteps =  _(steps).map(function(fn, key) {
     return function(cb) {
       startupTimings[fn.name] = Date.now();
       console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
       fn.call(null, function() {
-        startupTimings[fn.name] -= Date.now();
-        console.log('### Step: ' + fn.name + ' done in ' + (-1*startupTimings[fn.name]) + 'ms ###');
+        console.log('### Step: ' + fn.name + ' done in ' + (Date.now() - startupTimings[fn.name]) + 'ms ###');
         uiGlobals.bootstrapPromises[fn.name].resolve();
         cb.apply(this, arguments);
       });
