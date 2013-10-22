@@ -286,7 +286,7 @@ function sendDeviceData(cb) {
 
   var authDataFile = path.join(dataDir, 'lastauth');
 
-  fs.readFileSync(authDataFile, 'utf-8', function(err, authData) {
+  fs.readFile(authDataFile, 'utf-8', function(err, authData) {
     if (err) {
       console.warn('Error reading auth data file.');
       return cb && cb(err);
