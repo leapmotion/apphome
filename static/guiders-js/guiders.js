@@ -28,7 +28,7 @@ window.guiders = (function($) {
     classString: null,
     closeOnEscape: true,
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    highlight: null,
+    highlight: true,
     isHashable: true,
     maxWidth: null,
     offset: {
@@ -38,7 +38,7 @@ window.guiders = (function($) {
     onClose: null,
     onHide: null,
     onShow: null,
-    overlay: false,
+    overlay: true,
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     shouldSkip: function() {}, // Optional handler allows you to skip a guider if returns true.
     title: "Sample title goes here",
@@ -60,7 +60,7 @@ window.guiders = (function($) {
     "</div>"
   ].join("");
 
-  guiders._arrowSize = 42; // This is the arrow's width and height.
+  guiders._arrowSize = 18; // This is the arrow's width and height.
   guiders._backButtonTitle = "Back";
   guiders._buttonAttributes = {"href": "javascript:void(0);"};
   guiders._buttonClassName = "guiders_button"; // Override this if you use a different class name for your buttons.
@@ -174,8 +174,6 @@ window.guiders = (function($) {
 
     var attachTo = $(myGuider.attachTo);
 
-    console.log(attachTo);
-
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
 
@@ -265,7 +263,7 @@ window.guiders = (function($) {
   };
 
   guiders._hideOverlay = function() {
-    $("#guiders_overlay").fadeOut("fast");
+    $(".guiders_overlay").fadeOut("fast");
   };
 
   guiders._highlightElement = function(selector) {
@@ -273,22 +271,66 @@ window.guiders = (function($) {
   };
 
   guiders._initializeOverlay = function() {
-    if ($("#guiders_overlay").length === 0) {
-      $("<div id='guiders_overlay'></div>").hide().appendTo("body");
+    if ($(".guiders_overlay").length === 0) {
+      $("<div class='guiders_overlay top'></div>").hide().appendTo("body");
+      $("<div class='guiders_overlay right'></div>").hide().appendTo("body");
+      $("<div class='guiders_overlay bottom'></div>").hide().appendTo("body");
+      $("<div class='guiders_overlay left'></div>").hide().appendTo("body");
+      $("<div class='guiders_overlay click_guard'></div>").hide().appendTo("body");
     }
   };
 
   guiders._showOverlay = function(myGuider) {
-    // This callback is needed to fix an IE opacity bug.
-    // See also:
-    // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
-    $("#guiders_overlay").fadeIn("fast", function(){
-      if (this.style.removeAttribute) {
-        this.style.removeAttribute("filter");
-      }
-    });
-    if (guiders._isIE) {
-      $("#guiders_overlay").css("position", "absolute");
+    if(!myGuider.highlight || !myGuider.attachTo) {
+      $(".guiders_overlay").hide();
+
+      $(".guiders_overlay.top").css({
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+      }).fadeIn("fast");
+
+    } else {
+      var $highlight = $('.guiders_highlight'),
+        highlight_top = $highlight.offset().top,
+        highlight_left = $highlight.offset().left,
+        highlight_bottom = highlight_top + $highlight.height(),
+        highlight_right = highlight_left + $highlight.width(),
+        window_width = $(window).width(),
+        window_height = $(window).height();
+
+      $(".guiders_overlay").hide();
+
+      $(".guiders_overlay.top").css({
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: highlight_top
+      });
+
+      $(".guiders_overlay.right").css({
+        top: highlight_top,
+        left: highlight_right,
+        width: window_width - highlight_right,
+        height: highlight_bottom - highlight_top
+      });
+
+      $('.guiders_overlay.bottom').css({
+        top: highlight_bottom,
+        left: 0,
+        width: '100%',
+        height: window_height - highlight_bottom
+      });
+
+      $('.guiders_overlay.left').css({
+        top: highlight_top,
+        left: 0,
+        width: highlight_left,
+        height: highlight_bottom - highlight_top
+      });
+
+      $(".guiders_overlay").show();
     }
   };
 
@@ -580,11 +622,12 @@ window.guiders = (function($) {
 
     var myGuider = guiders.get(id);
     if (myGuider.overlay) {
-      guiders._showOverlay(myGuider);
-      // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight && myGuider.attachTo) {
         guiders._highlightElement(myGuider.attachTo);
       }
+
+      guiders._showOverlay(myGuider);
+      // if guider is attached to an element, make sure it's visible
     }
 
     if (myGuider.closeOnEscape) {

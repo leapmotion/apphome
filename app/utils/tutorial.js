@@ -3,6 +3,7 @@ var i18n = require('./i18n.js');
 function makeGuides() {
     guiders.createGuider({
         buttons: [{name: 'Take a Quick Tour', classString: 'primary', onclick: guiders.next}],
+        classString: 'primary',
         description: 'Airspace Home is the place to launch all of your Leap-powered apps.',
         id: 'g_start',
         next: 'g_apps',
