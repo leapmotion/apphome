@@ -169,12 +169,14 @@ function setupMainWindow(cb) {
 }
 
 function doFirstRun(cb) {
-  tutorial.makeGuides();
   if (!uiGlobals.isFirstRun) {
     cb && cb(null);
   } else {
-    var firstRunView = new FirstRun({
-      onLoggedIn: cb
+    tutorial.makeGuides();
+    var firstRunPopup = popup.open('first-run');
+    firstRunPopup.on('close', function() {
+      firstRunPopup.close(true);
+      cb && cb(null);
     });
   }
 }
