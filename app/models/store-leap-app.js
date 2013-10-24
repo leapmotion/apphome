@@ -76,7 +76,6 @@ module.exports = LeapApp.extend({
   },
 
   _downloadBinary: function(cb) {
-    this.set('state', LeapApp.States.Connecting);
     var binaryUrl = this.get('binaryUrl');
     console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
 
@@ -93,7 +92,9 @@ module.exports = LeapApp.extend({
       cb && cb(err || null);
     };
 
-    if (url.parse(binaryUrl).protocol == null) {
+    if (!url.parse(binaryUrl).protocol) {
+      // Prebundled apps
+      this.set('state', LeapApp.States.Installing);
       var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
       console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
 
@@ -106,6 +107,8 @@ module.exports = LeapApp.extend({
       }
     } else {
       var downloadProgress;
+
+      this.set('state', LeapApp.States.Connecting);
 
       function cancelDownload() {
         if (downloadProgress && downloadProgress.cancel()) {
