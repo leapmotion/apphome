@@ -68,7 +68,9 @@ function bootstrapAirspace() {
       process.exit();
     } else {
       mixpanel.trackOpen({
-        bootstrapDurationMs: (new Date()).getTime() - window.appStartTime
+        bootstrapDurationMs: (new Date()).getTime() - window.appStartTime,
+        windowWidth: $(window).width(),
+        windowHeight: $(window).height()
       });
     }
   });

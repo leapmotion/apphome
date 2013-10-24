@@ -231,11 +231,7 @@ function localManifestPromise() {
   var defer = $.Deferred();
   _manifestPromise = defer.promise();
 
-  api.getLocalAppManifest(function(err, manifest) {
-    if (err) {
-      console.error('Unable to fetch local app manifest: ' + (err.stack || err));
-      // todo: retry? (but bootstrap blocks on it)
-    }
+  api.getLocalAppManifest(function(manifest) {
     defer.resolve(manifest);
   });
 
