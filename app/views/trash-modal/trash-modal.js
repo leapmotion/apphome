@@ -1,5 +1,6 @@
 var os = require('os');
 
+var api = require('../../utils/api.js');
 var i18n = require('../../utils/i18n.js');
 var installManager = require('../../utils/install-manager.js');
 
@@ -33,8 +34,13 @@ module.exports = Modal.extend({
         onReinstall: (function() {
           this.remove();
           uiGlobals.uninstalledApps.remove(app);
-          uiGlobals.myApps.add(app);
-          installManager.enqueue(app);
+
+          // Need this to reset the binaryUrl
+          api.getAppDetails(app, function() {
+            uiGlobals.myApps.add(app);
+            installManager.enqueue(app);
+          });
+
           this.options.onClose(true);
         }).bind(this)
       });
