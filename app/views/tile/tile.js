@@ -173,7 +173,6 @@ var Tile = BaseView.extend({
     var downloadModal = new DownloadModalView({
       leapApp: leapApp,
       onConfirm: function() {
-        this.$el.removeClass('update');
         downloadModal.remove();
         installManager.enqueue(leapApp, null, true);
       }.bind(this),

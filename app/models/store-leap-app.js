@@ -46,7 +46,6 @@ module.exports = LeapApp.extend({
     this.trigger('installstart');
     if (this.isUpdatable()) {
       mixpanel.trackAppUpgrade();
-      this.set(this.get('availableUpdate').toJSON());
       console.log('Upgrading: ' + this.get('name'));
 
       // refresh icon and tile
@@ -55,6 +54,9 @@ module.exports = LeapApp.extend({
 
       this._installFromServer(function(err) {
         if (!err) {
+          var newAppJson = this.get('availableUpdate').toJSON();
+          delete newAppJson.state;
+          this.set(newAppJson);
           this.set('availableUpdate', null);
         }
         cb && cb(err);
@@ -113,8 +115,11 @@ module.exports = LeapApp.extend({
           downloadProgress.removeAllListeners();
           downloadProgress = null;
           this.set('noAutoInstall', true);
-          this.set('state', LeapApp.States.NotYetInstalled);
           this._shouldCancelDownload = false;
+
+          var error = new Error('Download cancelled');
+          error.cancelled = true;
+          cb && cb(error);
         } else {
           this._shouldCancelDownload = true;
         }
@@ -204,13 +209,19 @@ module.exports = LeapApp.extend({
         console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
         mixpanel.trackEvent('Install Failed', { appName: this.get('name'), appVersion: this.get('version'), error: err && err.stack });
       }
-      this.set('state', LeapApp.States.NotYetInstalled);
     } else {
       console.info('Installation of ' + this.get('name') + ' complete');
-      this.set('state', LeapApp.States.Ready);
       this.trigger('install');
     }
-    cb && cb(err);
+
+    fs.exists(this.get('executable'), function(exists) {
+      if (exists) {
+        this.set('state', LeapApp.States.Ready);
+      } else {
+        this.set('state', LeapApp.States.NotYetInstalled);
+      }
+      cb && cb(err);
+    }.bind(this));
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
