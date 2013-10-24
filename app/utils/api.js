@@ -77,6 +77,7 @@ function handleAppJson(appJson) {
         getAppDetails(app, function() {
           var appJson = app.toJSON();
           delete appJson.state;
+          delete appJson.binaryUrl;
           existingApp.set(appJson);
         });
       } else if (app.get('versionId') > existingApp.get('versionId')) {
