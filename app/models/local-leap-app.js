@@ -231,16 +231,9 @@ function localManifestPromise() {
   var defer = $.Deferred();
   _manifestPromise = defer.promise();
 
-  function getManifest() {
-    api.getLocalAppManifest(function(err, manifest) {
-      if (err) {
-        console.error('Unable to fetch local app manifest: ' + (err.stack || err));
-        setTimeout(getManifest, config.ServerConnectRetryMs);
-      } else {
-        defer.resolve(manifest);
-      }
-    });
-  }
+  api.getLocalAppManifest(function(manifest) {
+    defer.resolve(manifest);
+  });
 
   return _manifestPromise;
 }

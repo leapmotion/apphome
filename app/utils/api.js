@@ -266,12 +266,14 @@ function createWebLinkApps(webAppData) {
 function getLocalAppManifest(cb) {
   httpHelper.getJson(config.NonStoreAppManifestUrl, function(err, manifest) {
     if (err) {
-      console.error('Failed to get app manifest: ' + err && err.stack);
-      cb && cb(err);
+      console.warn('Failed to get app manifest (retrying): ' + err && err.stack);
+      setTimeout(function() {
+        getLocalAppManifest(cb);
+      }, config.S3ConnectRetryMs);
     } else {
       createWebLinkApps(manifest.web);
       var platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
-      cb && cb(null, platformApps);
+      cb && cb(platformApps);
     }
     cb = null;
   });

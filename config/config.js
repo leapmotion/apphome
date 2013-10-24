@@ -47,7 +47,8 @@ var config = {
   },
 
   ServerConnectRetryMs: 30 * 1000, // 30 seconds
-  FsScanIntervalMs: 60, //* 60 * 1000, // 1 hour
+  S3ConnectRetryMs: 10 * 1000, // 10 seconds
+  FsScanIntervalMs: 60 * 60 * 1000, // 1 hour
   AuthLoadTimeoutMs: 30 * 1000, // 30 seconds
 
   DbKeys: {
