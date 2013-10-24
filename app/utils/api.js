@@ -275,7 +275,6 @@ function getLocalAppManifest(cb) {
       var platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
       cb && cb(platformApps);
     }
-    cb = null;
   });
 }
 
