@@ -33,6 +33,7 @@
   <script src="./static/notifications/nw-desktop-notifications.js"></script>
   <!--<script src="./static/js/leap.min.js"></script>-->
   <script src="./static/js/pubnub-3.5.47.min.js"></script>
+  <script src="./static/js/konami.js"></script>
 </head>
 <body class="startup">
 
@@ -61,6 +62,10 @@
   </script>
 
     <script>
+
+      new Konami(function() {
+        nwGui.Window.get().showDevTools();
+      });
 
 //    (function() {
 //      var ctl = new Leap.Controller({enableGestures: true});
