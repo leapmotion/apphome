@@ -40,6 +40,10 @@ function getLocale(cb) {
             locale = module.exports.locale = fullLocale.split('-').shift();
           }
 
+          if (supportedLanguages.indexOf(locale) === -1) {
+            locale = module.exports.locale = DefaultLocale;
+          }
+
           cb && cb(null, locale);
       }
 
