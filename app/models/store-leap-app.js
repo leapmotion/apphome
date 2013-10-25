@@ -217,7 +217,7 @@ module.exports = LeapApp.extend({
       this.trigger('install');
     }
 
-    fs.exists(this.get('executable'), function(exists) {
+    fs.exists(this.get('executable') || '', function(exists) {
       if (exists) {
         this.set('state', LeapApp.States.Ready);
       } else {
