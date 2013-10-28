@@ -48,6 +48,9 @@ module.exports = LeapApp.extend({
       mixpanel.trackAppUpgrade();
       console.log('Upgrading: ' + this.get('name'));
 
+      // update binary, tile, and icon urls from the new app version
+      this.set(this.get('availableUpdate').pick('binaryUrl', 'tileUrl', 'iconUrl'));
+
       // refresh icon and tile
       this.downloadIcon();
       this.downloadTile();
