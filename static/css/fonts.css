@@ -150,6 +150,71 @@
 
 
 @font-face {
+    font-family: 'itc_avantgarde';
+    src: url('../fonts/texgyreadventor-webfont.eot');
+    src: url('../fonts/texgyreadventor-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/texgyreadventor-webfont.woff') format('woff'),
+         url('../fonts/texgyreadventor-webfont.ttf') format('truetype'),
+         url('../fonts/texgyreadventor-webfont.svg#itc_avantgarde') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+
+@font-face {
+    font-family: 'itc_avantgarde_bd';
+    src: url('../fonts/texgyreadventor-bold-webfont.eot');
+    src: url('../fonts/texgyreadventor-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/texgyreadventor-bold-webfont.woff') format('woff'),
+         url('../fonts/texgyreadventor-bold-webfont.ttf') format('truetype'),
+         url('../fonts/texgyreadventor-bold-webfont.svg#itc_avantgarde_bd') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+
+@font-face {
+    font-family: 'itc_avantgarde_it';
+    src: url('../fonts/texgyreadventor-italic-webfont.eot');
+    src: url('../fonts/texgyreadventor-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/texgyreadventor-italic-webfont.woff') format('woff'),
+         url('../fonts/texgyreadventor-italic-webfont.ttf') format('truetype'),
+         url('../fonts/texgyreadventor-italic-webfont.svg#itc_avantgarde_it') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+
+
+@font-face {
+    font-family: 'itc_avantgarde_bdit';
+    src: url('../fonts/texgyreadventor-bolditalic-webfont.eot');
+    src: url('../fonts/texgyreadventor-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/texgyreadventor-bolditalic-webfont.woff') format('woff'),
+         url('../fonts/texgyreadventor-bolditalic-webfont.ttf') format('truetype'),
+         url('../fonts/texgyreadventor-bolditalic-webfont.svg#itc_avantgarde_bdit') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+
+@font-face {
     font-family: 'myriad-pro';
     src: font-url('../fonts/myriadpro-regular.eot');
     src: url('../fonts/myriadpro-regular.woff') format('woff'), url('../fonts/myriadpro-regular.ttf') format('truetype'), url('../fonts/myriadpro-regular.svg') format('svg');
