@@ -73,6 +73,9 @@ function unzipFile(src, dest, shellUnzipOnly, cb) {
 }
 
 function extractAppZip(src, dest, shellUnzipOnly, cb) {
+  if (!fs.existsSync(src)) {
+    return cb && cb(new Error('Zip archive does not exist: ' + src));
+  }
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
@@ -111,6 +114,10 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
 }
 
 function extractAppDmg(src, dest, cb) {
+  if (!fs.existsSync(src)) {
+    return cb && cb(new Error('Disk image does not exist: ' + src));
+  }
+
   if (os.platform() !== 'darwin') {
     return cb && cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }
