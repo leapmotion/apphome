@@ -6,6 +6,8 @@ var path = require('path');
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
 process.env.BOOTSTRAP_SCRIPT_PATH = path.join(__dirname, '..', 'test', 'support', 'pre-run.js');
+process.env.LEAPHOME_LOGIN_EMAIL = 'pbaumgart+test@leapmotion.com';
+process.env.LEAPHOME_LOGIN_PASSWORD = 'abc123';
 
 // pull in all files we want tested and run them
 
