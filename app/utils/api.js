@@ -17,6 +17,7 @@ var oauth = require('./oauth.js');
 var pubnub = require('./pubnub.js');
 var semver = require('./semver.js');
 
+var LeapApp = require('../models/leap-app.js');
 var WebLinkApp = require('../models/web-link-app.js');
 
 var NodePlatformToServerPlatform = {
@@ -73,7 +74,7 @@ function handleAppJson(appJson) {
     var uninstalledApps = uiGlobals.uninstalledApps;
     var existingApp = myApps.get(app.get('appId')) || uninstalledApps.get(app.get('appId'));
     if (existingApp) {
-      if (!existingApp.isInstalled() && !existingApp.isUninstalled()) {
+      if (existingApp.isInstallable()) {
         getAppDetails(app, function() {
           var appJson = app.toJSON();
           delete appJson.state;
@@ -84,8 +85,6 @@ function handleAppJson(appJson) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpdate', app);
         getAppDetails(app);
-      } else {
-        existingApp.set('binaryUrl', app.get('binaryUrl'));
       }
     } else {
       if (appsAdded >= 40) {
@@ -367,6 +366,7 @@ function parsePrebundledManifest(manifest, cb) {
     if (!uiGlobals.myApps.get(appJson.app_id)) {
       var app = handleAppJson(appJson);
       if (app) {
+        app.set('state', LeapApp.States.Waiting);
         installationFunctions.push(function(callback) {
           console.log('Installing prebundled app: ' + app.get('name'));
           app.install(function (err) {
