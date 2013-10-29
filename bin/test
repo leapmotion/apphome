@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-// pull in all files we want tested and run them
+var spawn = require('child_process').spawn;
 var fs = require('fs');
-var path = require('path');
 var Mocha = require('mocha');
+var path = require('path');
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
+process.env.BOOTSTRAP_SCRIPT_PATH = path.join(__dirname, '..', 'test', 'support', 'pre-run.js');
+
+// pull in all files we want tested and run them
 
 var projectDir = path.join(__dirname, '..');
 var queue = [];
@@ -22,7 +25,6 @@ if (testFiles.length === 0) {
   }
 }
 
-
 while (queue.length > 0) {
   var currentFile = queue.shift();
   if (fs.statSync(currentFile).isDirectory()) {
@@ -36,8 +38,40 @@ while (queue.length > 0) {
 
 console.log('Testing file' + (testFiles.length > 1 ? 's' : '') + ': ' + testFiles.join(', '));
 
-var mocha = new Mocha();
-testFiles.forEach(function(testFile) {
-  mocha.addFile(testFile);
+function startSeleniumServer(cb) {
+  var chromeDriverPath = path.join(__dirname, '..', 'nw', 'node-webkit-v0.7.2-linux-ia32', 'chromedriver2_server');
+  var seleniumJarPath = path.join(__dirname, '..', 'test', 'selenium-server.jar');
+  var seleniumArgs = [ '-Dwebdriver.chrome.driver=' + chromeDriverPath ];
+  var seleniumServer = spawn('java', [ '-jar', seleniumJarPath ].concat(seleniumArgs));
+  seleniumServer.stdout.on('data', function(data) {
+    if (/Started org\.openqa\.jetty\.jetty\.Server/.test(data)) {
+      cb && cb(null, seleniumServer);
+      cb = null;
+    }
+  });
+  seleniumServer.stderr.on('data', function(data) {
+    if (/Error:/.test(data)) {
+      cb && cb(new Error(data), seleniumServer);
+      cb = null;
+    }
+  });
+}
+
+console.log('Starting Selenium server...');
+startSeleniumServer(function(err, seleniumServer) {
+  process.on('exit', function() {
+    seleniumServer.kill();
+  });
+
+  if (err) {
+    console.log(err.message);
+    process.exit();
+  } else {
+    console.log('started.');
+    var mocha = new Mocha();
+    testFiles.forEach(function(testFile) {
+      mocha.addFile(testFile);
+    });
+    mocha.run(process.exit);
+  }
 });
-mocha.run(process.exit);

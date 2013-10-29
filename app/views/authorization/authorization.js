@@ -132,14 +132,7 @@ module.exports = BaseView.extend({
   _performActionBasedOnUrl: function(url, cb) {
     var urlParts = urlParse(url, true);
     if (/^\/users/.test(urlParts.pathname)) {
-      if (process.env.LEAPHOME_LOGIN_EMAIL) {
-        this._loginAs({
-          email: process.env.LEAPHOME_LOGIN_EMAIL,
-          password: process.env.LEAPHOME_LOGIN_PASSWORD
-        });
-      } else {
-        this._waitForUserToSignIn();
-      }
+      this._waitForUserToSignIn();
     } else if (/^\/oauth\/authorize/.test(urlParts.pathname)) {
       this._allowOauthAuthorization();
     } else if (urlParts.query && urlParts.query.code) {
@@ -150,7 +143,6 @@ module.exports = BaseView.extend({
   },
 
   _loginAs: function(userobj) {
-    console.log('_loginAs', userobj);
     this._showLoginForm();
     this._center();
     var iframeWindow = this.$iframe.prop('contentWindow');
