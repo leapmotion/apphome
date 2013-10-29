@@ -382,7 +382,10 @@ function parsePrebundledManifest(manifest, cb) {
     }
   });
 
-  async.parallelLimit(installationFunctions, 2, cb);
+  async.parallelLimit(installationFunctions, 2, function(err) {
+    installManager.showAppropriateDownloadControl();
+    cb && cb(err);
+  });
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
