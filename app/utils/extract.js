@@ -90,24 +90,28 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
     if (err) {
       return cb && cb(err);
     }
-    try {
-      var extractedFiles = fs.readdirSync(dest);
-      var possibleAppDirs = [];
-      extractedFiles.forEach(function (extractedFile) {
-        if (!IgnoredWindowsFileRegex.test(extractedFile)) {
-          possibleAppDirs.push(extractedFile);
-        }
-      });
-      if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
-        // application has a single top-level directory, so pull the contents out of that
-        var topLevelDir = path.join(dest, possibleAppDirs[0]);
-        fs.readdirSync(topLevelDir).forEach(function (appFile) {
-          fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+    if (os.platform() === 'win32') {
+      try {
+        var extractedFiles = fs.readdirSync(dest);
+        var possibleAppDirs = [];
+        extractedFiles.forEach(function (extractedFile) {
+          if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+            possibleAppDirs.push(extractedFile);
+          }
         });
-        fs.rmdirSync(topLevelDir);
+        if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
+          // application has a single top-level directory, so pull the contents out of that
+          var topLevelDir = path.join(dest, possibleAppDirs[0]);
+          fs.readdirSync(topLevelDir).forEach(function (appFile) {
+            var from = path.join(topLevelDir, appFile);
+            fs.chmodSync(from, 0777); // make sure file has write permissions
+            fs.renameSync(from, path.join(dest, appFile));
+          });
+          fs.rmdirSync(topLevelDir);
+        }
+      } catch (err) {
+        cb && cb(err);
       }
-    } catch (err) {
-      cb && cb(err);
     }
     cb && cb(null);
   });
