@@ -68,6 +68,7 @@ var Tile = BaseView.extend({
     this.listenTo(leapApp, 'change:state', function() {
       this.$el.removeClass(this._stateToClass(leapApp.previous('state')));
       this.$el.addClass(this._stateToClass(leapApp.get('state')));
+      this.$el.toggleClass('update', leapApp.isUpdatable());
       this._setupDragging();
     }, this);
 
