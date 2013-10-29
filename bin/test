@@ -2,6 +2,7 @@
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var Mocha = require('mocha');
+var os = require('os');
 var path = require('path');
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
@@ -40,11 +41,21 @@ while (queue.length > 0) {
 
 console.log('Testing file' + (testFiles.length > 1 ? 's' : '') + ': ' + testFiles.join(', '));
 
+
+var NodeWebkitVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8')).nwVersion;
+var PlatformChromeDriverPathSuffixes = {
+  win32:  'win-ia32\\chromedriver2_server.exe',
+  darwin: 'osx-ia32/chromedriver2_server',
+  linux:  'linux-ia32/chromedriver2_server'
+};
+
 function startSeleniumServer(cb) {
-  var chromeDriverPath = path.join(__dirname, '..', 'nw', 'node-webkit-v0.7.2-linux-ia32', 'chromedriver2_server');
+  var chromeDriverPath = path.join(__dirname, '..', 'nw', 'node-webkit-v' + NodeWebkitVersion + '-' + PlatformChromeDriverPathSuffixes[os.platform()]);
   var seleniumJarPath = path.join(__dirname, '..', 'test', 'selenium-server.jar');
   var seleniumArgs = [ '-Dwebdriver.chrome.driver=' + chromeDriverPath ];
-  var seleniumServer = spawn('java', [ '-jar', seleniumJarPath ].concat(seleniumArgs));
+  var fullArgs = [ '-jar', seleniumJarPath ].concat(seleniumArgs);
+  console.log('Starting Selenium server with command: java "' + fullArgs.join('" "') + '" ...');
+  var seleniumServer = spawn('java', fullArgs);
   seleniumServer.stdout.on('data', function(data) {
     if (/Started org\.openqa\.jetty\.jetty\.Server/.test(data)) {
       cb && cb(null, seleniumServer);
@@ -57,16 +68,23 @@ function startSeleniumServer(cb) {
       cb = null;
     }
   });
+  seleniumServer.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
 }
 
-console.log('Starting Selenium server...');
 startSeleniumServer(function(err, seleniumServer) {
   process.on('exit', function() {
-    seleniumServer.kill();
+    seleniumServer && seleniumServer.kill();
   });
 
   if (err) {
-    console.log(err.message);
+    if (err.code === 'ENOENT') {
+      console.log('You need to install the Java Runtime.');
+    } else {
+      console.log(err.message);
+    }
     process.exit();
   } else {
     console.log('started.');

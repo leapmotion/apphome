@@ -40,14 +40,6 @@ module.exports = BaseView.extend({
   },
 
   authorize: function(cb) {
-    if (process.env.LEAPHOME_LOGIN_EMAIL && didAutoLogout === false) {
-      didAutoLogout = true;
-      // start logged out
-      this.logOut(function() {
-        this.authorize(cb);
-      }.bind(this));
-      return;
-    }
     this.$el.appendTo('body');
     this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
@@ -140,16 +132,6 @@ module.exports = BaseView.extend({
     } else {
       cb(new Error('Unknown URL: ' + url));
     }
-  },
-
-  _loginAs: function(userobj) {
-    this._showLoginForm();
-    this._center();
-    var iframeWindow = this.$iframe.prop('contentWindow');
-    $('#user_email', iframeWindow.document).val(userobj.email);
-    $('#user_password', iframeWindow.document).val(userobj.password);
-    $('form', iframeWindow.document).submit();
-    this._showLoggingInMessage();
   },
 
   _waitForUserToSignIn: function() {

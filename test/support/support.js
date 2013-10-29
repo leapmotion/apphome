@@ -1,9 +1,8 @@
 global._ = require('underscore');
 global.Q = require('q');
-global.wd = require('wd');
-global.config = require('../../config/config.js');
 
 var chai = require('chai');
+var config = require('../../config/config.js');
 chai.use(require('chai-as-promised')).should();
 
 function pollingDeferred(pollFn, checkFn, interval) {
@@ -23,11 +22,11 @@ function pollingDeferred(pollFn, checkFn, interval) {
   return deferred.promise;
 }
 
-function waitForWindowHandlesLength(browser, length) {
+function waitForNumWindows(browser, length) {
   return pollingDeferred(function() {
-      return browser.windowHandles()
+      return browser.windowHandles();
     }, function(handles) {
-      return handles.length < length || handles;
+      return handles.length === length && handles;
     });
 }
 
@@ -57,7 +56,7 @@ function loadApp(browser, firstRun) {
     appPromise = appPromise
       .execute('window.__runApp();')
       .then(function() {
-        return waitForWindowHandlesLength(browser, 2);
+        return waitForNumWindows(browser, 2);
       })
       .then(function(handles) {
         return browser.window(handles[1]); // select first-run splash
@@ -109,5 +108,6 @@ function login(browser, email, password) {
 }
 
 module.exports.loadApp = loadApp;
+module.exports.waitForNumWindows = waitForNumWindows;
 module.exports.switchToMainWindow = switchToMainWindow;
 module.exports.login = login;

@@ -92,7 +92,7 @@ module.exports = BaseView.extend({
 
   _launchOrientation: function() {
     var orientationPath = PlatformOrientationPaths[os.platform()];
-    if (orientationPath && fs.existsSync(orientationPath)) {
+    if (process.env.LEAPHOME_ENV !== 'test' && orientationPath && fs.existsSync(orientationPath)) {
       this.$el.addClass('launching-orientation');
       nwGui.Shell.openItem(orientationPath);
       mixpanel.trackEvent('Started Orientation', null, 'OOBE');
