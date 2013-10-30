@@ -102,10 +102,20 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
         if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
           // application has a single top-level directory, so pull the contents out of that
           var topLevelDir = path.join(dest, possibleAppDirs[0]);
+          function renameSyncRecursive(from, to) {
+            if (fs.statSync(from).isDirectory()) {
+              fs.mkdirpSync(to);
+              fs.readdirSync(from).forEach(function(subFile) {
+                renameSyncRecursive(path.join(from, subFile), path.join(to, subFile));
+              });
+              fs.rmdirSync(from);
+            } else {
+              fs.chmodSync(from, 0777); // make sure file has write permissions
+              fs.renameSync(from, to);
+            }
+          }
           fs.readdirSync(topLevelDir).forEach(function (appFile) {
-            var from = path.join(topLevelDir, appFile);
-            fs.chmodSync(from, 0777); // make sure file has write permissions
-            fs.renameSync(from, path.join(dest, appFile));
+            renameSyncRecursive(path.join(topLevelDir, appFile), path.join(dest, appFile));
           });
           fs.rmdirSync(topLevelDir);
         }
