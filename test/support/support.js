@@ -3,6 +3,9 @@ global.Q = require('q');
 
 var chai = require('chai');
 var config = require('../../config/config.js');
+var fs = require('fs-extra');
+var os = require('os');
+var path = require('path');
 chai.use(require('chai-as-promised')).should();
 
 function pollingDeferred(pollFn, checkFn, interval) {
@@ -37,7 +40,22 @@ function setDbValue(browser, key, value) {
   return browser.execute(command);
 }
 
+function deleteNwDir() {
+  var nwDir;
+  if (os.platform() === 'win32') {
+    nwDir = path.join(process.env.LOCALAPPDATA, 'node-webkit');
+  } else if (os.platform() === 'darwin') {
+    nwDir = path.join(process.env.HOME, 'Library', 'Application Support', 'node-webkit');
+  }
+
+  if (nwDir && fs.existsSync(nwDir)) {
+    fs.deleteSync(nwDir);
+  }
+}
+
 function loadApp(browser, firstRun) {
+  deleteNwDir();
+
   var appPromise = browser
     .init({ browserName: 'chrome' })
     .get('file://' + __dirname + '/../../index.html');
