@@ -28,6 +28,14 @@ module.exports = Modal.extend({
       this.$('.content').addClass('scroll');
     }
 
+    function reinstallApp(app) {
+      // Need this to reset the binaryUrl
+      api.getAppDetails(app, function() {
+        uiGlobals.myApps.add(app);
+        installManager.enqueue(app);
+      });
+    }
+
     uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({
         leapApp: app,
@@ -35,11 +43,7 @@ module.exports = Modal.extend({
           this.remove();
           uiGlobals.uninstalledApps.remove(app);
 
-          // Need this to reset the binaryUrl
-          api.getAppDetails(app, function() {
-            uiGlobals.myApps.add(app);
-            installManager.enqueue(app);
-          });
+          reinstallApp(app);
 
           this.options.onClose(true);
         }).bind(this)
@@ -50,8 +54,8 @@ module.exports = Modal.extend({
     this.$('.button.reinstall-all').click((function() {
       while(uiGlobals.uninstalledApps.length) {
         var app = uiGlobals.uninstalledApps.shift();
-        uiGlobals.myApps.add(app);
-        installManager.enqueue(app);
+
+        reinstallApp(app);
       }
 
       this.options.onClose(true);
