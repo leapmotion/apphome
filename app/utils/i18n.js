@@ -34,6 +34,8 @@ function getLocale(cb) {
 
           if (supportedLanguages.indexOf(fullLocale) !== -1) {
             locale = fullLocale;
+          } else if (/zh.hk|zh.mo/i.test(fullLocale)) {
+            locale = 'zh-TW'; // zh-HK and zh-MO should fall back to traditional Chinese.
           } else if (fullLocale.indexOf('zh') === 0) {
             locale = 'zh-CN';
           } else {
