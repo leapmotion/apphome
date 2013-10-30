@@ -37,16 +37,6 @@ function setDbValue(browser, key, value) {
   return browser.execute(command);
 }
 
-function waitForBodyLoad(browser) {
-  return pollingDeferred(function() {
-      return browser
-        .elementByTagName('body')
-        .getAttribute('class');
-    }, function(classes) {
-      return /\bloading\b/.test(classes);
-    });
-}
-
 function loadApp(browser, firstRun) {
   var appPromise = browser
     .init({ browserName: 'chrome' })
@@ -102,9 +92,7 @@ function login(browser, email, password) {
     .type(password)
     .elementByTagName('form')
     .submit()
-    .then(function() {
-      return waitForBodyLoad(browser);
-    });
+    .waitForElementByCssSelector('.tile.waiting');
 }
 
 module.exports.loadApp = loadApp;

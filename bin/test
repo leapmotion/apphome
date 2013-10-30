@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var spawn = require('child_process').spawn;
-var fs = require('fs');
+var fs = require('fs-extra');
 var Mocha = require('mocha');
 var os = require('os');
 var path = require('path');
@@ -72,6 +72,17 @@ function startSeleniumServer(cb) {
     cb && cb(err);
     cb = null;
   });
+}
+
+var nwDir;
+if (os.platform() === 'win32') {
+  nwDir = path.join(process.env.LOCALAPPDATA, 'node-webkit');
+} else if (os.platform() === 'darwin') {
+  nwDir = path.join(process.env.HOME, 'Library', 'Application Support', 'node-webkit');
+}
+
+if (nwDir && fs.existsSync(nwDir)) {
+  fs.deleteSync(nwDir);
 }
 
 startSeleniumServer(function(err, seleniumServer) {
