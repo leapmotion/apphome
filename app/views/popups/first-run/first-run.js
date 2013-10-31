@@ -62,19 +62,16 @@ module.exports = BaseView.extend({
 
     this.$('#signin').click(function() {
       this._showAuth(false);
+      this.$('#auth iframe.oauth').hide()[0].contentWindow.location.href = "https://central.leapmotion.com/users/sign_in";
     }.bind(this));
   },
 
   _showAuth: function(newUser) {
     this.$('#intro').hide();
     this.$('#auth').show();
-    this._center();
+    this.$el.css({
+      'margin-top': -340,
+    });
   },
-
-  _center: function() {
-    $('.first-run-view').animate({
-      'margin-top': -0.5 * $('.first-run-view').height()
-    }, 200);
-  }
 
 });
