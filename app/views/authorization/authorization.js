@@ -36,8 +36,6 @@ module.exports = BaseView.extend({
     this.$noInternet = this.$('.no-internet');
     this.$waiting = this.$('.waiting');
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
-    this._boundCenteringFn = this._center.bind(this);
-    $(window).resize(this._boundCenteringFn);
   },
 
   authorize: function(cb) {
@@ -50,28 +48,28 @@ module.exports = BaseView.extend({
       return;
     }
     this.$el.appendTo(this.options.selector || 'body');
-    this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
     if (window.navigator.onLine) {
-      this.$iframe.hide();
       this.$iframe.attr('src', oauth.getAuthorizationUrl());
 
       this._startLoadTimeout(cb);
 
       this.$iframe.load(function() {
+        console.log('Iframe loaded');
+
         try {
           var iframeWindow = this.$iframe.prop('contentWindow');
+          console.log('Iframe has contents');
 
           if (/^http/i.test(iframeWindow.location.href)) {
-            this._styleIframe();
-            this.$iframe.show();
             $(iframeWindow).unload(function() {
-              this.$iframe.hide();
+              console.log('Iframe unloaded');
+              this._showConnectingMessage();
               this._startLoadTimeout(cb);
             }.bind(this));
+
             this._interceptPopupLinks($('body', iframeWindow.document));
-            this._center();
             this._clearLoadTimeout();
             this._performActionBasedOnUrl(iframeWindow.location.href, cb);
           } else {
@@ -94,7 +92,6 @@ module.exports = BaseView.extend({
 
   logOut: function(cb) {
     this.$el.appendTo('body');
-    this._center();
     this._showLoggingOutMessage();
 
     oauth.logOut();
@@ -121,6 +118,8 @@ module.exports = BaseView.extend({
   },
 
   _styleIframe: function() {
+    console.log('Styling contents of Iframe');
+
     var $contents = $('iframe.oauth').contents();
     var cssLink = $('<style>').text(fs.readFileSync('static/css/custom-login-styling.css'));
     $contents.find('head').append(cssLink);
@@ -146,7 +145,6 @@ module.exports = BaseView.extend({
       this._showConnectingMessage();
       this.authorize(cb);
     } else {
-      this._center();
       this._showNoInternetMessage();
       setTimeout(function() {
         this._waitForInternetConnection(cb);
@@ -155,6 +153,7 @@ module.exports = BaseView.extend({
   },
 
   _performActionBasedOnUrl: function(url, cb) {
+    console.log('Performing action based on url: ' + url);
     var urlParts = urlParse(url, true);
     if (/^\/users/.test(urlParts.pathname)) {
       if (process.env.LEAPHOME_LOGIN_EMAIL) {
@@ -168,6 +167,7 @@ module.exports = BaseView.extend({
     } else if (/^\/oauth\/authorize/.test(urlParts.pathname)) {
       this._allowOauthAuthorization();
     } else if (urlParts.query && urlParts.query.code) {
+      this._showLoggingInMessage();
       this._finishAuthorization(urlParts.query.code, cb);
     } else {
       cb(new Error('Unknown URL: ' + url));
@@ -177,7 +177,6 @@ module.exports = BaseView.extend({
   _loginAs: function(userobj) {
     console.log('_loginAs', userobj);
     this._showLoginForm();
-    this._center();
     var iframeWindow = this.$iframe.prop('contentWindow');
     $('#user_email', iframeWindow.document).val(userobj.email);
     $('#user_password', iframeWindow.document).val(userobj.password);
@@ -186,6 +185,8 @@ module.exports = BaseView.extend({
   },
 
   _waitForUserToSignIn: function() {
+    this._showLoginForm();
+
     var iframeWindow = this.$iframe.prop('contentWindow');
     var signUpUrl = $('.auth-link:first', iframeWindow.document).attr('href');
     var isShowingSignInForm = /^\/users\/sign_in/.test(iframeWindow.location.pathname);
@@ -205,8 +206,6 @@ module.exports = BaseView.extend({
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
       $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
-      this._showLoginForm();
-      this._center();
      }
   },
 
@@ -223,6 +222,7 @@ module.exports = BaseView.extend({
   },
 
   _finishAuthorization: function(code, cb) {
+    console.log('Finishing authorization');
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
         console.warn(err);
@@ -232,31 +232,41 @@ module.exports = BaseView.extend({
   },
 
   _showLoginForm: function() {
+    console.log('Showing login form');
     this.$noInternet.hide();
-    this.$waiting.hide();
+    this.$waiting.removeClass('after before logout').hide();
+    this._styleIframe();
+    this._resizeIframe();
     this.$iframe.show();
   },
 
   _showConnectingMessage: function() {
+    console.log('Showing connecting message');
     this.$noInternet.hide();
     this.$iframe.hide();
-    this.$waiting.show().removeClass('after').addClass('before');
+    if (!this.$waiting.hasClass('after')) {
+      this.$waiting.show().removeClass('after logout').addClass('before');
+    }
   },
 
   _showLoggingInMessage: function() {
+    console.log('Showing logging in message');
     this.$noInternet.hide();
     this.$iframe.hide();
-    this.$waiting.show().removeClass('before').addClass('after');
+    this.$waiting.show().removeClass('before logout').addClass('after');
   },
 
   _showNoInternetMessage: function() {
+    console.log('Showing no-internet message');
     this.$iframe.hide();
     this.$waiting.hide();
-    this.$noInternet.hide();
+    this.$noInternet.show();
   },
 
   _showLoggingOutMessage: function() {
-    this.$waiting.show().removeClass('before').addClass('logout');
+    this.$iframe.hide();
+    this.$noInternet.hide();
+    this.$waiting.show().removeClass('before after').addClass('logout');
   },
 
   _interceptPopupLinks: function($elem) {
@@ -278,29 +288,16 @@ module.exports = BaseView.extend({
     });
   },
 
-  _center: function() {
+  _resizeIframe: function() {
     var iframeWindow = this.$iframe.prop('contentWindow');
     if (iframeWindow) {
-      this.$iframe.css('visibility', 'hidden');
       var declaredWidth = parseInt($('body', iframeWindow.document).attr('airspace-home-width'), 10);
       if (declaredWidth) {
         this.$iframe.width(declaredWidth);
       }
       this.$iframe.height(0);
       this.$iframe.height(Math.min(1.5*$(iframeWindow.document).height(), $(window).height() - 10));
-      this._centerElement(this.$iframe);
-      this.$iframe.css('visibility', 'visible');
     }
-
-    this._centerElement(this.$noInternet);
-    this._centerElement(this.$waiting);
-  },
-
-  _centerElement: function($element) {
-    $element.css({
-      left: ($(window).width() - $element.outerWidth()) / 2,
-      top:  ($(window).height() - $element.outerHeight()) / 2
-    });
   },
 
   _clearLoadTimeout: function() {

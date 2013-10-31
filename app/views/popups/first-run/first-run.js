@@ -34,8 +34,7 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml({
       subheader_label:     i18n.translate('Welcome to a whole new world'),
       signup_label:        i18n.translate('Sign up to continue'),
-      signin_label:        i18n.translate('Sign in to an existing account'),
-      poweredby_label:        i18n.translate('Powered by Leap Motion')
+      signin_label:        i18n.translate('Sign in to an existing account')
     }));
 
     this.$el.toggleClass('embedded', uiGlobals.isEmbedded);
@@ -50,9 +49,11 @@ module.exports = BaseView.extend({
     authorizationView.authorize(function(err) {
       if (err) {
         console.warn('Error logging in: ' + err.stack || err);
+      } else {
+        this.$el.remove();
+        this.options.onLoggedIn();
       }
-      cb && cb(null); // skip auth if there's an error
-    });
+    }.bind(this));
   },
 
   _setupBindings: function() {
