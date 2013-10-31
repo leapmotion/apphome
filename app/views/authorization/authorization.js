@@ -54,6 +54,7 @@ module.exports = BaseView.extend({
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
     if (window.navigator.onLine) {
+      this.$iframe.hide();
       this.$iframe.attr('src', oauth.getAuthorizationUrl());
 
       this._startLoadTimeout(cb);
@@ -64,8 +65,9 @@ module.exports = BaseView.extend({
 
           if (/^http/i.test(iframeWindow.location.href)) {
             this._styleIframe();
+            this.$iframe.show();
             $(iframeWindow).unload(function() {
-              this.$iframe.css('visibility', 'hidden');
+              this.$iframe.hide();
               this._startLoadTimeout(cb);
             }.bind(this));
             this._interceptPopupLinks($('body', iframeWindow.document));
@@ -124,10 +126,19 @@ module.exports = BaseView.extend({
     $contents.find('head').append(cssLink);
 
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
-      .text('Birth Date');
+      .text('Birth Date')
+      .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
+      .after($('<span>').text(i18n.translate('Why is this required?')));
 
-    $contents.find('.auth-form form div:last-child a')
-      .text('Create Account');
+    $contents.find('.auth-form form div .auth-field, #user_airspace_tos_accepted, #user_born_at_month, #user_born_at_day, #user_born_at_year')
+      .attr('required', 'required');
+
+    $contents.find('div.divider').hide();
+
+    $contents.find('.alerts').prependTo($contents.find('.auth-form'));
+
+    $contents.find('.auth-screen .auth-links.back').html('<a href="https://central.leapmotion.com/users/sign_in" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
+
   },
 
   _waitForInternetConnection: function(cb) {
@@ -276,7 +287,7 @@ module.exports = BaseView.extend({
         this.$iframe.width(declaredWidth);
       }
       this.$iframe.height(0);
-      this.$iframe.height(Math.min($(iframeWindow.document).height(), $(window).height() - 10));
+      this.$iframe.height(Math.min(1.5*$(iframeWindow.document).height(), $(window).height() - 10));
       this._centerElement(this.$iframe);
       this.$iframe.css('visibility', 'visible');
     }

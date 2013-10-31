@@ -15,45 +15,29 @@
     top auto
     left auto
 
-  iframe.oauth, .no-internet, .leap-logo-box
-    background rgba(0, 0, 0, 0.3)
-    border-radius 8px
+  iframe.oauth, .no-internet
     border none
-    box-shadow 0px 0px 50px rgba(0, 0, 0, 0.5)
+    display none
     height 498px
     margin 0
     overflow hidden
     width 422px
 
-
   .waiting
     height 300px
-    position absolute
-    width 402px
-
-    .leap-logo-box
-      margin-top 0
-      border-color white
-      height 96px
-      padding 50px 0
-      position static
-
-      .leap-logo
-        background url(static/images/leap-logo.png)
-        display block
-        height 96px
-        margin 0 auto
-        width 200px
+    width 412px
+    margin 0 auto
 
     .spinner-holder
-      margin-top 72px
+      height 1px
+      position relative
+      margin 50px 0 30px
 
     .message
       color #999
       display none
       font-size 20px
       font-style italic
-      margin-top 110px
       text-align center
 
     &.before
@@ -71,6 +55,7 @@
   .no-internet
     background -webkit-radial-gradient(center center, circle cover, #f0f0f0, #fdfdfd)
     color #444
+    display none
     height 270px
     padding 20px
     text-align center
