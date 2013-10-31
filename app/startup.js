@@ -15,11 +15,12 @@ var frozenApps = require('./utils/frozen-apps.js');
 var i18n = require('./utils/i18n.js');
 var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
-var popup = require('./views/popups/popup.js');
 var shell = require('./utils/shell.js');
+var oauth = require('./utils/oauth.js');
 var windowChrome = require('./utils/window-chrome.js');
 var workingFile = require('./utils/working-file.js');
 
+var FirstRun = require('./views/popups/first-run/first-run.js');
 var LeapApp = require('./models/leap-app.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -42,8 +43,8 @@ function run() {
     ensureWorkingDirs,
     migrateDatabase,
     prerunAsyncKickoff,
-    firstRun,
     setupMainWindow,
+    doFirstRun,
     handleLocalTiles,
     authorize,
     startMainApp,
@@ -153,24 +154,20 @@ function prerunAsyncKickoff(cb) {
   cb && cb(null);
 }
 
-function firstRun(cb) {
-  if (!uiGlobals.isFirstRun) {
-    cb && cb(null);
-  } else {
-    var firstRunPopup = popup.open('first-run');
-    firstRunPopup.on('close', function() {
-      firstRunPopup.close(true);
-      cb && cb(null);
-    });
-  }
-}
-
 function setupMainWindow(cb) {
   // Builds the menu bar
   windowChrome.rebuildMenuBar(false);
   windowChrome.maximizeWindow();
 
   cb && cb(null);
+}
+
+function doFirstRun(cb) {
+  if (!uiGlobals.isFirstRun) {
+    cb && cb(null);
+  } else {
+    var firstRunView = new FirstRun();
+  }
 }
 
 function handleLocalTiles(cb) {

@@ -1,5 +1,6 @@
 var Spinner = require('spin');
 var urlParse = require('url').parse;
+var fs = require('fs');
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
@@ -48,7 +49,7 @@ module.exports = BaseView.extend({
       }.bind(this));
       return;
     }
-    this.$el.appendTo('body');
+    this.$el.appendTo(this.options.selector || 'body');
     this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
@@ -62,6 +63,7 @@ module.exports = BaseView.extend({
           var iframeWindow = this.$iframe.prop('contentWindow');
 
           if (/^http/i.test(iframeWindow.location.href)) {
+            this._styleIframe();
             $(iframeWindow).unload(function() {
               this.$iframe.css('visibility', 'hidden');
               this._startLoadTimeout(cb);
@@ -100,7 +102,7 @@ module.exports = BaseView.extend({
       $logoutFrame.load(function() {
         $logoutFrame.remove();
         cb(null);
-      })
+      });
       $logoutFrame.appendTo('body');
     }
 
@@ -114,6 +116,18 @@ module.exports = BaseView.extend({
     //    cb && cb(null);
     //  }
     //});
+  },
+
+  _styleIframe: function() {
+    var $contents = $('iframe.oauth').contents();
+    var cssLink = $('<style>').text(fs.readFileSync('static/css/custom-login-styling.css'));
+    $contents.find('head').append(cssLink);
+
+    $contents.find('.auth-form form .control-group:nth-child(6) h4')
+      .text('Birth Date');
+
+    $contents.find('.auth-form form div:last-child a')
+      .text('Create Account');
   },
 
   _waitForInternetConnection: function(cb) {
@@ -207,31 +221,31 @@ module.exports = BaseView.extend({
   },
 
   _showLoginForm: function() {
-    this.$noInternet.addClass('background');
-    this.$waiting.addClass('background');
-    this.$iframe.removeClass('background');
+    this.$noInternet.hide();
+    this.$waiting.hide();
+    this.$iframe.show();
   },
 
   _showConnectingMessage: function() {
-    this.$noInternet.addClass('background');
-    this.$iframe.addClass('background');
-    this.$waiting.removeClass('background').removeClass('after').addClass('before');
+    this.$noInternet.hide();
+    this.$iframe.hide();
+    this.$waiting.show().removeClass('after').addClass('before');
   },
 
   _showLoggingInMessage: function() {
-    this.$noInternet.addClass('background');
-    this.$iframe.addClass('background');
-    this.$waiting.removeClass('background').removeClass('before').addClass('after');
+    this.$noInternet.hide();
+    this.$iframe.hide();
+    this.$waiting.show().removeClass('before').addClass('after');
   },
 
   _showNoInternetMessage: function() {
-    this.$iframe.addClass('background');
-    this.$waiting.addClass('background');
-    this.$noInternet.removeClass('background');
+    this.$iframe.hide();
+    this.$waiting.hide();
+    this.$noInternet.hide();
   },
 
   _showLoggingOutMessage: function() {
-    this.$waiting.removeClass('background').removeClass('before').addClass('logout');
+    this.$waiting.show().removeClass('before').addClass('logout');
   },
 
   _interceptPopupLinks: function($elem) {
@@ -254,8 +268,6 @@ module.exports = BaseView.extend({
   },
 
   _center: function() {
-    var $frbg = this.$('.first-run-background');
-
     var iframeWindow = this.$iframe.prop('contentWindow');
     if (iframeWindow) {
       this.$iframe.css('visibility', 'hidden');
@@ -271,11 +283,6 @@ module.exports = BaseView.extend({
 
     this._centerElement(this.$noInternet);
     this._centerElement(this.$waiting);
-    this._centerElement($frbg);
-
-    // 1440 comes from the image width declared in authorization.styl
-    var scale = Math.min($(window).width(), 1440) / 1440;
-    $frbg.css('transform', 'scaleX(' + scale + ') scaleY(' + scale + ')');
   },
 
   _centerElement: function($element) {

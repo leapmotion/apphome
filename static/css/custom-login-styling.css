@@ -1,0 +1,42 @@
+body {
+    background: transparent !important;
+}
+
+#wrapper {
+    padding-top: 0 !important;
+}
+
+.auth-form {
+    background: transparent !important;
+    border: none !important;
+    border-radius: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+}
+
+.auth-form h1, .auth-form hr {
+    display: none !important;
+}
+
+.auth-form form .control-group:nth-child(6) h4 {
+    color: white !important;
+    font-size: 18px !important;
+}
+
+.auth-links {
+    margin-top: -40px !important;
+}
+
+.auth-links a:hover {
+    color: #9ac948 !important;
+}
+
+.auth-form form > div:last-child {
+    margin-top: 30px !important;
+    margin-bottom: 0px !important;
+}
+
+.auth-form form input.btn.btn-primary {
+    padding: 23px 0 !important;
+}

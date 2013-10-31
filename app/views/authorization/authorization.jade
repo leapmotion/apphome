@@ -1,9 +1,4 @@
-.first-run-background
-  .label.top.left= findAndLaunch_label
-  .label.bottom.left= syncPurchases_label
-  .label.top.right= discoverGames_label
-  .label.bottom.right= sameLogin_label
-iframe.oauth.background(nwdisable, nwfaketop)
+iframe.oauth(nwdisable, nwfaketop)
 .waiting.before
   .leap-logo-box
     .leap-logo
@@ -11,7 +6,7 @@ iframe.oauth.background(nwdisable, nwfaketop)
   .message.before= beforeMessage_label
   .message.after= afterMessage_label
   .message.logout= logoutMessage_label
-.no-internet.background
+.no-internet
   h2= noInternet_label
   .icon
   .instruction= instruction_label

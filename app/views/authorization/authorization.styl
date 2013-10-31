@@ -7,46 +7,21 @@
   left 0
   z-index 250
 
-  .first-run-background
-    background url(static/images/create-account-bg.png)
-    background-repeat no-repeat
-    width 1440px
-    height 434px
+  &.first-run
+    background none
+    height auto
+    width auto
     position relative
-    max-width 1191px
-    visibility hidden
-
-    .label
-      position absolute
-      color gray
-      font-size 18px
-
-      &.top
-        top -2px
-
-      &.left
-        width 215px
-        left 140px
-
-      &.bottom
-        top 82px
-
-      &.right
-        left 944px
-        width 250px
-
-  &.first-run .first-run-background
-    visibility visible
+    top auto
+    left auto
 
   iframe.oauth, .no-internet, .leap-logo-box
-    background white
-    border 1px solid #ddd
+    background rgba(0, 0, 0, 0.3)
     border-radius 8px
-    box-shadow 1px 1px 6px rgba(0, 0, 0, 0.2)
+    border none
+    box-shadow 0px 0px 50px rgba(0, 0, 0, 0.5)
     height 498px
     margin 0
-    margin-top -2%
-    position absolute
     overflow hidden
     width 422px
 
@@ -116,7 +91,3 @@
     .instruction
       font-size 20px
       margin 0 50px
-
-  .background
-    left: -1000px !important
-    top: -1000px !important
