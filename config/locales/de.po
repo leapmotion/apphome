@@ -56,7 +56,7 @@ msgid "No Internet connection"
 msgstr "Keine Internetverbindung"
 
 msgid "Please ensure your Internet connection is working properly."
-msgstr "Vergewisern Sie sich, dass Ihre Internetverbindung einwandfrei funktioniert."
+msgstr "Vergewissern Sie sich, dass Ihre Internetverbindung einwandfrei funktioniert."
 
 msgid "No apps to display."
 msgstr "Keine Apps zum Anzeigen."
