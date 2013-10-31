@@ -149,7 +149,6 @@ function connectToStoreServer() {
           reconnectAfterError(new Error(messages.errors));
         } else {
           console.log('Connected to store server.');
-          $('body').removeClass('loading');
           messages.forEach(function(message) {
             if (message.auth_id && message.secret_token) {
               drm.writeXml(message.auth_id, message.secret_token);
@@ -169,6 +168,7 @@ function connectToStoreServer() {
           });
 
           installManager.showAppropriateDownloadControl();
+          $('body').removeClass('loading');
         }
       });
     }
