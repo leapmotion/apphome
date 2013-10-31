@@ -101,7 +101,7 @@ function cancelAll() {
   // Reset waiting apps
   for (var i = 0, len = installQueue.length; i < len - 1; i++) {
     var app = installQueue.pop().app;
-    if (app.isUpdatable() && app.get('state') === LeapApp.States.Waiting) {
+    if (app.hasUpdate() && app.get('state') === LeapApp.States.Waiting) {
       app.set('state', LeapApp.States.Ready);
     } else {
       app.set('state', LeapApp.States.NotYetInstalled);

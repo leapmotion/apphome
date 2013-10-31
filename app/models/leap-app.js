@@ -136,8 +136,12 @@ var LeapApp = BaseModel.extend({
     return this.get('state') === LeapApp.States.Ready;
   },
 
-  isUpdatable: function() {
+  hasUpdate: function() {
     return !!this.get('availableUpdate');
+  },
+
+  isUpdatable: function() {
+    return this.hasUpdate() && (this.get('state') === LeapApp.States.Ready);
   },
 
   install: function() {

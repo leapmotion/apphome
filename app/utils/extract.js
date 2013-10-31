@@ -73,6 +73,9 @@ function unzipFile(src, dest, shellUnzipOnly, cb) {
 }
 
 function extractAppZip(src, dest, shellUnzipOnly, cb) {
+  if (!fs.existsSync(src)) {
+    return cb && cb(new Error('Zip archive does not exist: ' + src));
+  }
   try {
     if (fs.existsSync(dest)) {
       fs.deleteSync(dest);
@@ -87,30 +90,48 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
     if (err) {
       return cb && cb(err);
     }
-    try {
-      var extractedFiles = fs.readdirSync(dest);
-      var possibleAppDirs = [];
-      extractedFiles.forEach(function (extractedFile) {
-        if (!IgnoredWindowsFileRegex.test(extractedFile)) {
-          possibleAppDirs.push(extractedFile);
-        }
-      });
-      if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
-        // application has a single top-level directory, so pull the contents out of that
-        var topLevelDir = path.join(dest, possibleAppDirs[0]);
-        fs.readdirSync(topLevelDir).forEach(function (appFile) {
-          fs.renameSync(path.join(topLevelDir, appFile), path.join(dest, appFile));
+    if (os.platform() === 'win32') {
+      try {
+        var extractedFiles = fs.readdirSync(dest);
+        var possibleAppDirs = [];
+        extractedFiles.forEach(function (extractedFile) {
+          if (!IgnoredWindowsFileRegex.test(extractedFile)) {
+            possibleAppDirs.push(extractedFile);
+          }
         });
-        fs.rmdirSync(topLevelDir);
+        if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
+          // application has a single top-level directory, so pull the contents out of that
+          var topLevelDir = path.join(dest, possibleAppDirs[0]);
+          function renameSyncRecursive(from, to) {
+            if (fs.statSync(from).isDirectory()) {
+              fs.mkdirpSync(to);
+              fs.readdirSync(from).forEach(function(subFile) {
+                renameSyncRecursive(path.join(from, subFile), path.join(to, subFile));
+              });
+              fs.rmdirSync(from);
+            } else {
+              fs.chmodSync(from, 0777); // make sure file has write permissions
+              fs.renameSync(from, to);
+            }
+          }
+          fs.readdirSync(topLevelDir).forEach(function (appFile) {
+            renameSyncRecursive(path.join(topLevelDir, appFile), path.join(dest, appFile));
+          });
+          fs.rmdirSync(topLevelDir);
+        }
+      } catch (err) {
+        cb && cb(err);
       }
-    } catch (err) {
-      cb && cb(err);
     }
     cb && cb(null);
   });
 }
 
 function extractAppDmg(src, dest, cb) {
+  if (!fs.existsSync(src)) {
+    return cb && cb(new Error('Disk image does not exist: ' + src));
+  }
+
   if (os.platform() !== 'darwin') {
     return cb && cb(new Error('Extracting DMG is only supported on Mac OS X.'));
   }

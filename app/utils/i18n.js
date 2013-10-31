@@ -30,15 +30,23 @@ function getLocale(cb) {
 
     if (os.platform() === 'win32') {
       function sanitizeLocale(fullLocale, cb) {
-        fullLocale = fullLocale || DefaultLocale;
+        fullLocale = (fullLocale || DefaultLocale).toLowerCase();
 
           if (supportedLanguages.indexOf(fullLocale) !== -1) {
             locale = fullLocale;
+          } else if (/zh.hk|zh.mo/i.test(fullLocale)) {
+            locale = 'zh-tw'; // zh-HK and zh-MO should fall back to traditional Chinese.
           } else if (fullLocale.indexOf('zh') === 0) {
-            locale = 'zh-CN';
+            locale = 'zh-cn';
           } else {
-            locale = module.exports.locale = fullLocale.split('-').shift();
+            locale = fullLocale.split('-').shift();
           }
+
+          if (supportedLanguages.indexOf(locale) === -1) {
+            locale = DefaultLocale;
+          }
+
+          module.exports.locale = locale;
 
           cb && cb(null, locale);
       }
