@@ -166,7 +166,9 @@ function doFirstRun(cb) {
   if (!uiGlobals.isFirstRun) {
     cb && cb(null);
   } else {
-    var firstRunView = new FirstRun();
+    var firstRunView = new FirstRun({
+      onLoggedIn: cb
+    });
   }
 }
 
