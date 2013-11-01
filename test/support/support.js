@@ -6,7 +6,11 @@ var config = require('../../config/config.js');
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
-chai.use(require('chai-as-promised')).should();
+var chaiAsPromised = require('chai-as-promised');
+var wd = require('wd');
+chai.use(chaiAsPromised).should();
+
+chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 function pollingDeferred(pollFn, checkFn, interval) {
   interval = (typeof timeout === 'undefined' ? 100 : interval);
