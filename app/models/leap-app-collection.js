@@ -1,3 +1,5 @@
+var async = require('async');
+
 var LeapApp = require('./leap-app.js');
 var LocalLeapApp = require('./local-leap-app.js');
 var StoreLeapApp = require('./store-leap-app.js');
@@ -19,7 +21,7 @@ module.exports = window.Backbone.Collection.extend({
   },
 
   model: function(attrs, options) {
-    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs));
+    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs, null, 2));
     if (attrs.urlToLaunch) {
       return new WebLinkApp(attrs, options);
     } else if (attrs.appId) {
@@ -29,11 +31,27 @@ module.exports = window.Backbone.Collection.extend({
     } else if (attrs.name) {
       return new LocalLeapApp(attrs, options);
     } else {
-      console.error('unknown app type: ' + JSON.stringify(attrs));
+      console.error('unknown app type: ' + JSON.stringify(attrs, null, 2));
     }
   },
 
   comparator: function(leapApp) {
     return leapApp.sortScore();
+  },
+
+  move: function(newAppDirectory) {
+    var appMoveQueue = async.queue(function(app, cb) {
+      app.move(newAppDirectory, cb);
+    }, 5);
+
+    appMoveQueue.drain = function() {
+      console.log('All apps moved to ' + newAppDirectory + ' successfully.');
+    };
+
+    this.filter(function(app) {
+      return app.isStoreApp() && app.get('state') === LeapApp.States.Ready;
+    }).forEach(function(app) {
+      appMoveQueue.push(app);
+    });
   }
 });

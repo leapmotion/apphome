@@ -158,6 +158,7 @@ function connectToStoreServer() {
             if (message.user_id) {
               uiGlobals.username = message.username;
               uiGlobals.email = message.email;
+              uiGlobals.user_id = message.user_id;
               subscribeToUserChannel(message.user_id);
               uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {

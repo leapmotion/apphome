@@ -118,7 +118,7 @@ msgstr "Quitter"
 msgid "File"
 msgstr "Fichier"
 
-msgid "Sign out %1$s"
+msgid "Sign Out %1$s"
 msgstr "Déconnecter %1$s"
 
 msgid "Account"
@@ -417,3 +417,6 @@ msgstr "Désarchiver tout"
 
 msgid "Click to Reinstall"
 msgstr "Cliquer pour réinstaller"
+
+msgid "Set Install Directory..."
+msgstr "Création du répertoire d'installation..."

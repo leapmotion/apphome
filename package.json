@@ -24,6 +24,7 @@
     "jade": "0.30.0",
     "jed": "0.5.4",
     "markdown": "0.4.0",
+    "mv": "1.0.0",
     "po2json": "0.0.6",
     "plist": "git://github.com/proxv/node-plist.git#ea8aca44489a71c08d21e24b33efcbb5b149b52e",
     "spin": "0.0.1",

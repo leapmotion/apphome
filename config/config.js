@@ -2,6 +2,9 @@ var path = require('path');
 
 var enumerable = require('../app/utils/enumerable.js');
 
+var AppsDir = 'AirspaceApps';
+var AppsUserDataDir = 'AirspaceApps';
+
 var config = {
 
   oauth: {
@@ -63,7 +66,8 @@ var config = {
     CrashCount: 'crashCount',
     ActiveTempFilesKey: 'active_temp_files',
     TempFilesNeedingDeletionKey: 'temp_files_needing_deletion',
-    MixpanelDistinctId: 'MixpanelDistinctId'
+    MixpanelDistinctId: 'MixpanelDistinctId',
+    AppInstallDir: 'AppInstallDir'
   },
 
   PlatformDirs: {
@@ -92,6 +96,18 @@ var config = {
     win32: process.env.USERPROFILE,
     darwin: process.env.HOME,
     linux: process.env.HOME
+  },
+
+  PlatformAppDirs: {
+    win32:  [ process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir ],
+    darwin: [ process.env.HOME, 'Applications', AppsDir ],
+    linux:  [ process.env.HOME, AppsDir ]
+  },
+
+  PlatformUserDataDirs: {
+    win32:  [ process.env.APPDATA, AppsUserDataDir ],
+    darwin: [ process.env.HOME, 'Library', 'Application Support', AppsUserDataDir ],
+    linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
   },
 
   FrozenAppPaths: [

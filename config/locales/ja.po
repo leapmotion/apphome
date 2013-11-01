@@ -118,7 +118,7 @@ msgstr "終了"
 msgid "File"
 msgstr "ファイル"
 
-msgid "Sign out %1$s"
+msgid "Sign Out %1$s"
 msgstr "%1$sからサインアウト"
 
 msgid "Account"
@@ -417,3 +417,6 @@ msgstr "すべてを展開"
 
 msgid "Click to Reinstall"
 msgstr "クリックして再インストール"
+
+msgid "Set Install Directory..."
+msgstr "インストール先を設定して下さい..."

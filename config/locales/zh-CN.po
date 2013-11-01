@@ -417,3 +417,6 @@ msgstr "全部解档"
 
 msgid "Click to Reinstall"
 msgstr "单击以重新安装"
+
+msgid "Set Install Directory..."
+msgstr "设置安装目录..."

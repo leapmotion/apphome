@@ -1,10 +1,12 @@
 var async = require('async');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
+var mv = require('mv');
 var os = require('os');
 var path = require('path');
 
 var config = require('../../config/config.js');
+var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
 var extract = require('../utils/extract.js');
 var oauth = require('../utils/oauth.js');
@@ -14,26 +16,16 @@ var url = require('url');
 
 var LeapApp = require('./leap-app.js');
 
-var AppsDir = 'AirspaceApps';
-var PlatformAppDirs = {
-  win32:  [ process.env.LOCALAPPDATA || process.env.USERPROFILE, AppsDir ],
-  darwin: [ process.env.HOME, 'Applications', AppsDir ],
-  linux:  [ process.env.HOME, AppsDir ]
-};
-
-var AppsUserDataDir = 'AirspaceApps';
-var PlatformUserDataDirs = {
-  win32:  [ process.env.APPDATA, AppsUserDataDir ],
-  darwin: [ process.env.HOME, 'Library', 'Application Support', AppsUserDataDir ],
-  linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
-};
-
 module.exports = LeapApp.extend({
 
   idAttribute: 'appId',
 
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
+
+    if ((this.get('state') === LeapApp.States.Ready) && !fs.existsSync(this.get('executable'))) {
+      this.set('state', LeapApp.States.NotYetInstalled);
+    }
 
     this.set('availableUpdate', null);
   },
@@ -230,6 +222,50 @@ module.exports = LeapApp.extend({
     }.bind(this));
   },
 
+  move: function(targetDirectory, cb) {
+    var sourceExe = this.get('executable');
+    if (!sourceExe) {
+      cb && cb(null);
+      return;
+    }
+
+    var sourceDirectory = path.dirname(sourceExe);
+
+    if (sourceDirectory == targetDirectory) {
+      cb && cb(null);
+      return;
+    }
+
+    var targetExe = sourceExe.replace(sourceDirectory, targetDirectory);
+
+    console.log('Moving ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
+
+    mv(sourceExe, targetExe, {mkdirp: true}, (function(err) {
+      if (err) {
+        console.log('Error moving ' + this.get('name'));
+        cb && cb(err);
+        return;
+      }
+
+      // Force regeneration of app dir
+      delete this.__appDir;
+
+      this.set('executable', targetExe);
+
+      this.save();
+
+      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetExe), function(err3) {
+        if (err3) {
+          console.warn('xattr exec error, ignoring: ' + err3);
+        }
+      });
+
+      console.log('Moved ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
+
+      cb && cb(null);
+    }).bind(this));
+  },
+
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
@@ -293,11 +329,16 @@ module.exports = LeapApp.extend({
 
   _appDir: function() {
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
-    return this._getDir(PlatformAppDirs, '__appDir', suffix);
+    var userSetInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
+    if (userSetInstallDir) {
+      return path.join(userSetInstallDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
+    } else {
+      return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+    }
   },
 
   _userDataDir: function() {
-    return this._getDir(PlatformUserDataDirs, '__userDataDir');
+    return this._getDir(config.PlatformUserDataDirs, '__userDataDir');
   },
 
   _getDir: function(dirsByPlatform, attributeName, suffix) {
@@ -311,7 +352,7 @@ module.exports = LeapApp.extend({
         throw new Error('No app name specified.');
       }
       var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
-      dir = path.join(baseDir, this.cleanAppName() + suffix);
+      dir = path.join(baseDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
       this[attributeName] = dir;
     }
     return dir;

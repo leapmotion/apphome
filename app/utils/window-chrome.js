@@ -1,8 +1,11 @@
+var fs = require('fs');
 var os = require('os');
+var path = require('path');
 
 var api = require('./api.js');
 var authorizationUtil = require('./authorization-util.js');
 var config = require('../../config/config.js');
+var db = require('./db.js');
 var i18n = require('./i18n.js');
 var mixpanel = require('./mixpanel.js');
 var popup = require('../views/popups/popup.js');
@@ -81,14 +84,31 @@ function rebuildMenuBar(enableLogOut) {
 
   var accountMenu = new nwGui.Menu();
   accountMenu.append(new nwGui.MenuItem({
-    label: i18n.translate('Sign out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
+    label: i18n.translate('Sign Out %1$s').fetch(enableLogOut ? (uiGlobals.username || uiGlobals.email) : ''),
     click: authorizationUtil.logOutUser,
     enabled: !!enableLogOut
+  }));
+  accountMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Set Install Directory...'),
+    click: function() {
+      $('input#installLocation').trigger('click');
+    }
   }));
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Account'),
     submenu: accountMenu
   }));
+
+  $('input#installLocation').change(function() {
+    var newAppDir = $(this).val();
+
+    console.log('Changed app install location to ' + newAppDir);
+    db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
+
+    uiGlobals.myApps.move(path.join(newAppDir, String(uiGlobals.user_id)));
+
+    $('input#installLocation').attr('nwdirectory', newAppDir);
+  });
 
   // TODO: support website links on both OS X and Windows
   if (os.platform() === 'win32') {

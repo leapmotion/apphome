@@ -118,7 +118,7 @@ msgstr "Beenden"
 msgid "File"
 msgstr "Datei"
 
-msgid "Sign out %1$s"
+msgid "Sign Out %1$s"
 msgstr "%1$s abmelden"
 
 msgid "Account"
@@ -418,4 +418,5 @@ msgstr "Alle nicht archivieren"
 msgid "Click to Reinstall"
 msgstr "Für Neuinstallation klicken"
 
-
+msgid "Set Install Directory..."
+msgstr "Installationsverzeichnis angeben..."
