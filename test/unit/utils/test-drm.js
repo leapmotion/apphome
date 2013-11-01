@@ -22,6 +22,9 @@ describe('drm XML writing', function() {
       mkdirs: function(path, cb) {
         cb && cb();
       },
+      exists: function(path, cb) {
+        cb && cb(false);
+      },
       writeFile: function(outputPath, data) {
         assert.ok(data.match(AuthId));
         assert.ok(data.match(Token));
@@ -47,6 +50,9 @@ describe('drm XML writing', function() {
     drm.__set__('fs', _(require('fs-extra')).extend({
       mkdirs: function(path, cb) {
         cb && cb();
+      },
+      exists: function(path, cb) {
+        cb && cb(false);
       },
       writeFile: function(outputPath, data) {
         assert.ok(data.match(AuthId));
