@@ -15,6 +15,7 @@ describe('downloading', function() {
   });
 
   it('should start on first login and be cancellable', function(done) {
+    this.timeout(5000);
     browser
       .elementById('cancel-all').isVisible().should.become(true)
       .then(function() {
