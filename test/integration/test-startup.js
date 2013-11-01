@@ -29,9 +29,9 @@ describe('startup', function() {
   it('should show the login screen on non-first-run', function(done) {
     this.timeout(20000);
     support.loadApp(browser)
-        .waitForElementByTagName('iframe')
-        .elementByTagName('iframe').getAttribute('src').should.eventually.include('central.leapmotion.com')
-        .notify(done);
+      .waitForElementByTagName('iframe')
+      .elementByTagName('iframe').getAttribute('src').should.eventually.include('central.leapmotion.com')
+      .notify(done);
   });
 
   afterEach(function(done) {
