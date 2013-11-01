@@ -10,7 +10,7 @@ function openPopup(popupName, options) {
   if (!popup || options.allowMultiple) {
     var popupOptions = _.extend({
       name: popupName,
-      toolbar: true,
+      toolbar: false,
       frame: true,
       resizable: false,
       icon: 'static/icon/icon.png'

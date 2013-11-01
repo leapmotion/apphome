@@ -19,7 +19,7 @@ if (testFiles.length === 0) {
   queue = [ path.join(projectDir, 'test') ];
 } else {
   for (var i = 0; i < testFiles.length; i++) {
-    var testFile = testFiles[i];
+    var testFile = path.join(process.cwd(), testFiles[i]);
     if (fs.statSync(testFile).isDirectory()) {
       queue.push(testFile);
       testFiles.splice(i, 1);
@@ -74,24 +74,46 @@ function startSeleniumServer(cb) {
   });
 }
 
-startSeleniumServer(function(err, seleniumServer) {
-  process.on('exit', function() {
-    seleniumServer && seleniumServer.kill();
-  });
+function runTests() {
+  var mocha = new Mocha();
+  testFiles.forEach(mocha.addFile.bind(mocha));
+  mocha.run(process.exit);
+}
 
-  if (err) {
-    if (err.code === 'ENOENT') {
-      console.log('You need to install the Java Runtime.');
-    } else {
-      console.log(err.message);
-    }
-    process.exit();
-  } else {
-    console.log('started.');
-    var mocha = new Mocha();
-    testFiles.forEach(function(testFile) {
-      mocha.addFile(testFile);
-    });
-    mocha.run(process.exit);
+var runningIntegrationTest = false;
+for (var i = 0, len = testFiles.length; i < len; i++) {
+  if (/integration/.test(testFiles[i])) {
+    runningIntegrationTest = true;
+    break;
   }
-});
+}
+
+if (runningIntegrationTest) {
+  startSeleniumServer(function(err, seleniumServer) {
+    if (err) {
+      if (err.code === 'ENOENT') {
+        console.log('You need to install the Java Runtime.');
+      } else {
+        console.log(err.message);
+      }
+      process.exit();
+    } else {
+      console.log('started.');
+
+      seleniumServer.on('exit', function(code) {
+        console.log('Selenium server exited with code: ' + code);
+        process.exit();
+      });
+
+      process.on('exit', function() {
+        seleniumServer.removeListener('exit');
+        seleniumServer.kill();
+      });
+
+      runTests();
+    }
+  });
+} else {
+  runTests();
+}
+

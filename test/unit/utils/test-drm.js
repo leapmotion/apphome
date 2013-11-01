@@ -19,8 +19,10 @@ describe('drm XML writing', function() {
     }));
 
     drm.__set__('fs', _(require('fs-extra')).extend({
-      mkdirsSync: function() {},
-      writeFileSync: function(outputPath, data) {
+      mkdirs: function(path, cb) {
+        cb && cb();
+      },
+      writeFile: function(outputPath, data) {
         assert.ok(data.match(AuthId));
         assert.ok(data.match(Token));
         assert.equal(outputPath, path.join(process.env.APPDATA, 'Leap Motion', 'tt.xml'));
@@ -43,8 +45,10 @@ describe('drm XML writing', function() {
     }));
 
     drm.__set__('fs', _(require('fs-extra')).extend({
-      mkdirsSync: function() {},
-      writeFileSync: function(outputPath, data) {
+      mkdirs: function(path, cb) {
+        cb && cb();
+      },
+      writeFile: function(outputPath, data) {
         assert.ok(data.match(AuthId));
         assert.ok(data.match(Token));
         assert.equal(outputPath, path.join(process.env.HOME, 'Library', 'Preferences', 'DSS', 'auth.plist'));
