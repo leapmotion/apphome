@@ -15,11 +15,6 @@ body {
   position: fixed;
 }
 
-body.startup {
-  left: -100000px;
-  background: transparent;
-}
-
 body.loading {
   cursor: progress;
 }

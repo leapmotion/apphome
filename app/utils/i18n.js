@@ -143,7 +143,9 @@ function translate(str) {
     translation.toString = translation.fetch;
     return translation;
   } else {
-    throw new Error('i18n must be initialized before use.');
+    var err = new Error('i18n must be initialized before use.');
+    console.warn(err.stack || err);
+    throw err;
   }
 }
 

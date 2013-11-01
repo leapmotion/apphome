@@ -1,84 +1,39 @@
 .authorization
-  background -webkit-radial-gradient(center center, circle cover, #f8faf8, #e8eae8)
-  height 100%
-  width 100%
-  position absolute
-  top 0
-  left 0
-  z-index 250
+  background none
+  width 786px
+  top 50%
+  margin -340px auto 0
+  text-align center
+  position relative
+  overflow hidden
 
-  .first-run-background
-    background url(static/images/create-account-bg.png)
-    background-repeat no-repeat
-    width 1440px
-    height 434px
-    position relative
-    max-width 1191px
-    visibility hidden
+  #icon
+    display block
+    margin 0 auto
 
-    .label
-      position absolute
-      color gray
-      font-size 18px
-
-      &.top
-        top -2px
-
-      &.left
-        width 215px
-        left 140px
-
-      &.bottom
-        top 82px
-
-      &.right
-        left 944px
-        width 250px
-
-  &.first-run .first-run-background
-    visibility visible
-
-  iframe.oauth, .no-internet, .leap-logo-box
-    background white
-    border 1px solid #ddd
-    border-radius 8px
-    box-shadow 1px 1px 6px rgba(0, 0, 0, 0.2)
+  iframe.oauth, .no-internet
+    border none
+    display none
     height 498px
     margin 0
-    margin-top -2%
-    position absolute
     overflow hidden
     width 422px
 
-
   .waiting
     height 300px
-    position absolute
-    width 402px
-
-    .leap-logo-box
-      margin-top 0
-      border-color white
-      height 96px
-      padding 50px 0
-      position static
-
-      .leap-logo
-        background url(static/images/leap-logo.png)
-        display block
-        height 96px
-        margin 0 auto
-        width 200px
+    width 412px
+    margin 0 auto
 
     .spinner-holder
-      margin-top 72px
+      height 1px
+      position relative
+      margin 50px 0 30px
 
     .message
-      color #999
+      color rgb(153,153,153)
       display none
       font-size 20px
       font-style italic
-      margin-top 110px
       text-align center
 
     &.before
@@ -94,14 +49,13 @@
         display block
 
   .no-internet
-    background -webkit-radial-gradient(center center, circle cover, #f0f0f0, #fdfdfd)
-    color #444
-    height 270px
+    color rgb(153,153,153)
+    display none
     padding 20px
     text-align center
+    margin 0 auto
 
     h2
-      border-bottom 1px solid #e8e8e8
       font-size 32px
       font-weight normal
       margin 10px 20px 0
@@ -116,7 +70,3 @@
     .instruction
       font-size 20px
       margin 0 50px
-
-  .background
-    left: -1000px !important
-    top: -1000px !important

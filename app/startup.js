@@ -15,11 +15,12 @@ var frozenApps = require('./utils/frozen-apps.js');
 var i18n = require('./utils/i18n.js');
 var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
-var popup = require('./views/popups/popup.js');
 var shell = require('./utils/shell.js');
+var oauth = require('./utils/oauth.js');
 var windowChrome = require('./utils/window-chrome.js');
 var workingFile = require('./utils/working-file.js');
 
+var FirstRun = require('./views/popups/first-run/first-run.js');
 var LeapApp = require('./models/leap-app.js');
 var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
@@ -34,29 +35,34 @@ function wrappedSetTimeout(task, ms) {
   }, ms);
 }
 
-function bootstrapAirspace() {
+function run() {
   var steps = [
+    getConfiguration,
     initializeMixpanel,
     initializeInternationalization,
     ensureWorkingDirs,
     migrateDatabase,
     prerunAsyncKickoff,
-    firstRun,
     setupMainWindow,
-    //checkLeapConnection,
-    localTiles,
+    doFirstRun,
+    handleLocalTiles,
+    authorize,
     startMainApp,
-    afterwardsAsyncKickoffs
+    cleanup
   ];
 
   steps.forEach(function(step) {
     uiGlobals.bootstrapPromises[step.name] = new $.Deferred();
   });
 
+  var startupTimings = {};
+
   var wrappedSteps =  _(steps).map(function(fn, key) {
     return function(cb) {
+      startupTimings[fn.name] = Date.now();
       console.log('~~~ Bootstrap Step: ' + fn.name + ' ~~~ ');
       fn.call(null, function() {
+        console.log('### Step: ' + fn.name + ' done in ' + (Date.now() - startupTimings[fn.name]) + 'ms ###');
         uiGlobals.bootstrapPromises[fn.name].resolve();
         cb.apply(this, arguments);
       });
@@ -74,6 +80,19 @@ function bootstrapAirspace() {
       });
     }
   });
+}
+
+/*
+ * Get global config variables
+ */
+function getConfiguration(cb) {
+  // Check if device has an embedded leap or not.
+  // Checks db first to see if there's a stored value
+  uiGlobals.isEmbedded = embeddedLeap.isLeapEmbedded();
+
+  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  cb && cb(null);
 }
 
 /*
@@ -111,7 +130,8 @@ function ensureWorkingDirs(cb) {
   async.series([
     dirFn(appDataDir),
     dirFn(tempDir),
-    dirFn(leapSharedData)
+    dirFn(leapSharedData),
+    workingFile.cleanupTempFiles
   ], function(err) {
     cb && cb(err);
   });
@@ -124,127 +144,89 @@ function migrateDatabase(cb) {
 }
 
 function prerunAsyncKickoff(cb) {
-  uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
-
-  // Gather all temp files that weren't cleaned up from last time immediately
-  // and delete them once we're idle
-  workingFile.cleanupTempFiles();
-
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
   // based on the json and information in the database.
   // myApps tries to install everything that gets added (that has state NotYetInstalled)
   LeapApp.hydrateCachedModels();
 
-  // Check if device has an embedded leap or not.
-  // Checks db first to see if there's a stored value
-  embeddedLeap.embeddedLeapPromise();
-
   // Creates manifest promise for future use
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
-
-  // Builds the menu bar
-  // TODO move this to setupMainWindow?
-  windowChrome.rebuildMenuBar(false);
   cb && cb(null);
-}
-
-function firstRun(cb) {
-  if (!uiGlobals.isFirstRun) {
-    cb && cb(null);
-  } else {
-    var firstRunPopup = popup.open('first-run');
-    firstRunPopup.on('close', function() {
-      firstRunPopup.close(true);
-      cb && cb(null);
-    });
-  }
 }
 
 function setupMainWindow(cb) {
+  // Builds the menu bar
+  windowChrome.rebuildMenuBar(false);
   windowChrome.maximizeWindow();
-
-  // TODO: move to an explicit step at end?
-  window.setTimeout(function() {
-    $('body').removeClass('startup');
-  }, 50);
 
   cb && cb(null);
 }
 
-function checkLeapConnection(cb) {
-  embeddedLeap.embeddedLeapPromise().done(function(isEmbedded) {
-    var leapNotConnectedView = new LeapNotConnectedView({ isEmbedded: isEmbedded });
-    leapNotConnectedView.encourageConnectingLeap(function() {
-      leapNotConnectedView.remove();
-    });
+function doFirstRun(cb) {
+  if (!uiGlobals.isFirstRun) {
     cb && cb(null);
+  } else {
+    var firstRunView = new FirstRun({
+      onLoggedIn: cb
+    });
+  }
+}
+
+function handleLocalTiles(cb) {
+  LocalLeapApp.localManifestPromise().done(function(manifest) {
+    if (manifest) {
+      // Fire this fast, so the Orientation tile shows up at the top of the list.
+      LocalLeapApp.explicitPathAppScan(manifest);
+
+      // This is less urgent; give other bootstrap tasks a chance to complete.
+      wrappedSetTimeout(function() {
+        setInterval(function() {
+          LocalLeapApp.localAppScan(manifest);
+        }, config.FsScanIntervalMs);
+      }, 6000);
+    } else {
+      console.warn('Manifest missing, skipping local tiles.');
+    }
+  });
+  cb && cb(null);
+}
+
+function authorize(cb) {
+  authorizationUtil.withAuthorization(function(err) {
+    if (err) {
+      setTimeout(authorize, 50); // Keep on trying...
+    } else {
+      cb && cb(null);
+    }
   });
 }
 
-function localTiles(cb) {
-  AsyncTasks.scanForLocalApps();
-  cb && cb(null);
-}
-
 function startMainApp(cb) {
-  AsyncTasks.authorizeAndPaintMainScreen();
+  $('body').removeClass('startup');
+  $('body').addClass('loading');
+  windowChrome.paintMainPage();
+  api.connectToStoreServer(); // Put callback in here?
+
   cb && cb(null);
 }
 
-function afterwardsAsyncKickoffs(cb) {
-  wrappedSetTimeout(frozenApps.get, 10);
-  cb && cb(null);
-}
+function cleanup(cb) {
+  crashCounter.reset();
+  db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-
-var AsyncTasks = {
-
-  scanForLocalApps: function() {
-    LocalLeapApp.localManifestPromise().done(function(manifest) {
-      if (manifest) {
-        // Fire this fast, so the Orientation tile shows up at the top of the list.
-        LocalLeapApp.explicitPathAppScan(manifest);
-
-        // This is less urgent; give other bootstrap tasks a chance to complete.
-        wrappedSetTimeout(function() {
-          LocalLeapApp.localAppScan(manifest);
-        }, 6000);
-      } else {
-        console.warn('Manifest missing, skipping local tiles.');
-      }
-    });
-  },
-
-  authorizeAndPaintMainScreen: function() {
-    authorizationUtil.withAuthorization(function(err) {
-      if (err) {
-        setTimeout(AsyncTasks.authorizeAndPaintMainScreen, 50); // Keep on trying...
-      } else {
-        AsyncTasks.afterAuthorizionComplete();
-      }
-    });
-  },
-
-  afterAuthorizionComplete: function() {
-    console.log('Authorization complete. Painting main page');
-    uiGlobals.isFirstRun = false; // todo: remove this. First run should remain constant throughout app's first run. check AlreadyDidFirstRun elsewhere if needed
-    db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
-    $('body').addClass('loading');
-    windowChrome.paintMainPage();
-    crashCounter.reset();
-    setInterval(AsyncTasks.scanForLocalApps, config.FsScanIntervalMs);
-
-    try {
-      api.sendDeviceData();
-      api.sendAppVersionData();
-    } catch (err) {
-      console.error('Failed to send device data: ' + (err.stack + err));
+  async.parallel([
+    api.sendDeviceData,
+    api.sendAppVersionData
+  ], function(err, result) {
+    if (err) {
+      // We don't actually care if either of these calls throw errors.
+      console.warn(err);
     }
-    api.connectToStoreServer();
-  }
+  });
 
-};
+  cb && cb(null);
+}
 
-module.exports.run = bootstrapAirspace;
+module.exports.run = run;

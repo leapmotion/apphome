@@ -1,5 +1,6 @@
 var Spinner = require('spin');
 var urlParse = require('url').parse;
+var fs = require('fs');
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
@@ -35,8 +36,6 @@ module.exports = BaseView.extend({
     this.$noInternet = this.$('.no-internet');
     this.$waiting = this.$('.waiting');
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
-    this._boundCenteringFn = this._center.bind(this);
-    $(window).resize(this._boundCenteringFn);
   },
 
   authorize: function(cb) {
@@ -49,7 +48,6 @@ module.exports = BaseView.extend({
       return;
     }
     this.$el.appendTo('body');
-    this._center();
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
     if (window.navigator.onLine) {
@@ -58,16 +56,17 @@ module.exports = BaseView.extend({
       this._startLoadTimeout(cb);
 
       this.$iframe.load(function() {
+
         try {
           var iframeWindow = this.$iframe.prop('contentWindow');
 
           if (/^http/i.test(iframeWindow.location.href)) {
             $(iframeWindow).unload(function() {
-              this.$iframe.css('visibility', 'hidden');
+              this._showConnectingMessage();
               this._startLoadTimeout(cb);
             }.bind(this));
+
             this._interceptPopupLinks($('body', iframeWindow.document));
-            this._center();
             this._clearLoadTimeout();
             this._performActionBasedOnUrl(iframeWindow.location.href, cb);
           } else {
@@ -90,7 +89,6 @@ module.exports = BaseView.extend({
 
   logOut: function(cb) {
     this.$el.appendTo('body');
-    this._center();
     this._showLoggingOutMessage();
 
     oauth.logOut();
@@ -100,7 +98,7 @@ module.exports = BaseView.extend({
       $logoutFrame.load(function() {
         $logoutFrame.remove();
         cb(null);
-      })
+      });
       $logoutFrame.appendTo('body');
     }
 
@@ -116,12 +114,32 @@ module.exports = BaseView.extend({
     //});
   },
 
+  _styleIframe: function() {
+    var $contents = $('iframe.oauth').contents();
+    var cssLink = $('<style>').text(fs.readFileSync('static/css/custom-login-styling.css'));
+    $contents.find('head').append(cssLink);
+
+    $contents.find('.auth-form form .control-group:nth-child(6) h4')
+      .text('Birth Date')
+      .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
+      .after($('<span>').text(i18n.translate('Why is this required?')));
+
+    $contents.find('.auth-form form div .auth-field, #user_airspace_tos_accepted, #user_born_at_month, #user_born_at_day, #user_born_at_year')
+      .attr('required', 'required');
+
+    $contents.find('div.divider').hide();
+
+    $contents.find('.alerts').prependTo($contents.find('.auth-form'));
+
+    $contents.find('.auth-screen .auth-links.back').html('<a href="https://central.leapmotion.com/users/sign_in" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
+
+  },
+
   _waitForInternetConnection: function(cb) {
     if (window.navigator.onLine) {
       this._showConnectingMessage();
       this.authorize(cb);
     } else {
-      this._center();
       this._showNoInternetMessage();
       setTimeout(function() {
         this._waitForInternetConnection(cb);
@@ -143,6 +161,7 @@ module.exports = BaseView.extend({
     } else if (/^\/oauth\/authorize/.test(urlParts.pathname)) {
       this._allowOauthAuthorization();
     } else if (urlParts.query && urlParts.query.code) {
+      this._showLoggingInMessage();
       this._finishAuthorization(urlParts.query.code, cb);
     } else {
       cb(new Error('Unknown URL: ' + url));
@@ -152,7 +171,6 @@ module.exports = BaseView.extend({
   _loginAs: function(userobj) {
     console.log('_loginAs', userobj);
     this._showLoginForm();
-    this._center();
     var iframeWindow = this.$iframe.prop('contentWindow');
     $('#user_email', iframeWindow.document).val(userobj.email);
     $('#user_password', iframeWindow.document).val(userobj.password);
@@ -172,16 +190,15 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-     if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
-       iframeWindow.location = signUpUrl;
-       this._hasRedirectedToSignUp = true;
-     } else {
+    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+      iframeWindow.location = signUpUrl;
+      this._hasRedirectedToSignUp = true;
+    } else {
+      this._showLoginForm();
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
       $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
-      this._showLoginForm();
-      this._center();
      }
   },
 
@@ -202,36 +219,43 @@ module.exports = BaseView.extend({
       if (err) {
         console.warn(err);
       }
+      this.$el.remove();
       cb(err || null);
     }.bind(this));
   },
 
   _showLoginForm: function() {
-    this.$noInternet.addClass('background');
-    this.$waiting.addClass('background');
-    this.$iframe.removeClass('background');
+    this.$noInternet.hide();
+    this.$waiting.removeClass('after before logout').hide();
+    this._styleIframe();
+    this._resizeIframe();
+    this.$iframe.show();
   },
 
   _showConnectingMessage: function() {
-    this.$noInternet.addClass('background');
-    this.$iframe.addClass('background');
-    this.$waiting.removeClass('background').removeClass('after').addClass('before');
+    this.$noInternet.hide();
+    this.$iframe.hide();
+    if (!this.$waiting.hasClass('after')) {
+      this.$waiting.show().removeClass('after logout').addClass('before');
+    }
   },
 
   _showLoggingInMessage: function() {
-    this.$noInternet.addClass('background');
-    this.$iframe.addClass('background');
-    this.$waiting.removeClass('background').removeClass('before').addClass('after');
+    this.$noInternet.hide();
+    this.$iframe.hide();
+    this.$waiting.show().removeClass('before logout').addClass('after');
   },
 
   _showNoInternetMessage: function() {
-    this.$iframe.addClass('background');
-    this.$waiting.addClass('background');
-    this.$noInternet.removeClass('background');
+    this.$iframe.hide();
+    this.$waiting.hide();
+    this.$noInternet.show();
   },
 
   _showLoggingOutMessage: function() {
-    this.$waiting.removeClass('background').removeClass('before').addClass('logout');
+    this.$iframe.hide();
+    this.$noInternet.hide();
+    this.$waiting.show().removeClass('before after').addClass('logout');
   },
 
   _interceptPopupLinks: function($elem) {
@@ -253,36 +277,16 @@ module.exports = BaseView.extend({
     });
   },
 
-  _center: function() {
-    var $frbg = this.$('.first-run-background');
-
+  _resizeIframe: function() {
     var iframeWindow = this.$iframe.prop('contentWindow');
     if (iframeWindow) {
-      this.$iframe.css('visibility', 'hidden');
       var declaredWidth = parseInt($('body', iframeWindow.document).attr('airspace-home-width'), 10);
       if (declaredWidth) {
         this.$iframe.width(declaredWidth);
       }
       this.$iframe.height(0);
-      this.$iframe.height(Math.min($(iframeWindow.document).height(), $(window).height() - 10));
-      this._centerElement(this.$iframe);
-      this.$iframe.css('visibility', 'visible');
+      this.$iframe.height(Math.min(1.5*$(iframeWindow.document).height(), $(window).height() - 10));
     }
-
-    this._centerElement(this.$noInternet);
-    this._centerElement(this.$waiting);
-    this._centerElement($frbg);
-
-    // 1440 comes from the image width declared in authorization.styl
-    var scale = Math.min($(window).width(), 1440) / 1440;
-    $frbg.css('transform', 'scaleX(' + scale + ') scaleY(' + scale + ')');
-  },
-
-  _centerElement: function($element) {
-    $element.css({
-      left: ($(window).width() - $element.outerWidth()) / 2,
-      top:  ($(window).height() - $element.outerHeight()) / 2
-    });
   },
 
   _clearLoadTimeout: function() {
