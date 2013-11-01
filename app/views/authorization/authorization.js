@@ -47,7 +47,7 @@ module.exports = BaseView.extend({
       }.bind(this));
       return;
     }
-    this.$el.appendTo(this.options.selector || 'body');
+    this.$el.appendTo('body');
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
     if (window.navigator.onLine) {
@@ -185,8 +185,6 @@ module.exports = BaseView.extend({
   },
 
   _waitForUserToSignIn: function() {
-    this._showLoginForm();
-
     var iframeWindow = this.$iframe.prop('contentWindow');
     var signUpUrl = $('.auth-link:first', iframeWindow.document).attr('href');
     var isShowingSignInForm = /^\/users\/sign_in/.test(iframeWindow.location.pathname);
@@ -198,10 +196,11 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-     if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
-       iframeWindow.location = signUpUrl;
-       this._hasRedirectedToSignUp = true;
-     } else {
+    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+      iframeWindow.location = signUpUrl;
+      this._hasRedirectedToSignUp = true;
+    } else {
+      this._showLoginForm();
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
@@ -227,6 +226,7 @@ module.exports = BaseView.extend({
       if (err) {
         console.warn(err);
       }
+      this.$el.remove();
       cb(err || null);
     }.bind(this));
   },

@@ -42,18 +42,7 @@ module.exports = BaseView.extend({
 
     this._setupBindings();
 
-    var authorizationView = new AuthorizationView({
-      selector: '#auth',
-    });
-
-    authorizationView.authorize(function(err) {
-      if (err) {
-        console.warn('Error logging in: ' + err.stack || err);
-      } else {
-        this.$el.remove();
-        this.options.onLoggedIn();
-      }
-    }.bind(this));
+    this.authorizationView = new AuthorizationView();
   },
 
   _setupBindings: function() {
@@ -68,11 +57,15 @@ module.exports = BaseView.extend({
   },
 
   _showAuth: function(newUser) {
-    this.$('#intro').hide();
-    this.$('#auth').show();
-    this.$el.css({
-      'margin-top': -340,
-    });
+    this.$el.hide();
+    this.authorizationView.authorize(function(err) {
+      if (err) {
+        console.warn('Error logging in: ' + err.stack || err);
+      } else {
+        this.$el.remove();
+        this.options.onLoggedIn();
+      }
+    }.bind(this));
   },
 
 });
