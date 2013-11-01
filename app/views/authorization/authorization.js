@@ -56,15 +56,12 @@ module.exports = BaseView.extend({
       this._startLoadTimeout(cb);
 
       this.$iframe.load(function() {
-        console.log('Iframe loaded');
 
         try {
           var iframeWindow = this.$iframe.prop('contentWindow');
-          console.log('Iframe has contents');
 
           if (/^http/i.test(iframeWindow.location.href)) {
             $(iframeWindow).unload(function() {
-              console.log('Iframe unloaded');
               this._showConnectingMessage();
               this._startLoadTimeout(cb);
             }.bind(this));
@@ -118,8 +115,6 @@ module.exports = BaseView.extend({
   },
 
   _styleIframe: function() {
-    console.log('Styling contents of Iframe');
-
     var $contents = $('iframe.oauth').contents();
     var cssLink = $('<style>').text(fs.readFileSync('static/css/custom-login-styling.css'));
     $contents.find('head').append(cssLink);
@@ -153,7 +148,6 @@ module.exports = BaseView.extend({
   },
 
   _performActionBasedOnUrl: function(url, cb) {
-    console.log('Performing action based on url: ' + url);
     var urlParts = urlParse(url, true);
     if (/^\/users/.test(urlParts.pathname)) {
       if (process.env.LEAPHOME_LOGIN_EMAIL) {
@@ -221,7 +215,6 @@ module.exports = BaseView.extend({
   },
 
   _finishAuthorization: function(code, cb) {
-    console.log('Finishing authorization');
     oauth.authorizeWithCode(code, function(err) {
       if (err) {
         console.warn(err);
@@ -232,7 +225,6 @@ module.exports = BaseView.extend({
   },
 
   _showLoginForm: function() {
-    console.log('Showing login form');
     this.$noInternet.hide();
     this.$waiting.removeClass('after before logout').hide();
     this._styleIframe();
@@ -241,7 +233,6 @@ module.exports = BaseView.extend({
   },
 
   _showConnectingMessage: function() {
-    console.log('Showing connecting message');
     this.$noInternet.hide();
     this.$iframe.hide();
     if (!this.$waiting.hasClass('after')) {
@@ -250,14 +241,12 @@ module.exports = BaseView.extend({
   },
 
   _showLoggingInMessage: function() {
-    console.log('Showing logging in message');
     this.$noInternet.hide();
     this.$iframe.hide();
     this.$waiting.show().removeClass('before logout').addClass('after');
   },
 
   _showNoInternetMessage: function() {
-    console.log('Showing no-internet message');
     this.$iframe.hide();
     this.$waiting.hide();
     this.$noInternet.show();
