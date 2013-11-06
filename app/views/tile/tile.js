@@ -49,6 +49,7 @@ var Tile = BaseView.extend({
 
     this.setElement(this.templateHtml({
       app:                  this.appJson,
+      store_app:            leapApp.isStoreApp(),
       app_slug:             urlify(this.appJson.name),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
