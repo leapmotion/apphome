@@ -25,10 +25,11 @@ messageState(state, showSpinner = false, tileOpacity = .7)
   float left
   height $tileH
   list-style none
-  margin 16px 16px 32px
+  margin 16px
   position relative
   -webkit-user-drag element
   width $tileW
+  box-shadow 0 0 24px 4px rgba(0, 0, 0, 0.6)
 
 
   messageState(waiting, false, .3)
@@ -74,25 +75,6 @@ messageState(state, showSpinner = false, tileOpacity = .7)
 
       h3
         color #fff
-
-  .name-outer
-    float right
-    right 50%
-    position relative
-    margin-top 183px
-
-  .name-inner
-    float right
-    right -50%
-    position relative
-
-  h3
-    color #b2b2b2
-    font-size 21px
-    -webkit-user-drag none
-    float left
-    margin 0
-    text-align center
 
   .icon
     position absolute

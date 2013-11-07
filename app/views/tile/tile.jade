@@ -2,15 +2,12 @@ li.tile(draggable=true)
   img.tile-bg(src=app.tilePath)
   img.icon(src=app.iconPath)
   i.update-notification.icon-circle-arrow-up
-  .name-outer
-    .name-inner
-      h3.name= app.name
-      .message
-        h3.waiting= waiting_label
-        h3.connecting= connecting_label
-        h3.downloading= downloading_label
-        h3.installing= installing_label
-        h3.launching= launching_label
+  .message
+    h3.waiting= waiting_label
+    h3.connecting= connecting_label
+    h3.downloading= downloading_label
+    h3.installing= installing_label
+    h3.launching= launching_label
   .install-overlay= clickToInstall_label
   .cancel
   .progress
