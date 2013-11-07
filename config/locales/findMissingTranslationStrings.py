@@ -21,7 +21,6 @@ for filename in filter(lambda f: 'po' in f, os.listdir('.')):
         languages_for_string[TRANSLATION_KEY.findall(l)[0]].append(filename.split('.')[0])
 
 
-#lines = subprocess.check_output(['find', '../../app', '-type', 'f', '|', 'xargs', 'grep', '-i', 'i18n\.translate'])
 lines = subprocess.check_output('find ../../app -type f | xargs grep -i i18n\.translate', shell=True)
 for l in lines.split('\n'):
     for string_to_translate in TRANSLATION_STRING.findall(l):
