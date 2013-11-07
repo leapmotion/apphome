@@ -42,5 +42,5 @@
     "test": "node bin/test"
   },
   "engine": "node >= 0.10.0",
-  "nwVersion": "0.8.0"
+  "nwVersion": "0.8.1-rc1"
 }
