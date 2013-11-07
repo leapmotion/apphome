@@ -206,7 +206,11 @@ function authorize(cb) {
 function startMainApp(cb) {
   $('body').removeClass('startup');
   $('body').addClass('loading');
-  windowChrome.paintMainPage();
+
+  _.defer(function() {
+    windowChrome.paintMainPage();
+  });
+
   api.connectToStoreServer(); // Put callback in here?
 
   cb && cb(null);
