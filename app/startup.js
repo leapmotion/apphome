@@ -17,6 +17,7 @@ var migrations = require('./utils/migrations.js');
 var mixpanel = require('./utils/mixpanel.js');
 var shell = require('./utils/shell.js');
 var oauth = require('./utils/oauth.js');
+var tutorial = require('./utils/tutorial.js');
 var windowChrome = require('./utils/window-chrome.js');
 var workingFile = require('./utils/working-file.js');
 
@@ -169,7 +170,10 @@ function doFirstRun(cb) {
     cb && cb(null);
   } else {
     var firstRunView = new FirstRun({
-      onLoggedIn: cb
+      onLoggedIn: function() {
+        tutorial.makeGuides();
+        cb && cb(null);
+      }
     });
   }
 }
