@@ -172,7 +172,7 @@ window.guiders = (function($) {
       return;
     }
 
-    var attachTo = $(myGuider.attachTo);
+    var attachTo = $(myGuider.attachTo + ':first');
 
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
@@ -480,11 +480,6 @@ window.guiders = (function($) {
     guiderElement.appendTo("body");
     guiderElement.attr("id", myGuider.id);
 
-    // Ensure myGuider.attachTo is a jQuery element.
-    if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
-      guiders._attach(myGuider);
-    }
-
     guiders._initializeOverlay();
 
     guiders._guiders[myGuider.id] = myGuider;
@@ -621,6 +616,11 @@ window.guiders = (function($) {
     }
 
     var myGuider = guiders.get(id);
+    // Ensure myGuider.attachTo is a jQuery element.
+    if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
+      guiders._attach(myGuider);
+    }
+
     if (myGuider.overlay) {
       if (myGuider.highlight && myGuider.attachTo) {
         guiders._highlightElement(myGuider.attachTo);

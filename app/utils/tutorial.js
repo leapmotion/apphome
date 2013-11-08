@@ -17,9 +17,9 @@ function makeGuides() {
         id: 'g_apps',
         next: 'g_orientation',
         title: String(i18n.translate('Experience the Controller')),
-        attachTo: '#froggle',
+        attachTo: '.tile.store', // picks the first one
         position: 3,
-        highlight: '#froggle'
+        highlight: '.tile.store'
     });
 
     guiders.createGuider({
