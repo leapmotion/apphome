@@ -110,11 +110,19 @@ function handleNotification(notificationJson) {
 }
 
 function subscribeToUserNotifications(userId) {
-  pubnub.subscribe(userId + '.user.notification', function() {
-    handleNotification.apply(this, arguments);
+  pubnub.history({
+    count: 10,
+    channel: userId + '.user.notification',
+    callback: function() {
+      handleNotification.apply(this, arguments);
+    }
   });
-  pubnub.subscribe('notification', function() {
-    handleNotification.apply(this, arguments);
+  pubnub.history({
+    count: 10,
+    channel: 'notification',
+    callback: function() {
+      handleNotification.apply(this, arguments);
+    }
   });
 }
 
