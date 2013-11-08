@@ -169,11 +169,11 @@ function doFirstRun(cb) {
   if (!uiGlobals.isFirstRun) {
     cb && cb(null);
   } else {
-    tutorial.makeGuides();
-    var firstRunPopup = popup.open('first-run');
-    firstRunPopup.on('close', function() {
-      firstRunPopup.close(true);
-      cb && cb(null);
+    var firstRunView = new FirstRun({
+      onLoggedIn: function() {
+        tutorial.makeGuides();
+        cb && cb(null);
+      }
     });
   }
 }
