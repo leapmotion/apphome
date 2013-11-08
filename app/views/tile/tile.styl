@@ -6,19 +6,16 @@ $progressBarColor = #e1e1e1
 $tileH = 176px
 $tileW = 320px
 
-messageState(state, showSpinner = false, tileOpacity = .7)
+messageState(state, tileOpacity = .7)
   &.{state}
-    .message .{state}
-      display block
-    .message .spinner
-      if showSpinner
+    .install-overlay
+      unless state is notyetinstalled
         display block
-      else
-        display none
+
+      .{state}
+        display block
     .tile-bg
       opacity tileOpacity
-    .name
-      display none
 
 .tile
   border-radius $borderRadius
@@ -32,11 +29,11 @@ messageState(state, showSpinner = false, tileOpacity = .7)
   box-shadow 0 0 24px 4px rgba(0, 0, 0, 0.6)
 
 
-  messageState(waiting, false, .3)
-  messageState(connecting, true, .3)
-  messageState(downloading, true, 1)
-  messageState(installing, true, 1)
-  messageState(launching, true, .7)
+  messageState(notyetinstalled, .7)
+  messageState(waiting, .5)
+  messageState(connecting, .5)
+  messageState(installing, 1)
+  messageState(launching, .7)
 
   &.downloading
     .progress, .message .spinner, .cancel
@@ -96,11 +93,6 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     overflow hidden
     -webkit-user-drag none
 
-  .message
-    .waiting, .installing, .downloading, .connecting, .launching, .spinner
-      display none
-      width 100%
-
   .update-notification
     background-color #222
     border-radius 12px
@@ -131,6 +123,9 @@ messageState(state, showSpinner = false, tileOpacity = .7)
     text-align center
     top 50%
     width 60%
+
+    .notyetinstalled, .waiting, .installing, .connecting, .launching
+      display none
 
   .progress
     background-color rgba(37,37,37,.5)
@@ -167,9 +162,6 @@ messageState(state, showSpinner = false, tileOpacity = .7)
       opacity 1
 
   &.notyetinstalled
-    .name
-      color #b2b2b2
-      width auto
 
     &:hover
       .install-overlay
@@ -178,9 +170,6 @@ messageState(state, showSpinner = false, tileOpacity = .7)
   &.ready.update
     .update-notification
       display block
-
-  &.uninstalled
-    opacity 0.4
 
 vendors = webkit
 @keyframes pulse
