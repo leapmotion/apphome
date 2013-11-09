@@ -105,6 +105,19 @@ function handleAppJson(appJson) {
   return app;
 }
 
+function handleNotification(notificationJson) {
+  console.log('got notification', notificationJson);
+}
+
+function subscribeToUserNotifications(userId) {
+  pubnub.history(10, 'notification', function() {
+    handleNotification.apply(this, arguments);
+  });
+  pubnub.history(10, 'notification', function() {
+    handleNotification.apply(this, arguments);
+  });
+}
+
 function subscribeToUserChannel(userId) {
   pubnub.subscribe(userId + '.user.purchased', function() {
     var win = nwGui.Window.get();
@@ -160,6 +173,7 @@ function connectToStoreServer() {
               uiGlobals.email = message.email;
               uiGlobals.user_id = message.user_id;
               subscribeToUserChannel(message.user_id);
+              subscribeToUserNotifications(message.user_id);
               uiGlobals.trigger(uiGlobals.Event.SignIn);
             } else {
               var app = handleAppJson(message);

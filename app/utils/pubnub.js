@@ -64,6 +64,30 @@ function subscribe(channel, callback) {
   }
 }
 
+function history(count, channel, callback) {
+  if (!pubnubSubscriptions[channel]) { // only allow one subscription per channel
+    pubnubSubscriptions[channel] = callback;
+    pubnubDomain.run(function() {
+      pubnub.history({
+        count: count,
+        channel: channel,
+        callback: function(data) {
+          try {
+            callback(data);
+          } catch (err) {
+            console.warn('Failed to handle PubNub message on channel "' + channel + '": ' + data);
+          }
+        }
+      });
+    }); 
+    return true;
+  } else {
+    console.warn('Ignoring duplicate subscription on channel "' + channel + '".');
+    return false;
+  }
+}
+
 module.exports.domain = pubnubDomain;
 module.exports.subscribe = subscribe;
+module.exports.history = history;
 module.exports.unsubscribeAll = unsubscribeAll;
