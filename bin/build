@@ -5,6 +5,7 @@ var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
 
+var config = require('../config/config.js');
 var shell = require('../app/utils/shell.js');
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
@@ -124,7 +125,7 @@ function buildForWindows(cb) {
     };
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion  +  '-win-ia32'), buildDir(platform), function(err) {
+  fs.copy(path.join(config.PlatformLibrariesDir[os.platform()], 'node-webkit-v' + packageJson.nwVersion  +  '-win-ia32'), buildDir(platform), function(err) {
     if (err) {
       return cb(err);
     }
@@ -190,7 +191,7 @@ function buildForMac(cb) {
     return plist.replace(plistEndRegex, r.join('\n'));
   }
 
-  fs.copy(path.join(__dirname, '..', 'nw', 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir(platform), packageJson.name + '.app'), function(err) {
+  fs.copy(path.join(config.PlatformLibrariesDir[os.platform()], 'node-webkit-v' + packageJson.nwVersion + '-osx-ia32', 'node-webkit.app'), path.join(buildDir(platform), packageJson.name + '.app'), function(err) {
     if (err) {
       return cb(err);
     }

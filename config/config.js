@@ -110,6 +110,18 @@ var config = {
     linux:  [ process.env.HOME, '.config', AppsUserDataDir ]
   },
 
+  PlatformLibrariesDir: {
+    win32:  'C:\\Libraries-x86',
+    darwin: '/opt/local/Libraries',
+    linux:  '/opt/local/Libraries',
+  },
+
+  PlatformSuffixes: {
+    win32:  'win-ia32/nw.exe',
+    darwin: 'osx-ia32/node-webkit.app/Contents/MacOS/node-webkit',
+    linux:  'linux-ia32/nw'
+  },
+
   FrozenAppPaths: [
     '\\Program Files (x86)\\Leap Motion Apps\\PreBundle.LeapMotion',
     './PreBundle.LeapMotion'

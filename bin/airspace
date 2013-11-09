@@ -4,17 +4,14 @@ var os = require('os');
 var path = require('path');
 var spawn = require('child_process').spawn;
 
+var config = require('../config/config.js');
+
 var NodeWebkitVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8')).nwVersion;
 var workingDir = path.dirname(__dirname);
-var platformSuffixes = {
-  win32:  'win-ia32/nw.exe',
-  darwin: 'osx-ia32/node-webkit.app/Contents/MacOS/node-webkit',
-  linux:  'linux-ia32/nw'
-};
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'development';
 
-var executable = 'nw/node-webkit-v' + NodeWebkitVersion + '-' + platformSuffixes[os.platform()];
+var executable = config.PlatformLibrariesDir[os.platform()] + '/node-webkit-v' + NodeWebkitVersion + '-' + config.PlatformSuffixes[os.platform()];
 var nw = spawn(executable, [ '--enable-logging', '.' ].concat(process.argv.slice(2)), {
   cwd: workingDir,
   env: process.env
