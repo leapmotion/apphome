@@ -212,6 +212,32 @@ var LeapApp = BaseModel.extend({
     }
   },
 
+  getShortDescription:  function() {
+    var fullDescription = this.get('description');
+
+    if (typeof fullDescription === 'undefined') {
+      return '';
+    }
+
+    var isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\.)\s*/);
+    if (isSentence && (isSentence.length < 60)) {
+      // Two sentences
+      isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\. +[^\.\n]+?\.)/);
+    }
+
+    var firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\.)\s*/);
+    if (firstSentence && (firstSentence.length < 60)) {
+      // Two sentences
+      firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\. +[^\.\n]+?\.)/);
+    }
+
+    var sentence = (isSentence && isSentence[2]) || (firstSentence && firstSentence[2]);
+
+    var shortDescription = sentence || fullDescription.split('#').join('').replace(/\n+/, ' ');
+
+    return $.trim(shortDescription);
+  },
+
   downloadIcon: function(cb) {
     this._downloadAsset('iconUrl', 'iconPath', this.standardIconPath(), cb);
   },
