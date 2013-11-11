@@ -75,7 +75,7 @@ function startSeleniumServer(cb) {
 }
 
 function runTests() {
-  var mocha = new Mocha();
+  var mocha = new Mocha({reporter: 'spec'});
   testFiles.forEach(mocha.addFile.bind(mocha));
   mocha.run(process.exit);
 }
