@@ -31,8 +31,7 @@
     "spin": "0.0.1",
     "stylus": "0.32.1",
     "underscore": "1.4.4",
-    "unzip": "git://github.com/proxv/node-unzip.git",
-    "ws": "0.4.25"
+    "unzip": "git://github.com/proxv/node-unzip.git"
   },
   "devDependencies": {
     "express": "3.2.6",

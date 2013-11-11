@@ -23,7 +23,6 @@ var workingFile = require('./utils/working-file.js');
 
 var FirstRun = require('./views/popups/first-run/first-run.js');
 var LeapApp = require('./models/leap-app.js');
-var LeapNotConnectedView = require('./views/leap-not-connected/leap-not-connected.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
 
 function wrappedSetTimeout(task, ms) {
