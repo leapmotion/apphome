@@ -104,6 +104,7 @@ function buildForWindows(cb) {
     console.log('Building for Windows must be done on Windows, unfortunately.');
     return cb(null);
   }
+
   function getExecFn(command) {
     return function execFn(cb, retriesLeft) {
       if (typeof retriesLeft === 'undefined') {
@@ -165,6 +166,11 @@ function buildForWindows(cb) {
 
 function buildForMac(cb) {
   var platform = 'osx';
+
+  if (os.platform() !== 'darwin') {
+    console.log('Building for OSX must be done on OSX, unfortunately.');
+    return cb(null);
+  }
 
   function changePlistString(plist, key, newValue) {
     var searchRegex = new RegExp('(<key>' + key + '<\\/key>\\s*<string>)[^<]*(<\\/string>)');
