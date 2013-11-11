@@ -41,9 +41,21 @@ module.exports = BaseView.extend({
     this.$el.toggleClass('embedded', uiGlobals.isEmbedded);
     $('body').append(this.$el);
 
-    this._setupBindings();
-
     this.authorizationView = new AuthorizationView();
+
+    if (true || uiGlobals.isEmbedded) {
+      this.$el.find('#actions').addClass('disabled');
+      this.$el.find('img.activate-pongo').show();
+      this.$el.css('margin-top', -1*this.$el.height()/2);
+      eula.waitForLicense((function() {
+        this._setupBindings();
+        this.$el.find('img.activate-pongo').hide();
+        this.$el.find('#actions').removeClass('disabled');
+        this.$el.css('margin-top', -1*this.$el.height()/2);
+      }).bind(this));
+    } else {
+      this._setupBindings();
+    }
   },
 
   _setupBindings: function() {
