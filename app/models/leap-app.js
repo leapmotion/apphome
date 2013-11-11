@@ -220,13 +220,13 @@ var LeapApp = BaseModel.extend({
     }
 
     var isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\.)\s*/);
-    if (isSentence && (isSentence.length < 60)) {
+    if (isSentence && (isSentence[2].length < 60)) {
       // Two sentences
       isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\. +[^\.\n]+?\.)/);
     }
 
     var firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\.)\s*/);
-    if (firstSentence && (firstSentence.length < 60)) {
+    if (firstSentence && (firstSentence[2].length < 60)) {
       // Two sentences
       firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\. +[^\.\n]+?\.)/);
     }
