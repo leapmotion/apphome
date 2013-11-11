@@ -127,6 +127,11 @@ var config = {
     './PreBundle.LeapMotion'
   ],
 
+  EmbeddedLeapTypes: [
+    'pongo',
+    'hops'
+  ],
+
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
 
   ModulePaths: {

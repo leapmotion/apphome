@@ -89,7 +89,7 @@ function run() {
 function getConfiguration(cb) {
   // Check if device has an embedded leap or not.
   // Checks db first to see if there's a stored value
-  uiGlobals.isEmbedded = embeddedLeap.isLeapEmbedded();
+  uiGlobals.embeddedDevice = embeddedLeap.getEmbeddedDevice();
 
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 

@@ -15,7 +15,7 @@ module.exports = BaseView.extend({
 
   initialize: function() {
     this.injectCss();
-    this.$el.toggleClass('embedded', !!uiGlobals.isEmbedded);
+    this.$el.toggleClass('embedded', !!uiGlobals.embeddedDevice);
     this.$el.append(this.templateHtml({
       skipButton_label: i18n.translate('Continue with mouse only')
     }));
