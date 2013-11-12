@@ -43,18 +43,27 @@ module.exports = BaseView.extend({
     this.authorizationView = new AuthorizationView();
 
     if (true || uiGlobals.embeddedDevice) {
+      this.$activateImage = this.$el.find('img.' + uiGlobals.embeddedDevice);
+
       this.$el.find('#actions').addClass('disabled');
-      this.$el.find('img.' + uiGlobals.embeddedDevice).show();
-      this.$el.css('margin-top', -1*this.$el.height()/2);
+
+      this.$activateImage.show();
+      this._center();
+
       eula.waitForLicense((function() {
         this._setupBindings();
-        this.$el.find('img.' + uiGlobals.embeddedDevice).hide();
+
+        this.$activateImage.hide();
         this.$el.find('#actions').removeClass('disabled');
-        this.$el.css('margin-top', -1*this.$el.height()/2);
+        this._center();
       }).bind(this));
     } else {
       this._setupBindings();
     }
+  },
+
+  _center: function() {
+    this.$el.css('margin-top', -1*this.$el.height()/2);
   },
 
   _setupBindings: function() {
