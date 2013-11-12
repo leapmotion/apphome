@@ -124,7 +124,6 @@ module.exports = BaseView.extend({
     $contents.find('.alert:contains("You need to sign in or sign up before continuing.")').hide();
 
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
-      .text('Birth Date')
       .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
       .after($('<span>').text(i18n.translate('Why is this required?')));
 
