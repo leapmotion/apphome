@@ -38,7 +38,9 @@ module.exports = BaseView.extend({
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
   },
 
-  authorize: function(cb) {
+  authorize: function(cb, newUser) {
+    this.__newUser = newUser;
+
     if (process.env.LEAPHOME_LOGIN_EMAIL && didAutoLogout === false) {
       didAutoLogout = true;
       // start logged out
@@ -119,6 +121,8 @@ module.exports = BaseView.extend({
     var cssLink = $('<style>').text(fs.readFileSync('static/css/custom-login-styling.css'));
     $contents.find('head').append(cssLink);
 
+    $contents.find('.alert:contains("You need to sign in or sign up before continuing.")').hide();
+
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
       .text('Birth Date')
       .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
@@ -190,7 +194,7 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm) {
+    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm && this.__newUser) {
       iframeWindow.location = signUpUrl;
       this._hasRedirectedToSignUp = true;
     } else {
