@@ -6,38 +6,38 @@ function makeGuides() {
         classString: 'primary',
         description: String(i18n.translate('Airspace Home is the place to launch all of your Leap-powered apps.')),
         id: 'g_start',
-        next: 'g_apps',
+        next: 'g_orientation',
         title: String(i18n.translate('Welcome to Airspace Home!')),
         xButton: true,
     }).show();
 
     guiders.createGuider({
-        buttons: [{name: String(i18n.translate('Next')), classString: 'next'}],
-        description: String(i18n.translate("We thought you would like to dive right in, so we handpicked some free apps for you.")),
-        id: 'g_apps',
-        next: 'g_orientation',
-        title: String(i18n.translate('Experience the Controller')),
-        attachTo: '.tile.store', // picks the first one
-        position: 3,
-        highlight: '.tile.store'
-    });
-
-    guiders.createGuider({
-        buttons: [{name: String(i18n.translate('Back')), classString: 'back'}, {name: String(i18n.translate('Next')), classString: 'next'}],
-        description: String(i18n.translate("Want to learn more about the Leap device's capabilities?  Go through a quick orientation to learn first hand.")),
+        buttons: [{name: String(i18n.translate('Launch Orientation')), classString: 'next', onclick: function() { window.alert('Orientation!'); guiders.next(); }}],
+        description: String(i18n.translate("Check out Orientation to learn what the controller can do.")),
         id: 'g_orientation',
-        next: 'g_store',
-        title: String(i18n.translate('Understand the Device')),
+        next: 'g_apps',
+        title: String(i18n.translate('Learn About the Controller')),
         attachTo: '#orientation',
         position: 6,
         highlight: '#orientation'
     });
 
     guiders.createGuider({
+        buttons: [{name: String(i18n.translate('Back')), classString: 'back'}, {name: String(i18n.translate('Next')), classString: 'next'}],
+        description: String(i18n.translate("Every tile is a unique Leap-enabled experience just one click away.")),
+        id: 'g_apps',
+        next: 'g_store',
+        title: String(i18n.translate('Try out your new apps')),
+        attachTo: '.tile.store', // picks the first one
+        position: 6,
+        highlight: '.tile.store'
+    });
+
+    guiders.createGuider({
         buttons: [{name: String(i18n.translate('Back')), classString: 'back'}, {name: String(i18n.translate('Done')), classString: 'primary', onclick: guiders.hideAll}],
         description: String(i18n.translate("Airspace Store is the place for you to discover and download new apps.")),
         id: 'g_store',
-        title: String(i18n.translate('Discover New Apps!')),
+        title: String(i18n.translate('Discover new apps')),
         attachTo: '#airspace-store',
         position: 3,
         highlight: '#airspace-store'
