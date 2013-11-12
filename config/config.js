@@ -92,6 +92,11 @@ var config = {
     win32:  [ process.env.PROGRAMDATA, 'Leap Motion' ]
   },
 
+  PlatformOrientationPaths: {
+    win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe',
+    darwin: '/Applications/Leap Motion Orientation.app'
+  },
+
   UserHomeDirs: {
     win32: process.env.USERPROFILE,
     darwin: process.env.HOME,
