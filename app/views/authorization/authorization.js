@@ -176,12 +176,12 @@ module.exports = BaseView.extend({
         $(this).text(i18n.translate($(this).text())); // TODO translate it
       }
 
-      if ($(this).prop('tagName') == 'INPUT') {
-        if ($(this).prop('value') && isNaN($(this).prop('value'))) {
+      if (($(this).prop('tagName') == 'INPUT') && ($(this).prop('type') !== 'hidden')) {
+        if (($(this).prop('type') == 'submit') && $(this).prop('value') && isNaN($(this).prop('value'))) {
           $(this).prop('value', i18n.translate($(this).prop('value')));
         }
 
-        if ($(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
+        if (($(this).prop('type') == 'text') && $(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
           $(this).prop('placeholder', i18n.translate($(this).prop('placeholder')));
         }
       }
