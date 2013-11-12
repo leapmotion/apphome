@@ -1,145 +1,145 @@
-msgid "Welcome"
+msgid "welcome"
 msgstr "Bienvenido"
 
-msgid "Welcome to a whole new world"
+msgid "welcome to a whole new world"
 msgstr "Bienvenido a un mundo completamente nuevo"
 
-msgid "Below are a few tips to get you started"
+msgid "below are a few tips to get you started"
 msgstr "A continuación presentamos algunos consejos para empezar"
 
-msgid "I agree to the Leap Motion %1$s"
+msgid "i agree to the leap motion %1$s"
 msgstr "Acepto el  %1$s de Leap Motion"
 
-msgid "End User License Agreement"
+msgid "end user license agreement"
 msgstr "Acuerdo de licencia del usuario final"
 
-msgid "Continue"
+msgid "continue"
 msgstr "Continuar"
 
-msgid "Airspace, the Leap Motion app store"
+msgid "airspace, the leap motion app store"
 msgstr "Airspace, la tienda de aplicaciones de Leap Motion"
 
-msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgid "discover, download, and launch your leap motion apps from airspace - the first-ever place for first-ever apps."
 msgstr "Descubra, descargue e inicie sus aplicaciones de Leap Motion desde Airspace: un lugar único para aplicaciones únicas."
 
-msgid "Launch Airspace"
+msgid "launch airspace"
 msgstr "Iniciar Airspace"
 
-msgid "Leap Motion End User Software License Agreement"
+msgid "leap motion end user software license agreement"
 msgstr "Acuerdo de licencia del usuario final del software Leap Motion"
 
-msgid "Continue with mouse only"
+msgid "continue with mouse only"
 msgstr "Continúe solo con el mouse"
 
-msgid "Find and launch your Leap Motion apps"
+msgid "find and launch your leap motion apps"
 msgstr "Encuentre e inicie aplicaciones Leap Motion"
 
-msgid "Sync purchases across devices"
+msgid "sync purchases across devices"
 msgstr "Sincronice sus compras en todos los dispositivos"
 
-msgid "Discover games, utilities, music, and more in our store!"
+msgid "discover games, utilities, music, and more in our store!"
 msgstr "¡Descubra juegos, utilidades, música y mucho más en nuestra tienda!"
 
-msgid "Use the same login for purchases, support, and more!"
+msgid "use the same login for purchases, support, and more!"
 msgstr "¡Use el mismo inicio de sesión para compras, soporte y mucho más!"
 
-msgid "Connecting to authentication server..."
+msgid "connecting to authentication server..."
 msgstr "Conectando al servidor de autenticación..."
 
-msgid "Preparing for launch..."
+msgid "preparing for launch..."
 msgstr "Preparando para iniciar..."
 
-msgid "Signing you out..."
+msgid "signing you out..."
 msgstr "Cerrando su sesión..."
 
-msgid "No Internet connection"
+msgid "no internet connection"
 msgstr "Sin conexión a Internet"
 
-msgid "Please ensure your Internet connection is working properly."
+msgid "please ensure your internet connection is working properly."
 msgstr "Por favor, verifique si su conexión a Internet funciona correctamente."
 
-msgid "No apps to display."
+msgid "no apps to display."
 msgstr "No hay aplicaciones para mostrar."
 
-msgid "Waiting..."
+msgid "waiting..."
 msgstr "Esperando..."
 
-msgid "Connecting..."
+msgid "connecting..."
 msgstr "Conectando..."
 
-msgid "Downloading..."
+msgid "downloading..."
 msgstr "Descargando..."
 
-msgid "Installing..."
+msgid "installing..."
 msgstr "Instalando..."
 
-msgid "Opening..."
+msgid "opening..."
 msgstr "Abriendo..."
 
-msgid "Launching..."
+msgid "launching..."
 msgstr "Iniciando..."
 
-msgid "Click to Install"
+msgid "click to install"
 msgstr "Haga clic para instalar"
 
-msgid "Trash"
+msgid "trash"
 msgstr "Papelera"
 
-msgid "Version"
+msgid "version"
 msgstr "Versión"
 
-msgid "Release Date"
+msgid "release date"
 msgstr "Fecha de lanzamiento"
 
-msgid "What's New"
+msgid "what's new"
 msgstr "Novedades"
 
-msgid "Description"
+msgid "description"
 msgstr "Descripción"
 
-msgid "Cancel"
+msgid "cancel"
 msgstr "Cancelar"
 
-msgid "Install %1$s"
+msgid "install %1$s"
 msgstr "Instalar %1$s"
 
-msgid "Update App"
+msgid "update app"
 msgstr "Actualizar aplicación"
 
-msgid "Launch App"
+msgid "launch app"
 msgstr "Iniciar aplicación"
 
-msgid "Controller Settings"
+msgid "controller settings"
 msgstr "Configuración de controlador"
 
-msgid "Exit"
+msgid "exit"
 msgstr "Salir"
 
-msgid "File"
+msgid "file"
 msgstr "Archivo"
 
-msgid "Sign Out %1$s"
+msgid "sign out %1$s"
 msgstr "Cerrar sesión de %1$s"
 
-msgid "Account"
+msgid "account"
 msgstr "Cuenta"
 
-msgid "About Airspace Home"
+msgid "about airspace home"
 msgstr "Acerca de Airspace Home"
 
-msgid "Airspace Home"
+msgid "airspace home"
 msgstr "Airspace Home"
 
-msgid "Help"
+msgid "help"
 msgstr "Ayuda"
 
-msgid "Home"
+msgid "home"
 msgstr "Página principal"
 
-msgid "Store"
+msgid "store"
 msgstr "Tienda"
 
-msgid "You need to sign in or sign up before continuing."
+msgid "you need to sign in or sign up before continuing."
 msgstr "Necesita iniciar sesión o registrarse para continuar."
 
 msgid "account email"
@@ -148,275 +148,275 @@ msgstr "cuenta de correo electrónico"
 msgid "password"
 msgstr "contraseña"
 
-msgid "Sign In"
+msgid "sign in"
 msgstr "Iniciar sesión"
 
-msgid "Sign Up"
+msgid "sign up"
 msgstr "Registrarse"
 
-msgid "Forgot password?"
+msgid "forgot password?"
 msgstr "¿Olvidó su contraseña?"
 
-msgid "Invalid email or password."
+msgid "invalid email or password."
 msgstr "Correo electrónico o contraseña no válidos."
 
 msgid "account email"
 msgstr "cuenta de correo electrónico"
 
-msgid "Please enter an email address."
+msgid "please enter an email address."
 msgstr "Introduzca una dirección de correo electrónico."
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "El correo electrónico no puede estar en blanco"
 
-msgid "Send Instructions"
+msgid "send instructions"
 msgstr "Enviar instrucciones"
 
-msgid "Get Started"
+msgid "get started"
 msgstr "Primeros pasos"
 
-msgid "Getting Started..."
+msgid "getting started..."
 msgstr "Empezando..."
 
-msgid "Create username"
+msgid "create username"
 msgstr "Crear nombre de usuario"
 
-msgid "Email"
+msgid "email"
 msgstr "Correo electrónico"
 
-msgid "Create password"
+msgid "create password"
 msgstr "Crear contraseña"
 
-msgid "Confirm password"
+msgid "confirm password"
 msgstr "Confirmar contraseña"
 
-msgid "Birthdate"
+msgid "birthdate"
 msgstr "Fecha de nacimiento"
 
-msgid "Month"
+msgid "month"
 msgstr "Mes"
 
-msgid "January"
+msgid "january"
 msgstr "Enero"
 
-msgid "February"
+msgid "february"
 msgstr "Febrero"
 
-msgid "March"
+msgid "march"
 msgstr "Marzo"
 
-msgid "April"
+msgid "april"
 msgstr "Abril"
 
-msgid "May"
+msgid "may"
 msgstr "Mayo"
 
-msgid "June"
+msgid "june"
 msgstr "Junio"
 
-msgid "July"
+msgid "july"
 msgstr "Julio"
 
-msgid "August"
+msgid "august"
 msgstr "Agosto"
 
-msgid "September"
+msgid "september"
 msgstr "Septiembre"
 
-msgid "October"
+msgid "october"
 msgstr "Octubre"
 
-msgid "November"
+msgid "november"
 msgstr "Noviembre"
 
-msgid "December"
+msgid "december"
 msgstr "Diciembre"
 
-msgid "I agree to the Airspace Terms of Service"
+msgid "i agree to the airspace terms of service"
 msgstr "Acepto los Términos de servicio de Airspace"
 
-msgid "Email me Leap Motion news and updates."
+msgid "email me leap motion news and updates."
 msgstr "Enviarme noticias y actualizaciones de Leap Motion."
 
-msgid "Sign in to an existing account"
+msgid "sign in to an existing account"
 msgstr "Iniciar sesión en una cuenta existente"
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "El correo electrónico no puede estar en blanco"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "Es obligatorio establecer una contraseña"
 
-msgid "Username can't be blank"
+msgid "username can't be blank"
 msgstr "El nombre de usuario no puede estar en blanco"
 
-msgid "Birthdate is required"
+msgid "birthdate is required"
 msgstr "La fecha de nacimiento es obligatoria"
 
-msgid "You must accept the Terms of Service"
+msgid "you must accept the terms of service"
 msgstr "Debe aceptar los Términos de servicio"
 
-msgid "Password entries do not match"
+msgid "password entries do not match"
 msgstr "Las entradas de contraseña no coinciden"
 
-msgid "Username has already been taken"
+msgid "username has already been taken"
 msgstr "El nombre de usuario ya existe"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "Es obligatorio establecer una contraseña"
 
-msgid "Your username contains invalid characters"
+msgid "your username contains invalid characters"
 msgstr "Su nombre de usuario contiene caracteres no válidos"
 
-msgid "A complete birthdate is required"
+msgid "a complete birthdate is required"
 msgstr "Se requiere la fecha de nacimiento completa"
 
-msgid "Password is too short (minimum is 6 characters)"
+msgid "password is too short (minimum is 6 characters)"
 msgstr "La contraseña es demasiado corta (mínimo de 6 caracteres)"
 
-msgid "About Airspace"
+msgid "about airspace"
 msgstr "Acerca de Airspace"
 
-msgid "Hide Airspace"
+msgid "hide airspace"
 msgstr "Ocultar Airspace"
 
-msgid "Hide Others"
+msgid "hide others"
 msgstr "Ocultar otros"
 
-msgid "Show All"
+msgid "show all"
 msgstr "Mostrar todos"
 
-msgid "Quit Airspace"
+msgid "quit airspace"
 msgstr "Salir de Airspace"
 
-msgid "Edit"
+msgid "edit"
 msgstr "Editar"
 
-msgid "Undo"
+msgid "undo"
 msgstr "Deshacer"
 
-msgid "Redo"
+msgid "redo"
 msgstr "Rehacer"
 
-msgid "Cut"
+msgid "cut"
 msgstr "Cortar"
 
-msgid "Copy"
+msgid "copy"
 msgstr "Copiar"
 
-msgid "Paste"
+msgid "paste"
 msgstr "Pegar"
 
-msgid "Delete"
+msgid "delete"
 msgstr "Eliminar"
 
-msgid "Select All"
+msgid "select all"
 msgstr "Seleccionar todos"
 
-msgid "Account"
+msgid "account"
 msgstr "Cuenta"
 
-msgid "Sign Out ##"
+msgid "sign out ##"
 msgstr "Cerrar sesión ##"
 
-msgid "Window"
+msgid "window"
 msgstr "Ventana"
 
-msgid "Minimize"
+msgid "minimize"
 msgstr "Minimizar"
 
-msgid "Close"
+msgid "close"
 msgstr "Cerrar"
 
-msgid "Bring All to Front"
+msgid "bring all to front"
 msgstr "Traer todo al frente"
 
-msgid "Changes will take effect on relaunch"
+msgid "changes will take effect on relaunch"
 msgstr "Los cambios tendrán efecto en el reinicio"
 
-msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgid "orientation has crashed. please make sure you have the latest graphics drivers installed."
 msgstr "Orientation se ha bloqueado. Verifique si tiene instalados los controladores de gráficos más recientes."
 
-msgid "Error Report"
+msgid "error report"
 msgstr "Informe de errores"
 
-msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgid "last time, the leap motion service or one of its associated programs crashed. please send us this error report to help improve the software."
 msgstr "La última vez, Leap Motion Service o uno de sus programas asociados se bloqueó. Por favor, envíenos el informe de errores para ayudarnos a mejorar el software."
 
-msgid "Send Error Report"
+msgid "send error report"
 msgstr "Enviar informe de errores"
 
-msgid "Don't Send"
+msgid "don't send"
 msgstr "No enviar"
 
-msgid "Airspace Store"
+msgid "airspace store"
 msgstr "Tienda Airspace"
 
-msgid "App Store"
+msgid "app store"
 msgstr "Tienda de aplicaciones"
 
-msgid "Download All"
+msgid "download all"
 msgstr "Descargar todo"
 
-msgid "Download All Applications"
+msgid "download all applications"
 msgstr "Descargar todas las aplicaciones"
 
-msgid "Download All Apps"
+msgid "download all apps"
 msgstr "Descargar todas las aplicaciones"
 
-msgid "Install All"
+msgid "install all"
 msgstr "Instalar todo"
 
-msgid "Install All Applications"
+msgid "install all applications"
 msgstr "Instalar todas las aplicaciones"
 
-msgid "Install All Apps"
+msgid "install all apps"
 msgstr "Instalar todas las aplicaciones"
 
-msgid "Upgrade All"
+msgid "upgrade all"
 msgstr "Actualizar la versión de todo"
 
-msgid "Upgrade All Applications"
+msgid "upgrade all applications"
 msgstr "Actualizar la versión de todas las aplicaciones"
 
-msgid "Upgrade All Apps"
+msgid "upgrade all apps"
 msgstr "Actualizar la versión de todas las aplicaciones"
 
-msgid "Update All"
+msgid "update all"
 msgstr "Actualizar todo"
 
-msgid "Update All Applications"
+msgid "update all applications"
 msgstr "Actualizar todas las aplicaciones"
 
-msgid "Update All Apps"
+msgid "update all apps"
 msgstr "Actualizar todas las aplicaciones"
 
-msgid "Cancel All"
+msgid "cancel all"
 msgstr "Cancelar todo"
 
-msgid "Cancel all downloads"
+msgid "cancel all downloads"
 msgstr "Cancelar todas las descargas"
 
-msgid "Cancel all pending downloads"
+msgid "cancel all pending downloads"
 msgstr "Cancelar todas las descargas pendientes"
 
-msgid "Recycle Bin"
+msgid "recycle bin"
 msgstr "Papelera de reciclaje"
 
-msgid "Archive"
+msgid "archive"
 msgstr "Archivar"
 
-msgid "Reinstall All"
+msgid "reinstall all"
 msgstr "Reinstalar todo"
 
-msgid "Restore All"
+msgid "restore all"
 msgstr "Restaurar todo"
 
-msgid "Unarchive All"
+msgid "unarchive all"
 msgstr "Desarchivar todo"
 
-msgid "Click to Reinstall"
+msgid "click to reinstall"
 msgstr "Haga clic para reinstalar"
 
-msgid "Set Install Directory..."
+msgid "set install directory..."
 msgstr "Establezca el directorio de instalación..."
