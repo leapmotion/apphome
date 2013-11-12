@@ -138,22 +138,54 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-form').css({'position': 'relative'});
 
+    $contents.find('#user_username').prop('placeholder', 'Create Username');
+    $contents.find('.auth-screen #user_email').prop('placeholder', 'Account email');
+
     var alertSelectorMap = {
+      'error-username': '#user_username',
       'error-email': '#user_email',
       'error-password': '#user_password_confirmation',
     };
 
-    $contents.find('.alert').each(function(i, el) {
+    _.keys(alertSelectorMap).forEach(function(alertSelector) {
+      $contents.find('.' + alertSelector).each(function() {
+        $(this).addClass('field-alert');
+        $(this).addClass('alert-danger');
+      });
+    });
+
+    $contents.find('.field-alert').each(function(i, el) {
         _.keys(alertSelectorMap).forEach(function(alertSelector) {
           if ($(this).hasClass(alertSelector)) {
-            $(this).addClass('field-alert');
-            $(this).addClass('alert-danger');
             var top = $contents.find(alertSelectorMap[alertSelector]).offset().top;
+            console.log('Attaching ' + alertSelector + ' to ' + alertSelectorMap[alertSelector] + ' at ' + top);
             $(this).css({'top': top});
           }
         }.bind(this));
     });
 
+    this._translateIframeContents();
+
+  },
+
+  _translateIframeContents: function() {
+    var $contents = $('iframe.oauth').contents();
+
+    $contents.find('.auth-form').find('*').each(function() {
+      if ($(this).text() && $(this).text() == $(this).html() && isNaN($(this).text())) {
+        $(this).text(i18n.translate($(this).text())); // TODO translate it
+      }
+
+      if ($(this).prop('tagName') == 'INPUT') {
+        if ($(this).prop('value') && isNaN($(this).prop('value'))) {
+          $(this).prop('value', i18n.translate($(this).prop('value')));
+        }
+
+        if ($(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
+          $(this).prop('placeholder', i18n.translate($(this).prop('placeholder')));
+        }
+      }
+    });
   },
 
   _waitForInternetConnection: function(cb) {
