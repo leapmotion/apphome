@@ -54,9 +54,6 @@ var _launchOrientation =  function() {
   if (orientationPath && fs.existsSync(orientationPath)) {
     nwGui.Shell.openItem(orientationPath);
     mixpanel.trackEvent('Started Orientation', null, 'OOBE');
-    return true;
-  } else {
-    return false;
   }
 };
 
