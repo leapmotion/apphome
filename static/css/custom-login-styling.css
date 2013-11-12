@@ -80,6 +80,17 @@ body {
     background: transparent !important;
 }
 
+.auth-form .alerts .alert {
+    border-radius: 4px;
+}
+
+.auth-form .alerts .alert.field-alert {
+    display: block;
+    position: fixed;
+    width: 180px;
+    left: 550px;
+}
+
 
 select:focus,
 textarea:focus,
