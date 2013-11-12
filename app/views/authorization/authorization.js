@@ -173,7 +173,7 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-form').find('*').each(function() {
       if ($(this).text() && $(this).text() == $(this).html() && isNaN($(this).text())) {
-        $(this).text(i18n.translate($(this).text())); // TODO translate it
+        $(this).text(i18n.translate($(this).text()));
       }
 
       if (($(this).prop('tagName') == 'INPUT') && ($(this).prop('type') !== 'hidden')) {
