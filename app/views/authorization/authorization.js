@@ -158,7 +158,6 @@ module.exports = BaseView.extend({
         _.keys(alertSelectorMap).forEach(function(alertSelector) {
           if ($(this).hasClass(alertSelector)) {
             var top = $contents.find(alertSelectorMap[alertSelector]).offset().top;
-            console.log('Attaching ' + alertSelector + ' to ' + alertSelectorMap[alertSelector] + ' at ' + top);
             $(this).css({'top': top});
           }
         }.bind(this));
