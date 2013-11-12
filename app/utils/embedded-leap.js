@@ -17,7 +17,7 @@ function getEmbeddedDevice() {
     return uiGlobals.embeddedDevice;
   }
 
-  var existingValue = db.fetchObj(config.DbKeys.HasEmbeddedLeapDevice);
+  var existingValue = db.fetchObj(config.DbKeys.EmbeddedLeapDevice);
   if (typeof existingValue !== 'undefined') {
     return existingValue;
   }
@@ -46,7 +46,7 @@ function getEmbeddedDevice() {
       console.error('Error reading installtype: ' + err);
     }
   }
-  db.saveObj(config.DbKeys.HasEmbeddedLeapDevice, embeddedDevice);
+  db.saveObj(config.DbKeys.EmbeddedLeapDevice, embeddedDevice);
   return embeddedDevice;
 }
 

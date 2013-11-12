@@ -67,7 +67,8 @@ var config = {
     ActiveTempFilesKey: 'active_temp_files',
     TempFilesNeedingDeletionKey: 'temp_files_needing_deletion',
     MixpanelDistinctId: 'MixpanelDistinctId',
-    AppInstallDir: 'AppInstallDir'
+    AppInstallDir: 'AppInstallDir',
+    EmbeddedLeapDevice: 'EmbeddedLeapDevice'
   },
 
   PlatformDirs: {
