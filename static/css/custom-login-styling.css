@@ -19,6 +19,7 @@ body {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .auth-form h1,
@@ -33,10 +34,6 @@ body {
 
 .auth-screen .auth-links {
     margin-top: 20px !important;
-}
-
-.auth-links {
-    margin-top: -40px !important;
 }
 
 .auth-links a:hover {

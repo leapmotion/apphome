@@ -1,145 +1,145 @@
-msgid "Welcome"
+msgid "welcome"
 msgstr "欢迎使用"
 
-msgid "Welcome to a whole new world"
+msgid "welcome to a whole new world"
 msgstr "欢迎来到新领域"
 
-msgid "Below are a few tips to get you started"
+msgid "below are a few tips to get you started"
 msgstr "下面是一些可帮助您使用产品的小提示"
 
-msgid "I agree to the Leap Motion %1$s"
+msgid "i agree to the leap motion %1$s"
 msgstr "我同意 Leap Motion %1$s"
 
-msgid "End User License Agreement"
+msgid "end user license agreement"
 msgstr "最终用户许可协议"
 
-msgid "Continue"
+msgid "continue"
 msgstr "继续"
 
-msgid "Airspace, the Leap Motion app store"
+msgid "airspace, the leap motion app store"
 msgstr "Airspace，Leap Motion 应用商店"
 
-msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgid "discover, download, and launch your leap motion apps from airspace - the first-ever place for first-ever apps."
 msgstr "在 Airspace (提供顶尖应用的首创应用商店)中探索、下载和启动 Leap Motion 应用。"
 
-msgid "Launch Airspace"
+msgid "launch airspace"
 msgstr "启动 Airspace"
 
-msgid "Leap Motion End User Software License Agreement"
+msgid "leap motion end user software license agreement"
 msgstr "Leap Motion 最终用户软件许可协议"
 
-msgid "Continue with mouse only"
+msgid "continue with mouse only"
 msgstr "仅使用鼠标继续操作"
 
-msgid "Find and launch your Leap Motion apps"
+msgid "find and launch your leap motion apps"
 msgstr "查找并启动 Leap Motion 应用"
 
-msgid "Sync purchases across devices"
+msgid "sync purchases across devices"
 msgstr "在设备间同步购买的应用"
 
-msgid "Discover games, utilities, music, and more in our store!"
+msgid "discover games, utilities, music, and more in our store!"
 msgstr "在我们的商店中探索游戏、实用程序、音乐及更多内容!"
 
-msgid "Use the same login for purchases, support, and more!"
+msgid "use the same login for purchases, support, and more!"
 msgstr "使用同一登录名购买应用、获取支持及更多服务!"
 
-msgid "Connecting to authentication server..."
+msgid "connecting to authentication server..."
 msgstr "正在连接身份验证服务器..."
 
-msgid "Preparing for launch..."
+msgid "preparing for launch..."
 msgstr "正在准备启动..."
 
-msgid "Signing you out..."
+msgid "signing you out..."
 msgstr "正在注销..."
 
-msgid "No Internet connection"
+msgid "no internet connection"
 msgstr "无 Internet 连接"
 
-msgid "Please ensure your Internet connection is working properly."
+msgid "please ensure your internet connection is working properly."
 msgstr "请确保 Internet 连接正常。"
 
-msgid "No apps to display."
+msgid "no apps to display."
 msgstr "没有要显示的应用。"
 
-msgid "Waiting..."
+msgid "waiting..."
 msgstr "请稍候..."
 
-msgid "Connecting..."
+msgid "connecting..."
 msgstr "正在连接..."
 
-msgid "Downloading..."
+msgid "downloading..."
 msgstr "正在下载..."
 
-msgid "Installing..."
+msgid "installing..."
 msgstr "正在安装..."
 
-msgid "Opening..."
+msgid "opening..."
 msgstr "正在打开..."
 
-msgid "Launching..."
+msgid "launching..."
 msgstr "正在启动..."
 
-msgid "Click to Install"
+msgid "click to install"
 msgstr "单击以安装"
 
-msgid "Trash"
+msgid "trash"
 msgstr "垃圾桶"
 
-msgid "Version"
+msgid "version"
 msgstr "版本"
 
-msgid "Release Date"
+msgid "release date"
 msgstr "发行日期"
 
-msgid "What's New"
+msgid "what's new"
 msgstr "新增功能"
 
-msgid "Description"
+msgid "description"
 msgstr "描述"
 
-msgid "Cancel"
+msgid "cancel"
 msgstr "取消"
 
-msgid "Install %1$s"
+msgid "install %1$s"
 msgstr "安装 %1$s"
 
-msgid "Update App"
+msgid "update app"
 msgstr "更新应用"
 
-msgid "Launch App"
+msgid "launch app"
 msgstr "启动应用"
 
-msgid "Controller Settings"
+msgid "controller settings"
 msgstr "控制器设置"
 
-msgid "Exit"
+msgid "exit"
 msgstr "退出"
 
-msgid "File"
+msgid "file"
 msgstr "文件"
 
-msgid "Sign out %1$s"
+msgid "sign out %1$s"
 msgstr "注销 %1$s"
 
-msgid "Account"
+msgid "account"
 msgstr "帐户"
 
-msgid "About Airspace Home"
+msgid "about airspace home"
 msgstr "关于 Airspace 主页"
 
-msgid "Airspace Home"
+msgid "airspace home"
 msgstr "Airspace 主页"
 
-msgid "Help"
+msgid "help"
 msgstr "帮助"
 
-msgid "Home"
+msgid "home"
 msgstr "主页"
 
-msgid "Store"
+msgid "store"
 msgstr "商店"
 
-msgid "You need to sign in or sign up before continuing."
+msgid "you need to sign in or sign up before continuing."
 msgstr "您需要先登录或注销，然后才能继续操作。"
 
 msgid "account email"
@@ -148,275 +148,275 @@ msgstr "帐户电子邮件"
 msgid "password"
 msgstr "密码"
 
-msgid "Sign In"
+msgid "sign in"
 msgstr "登录"
 
-msgid "Sign Up"
+msgid "sign up"
 msgstr "注册"
 
-msgid "Forgot password?"
+msgid "forgot password?"
 msgstr "忘记密码?"
 
-msgid "Invalid email or password."
+msgid "invalid email or password."
 msgstr "电子邮件或密码无效。"
 
 msgid "account email"
 msgstr "帐户电子邮件"
 
-msgid "Please enter an email address."
+msgid "please enter an email address."
 msgstr "请输入电子邮件地址。"
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "电子邮件不得为空"
 
-msgid "Send Instructions"
+msgid "send instructions"
 msgstr "发送说明"
 
-msgid "Get Started"
+msgid "get started"
 msgstr "开始使用"
 
-msgid "Getting Started..."
+msgid "getting started..."
 msgstr "现在开始吧..."
 
-msgid "Create username"
+msgid "create username"
 msgstr "创建用户名"
 
-msgid "Email"
+msgid "email"
 msgstr "电子邮件"
 
-msgid "Create password"
+msgid "create password"
 msgstr "创建密码"
 
-msgid "Confirm password"
+msgid "confirm password"
 msgstr "确认密码"
 
-msgid "Birthdate"
+msgid "birthdate"
 msgstr "生日"
 
-msgid "Month"
+msgid "month"
 msgstr "月份"
 
-msgid "January"
+msgid "january"
 msgstr "1 月"
 
-msgid "February"
+msgid "february"
 msgstr "2 月"
 
-msgid "March"
+msgid "march"
 msgstr "3 月"
 
-msgid "April"
+msgid "april"
 msgstr "4 月"
 
-msgid "May"
+msgid "may"
 msgstr "5 月"
 
-msgid "June"
+msgid "june"
 msgstr "6 月"
 
-msgid "July"
+msgid "july"
 msgstr "7 月"
 
-msgid "August"
+msgid "august"
 msgstr "8 月"
 
-msgid "September"
+msgid "september"
 msgstr "9 月"
 
-msgid "October"
+msgid "october"
 msgstr "10 月"
 
-msgid "November"
+msgid "november"
 msgstr "11 月"
 
-msgid "December"
+msgid "december"
 msgstr "12 月"
 
-msgid "I agree to the Airspace Terms of Service"
+msgid "i agree to the airspace terms of service"
 msgstr "我同意 Airspace 服务条款"
 
-msgid "Email me Leap Motion news and updates."
+msgid "email me leap motion news and updates."
 msgstr "向我发送包含 Leap Motion 新闻和更新的电子邮件。"
 
-msgid "Sign in to an existing account"
+msgid "sign in to an existing account"
 msgstr "登录现有帐户"
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "电子邮件不得为空"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "需要设置密码"
 
-msgid "Username can't be blank"
+msgid "username can't be blank"
 msgstr "用户名不得为空"
 
-msgid "Birthdate is required"
+msgid "birthdate is required"
 msgstr "生日为必填项"
 
-msgid "You must accept the Terms of Service"
+msgid "you must accept the terms of service"
 msgstr "您必须接受服务条款"
 
-msgid "Password entries do not match"
+msgid "password entries do not match"
 msgstr "密码条目不匹配"
 
-msgid "Username has already been taken"
+msgid "username has already been taken"
 msgstr "用户名已被占用"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "需要设置密码"
 
-msgid "Your username contains invalid characters"
+msgid "your username contains invalid characters"
 msgstr "您的用户名包含无效字符"
 
-msgid "A complete birthdate is required"
+msgid "a complete birthdate is required"
 msgstr "需要填写完整生日"
 
-msgid "Password is too short (minimum is 6 characters)"
+msgid "password is too short (minimum is 6 characters)"
 msgstr "密码太短(最少 6 个字符)"
 
-msgid "About Airspace"
+msgid "about airspace"
 msgstr "关于 Airspace"
 
-msgid "Hide Airspace"
+msgid "hide airspace"
 msgstr "隐藏 Airspace"
 
-msgid "Hide Others"
+msgid "hide others"
 msgstr "隐藏其他内容"
 
-msgid "Show All"
+msgid "show all"
 msgstr "全部显示"
 
-msgid "Quit Airspace"
+msgid "quit airspace"
 msgstr "退出 Airspace"
 
-msgid "Edit"
+msgid "edit"
 msgstr "编辑"
 
-msgid "Undo"
+msgid "undo"
 msgstr "撤消"
 
-msgid "Redo"
+msgid "redo"
 msgstr "恢复"
 
-msgid "Cut"
+msgid "cut"
 msgstr "剪切"
 
-msgid "Copy"
+msgid "copy"
 msgstr "复制"
 
-msgid "Paste"
+msgid "paste"
 msgstr "粘贴"
 
-msgid "Delete"
+msgid "delete"
 msgstr "删除"
 
-msgid "Select All"
+msgid "select all"
 msgstr "全选"
 
-msgid "Account"
+msgid "account"
 msgstr "帐户"
 
-msgid "Sign Out %1$s"
+msgid "sign out %1$s"
 msgstr "注销 %1$s"
 
-msgid "Window"
+msgid "window"
 msgstr "窗口"
 
-msgid "Minimize"
+msgid "minimize"
 msgstr "最小化"
 
-msgid "Close"
+msgid "close"
 msgstr "关闭"
 
-msgid "Bring All to Front"
+msgid "bring all to front"
 msgstr "全部置顶"
 
-msgid "Changes will take effect on relaunch"
+msgid "changes will take effect on relaunch"
 msgstr "更改将在重新启动后生效"
 
-msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgid "orientation has crashed. please make sure you have the latest graphics drivers installed."
 msgstr "定位已崩溃。请确保您已安装了最新的显卡驱动程序。"
 
-msgid "Error Report"
+msgid "error report"
 msgstr "错误报告"
 
-msgid "Last time, the Leap Motion Service or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgid "last time, the leap motion service or one of its associated programs crashed. please send us this error report to help improve the software."
 msgstr "Leap Motion Service 或其关联的程序之一在上次崩溃。请向我们发送此错误报告以帮助改进软件。"
 
-msgid "Send Error Report"
+msgid "send error report"
 msgstr "发送错误报告"
 
-msgid "Don't Send"
+msgid "don't send"
 msgstr "不要发送"
 
-msgid "Airspace Store"
+msgid "airspace store"
 msgstr "Airspace 商店"
 
-msgid "App Store"
+msgid "app store"
 msgstr "应用商店"
 
-msgid "Download All"
+msgid "download all"
 msgstr "全部下载"
 
-msgid "Download All Applications"
+msgid "download all applications"
 msgstr "下载所有应用"
 
-msgid "Download All Apps"
+msgid "download all apps"
 msgstr "下载所有应用"
 
-msgid "Install All"
+msgid "install all"
 msgstr "全部安装"
 
-msgid "Install All Applications"
+msgid "install all applications"
 msgstr "安装所有应用"
 
-msgid "Install All Apps"
+msgid "install all apps"
 msgstr "安装所有应用"
 
-msgid "Upgrade All"
+msgid "upgrade all"
 msgstr "全部升级"
 
-msgid "Upgrade All Applications"
+msgid "upgrade all applications"
 msgstr "升级所有应用"
 
-msgid "Upgrade All Apps"
+msgid "upgrade all apps"
 msgstr "升级所有应用"
 
-msgid "Update All"
+msgid "update all"
 msgstr "全部更新"
 
-msgid "Update All Applications"
+msgid "update all applications"
 msgstr "更新所有应用"
 
-msgid "Update All Apps"
+msgid "update all apps"
 msgstr "更新所有应用"
 
-msgid "Cancel All"
+msgid "cancel all"
 msgstr "全部取消"
 
-msgid "Cancel all downloads"
+msgid "cancel all downloads"
 msgstr "取消所有下载"
 
-msgid "Cancel all pending downloads"
+msgid "cancel all pending downloads"
 msgstr "取消所有挂起的下载"
 
-msgid "Recycle Bin"
+msgid "recycle bin"
 msgstr "回收站"
 
-msgid "Archive"
+msgid "archive"
 msgstr "归档"
 
-msgid "Reinstall All"
+msgid "reinstall all"
 msgstr "全部重新安装"
 
-msgid "Restore All"
+msgid "restore all"
 msgstr "全部还原"
 
-msgid "Unarchive All"
+msgid "unarchive all"
 msgstr "全部解档"
 
-msgid "Click to Reinstall"
+msgid "click to reinstall"
 msgstr "单击以重新安装"
 
-msgid "Set Install Directory..."
+msgid "set install directory..."
 msgstr "设置安装目录..."

@@ -1,145 +1,145 @@
-msgid "Welcome"
+msgid "welcome"
 msgstr "ようこそ"
 
-msgid "Welcome to a whole new world"
+msgid "welcome to a whole new world"
 msgstr "新しい世界へようこそ"
 
-msgid "Below are a few tips to get you started"
+msgid "below are a few tips to get you started"
 msgstr "開始するにあたり、いくつかのヒントを示します"
 
-msgid "I agree to the Leap Motion %1$s"
+msgid "i agree to the leap motion %1$s"
 msgstr "Leap Motionの%1$sに同意します"
 
-msgid "End User License Agreement"
+msgid "end user license agreement"
 msgstr "ソフトウェア使用許諾契約書"
 
-msgid "Continue"
+msgid "continue"
 msgstr "続行"
 
-msgid "Airspace, the Leap Motion app store"
+msgid "airspace, the leap motion app store"
 msgstr "Airspaceは、Leap Motionのアプリ ストアです"
 
-msgid "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
+msgid "discover, download, and launch your leap motion apps from airspace - the first-ever place for first-ever apps."
 msgstr "Airspaceでは、Leap Motionのアプリを探し、ダウンロードして利用できます。他にはないアプリが揃った今までにないストアです。"
 
-msgid "Launch Airspace"
+msgid "launch airspace"
 msgstr "Airspaceの起動"
 
-msgid "Leap Motion End User Software License Agreement"
+msgid "leap motion end user software license agreement"
 msgstr "Leap Motionソフトウェア使用許諾契約書"
 
-msgid "Continue with mouse only"
+msgid "continue with mouse only"
 msgstr "マウスのみで続行する"
 
-msgid "Find and launch your Leap Motion apps"
+msgid "find and launch your leap motion apps"
 msgstr "Leap Motionアプリを探して利用する"
 
-msgid "Sync purchases across devices"
+msgid "sync purchases across devices"
 msgstr "購入したアプリをデバイス間で同期する"
 
-msgid "Discover games, utilities, music, and more in our store!"
+msgid "discover games, utilities, music, and more in our store!"
 msgstr "ゲーム、ユーティリティ、音楽などをAirspaceストアで見つける"
 
-msgid "Use the same login for purchases, support, and more!"
+msgid "use the same login for purchases, support, and more!"
 msgstr "1つのログイン アカウントで、アプリの購入やサポート情報の入手などが可能"
 
-msgid "Connecting to authentication server..."
+msgid "connecting to authentication server..."
 msgstr "認証サーバーに接続中..."
 
-msgid "Preparing for launch..."
+msgid "preparing for launch..."
 msgstr "起動の準備中..."
 
-msgid "Signing you out..."
+msgid "signing you out..."
 msgstr "サインアウト中..."
 
-msgid "No Internet connection"
+msgid "no internet connection"
 msgstr "インターネット接続がありません"
 
-msgid "Please ensure your Internet connection is working properly."
+msgid "please ensure your internet connection is working properly."
 msgstr "インターネット接続が正常に機能していることを確認してください。"
 
-msgid "No apps to display."
+msgid "no apps to display."
 msgstr "表示するアプリがありません。"
 
-msgid "Waiting..."
+msgid "waiting..."
 msgstr "待機中..."
 
-msgid "Connecting..."
+msgid "connecting..."
 msgstr "接続中..."
 
-msgid "Downloading..."
+msgid "downloading..."
 msgstr "ダウンロード中..."
 
-msgid "Installing..."
+msgid "installing..."
 msgstr "インストール中..."
 
-msgid "Opening..."
+msgid "opening..."
 msgstr "表示中..."
 
-msgid "Launching..."
+msgid "launching..."
 msgstr "起動中..."
 
-msgid "Click to Install"
+msgid "click to install"
 msgstr "クリックしてインストール"
 
-msgid "Trash"
+msgid "trash"
 msgstr "ごみ箱"
 
-msgid "Version"
+msgid "version"
 msgstr "バージョン"
 
-msgid "Release Date"
+msgid "release date"
 msgstr "リリース日"
 
-msgid "What's New"
+msgid "what's new"
 msgstr "新機能"
 
-msgid "Description"
+msgid "description"
 msgstr "説明"
 
-msgid "Cancel"
+msgid "cancel"
 msgstr "キャンセル"
 
-msgid "Install %1$s"
+msgid "install %1$s"
 msgstr "%1$sをインストール"
 
-msgid "Update App"
+msgid "update app"
 msgstr "アプリを更新"
 
-msgid "Launch App"
+msgid "launch app"
 msgstr "アプリを起動"
 
-msgid "Controller Settings"
+msgid "controller settings"
 msgstr "コントローラーの設定"
 
-msgid "Exit"
+msgid "exit"
 msgstr "終了"
 
-msgid "File"
+msgid "file"
 msgstr "ファイル"
 
-msgid "Sign Out %1$s"
+msgid "sign out %1$s"
 msgstr "%1$sからサインアウト"
 
-msgid "Account"
+msgid "account"
 msgstr "アカウント"
 
-msgid "About Airspace Home"
+msgid "about airspace home"
 msgstr "Airspace Homeについて"
 
-msgid "Airspace Home"
+msgid "airspace home"
 msgstr "Airspace Home"
 
-msgid "Help"
+msgid "help"
 msgstr "ヘルプ"
 
-msgid "Home"
+msgid "home"
 msgstr "ホーム"
 
-msgid "Store"
+msgid "store"
 msgstr "ストア"
 
-msgid "You need to sign in or sign up before continuing."
+msgid "you need to sign in or sign up before continuing."
 msgstr "続行する前にサインインまたはサインアップする必要があります。"
 
 msgid "account email"
@@ -148,275 +148,275 @@ msgstr "アカウントの電子メール"
 msgid "password"
 msgstr "パスワード"
 
-msgid "Sign In"
+msgid "sign in"
 msgstr "サインイン"
 
-msgid "Sign Up"
+msgid "sign up"
 msgstr "サインアップ"
 
-msgid "Forgot password?"
+msgid "forgot password?"
 msgstr "パスワードをお忘れですか?"
 
-msgid "Invalid email or password."
+msgid "invalid email or password."
 msgstr "無効な電子メールまたはパスワードです。"
 
 msgid "account email address"
 msgstr "アカウントの電子メール アドレス"
 
-msgid "Please enter an email address."
+msgid "please enter an email address."
 msgstr "電子メール アドレスを入力してください。"
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "電子メールを空白にすることはできません"
 
-msgid "Send Instructions"
+msgid "send instructions"
 msgstr "手順を送信"
 
-msgid "Get Started"
+msgid "get started"
 msgstr "作業の開始"
 
-msgid "Getting Started..."
+msgid "getting started..."
 msgstr "ソフトを起動しています..."
 
-msgid "Create username"
+msgid "create username"
 msgstr "ユーザー名の作成"
 
-msgid "Email"
+msgid "email"
 msgstr "電子メール"
 
-msgid "Create password"
+msgid "create password"
 msgstr "パスワードの作成"
 
-msgid "Confirm password"
+msgid "confirm password"
 msgstr "パスワードの確認"
 
-msgid "Birthdate"
+msgid "birthdate"
 msgstr "生年月日"
 
-msgid "Month"
+msgid "month"
 msgstr "月"
 
-msgid "January"
+msgid "january"
 msgstr "1月"
 
-msgid "February"
+msgid "february"
 msgstr "2月"
 
-msgid "March"
+msgid "march"
 msgstr "3月"
 
-msgid "April"
+msgid "april"
 msgstr "4月"
 
-msgid "May"
+msgid "may"
 msgstr "5月"
 
-msgid "June"
+msgid "june"
 msgstr "6月"
 
-msgid "July"
+msgid "july"
 msgstr "7月"
 
-msgid "August"
+msgid "august"
 msgstr "8月"
 
-msgid "September"
+msgid "september"
 msgstr "9月"
 
-msgid "October"
+msgid "october"
 msgstr "10月"
 
-msgid "November"
+msgid "november"
 msgstr "11月"
 
-msgid "December"
+msgid "december"
 msgstr "12月"
 
-msgid "I agree to the Airspace Terms of Service"
+msgid "i agree to the airspace terms of service"
 msgstr "Airspaceのサービス利用条件に同意します。"
 
-msgid "Email me Leap Motion news and updates."
+msgid "email me leap motion news and updates."
 msgstr "Leap Motionのニュースや更新情報の電子メールを受け取ります。"
 
-msgid "Sign in to an existing account"
+msgid "sign in to an existing account"
 msgstr "既存のアカウントにサインイン"
 
-msgid "Email can't be blank"
+msgid "email can't be blank"
 msgstr "電子メールを空白にすることはできません"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "パスワードの設定が必要です"
 
-msgid "Username can't be blank"
+msgid "username can't be blank"
 msgstr "ユーザー名を空白にすることはできません"
 
-msgid "Birthdate is required"
+msgid "birthdate is required"
 msgstr "生年月日が必要です"
 
-msgid "You must accept the Terms of Service"
+msgid "you must accept the terms of service"
 msgstr "サービス利用条件に同意する必要があります"
 
-msgid "Password entries do not match"
+msgid "password entries do not match"
 msgstr "入力されたパスワードが一致しません"
 
-msgid "Username has already been taken"
+msgid "username has already been taken"
 msgstr "ユーザー名がすでに使われています"
 
-msgid "Setting a password is required"
+msgid "setting a password is required"
 msgstr "パスワードの設定が必要です"
 
-msgid "Your username contains invalid characters"
+msgid "your username contains invalid characters"
 msgstr "ユーザー名に無効な文字が含まれています"
 
-msgid "A complete birthdate is required"
+msgid "a complete birthdate is required"
 msgstr "生年月日を正しく入力する必要があります"
 
-msgid "Password is too short (minimum is 6 characters)"
+msgid "password is too short (minimum is 6 characters)"
 msgstr "パスワードが短すぎます（6文字以上必要）"
 
-msgid "About Airspace"
+msgid "about airspace"
 msgstr "Airspaceについて"
 
-msgid "Hide Airspace"
+msgid "hide airspace"
 msgstr "Airspaceを表示しない"
 
-msgid "Hide Others"
+msgid "hide others"
 msgstr "その他を表示しない"
 
-msgid "Show All"
+msgid "show all"
 msgstr "すべてを表示"
 
-msgid "Quit Airspace"
+msgid "quit airspace"
 msgstr "Airspaceを終了"
 
-msgid "Edit"
+msgid "edit"
 msgstr "編集"
 
-msgid "Undo"
+msgid "undo"
 msgstr "元に戻す"
 
-msgid "Redo"
+msgid "redo"
 msgstr "やり直し"
 
-msgid "Cut"
+msgid "cut"
 msgstr "切り取り"
 
-msgid "Copy"
+msgid "copy"
 msgstr "コピー"
 
-msgid "Paste"
+msgid "paste"
 msgstr "貼り付け"
 
-msgid "Delete"
+msgid "delete"
 msgstr "削除"
 
-msgid "Select All"
+msgid "select all"
 msgstr "すべて選択"
 
-msgid "Account"
+msgid "account"
 msgstr "アカウント"
 
-msgid "Sign Out ##"
+msgid "sign out ##"
 msgstr "##からサインアウト"
 
-msgid "Window"
+msgid "window"
 msgstr "ウィンドウ"
 
-msgid "Minimize"
+msgid "minimize"
 msgstr "最小化"
 
-msgid "Close"
+msgid "close"
 msgstr "閉じる"
 
-msgid "Bring All to Front"
+msgid "bring all to front"
 msgstr "すべてを前面に表示"
 
-msgid "Changes will take effect on relaunch"
+msgid "changes will take effect on relaunch"
 msgstr "変更した内容は再起動後に有効になります"
 
-msgid "Orientation has crashed. Please make sure you have the latest graphics drivers installed."
+msgid "orientation has crashed. please make sure you have the latest graphics drivers installed."
 msgstr "画面の向きに問題が発生しました。最新のグラフィックス ドライバーがインストールされていることを確認してください。"
 
-msgid "Error Report"
+msgid "error report"
 msgstr "エラー レポート"
 
-msgid "Last time, the Leap Motion Core Services or one of its associated programs crashed. Please send us this error report to help improve the software."
+msgid "last time, the leap motion core services or one of its associated programs crashed. please send us this error report to help improve the software."
 msgstr "前回、Leap Motionのコア サービスまたはその関連プログラムの1つがクラッシュしました。ソフトウェアの品質向上に役立てるために、このエラー レポートをお送りください。"
 
-msgid "Send Error Report"
+msgid "send error report"
 msgstr "エラー レポートを送信する"
 
-msgid "Don't Send"
+msgid "don't send"
 msgstr "送信しない"
 
-msgid "Airspace Store"
+msgid "airspace store"
 msgstr "Airspace Store"
 
-msgid "App Store"
+msgid "app store"
 msgstr "アプリ ストア"
 
-msgid "Download All"
+msgid "download all"
 msgstr "すべてをダウンロード"
 
-msgid "Download All Applications"
+msgid "download all applications"
 msgstr "すべてのアプリケーションをダウンロード"
 
-msgid "Download All Apps"
+msgid "download all apps"
 msgstr "すべてのアプリをダウンロード"
 
-msgid "Install All"
+msgid "install all"
 msgstr "すべてをインストール"
 
-msgid "Install All Applications"
+msgid "install all applications"
 msgstr "すべてのアプリケーションをインストール"
 
-msgid "Install All Apps"
+msgid "install all apps"
 msgstr "すべてのアプリをインストール"
 
-msgid "Upgrade All"
+msgid "upgrade all"
 msgstr "すべてをアップグレード"
 
-msgid "Upgrade All Applications"
+msgid "upgrade all applications"
 msgstr "すべてのアプリケーションをアップグレード"
 
-msgid "Upgrade All Apps"
+msgid "upgrade all apps"
 msgstr "すべてのアプリをアップグレード"
 
-msgid "Update All"
+msgid "update all"
 msgstr "すべてを更新"
 
-msgid "Update All Applications"
+msgid "update all applications"
 msgstr "すべてのアプリケーションを更新"
 
-msgid "Update All Apps"
+msgid "update all apps"
 msgstr "すべてのアプリを更新"
 
-msgid "Cancel All"
+msgid "cancel all"
 msgstr "すべてをキャンセル"
 
-msgid "Cancel all downloads"
+msgid "cancel all downloads"
 msgstr "すべてのダウンロードをキャンセル"
 
-msgid "Cancel all pending downloads"
+msgid "cancel all pending downloads"
 msgstr "保留中のすべてのダウンロードをキャンセル"
 
-msgid "Recycle Bin"
+msgid "recycle bin"
 msgstr "ごみ箱"
 
-msgid "Archive"
+msgid "archive"
 msgstr "圧縮"
 
-msgid "Reinstall All"
+msgid "reinstall all"
 msgstr "すべてを再インストール"
 
-msgid "Restore All"
+msgid "restore all"
 msgstr "すべてを復元"
 
-msgid "Unarchive All"
+msgid "unarchive all"
 msgstr "すべてを展開"
 
-msgid "Click to Reinstall"
+msgid "click to reinstall"
 msgstr "クリックして再インストール"
 
-msgid "Set Install Directory..."
+msgid "set install directory..."
 msgstr "インストール先を設定して下さい..."

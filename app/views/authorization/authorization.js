@@ -124,7 +124,6 @@ module.exports = BaseView.extend({
     $contents.find('.alert:contains("You need to sign in or sign up before continuing.")').hide();
 
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
-      .text('Birth Date')
       .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
       .after($('<span>').text(i18n.translate('Why is this required?')));
 
@@ -139,22 +138,53 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-form').css({'position': 'relative'});
 
+    $contents.find('#user_username').prop('placeholder', 'Create Username');
+    $contents.find('.auth-screen #user_email').prop('placeholder', 'Account email');
+
     var alertSelectorMap = {
+      'error-username': '#user_username',
       'error-email': '#user_email',
       'error-password': '#user_password_confirmation',
     };
 
-    $contents.find('.alert').each(function(i, el) {
+    _.keys(alertSelectorMap).forEach(function(alertSelector) {
+      $contents.find('.' + alertSelector).each(function() {
+        $(this).addClass('field-alert');
+        $(this).addClass('alert-danger');
+      });
+    });
+
+    $contents.find('.field-alert').each(function(i, el) {
         _.keys(alertSelectorMap).forEach(function(alertSelector) {
           if ($(this).hasClass(alertSelector)) {
-            $(this).addClass('field-alert');
-            $(this).addClass('alert-danger');
             var top = $contents.find(alertSelectorMap[alertSelector]).offset().top;
             $(this).css({'top': top});
           }
         }.bind(this));
     });
 
+    this._translateIframeContents();
+
+  },
+
+  _translateIframeContents: function() {
+    var $contents = $('iframe.oauth').contents();
+
+    $contents.find('.auth-form').find('*').each(function() {
+      if ($(this).text() && $(this).text() == $(this).html() && isNaN($(this).text())) {
+        $(this).text(i18n.translate($(this).text()));
+      }
+
+      if (($(this).prop('tagName') == 'INPUT') && ($(this).prop('type') !== 'hidden')) {
+        if (($(this).prop('type') == 'submit') && $(this).prop('value') && isNaN($(this).prop('value'))) {
+          $(this).prop('value', i18n.translate($(this).prop('value')));
+        }
+
+        if (($(this).prop('type') == 'text') && $(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
+          $(this).prop('placeholder', i18n.translate($(this).prop('placeholder')));
+        }
+      }
+    });
   },
 
   _waitForInternetConnection: function(cb) {
