@@ -142,11 +142,9 @@ module.exports = BaseView.extend({
 
     $contents.find('.alert').each(function(i, el) {
         _.keys(alertSelectorMap).forEach(function(alertSelector) {
-          console.log('for: ' + alertSelector);
           if ($(this).hasClass(alertSelector)) {
             $(this).addClass('field-alert');
             $(this).addClass('alert-danger');
-            console.log('matching: ' + alertSelectorMap[alertSelector]);
             var top = $contents.find(alertSelectorMap[alertSelector]).offset().top;
             $(this).css({'top': top});
           }
