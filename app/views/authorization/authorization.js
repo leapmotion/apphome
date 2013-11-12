@@ -137,6 +137,24 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-screen .auth-links.back').html('<a href="https://central.leapmotion.com/users/sign_in" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
 
+    $contents.find('.auth-form').css({'position': 'relative'});
+
+    var alertSelectorMap = {
+      'error-email': '#user_email',
+      'error-password': '#user_password_confirmation',
+    };
+
+    $contents.find('.alert').each(function(i, el) {
+        _.keys(alertSelectorMap).forEach(function(alertSelector) {
+          if ($(this).hasClass(alertSelector)) {
+            $(this).addClass('field-alert');
+            $(this).addClass('alert-danger');
+            var top = $contents.find(alertSelectorMap[alertSelector]).offset().top;
+            $(this).css({'top': top});
+          }
+        }.bind(this));
+    });
+
   },
 
   _waitForInternetConnection: function(cb) {
