@@ -46,6 +46,7 @@ function cleanUpAppJson(appJson) {
     version: appJson.version_number,
     changelog: appJson.changelog,
     description: appJson.description,
+    tagline: appJson.tagline,
     releaseDate: releaseDate ? new Date(releaseDate).toLocaleDateString() : null,
     noAutoInstall: appJson.noAutoInstall
   };
