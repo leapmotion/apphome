@@ -42,7 +42,7 @@ module.exports = BaseView.extend({
 
     this.authorizationView = new AuthorizationView();
 
-    if (true || uiGlobals.embeddedDevice) {
+    if (uiGlobals.embeddedDevice) {
       this.$activateImage = this.$el.find('img.' + uiGlobals.embeddedDevice);
 
       this.$el.find('#actions').addClass('disabled');
