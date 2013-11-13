@@ -9,17 +9,20 @@ var config = require('../../config/config.js');
 var defer = $.Deferred();
 var promise;
 
-function isLeapEmbedded() {
-  if (typeof uiGlobals.isEmbedded !== 'undefined') {
-    return uiGlobals.isEmbedded;
+
+// Returns embedded type if type matches config.EmbeddedLeapTypes (e.g. pongo, hops)
+// Returns undefined if no embedded device
+function getEmbeddedDevice() {
+  if (config.EmbeddedLeapTypes.indexof(uiGlobals.embeddedDevice) !== -1) {
+    return uiGlobals.embeddedDevice;
   }
 
-  var existingValue = db.fetchObj(config.DbKeys.HasEmbeddedLeapDevice);
+  var existingValue = db.fetchObj(config.DbKeys.EmbeddedLeapDevice);
   if (typeof existingValue !== 'undefined') {
     return existingValue;
   }
 
-  var isEmbedded = false;
+  var embeddedDevice;
   if (os.platform() === 'win32') {
     try {
       // look for the file named 'installtype' in PlatformProgramDataDir
@@ -34,15 +37,17 @@ function isLeapEmbedded() {
           console.error('Unable to read Device type data');
         } else {
           console.log('Device type: ' + devicetype);
-          isEmbedded = (devicetype === "pongo" || devicetype === "hops");
+          if (config.EmbeddedLeapTypes.indexof(devicetype)) {
+            embeddedDevice = devicetype;
+          }
         }
       }
     } catch(err) {
       console.error('Error reading installtype: ' + err);
     }
   }
-  db.saveObj(config.DbKeys.HasEmbeddedLeapDevice, isEmbedded);
-  return isEmbedded;
+  db.saveObj(config.DbKeys.EmbeddedLeapDevice, embeddedDevice);
+  return embeddedDevice;
 }
 
-module.exports.isLeapEmbedded = isLeapEmbedded;
+module.exports.getEmbeddedDevice = getEmbeddedDevice;

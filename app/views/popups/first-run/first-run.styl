@@ -36,16 +36,13 @@
     text-decoration none
 
   #graphics
-    overflow hidden
 
-    .graphic
+    img
+      border-radius 6px
+      border 1px solid #444
+      display none
       width 304px
       height 234px
-      float left
-      margin-left 30px
-
-      &.first
-        margin-left 0
 
   #actions
     position relative
@@ -71,12 +68,6 @@
         background-image none
         background-color rgb(173, 205, 116)
 
-      &.disabled, &.disabled:hover
-        cursor default
-        background-image -webkit-linear-gradient(top, #bcdd41 0%, #aad029 100%)
-        color rgba(255, 255, 255, 0.9)
-        opacity 0.6
-
     .subbutton
       margin-top 15px
       color #9ac948
@@ -86,6 +77,18 @@
 
       &:hover
         text-decoration underline
+
+    &.disabled
+
+      .button, .button:hover
+        cursor default
+        background-image -webkit-linear-gradient(top, desaturate(lighten(#bcdd41, 20%), 20%) 0%, desaturate(lighten(#aad029, 20%), 20%) 100%)
+        color rgba(255, 255, 255, 0.9)
+
+      .subbutton, .subbutton:hover
+        cursor default
+        color desaturate(lighten(#9ac948, 20%), 20%)
+        text-decoration none
 
 #footer
   bottom 30px

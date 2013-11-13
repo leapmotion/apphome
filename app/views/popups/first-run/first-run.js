@@ -38,12 +38,32 @@ module.exports = BaseView.extend({
       signin_label:        i18n.translate('Sign in to an existing account')
     }));
 
-    this.$el.toggleClass('embedded', uiGlobals.isEmbedded);
     $('body').append(this.$el);
 
-    this._setupBindings();
-
     this.authorizationView = new AuthorizationView();
+
+    if (uiGlobals.embeddedDevice) {
+      this.$activateImage = this.$el.find('img.' + uiGlobals.embeddedDevice);
+
+      this.$el.find('#actions').addClass('disabled');
+
+      this.$activateImage.show();
+      this._center();
+
+      eula.waitForLicense((function() {
+        this._setupBindings();
+
+        this.$activateImage.hide();
+        this.$el.find('#actions').removeClass('disabled');
+        this._center();
+      }).bind(this));
+    } else {
+      this._setupBindings();
+    }
+  },
+
+  _center: function() {
+    this.$el.css('margin-top', -1*this.$el.height()/2);
   },
 
   _setupBindings: function() {
