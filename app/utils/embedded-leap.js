@@ -13,7 +13,7 @@ var promise;
 // Returns embedded type if type matches config.EmbeddedLeapTypes (e.g. pongo, hops)
 // Returns undefined if no embedded device
 function getEmbeddedDevice() {
-  if (config.EmbeddedLeapTypes.indexof(uiGlobals.embeddedDevice) !== -1) {
+  if (config.EmbeddedLeapTypes.indexOf(uiGlobals.embeddedDevice) !== -1) {
     return uiGlobals.embeddedDevice;
   }
 
@@ -37,7 +37,7 @@ function getEmbeddedDevice() {
           console.error('Unable to read Device type data');
         } else {
           console.log('Device type: ' + devicetype);
-          if (config.EmbeddedLeapTypes.indexof(devicetype)) {
+          if (config.EmbeddedLeapTypes.indexOf(devicetype)) {
             embeddedDevice = devicetype;
           }
         }
