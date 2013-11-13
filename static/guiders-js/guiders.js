@@ -240,16 +240,16 @@ window.guiders = (function($) {
     // position: fixed as well.
     if (attachTo.css("position") === "fixed" && guiders._fixedOrAbsolute === "fixed") {
       positionType = "fixed";
-      //top -= $(window).scrollTop();
-      //left -= $(window).scrollLeft();
+      top -= $(window).scrollTop();
+      left -= $(window).scrollLeft();
     }
 
     // If you specify an additional offset parameter when you create the guider, it gets added here.
     if (myGuider.offset.top !== null) {
-      //top += myGuider.offset.top;
+      top += myGuider.offset.top;
     }
     if (myGuider.offset.left !== null) {
-      //left += myGuider.offset.left;
+      left += myGuider.offset.left;
     }
 
     guiders._styleArrow(myGuider);
