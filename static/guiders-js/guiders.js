@@ -405,7 +405,22 @@ window.guiders = (function($) {
     }
   };
 
+  guiders.get = function(id) {
+    if (typeof guiders._guiders[id] === "undefined") {
+      return null;
+    }
+    return guiders._guiders[id] || null;
+  };
+
+  guiders.getCurrentGuider = function() {
+    return guiders._guiders[guiders._currentGuiderID] || null;
+  };
+
   guiders._updatePositionOnResize = function() {
+    if (!guiders.getCurrentGuider()) {
+      return;
+    }
+
     // Change the bubble position after browser gets resized
     var _resizing;
     $(window).resize(function() {
@@ -505,17 +520,6 @@ window.guiders = (function($) {
     }
 
     return guiders;
-  };
-
-  guiders.get = function(id) {
-    if (typeof guiders._guiders[id] === "undefined") {
-      return null;
-    }
-    return guiders._guiders[id] || null;
-  };
-
-  guiders.getCurrentGuider = function() {
-    return guiders._guiders[guiders._currentGuiderID] || null;
   };
 
   guiders.hideAll = function(omitHidingOverlay, next) {
