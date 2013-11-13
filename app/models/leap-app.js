@@ -212,30 +212,37 @@ var LeapApp = BaseModel.extend({
     }
   },
 
-  getShortDescription:  function() {
+  getShortDescription: function() {
+    if (this.get('tagline')) {
+      return this.get('tagline');
+    }
+
     var fullDescription = this.get('description');
 
     if (typeof fullDescription === 'undefined') {
       return '';
     }
 
-    var isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\.)\s*/);
+    // Strip tags
+    fullDescription = fullDescription.replace(/(<([^>]+)>)/ig,"");
+
+    var isSentence = fullDescription.match(/(\. |\n)+(\w[^\.!\n]+ is \w[^\.!]+?[\.!])\s*/);
     if (isSentence && (isSentence[2].length < 60)) {
       // Two sentences
-      isSentence = fullDescription.match(/(\n|\. +)([^\.\n]+ is [^\.]+?\. +[^\.\n]+?\.)/);
+      isSentence = fullDescription.match(/(\. |\n)+(\w[^\.!\n]+ is \w[^\.!]+?[\.!] +\w[^\.!\n]+?[\.!])/);
     }
 
-    var firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\.)\s*/);
+    var firstSentence = fullDescription.match(/(\. |\n)+(\w[^\.!\n]+?[\.!])\s*/);
     if (firstSentence && (firstSentence[2].length < 60)) {
       // Two sentences
-      firstSentence = fullDescription.match(/(\n|\. +)([^\.\n]+?\. +[^\.\n]+?\.)/);
+      firstSentence = fullDescription.match(/(\. |\n)+(\w[^\.!\n]+?\. +\w[^\.!\n]+?[\.!])/);
     }
 
     var sentence = (isSentence && isSentence[2]) || (firstSentence && firstSentence[2]);
 
-    var shortDescription = sentence || fullDescription.split('#').join('').replace(/\n+/, ' ');
+    var shortDescription = sentence || fullDescription.split('#').join('').split('\n')[0];
 
-    return $.trim(shortDescription);
+    return $.trim(shortDescription.split('\n').join(' '));
   },
 
   downloadIcon: function(cb) {
