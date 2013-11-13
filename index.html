@@ -55,6 +55,8 @@
       window.document.title = global.uiGlobals.appName;
       require('./app/utils/logging.js');
 
+      nwGui.App.setCrashDumpDir(require('./config/config.js').CrashReportingDirs[require('os').platform()]);
+
       var bootstrapScriptPath = process.env.BOOTSTRAP_SCRIPT_PATH || './app/airspace.js'; // a hook primarily used for testing
       var airspace = require(bootstrapScriptPath);
       console.log('Starting ' + uiGlobals.appName + ' v' + uiGlobals.appVersion + ' on node-webkit v' + process.versions['node-webkit']);
