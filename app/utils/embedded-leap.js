@@ -13,7 +13,7 @@ var promise;
 // Returns embedded type if type matches config.EmbeddedLeapTypes (e.g. pongo, hops)
 // Returns undefined if no embedded device
 function getEmbeddedDevice() {
-  if (typeof uiGlobals.embeddedDevice !== 'undefined') {
+  if (config.EmbeddedLeapTypes.indexof(uiGlobals.embeddedDevice) !== -1) {
     return uiGlobals.embeddedDevice;
   }
 
