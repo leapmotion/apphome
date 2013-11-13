@@ -35,6 +35,16 @@ var Tile = BaseView.extend({
       this._showOrHideIcon();
     }, this);
 
+    this.listenTo(app, 'change:description', function() {
+      var description = app.getShortDescription();
+      this.$('.description').text(description);
+    }, this);
+
+    this.listenTo(app, 'change:tagline', function() {
+      var description = app.getShortDescription();
+      this.$('.description').text(description);
+    }, this);
+
     this.listenTo(app, 'change:name', function() {
       this.$('.name').text(app.get('name'));
     }, this);
