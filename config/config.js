@@ -41,7 +41,7 @@ var config = {
     columnsPerSlide: 4,
     rowsPerSlide: 3,
     slideWidth: 1410,
-    slideHeight: 702,
+    slideHeight: 624,
     slidePeekDistance: 0,
     nextSlideHeight: 624,
     nextSlideOffset: 16,
