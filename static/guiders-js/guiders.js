@@ -417,10 +417,6 @@ window.guiders = (function($) {
   };
 
   guiders._updatePositionOnResize = function() {
-    if (!guiders.getCurrentGuider()) {
-      return;
-    }
-
     // Change the bubble position after browser gets resized
     var _resizing;
     $(window).resize(function() {
