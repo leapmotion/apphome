@@ -125,7 +125,14 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
       .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
-      .after($('<span>').text(i18n.translate('Why is this required?')));
+      .after($('<span>').addClass('birthday-why').text(i18n.translate('Why is this required?')))
+      .after($('<div>').addClass('birthday-explanation').html(i18n.translate("Providing your birthday helps make sure you get the right Leap Motion experience for your age.") + '<br /><br />' + i18n.translate("Don't worry.  We will not share this information.")));
+
+    $contents.find('.birthday-why').hover(function mousein() {
+      $contents.find('.birthday-explanation').show();
+    }, function mouseout() {
+      $contents.find('.birthday-explanation').hide();
+    });
 
     $contents.find('.auth-form form div .auth-field, #user_airspace_tos_accepted, #user_born_at_month, #user_born_at_day, #user_born_at_year')
       .attr('required', 'required');
