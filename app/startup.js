@@ -153,6 +153,14 @@ function prerunAsyncKickoff(cb) {
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
+
+  if (uiGlobals.embeddedDevice) {
+    // Creates manifest promise for future use
+    // Manifest is fetched by unzipping the prebundled apps
+    // Contains information on HP prebundled applications
+    frozenApps.prebundledManifestPromise();
+  }
+
   cb && cb(null);
 }
 
@@ -190,10 +198,22 @@ function handleLocalTiles(cb) {
         }, config.FsScanIntervalMs);
       }, 6000);
     } else {
-      console.warn('Manifest missing, skipping local tiles.');
+      console.warn('Local manifest missing, skipping local tiles.');
     }
   });
   cb && cb(null);
+}
+
+function handlePrebundledApps(cb) {
+  if (uiGlobals.embeddedDevice) {
+    frozenApps.prebundledManifestPromise().done(function(manifest) {
+      if (manifest) {
+        api.parsePrebundledManifest(manifest, cb);
+      } else {
+        console.warn('Prebundled manifest missing, skipping prebundled apps.');
+      }
+    });
+  }
 }
 
 function authorize(cb) {

@@ -7,7 +7,27 @@ var config = require('../../config/config.js');
 var db = require('./db.js');
 var extract = require('./extract.js');
 
-function getFrozenApps() {
+
+var _manifestPromise;
+function prebundledManifestPromise() {
+  if (_manifestPromise) {
+    return _manifestPromise;
+  }
+  var defer = $.Deferred();
+  _manifestPromise = defer.promise();
+
+  _getFrozenApps(function(err, manifest) {
+    if (err) {
+      defer.reject(err);
+    } else {
+      defer.resolve(manifest);
+    }
+  });
+
+  return _manifestPromise;
+}
+
+function _getFrozenApps(cb) {
   if (db.getItem(config.PrebundlingComplete)) {
     console.log('Prebundled apps already extracted.');
     return;
@@ -27,19 +47,23 @@ function getFrozenApps() {
     _expandFreezeDriedApps(freezeDriedBundlePath, function(err, manifest) {
       if (err) {
         console.error('Failed to expand prebundle. ' + (err.stack || err));
+        cb && cb('Failed to expand prebundle.');
       } else if (manifest) {
         try {
-          api.parsePrebundledManifest(manifest);
           db.setItem(config.PrebundlingComplete, true);
+          cb && cb(null, manifest);
         } catch (installErr) {
           console.error('Failed to initialize prebundled apps. ' + (installErr.stack || installErr));
+          cb && cb('Failed to initialize prebundled apps.');
         }
       } else {
         console.error('Found prebundle but manifest is missing.');
+        cb && cb('Found prebundle but manifest is missing.');
       }
     });
   } else {
     console.log('No prebundle on this system.');
+    cb && cb('No prebundle on this system.');
   }
 }
 
@@ -72,4 +96,4 @@ function _expandFreezeDriedApps(bundlePath, cb) {
   });
 }
 
-module.exports.get = getFrozenApps;
+module.exports.prebundledManifestPromise = prebundledManifestPromise;
