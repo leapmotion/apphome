@@ -42,7 +42,7 @@ var config = {
     rowsPerSlide: 3,
     slideWidth: 1410,
     slideHeight: 624,
-    slidePeekDistance: 0,
+    slidePeekDistance: -50,
     nextSlideHeight: 624,
     nextSlideOffset: 16,
     minSlidePadding: 200,
