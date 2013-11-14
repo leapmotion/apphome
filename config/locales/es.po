@@ -420,3 +420,33 @@ msgstr "Haga clic para reinstalar"
 
 msgid "set install directory..."
 msgstr "Establezca el directorio de instalación..."
+
+msgid "i agree to the %1$s"
+msgstr "Acepto los %1$s"
+
+msgid "airspace terms of service"
+msgstr "Términos de servicio de Airspace"
+
+msgid "day"
+msgstr "Día"
+
+msgid "month"
+msgstr "Mes"
+
+msgid "year"
+msgstr "Año"
+
+msgid "email has already been taken"
+msgstr "La dirección de correo electrónico ya está cogida"
+
+msgid "sign up to continue"
+msgstr "Regístrese para continuar"
+
+msgid "why is this required?"
+msgstr "¿Por qué es esto necesario?"
+
+msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
+msgstr "Compartir su fecha de nacimiento ayuda a que nos aseguremos de que obtienes la experiencia Leap Motion correcta para tu edad."
+
+msgid "don't worry. we will not share this information."
+msgstr "No te preocupes. No compartiremos esta información."
