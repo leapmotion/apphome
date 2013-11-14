@@ -18,12 +18,12 @@ for filename in filter(lambda f: 'po' in f, os.listdir('.')):
         lines = f.readlines()
 
     for l in filter(lambda l: l.startswith('msgid'), lines):
-        languages_for_string[TRANSLATION_KEY.findall(l)[0]].append(filename.split('.')[0])
+        languages_for_string[TRANSLATION_KEY.findall(l.lower())[0]].append(filename.split('.')[0])
 
 
 lines = subprocess.check_output('find ../../app -type f | xargs grep -i i18n\.translate', shell=True)
 for l in lines.split('\n'):
-    for string_to_translate in TRANSLATION_STRING.findall(l):
+    for string_to_translate in TRANSLATION_STRING.findall(l.lower()):
         if not string_to_translate in languages_for_string:
             print '"' + string_to_translate + '" needs translation to:', ' '.join(supported_languages)
         else:
