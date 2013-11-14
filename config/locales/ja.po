@@ -420,3 +420,33 @@ msgstr "クリックして再インストール"
 
 msgid "set install directory..."
 msgstr "インストール先を設定して下さい..."
+
+msgid "i agree to the %1$s"
+msgstr "私は %1$s に同意します"
+
+msgid "airspace terms of service"
+msgstr "Airspace 利用規約"
+
+msgid "day"
+msgstr "日"
+
+msgid "month"
+msgstr "月"
+
+msgid "year"
+msgstr "年"
+
+msgid "email has already been taken"
+msgstr "メールアドレスは既に使用されています"
+
+msgid "sign up to continue"
+msgstr "登録を継続する"
+
+msgid "why is this required?"
+msgstr "なぜこれが必要なのでしょう?"
+
+msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
+msgstr "生年月日の情報により、確実にあなたの年齢に合ったLeap Motion 体験ができるようになります。"
+
+msgid "don't worry. we will not share this information."
+msgstr "この情報を公表することはありませんので、ご安心ください。"

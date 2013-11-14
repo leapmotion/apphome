@@ -420,3 +420,33 @@ msgstr "单击以重新安装"
 
 msgid "set install directory..."
 msgstr "设置安装目录..."
+
+msgid "i agree to the %1$s"
+msgstr "我同意这份 %1$s"
+
+msgid "airspace terms of service"
+msgstr "Airspace 服务条款"
+
+msgid "day"
+msgstr "日"
+
+msgid "month"
+msgstr "月"
+
+msgid "year"
+msgstr "年"
+
+msgid "email has already been taken"
+msgstr "邮件已经被接受"
+
+msgid "sign up to continue"
+msgstr "注册以继续"
+
+msgid "why is this required?"
+msgstr "为何需要这些？"
+
+msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
+msgstr "提供您的出生日期以确保使您获得与您的年龄相适应的Leap Motion 使用体验。"
+
+msgid "don't worry. we will not share this information."
+msgstr "请勿担心，我们不会泄露该信息。"
