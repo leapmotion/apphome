@@ -215,7 +215,7 @@ module.exports = BaseView.extend({
     $win.resize(function() {
       var widthRatio = ($win.width() - config.Layout.minSlidePadding) / config.Layout.slideWidth;
       var heightRatio = ($win.height() - config.Layout.minSlidePadding) / config.Layout.slideHeight;
-      uiGlobals.scaling = Math.min(1, widthRatio, heightRatio);
+      uiGlobals.scaling = Math.min(1.2, widthRatio, heightRatio);
       this.myAppsCarousel.rescale();
     }.bind(this));
   },

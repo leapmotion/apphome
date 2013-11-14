@@ -60,7 +60,7 @@ window.guiders = (function($) {
     "</div>"
   ].join("");
 
-  guiders._arrowSize = 18; // This is the arrow's width and height.
+  guiders._arrowSize = 42; // This is the arrow's width and height.
   guiders._backButtonTitle = "Back";
   guiders._buttonAttributes = {"href": "javascript:void(0);"};
   guiders._buttonClassName = "guiders_button"; // Override this if you use a different class name for your buttons.
@@ -174,8 +174,15 @@ window.guiders = (function($) {
 
     var attachTo = $(myGuider.attachTo + ':first');
 
-    var myHeight = myGuider.elem.innerHeight();
-    var myWidth = myGuider.elem.innerWidth();
+    var myHeight = myGuider.elem.innerHeight() * global.uiGlobals.scaling;
+    var myWidth = myGuider.elem.innerWidth() * global.uiGlobals.scaling;
+
+    myGuider.elem.css({
+      "-webkit-transform": "scale(" + global.uiGlobals.scaling + ")",
+      "-webkit-transform-origin": "0 0"
+    });
+
+    myGuider.s = attachTo.hasClass('tile') ? global.uiGlobals.scaling : 1;
 
     if (myGuider.position === 0 || attachTo.length === 0) {
       var fixedOrAbsolute = "fixed";
@@ -193,7 +200,6 @@ window.guiders = (function($) {
     var top = base.top;
     var left = base.left;
 
-
     // topMarginOfBody corrects positioning if body has a top margin set on it.
     var topMarginOfBody = $("body").outerHeight(true) - $("body").outerHeight(false);
     top -= topMarginOfBody;
@@ -205,9 +211,9 @@ window.guiders = (function($) {
       myGuider.position = guiders._offsetNameMapping[myGuider.position];
     }
 
-    var attachToHeight = attachTo.innerHeight();
-    var attachToWidth = attachTo.innerWidth();
-    var bufferOffset = 0.9 * guiders._arrowSize;
+    var attachToHeight = attachTo.innerHeight() * myGuider.s;
+    var attachToWidth = attachTo.innerWidth() * myGuider.s;
+    var bufferOffset = 0.4 * guiders._arrowSize * myGuider.s;
 
     // offsetMap follows the form: [height, width]
     var offsetMap = {
@@ -295,8 +301,8 @@ window.guiders = (function($) {
       var $highlight = $('.guiders_highlight'),
         highlight_top = $highlight.offset().top,
         highlight_left = $highlight.offset().left,
-        highlight_bottom = highlight_top + $highlight.height(),
-        highlight_right = highlight_left + $highlight.width(),
+        highlight_bottom = highlight_top + $highlight.height() * myGuider.s,
+        highlight_right = highlight_left + $highlight.width() * myGuider.s,
         window_width = $(window).width(),
         window_height = $(window).height();
 
@@ -359,6 +365,7 @@ window.guiders = (function($) {
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
     var arrowOffset = guiders._arrowSize / 2;
+
     var positionMap = {
       1: ["right", arrowOffset],
       2: ["top", arrowOffset],
@@ -398,7 +405,22 @@ window.guiders = (function($) {
     }
   };
 
+  guiders.get = function(id) {
+    if (typeof guiders._guiders[id] === "undefined") {
+      return null;
+    }
+    return guiders._guiders[id] || null;
+  };
+
+  guiders.getCurrentGuider = function() {
+    return guiders._guiders[guiders._currentGuiderID] || null;
+  };
+
   guiders._updatePositionOnResize = function() {
+    if (!guiders.getCurrentGuider()) {
+      return;
+    }
+
     // Change the bubble position after browser gets resized
     var _resizing;
     $(window).resize(function() {
@@ -500,17 +522,6 @@ window.guiders = (function($) {
     return guiders;
   };
 
-  guiders.get = function(id) {
-    if (typeof guiders._guiders[id] === "undefined") {
-      return null;
-    }
-    return guiders._guiders[id] || null;
-  };
-
-  guiders.getCurrentGuider = function() {
-    return guiders._guiders[guiders._currentGuiderID] || null;
-  };
-
   guiders.hideAll = function(omitHidingOverlay, next) {
     next = next || false;
 
@@ -592,6 +603,7 @@ window.guiders = (function($) {
   guiders.reposition = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     guiders._attach(currentGuider);
+    guiders._showOverlay(currentGuider);
   };
 
   guiders.scrollToCurrent = function() {
