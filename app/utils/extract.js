@@ -161,7 +161,8 @@ function extractAppDmg(src, dest, cb) {
     }
 
     function unmount(callback) {
-      exec('hdiutil unmount -force ' + shell.escape(mountPoint), callback);
+      console.log('Unmounting and ejecting dmg at ' + mountPoint);
+      exec('diskutil eject ' + shell.escape(mountPoint), callback);
     }
 
     try {
