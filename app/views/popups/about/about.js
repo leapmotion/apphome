@@ -10,7 +10,7 @@ module.exports = BaseView.extend({
     title: i18n.translate('About Airspace Home'),
     width: 300,
     height: 160,
-    'always-on-top': true,
+    'always-on-top': false,
     show: false
   },
 
