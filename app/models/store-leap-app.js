@@ -36,7 +36,7 @@ module.exports = LeapApp.extend({
 
   install: function(cb) {
     this.trigger('installstart');
-    if (this.isUpdatable()) {
+    if (this.hasUpdate()) {
       mixpanel.trackAppUpgrade();
       console.log('Upgrading: ' + this.get('name'));
 
@@ -51,6 +51,7 @@ module.exports = LeapApp.extend({
         if (!err) {
           var newAppJson = this.get('availableUpdate').toJSON();
           delete newAppJson.state;
+          console.log('Update to version ' + newAppJson.versionId + ' successful');
           this.set(newAppJson);
           this.set('availableUpdate', null);
         }
