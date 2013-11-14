@@ -5,6 +5,7 @@ var os = require('os');
 var path = require('path');
 var plist = require('plist');
 var unzip = require('unzip');
+var async = require('async');
 
 var shell = require('./shell.js');
 
@@ -161,7 +162,15 @@ function extractAppDmg(src, dest, cb) {
     }
 
     function unmount(callback) {
-      exec('hdiutil unmount -force ' + shell.escape(mountPoint), callback);
+      console.log('Unmounting DMG at ' + mountPoint);
+      async.series([
+        function(cb) {
+          exec('hdiutil unmount -force ' + shell.escape(mountPoint), cb);
+        },
+        function(cb) {
+          exec('diskutil eject ' + shell.escape(mountPoint), callback);
+        },
+      ], callback);
     }
 
     try {
