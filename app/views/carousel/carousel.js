@@ -119,7 +119,7 @@ var CarouselView = BaseView.extend({
     }, this);
 
     this.listenTo(collection, 'change:state', function(leapApp) {
-      if (leapApp.get('state') === LeapApp.States.Connecting ||
+      if (!uiGlobals.inTutorial && leapApp.get('state') === LeapApp.States.Connecting ||
           (leapApp.isLocalApp() && leapApp.previous('state') === LeapApp.States.Uninstalled)) {
         this.switchToSlide(this._whichSlide(leapApp));
       }

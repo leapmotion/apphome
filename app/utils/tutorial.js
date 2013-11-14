@@ -6,6 +6,8 @@ var config = require('../../config/config.js');
 var mixpanel = require('./mixpanel.js');
 
 function makeGuides() {
+  uiGlobals.inTutorial = true;
+
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Take a Quick Tour')), classString: 'primary', onclick: guiders.next}],
     classString: 'primary',
@@ -14,6 +16,7 @@ function makeGuides() {
     next: 'g_orientation',
     title: String(i18n.translate('Welcome to Airspace Home!')),
     xButton: true,
+    onClose: onClose
   }).show();
 
   guiders.createGuider({
@@ -24,7 +27,8 @@ function makeGuides() {
     title: String(i18n.translate('Learn About the Controller')),
     attachTo: '#orientation',
     position: 6,
-    highlight: '#orientation'
+    highlight: '#orientation',
+    onClose: onClose
   });
 
   guiders.createGuider({
@@ -35,7 +39,8 @@ function makeGuides() {
     title: String(i18n.translate('Try out your new apps')),
     attachTo: '.tile.store', // picks the first one
     position: 6,
-    highlight: '.tile.store'
+    highlight: '.tile.store',
+    onClose: onClose
   });
 
   guiders.createGuider({
@@ -45,8 +50,18 @@ function makeGuides() {
     title: String(i18n.translate('Discover new apps')),
     attachTo: '#airspace-store',
     position: 3,
-    highlight: '#airspace-store'
+    highlight: '#airspace-store',
+    onClose: onClose,
+    onHide: function() {
+      mixpanel.trackEvent('Tutorial Finished', null, 'OOBE');
+      uiGlobals.inTutorial = false;
+    }
   });
+}
+
+function onClose() {
+  mixpanel.trackEvent('Tutorial Closed', null, 'OOBE');
+  uiGlobals.inTutorial = false;
 }
 
 var _launchOrientation =  function() {
