@@ -98,6 +98,12 @@ var config = {
     darwin: '/Applications/Leap Motion Orientation.app'
   },
 
+  CrashReportingDirs: {
+    win32:  'C:\\Users\\All Users\\Leap Motion',
+    darwin: process.env.HOME + '/Library/Application Support/Leap Motion',
+    linux:  process.env.HOME + '/.config/Leap Motion'
+  },
+
   UserHomeDirs: {
     win32: process.env.USERPROFILE,
     darwin: process.env.HOME,
