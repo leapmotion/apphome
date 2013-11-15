@@ -46,6 +46,7 @@ function run() {
     setupMainWindow,
     doFirstRun,
     handleLocalTiles,
+    handlePrebundledApps,
     authorize,
     startMainApp,
     cleanup
