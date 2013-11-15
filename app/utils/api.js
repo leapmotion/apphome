@@ -388,8 +388,11 @@ function parsePrebundledManifest(manifest, cb) {
   manifest.forEach(function (appJson) {
     appJson.noAutoInstall = true;
     if (!uiGlobals.myApps.get(appJson.app_id)) {
-      var app = handleAppJson(appJson);
+      var app = createAppModel(appJson);
       if (app) {
+        app.set('firstSeenAt', (new Date()).getTime());
+        uiGlobals.myApps.add(app);
+        
         app.set('state', LeapApp.States.Waiting);
         installationFunctions.push(function(callback) {
           console.log('Installing prebundled app: ' + app.get('name'));
@@ -397,11 +400,15 @@ function parsePrebundledManifest(manifest, cb) {
             if (err) {
               console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
             } else {
+              app.set('state', LeapApp.States.Ready);
+              getAppDetails(app);
               subscribeToAppChannel(app.get('appId'));
             }
             callback(null);
           });
         });
+      } else {
+        console.log('App model not created.  Skipping ' + appJson.name);
       }
     }
   });
