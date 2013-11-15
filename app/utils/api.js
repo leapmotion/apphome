@@ -62,7 +62,9 @@ function createAppModel(appJson) {
   var cleanAppJson = cleanUpAppJson(appJson);
   if (cleanAppJson.platform === os.platform()) {
     var StoreLeapApp = require('../models/store-leap-app.js');
-    return new StoreLeapApp(cleanAppJson);
+    var newApp = new StoreLeapApp(cleanAppJson);
+    newApp.set('firstSeenAt', (new Date()).getTime());
+    return newApp;
   } else {
     return null;
   }
@@ -407,7 +409,6 @@ function parsePrebundledManifest(manifest, cb) {
     if (!uiGlobals.myApps.get(appJson.app_id)) {
       var app = createAppModel(appJson);
       if (app) {
-        app.set('firstSeenAt', (new Date()).getTime());
         uiGlobals.myApps.add(app);
 
         app.set('state', LeapApp.States.Waiting);
@@ -417,7 +418,6 @@ function parsePrebundledManifest(manifest, cb) {
             if (err) {
               console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
             } else {
-              app.set('state', LeapApp.States.Ready);
               getAppDetails(app);
               subscribeToAppChannel(app.get('appId'));
             }
