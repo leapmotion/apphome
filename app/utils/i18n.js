@@ -115,8 +115,6 @@ function poFileForLocale(locale) {
 
 var i18n;
 function initialize(cb) {
-  var missingStringsLogFile = path.join(__dirname, '../../config/locales', 'to_translate.txt')
-  fs.writeFileSync(missingStringsLogFile, '');
   getLocale(function(err, locale) {
     if (err) {
       return cb && cb(err);
@@ -131,9 +129,6 @@ function initialize(cb) {
     i18n = new Jed({
       domain: locale,
       missing_key_callback: function(key) {
-        var keys = fs.readFileSync(missingStringsLogFile).toString().split('\n');
-        keys.push(key);
-        fs.writeFileSync(missingStringsLogFile, _.uniq(keys.sort(), true).join('\n'));
         console.warn('Missing translation key: "' + key + '" for locale: ' + locale);
       },
       locale_data: localeData
