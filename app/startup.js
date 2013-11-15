@@ -46,7 +46,6 @@ function run() {
     setupMainWindow,
     doFirstRun,
     handleLocalTiles,
-    handlePrebundledApps,
     authorize,
     startMainApp,
     cleanup
@@ -155,12 +154,10 @@ function prerunAsyncKickoff(cb) {
   // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
 
-  if (uiGlobals.embeddedDevice) {
-    // Creates manifest promise for future use
-    // Manifest is fetched by unzipping the prebundled apps
-    // Contains information on HP prebundled applications
-    frozenApps.prebundledManifestPromise();
-  }
+  // Creates manifest promise for future use
+  // Manifest is fetched by unzipping the prebundled apps
+  // Contains information on HP prebundled applications
+  frozenApps.prebundledManifestPromise();
 
   cb && cb(null);
 }
@@ -205,18 +202,6 @@ function handleLocalTiles(cb) {
   cb && cb(null);
 }
 
-function handlePrebundledApps(cb) {
-  if (uiGlobals.embeddedDevice) {
-    frozenApps.prebundledManifestPromise().done(function(manifest) {
-      if (manifest) {
-        api.parsePrebundledManifest(manifest, cb);
-      } else {
-        console.warn('Prebundled manifest missing, skipping prebundled apps.');
-      }
-    });
-  }
-}
-
 function authorize(cb) {
   authorizationUtil.withAuthorization(function(err) {
     if (err) {
@@ -235,9 +220,28 @@ function startMainApp(cb) {
     windowChrome.paintMainPage();
   });
 
-  api.connectToStoreServer(); // Put callback in here?
+  // Completely install our prebundled apps before connecting to the store server
+  handlePrebundledApps(api.connectToStoreServer);
 
   cb && cb(null);
+}
+
+function handlePrebundledApps(cb) {
+  console.log('Installing pre-bundled apps');
+  if (uiGlobals.embeddedDevice) {
+    frozenApps.prebundledManifestPromise().done(function(manifest) {
+      if (manifest) {
+        api.parsePrebundledManifest(manifest, cb);
+      } else {
+        console.warn('Prebundled manifest missing, skipping prebundled apps.');
+      }
+    });
+    
+    frozenApps.prebundledManifestPromise().fail(function(err) {
+      console.log('Skipping prebundled apps: ' + err);
+      cb && cb(null);
+    });
+  }
 }
 
 function cleanup(cb) {
