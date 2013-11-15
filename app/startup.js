@@ -157,7 +157,9 @@ function prerunAsyncKickoff(cb) {
   // Creates manifest promise for future use
   // Manifest is fetched by unzipping the prebundled apps
   // Contains information on HP prebundled applications
-  frozenApps.prebundledManifestPromise();
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice){
+    frozenApps.prebundledManifestPromise();
+  }
 
   cb && cb(null);
 }
@@ -207,8 +209,13 @@ function authorize(cb) {
     if (err) {
       setTimeout(authorize, 50); // Keep on trying...
     } else {
-      api.getUserInformation(function() {
-        cb && cb(null);
+
+      api.getUserInformation(function(err) {
+        if (err) {
+          cb && cb(err);
+        } else {
+          api.sendDeviceData(cb);
+        }
       });
     }
   });
@@ -218,12 +225,14 @@ function startMainApp(cb) {
   $('body').removeClass('startup');
   $('body').addClass('loading');
 
-  _.defer(function() {
-    windowChrome.paintMainPage();
-  });
+  windowChrome.paintMainPage();
 
   // Completely install our prebundled apps before connecting to the store server
-  handlePrebundledApps(api.connectToStoreServer);
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
+    handlePrebundledApps(api.connectToStoreServer);
+  } else {
+    api.connectToStoreServer();
+  }
 
   cb && cb(null);
 }
@@ -250,15 +259,7 @@ function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-  async.parallel([
-    api.sendDeviceData,
-    api.sendAppVersionData
-  ], function(err, result) {
-    if (err) {
-      // We don't actually care if either of these calls throw errors.
-      console.warn(err);
-    }
-  });
+  api.sendAppVersionData()
 
   cb && cb(null);
 }
