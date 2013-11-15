@@ -37,7 +37,7 @@ function getEmbeddedDevice() {
           console.error('Unable to read Device type data');
         } else {
           console.log('Device type: ' + devicetype);
-          if (config.EmbeddedLeapTypes.indexOf(devicetype)) {
+          if (config.EmbeddedLeapTypes.indexOf(devicetype) !== -1) {
             embeddedDevice = devicetype;
           }
         }

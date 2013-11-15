@@ -62,7 +62,9 @@ function createAppModel(appJson) {
   var cleanAppJson = cleanUpAppJson(appJson);
   if (cleanAppJson.platform === os.platform()) {
     var StoreLeapApp = require('../models/store-leap-app.js');
-    return new StoreLeapApp(cleanAppJson);
+    var newApp = new StoreLeapApp(cleanAppJson);
+    newApp.set('firstSeenAt', (new Date()).getTime());
+    return newApp;
   } else {
     return null;
   }
@@ -147,7 +149,7 @@ function reconnectAfterError(err) {
   }
 }
 
-function connectToStoreServer() {
+function _getStoreManifest(cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -162,32 +164,49 @@ function connectToStoreServer() {
         } else if (messages.errors) {
           reconnectAfterError(new Error(messages.errors));
         } else {
-          console.log('Connected to store server.');
-          $('body').removeClass('loading');
-          messages.forEach(function(message) {
-            if (message.auth_id && message.secret_token) {
-              drm.writeXml(message.auth_id, message.secret_token);
-            }
-
-            if (message.user_id) {
-              uiGlobals.username = message.username;
-              uiGlobals.email = message.email;
-              uiGlobals.user_id = message.user_id;
-              subscribeToUserChannel(message.user_id);
-              subscribeToUserNotifications(message.user_id);
-              uiGlobals.trigger(uiGlobals.Event.SignIn);
-            } else {
-              var app = handleAppJson(message);
-              if (app) {
-                subscribeToAppChannel(app.get('appId'));
-              }
-            }
-          });
-
-          installManager.showAppropriateDownloadControl();
+          cb(messages);
         }
       });
     }
+  });
+}
+
+function _setGlobalUserInformation(user) {
+  uiGlobals.username = user.username;
+  uiGlobals.email = user.email;
+  uiGlobals.user_id = user.user_id;
+  subscribeToUserChannel(user.user_id);
+  subscribeToUserNotifications(user.user_id);
+  uiGlobals.trigger(uiGlobals.Event.SignIn);
+}
+
+function getUserInformation(cb) {
+  _getStoreManifest(function(manifest) {
+    _setGlobalUserInformation(manifest.shift());
+    cb && cb(null);
+  });
+}
+
+function connectToStoreServer() {
+  _getStoreManifest(function(messages) {
+    console.log('Connected to store server.');
+    $('body').removeClass('loading');
+    messages.forEach(function(message) {
+      if (message.auth_id && message.secret_token) {
+        drm.writeXml(message.auth_id, message.secret_token);
+      }
+
+      if (message.user_id) {
+        _setGlobalUserInformation(message);
+      } else {
+        var app = handleAppJson(message);
+        if (app) {
+          subscribeToAppChannel(app.get('appId'));
+        }
+      }
+    });
+
+    installManager.showAppropriateDownloadControl();
   });
 }
 
@@ -388,8 +407,10 @@ function parsePrebundledManifest(manifest, cb) {
   manifest.forEach(function (appJson) {
     appJson.noAutoInstall = true;
     if (!uiGlobals.myApps.get(appJson.app_id)) {
-      var app = handleAppJson(appJson);
+      var app = createAppModel(appJson);
       if (app) {
+        uiGlobals.myApps.add(app);
+
         app.set('state', LeapApp.States.Waiting);
         installationFunctions.push(function(callback) {
           console.log('Installing prebundled app: ' + app.get('name'));
@@ -397,11 +418,14 @@ function parsePrebundledManifest(manifest, cb) {
             if (err) {
               console.error('Unable to initialize prebundled app ' + JSON.stringify(appJson) + ': ' + (err.stack || err));
             } else {
+              getAppDetails(app);
               subscribeToAppChannel(app.get('appId'));
             }
             callback(null);
           });
         });
+      } else {
+        console.log('App model not created.  Skipping ' + appJson.name);
       }
     }
   });
@@ -413,6 +437,7 @@ function parsePrebundledManifest(manifest, cb) {
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
+module.exports.getUserInformation = getUserInformation;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.getAppDetails = getAppDetails;
 module.exports.sendDeviceData = sendDeviceData;

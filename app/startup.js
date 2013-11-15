@@ -153,6 +153,14 @@ function prerunAsyncKickoff(cb) {
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
   LocalLeapApp.localManifestPromise();
+
+  // Creates manifest promise for future use
+  // Manifest is fetched by unzipping the prebundled apps
+  // Contains information on HP prebundled applications
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice){
+    frozenApps.prebundledManifestPromise();
+  }
+
   cb && cb(null);
 }
 
@@ -190,7 +198,7 @@ function handleLocalTiles(cb) {
         }, config.FsScanIntervalMs);
       }, 6000);
     } else {
-      console.warn('Manifest missing, skipping local tiles.');
+      console.warn('Local manifest missing, skipping local tiles.');
     }
   });
   cb && cb(null);
@@ -201,7 +209,14 @@ function authorize(cb) {
     if (err) {
       setTimeout(authorize, 50); // Keep on trying...
     } else {
-      cb && cb(null);
+
+      api.getUserInformation(function(err) {
+        if (err) {
+          cb && cb(err);
+        } else {
+          api.sendDeviceData(cb);
+        }
+      });
     }
   });
 }
@@ -210,28 +225,41 @@ function startMainApp(cb) {
   $('body').removeClass('startup');
   $('body').addClass('loading');
 
-  _.defer(function() {
-    windowChrome.paintMainPage();
-  });
+  windowChrome.paintMainPage();
 
-  api.connectToStoreServer(); // Put callback in here?
+  // Completely install our prebundled apps before connecting to the store server
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
+    handlePrebundledApps(api.connectToStoreServer);
+  } else {
+    api.connectToStoreServer();
+  }
 
   cb && cb(null);
+}
+
+function handlePrebundledApps(cb) {
+  console.log('Installing pre-bundled apps');
+  if (uiGlobals.embeddedDevice) {
+    frozenApps.prebundledManifestPromise().done(function(manifest) {
+      if (manifest) {
+        api.parsePrebundledManifest(manifest, cb);
+      } else {
+        console.warn('Prebundled manifest missing, skipping prebundled apps.');
+      }
+    });
+
+    frozenApps.prebundledManifestPromise().fail(function(err) {
+      console.log('Skipping prebundled apps: ' + err);
+      cb && cb(null);
+    });
+  }
 }
 
 function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-  async.parallel([
-    api.sendDeviceData,
-    api.sendAppVersionData
-  ], function(err, result) {
-    if (err) {
-      // We don't actually care if either of these calls throw errors.
-      console.warn(err);
-    }
-  });
+  api.sendAppVersionData()
 
   cb && cb(null);
 }
