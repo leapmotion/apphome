@@ -147,7 +147,7 @@ function reconnectAfterError(err) {
   }
 }
 
-function connectToStoreServer() {
+function _getStoreManifest(cb) {
   reconnectionTimeoutId = null;
 
   oauth.getAccessToken(function(err, accessToken) {
@@ -162,32 +162,51 @@ function connectToStoreServer() {
         } else if (messages.errors) {
           reconnectAfterError(new Error(messages.errors));
         } else {
-          console.log('Connected to store server.');
-          $('body').removeClass('loading');
-          messages.forEach(function(message) {
-            if (message.auth_id && message.secret_token) {
-              drm.writeXml(message.auth_id, message.secret_token);
-            }
-
-            if (message.user_id) {
-              uiGlobals.username = message.username;
-              uiGlobals.email = message.email;
-              uiGlobals.user_id = message.user_id;
-              subscribeToUserChannel(message.user_id);
-              subscribeToUserNotifications(message.user_id);
-              uiGlobals.trigger(uiGlobals.Event.SignIn);
-            } else {
-              var app = handleAppJson(message);
-              if (app) {
-                subscribeToAppChannel(app.get('appId'));
-              }
-            }
-          });
-
-          installManager.showAppropriateDownloadControl();
+          cb(messages);
         }
       });
     }
+  });
+}
+
+function getUserInformation(cb) {
+  _getStoreManifest(function(manifest) {
+    var user = manifest.shift();
+        uiGlobals.username = user.username;
+        uiGlobals.email = user.email;
+        uiGlobals.user_id = user.user_id;
+        subscribeToUserChannel(user.user_id);
+        subscribeToUserNotifications(user.user_id);
+        uiGlobals.trigger(uiGlobals.Event.SignIn);
+        cb && cb(null);
+  });
+}
+
+function connectToStoreServer() {
+  _getStoreManifest(function(messages) {
+    console.log('Connected to store server.');
+    $('body').removeClass('loading');
+    messages.forEach(function(message) {
+      if (message.auth_id && message.secret_token) {
+        drm.writeXml(message.auth_id, message.secret_token);
+      }
+
+      if (message.user_id) {
+        uiGlobals.username = message.username;
+        uiGlobals.email = message.email;
+        uiGlobals.user_id = message.user_id;
+        subscribeToUserChannel(message.user_id);
+        subscribeToUserNotifications(message.user_id);
+        uiGlobals.trigger(uiGlobals.Event.SignIn);
+      } else {
+        var app = handleAppJson(message);
+        if (app) {
+          subscribeToAppChannel(app.get('appId'));
+        }
+      }
+    });
+
+    installManager.showAppropriateDownloadControl();
   });
 }
 
@@ -392,7 +411,7 @@ function parsePrebundledManifest(manifest, cb) {
       if (app) {
         app.set('firstSeenAt', (new Date()).getTime());
         uiGlobals.myApps.add(app);
-        
+
         app.set('state', LeapApp.States.Waiting);
         installationFunctions.push(function(callback) {
           console.log('Installing prebundled app: ' + app.get('name'));
@@ -420,6 +439,7 @@ function parsePrebundledManifest(manifest, cb) {
 }
 
 module.exports.connectToStoreServer = connectToStoreServer;
+module.exports.getUserInformation = getUserInformation;
 module.exports.getLocalAppManifest = getLocalAppManifest;
 module.exports.getAppDetails = getAppDetails;
 module.exports.sendDeviceData = sendDeviceData;

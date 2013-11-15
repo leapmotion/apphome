@@ -207,7 +207,9 @@ function authorize(cb) {
     if (err) {
       setTimeout(authorize, 50); // Keep on trying...
     } else {
-      cb && cb(null);
+      api.getUserInformation(function() {
+        cb && cb(null);
+      });
     }
   });
 }
@@ -236,7 +238,7 @@ function handlePrebundledApps(cb) {
         console.warn('Prebundled manifest missing, skipping prebundled apps.');
       }
     });
-    
+
     frozenApps.prebundledManifestPromise().fail(function(err) {
       console.log('Skipping prebundled apps: ' + err);
       cb && cb(null);
