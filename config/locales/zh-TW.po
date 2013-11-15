@@ -417,3 +417,33 @@ msgstr "全部解檔"
 
 msgid "click to reinstall"
 msgstr "點擊以重新安裝"
+
+msgid "i agree to the %1$s"
+msgstr "我同意遵守 %1$s"
+
+msgid "airspace terms of service"
+msgstr "Airspace 使用條款"
+
+msgid "day"
+msgstr "日"
+
+msgid "month"
+msgstr "月"
+
+msgid "year"
+msgstr "年"
+
+msgid "email has already been taken"
+msgstr "這個電子信箱已經有人使用"
+
+msgid "sign up to continue"
+msgstr "註冊以繼續"
+
+msgid "why is this required?"
+msgstr "為什麼需要提供？"
+
+msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
+msgstr "提供出生日期有助於確定您得到適合您年齡的 Leap Motion 使用經驗。"
+
+msgid "don't worry. we will not share this information."
+msgstr "請放心，我們不會透露您的個人資訊。"
