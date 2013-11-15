@@ -169,16 +169,19 @@ function _getStoreManifest(cb) {
   });
 }
 
+function _setGlobalUserInformation(user) {
+  uiGlobals.username = user.username;
+  uiGlobals.email = user.email;
+  uiGlobals.user_id = user.user_id;
+  subscribeToUserChannel(user.user_id);
+  subscribeToUserNotifications(user.user_id);
+  uiGlobals.trigger(uiGlobals.Event.SignIn);
+}
+
 function getUserInformation(cb) {
   _getStoreManifest(function(manifest) {
-    var user = manifest.shift();
-        uiGlobals.username = user.username;
-        uiGlobals.email = user.email;
-        uiGlobals.user_id = user.user_id;
-        subscribeToUserChannel(user.user_id);
-        subscribeToUserNotifications(user.user_id);
-        uiGlobals.trigger(uiGlobals.Event.SignIn);
-        cb && cb(null);
+    _setGlobalUserInformation(manifest.shift());
+    cb && cb(null);
   });
 }
 
@@ -192,12 +195,7 @@ function connectToStoreServer() {
       }
 
       if (message.user_id) {
-        uiGlobals.username = message.username;
-        uiGlobals.email = message.email;
-        uiGlobals.user_id = message.user_id;
-        subscribeToUserChannel(message.user_id);
-        subscribeToUserNotifications(message.user_id);
-        uiGlobals.trigger(uiGlobals.Event.SignIn);
+        _setGlobalUserInformation(message);
       } else {
         var app = handleAppJson(message);
         if (app) {
