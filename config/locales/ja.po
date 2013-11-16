@@ -450,3 +450,54 @@ msgstr "生年月日の情報により、確実にあなたの年齢に合った
 
 msgid "don't worry. we will not share this information."
 msgstr "この情報を公表することはありませんので、ご安心ください。"
+
+msgid "welcome to airspace home!"
+msgstr "Airspace Homeにようこそ!"
+
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
+msgstr "あらゆるLeap Motion対応のアプリを起動し、ストアにアクセスして新しいアプリを見つけましょう。"
+
+msgid "take a quick tour"
+msgstr "説明を見る"
+
+msgid "airspace"
+msgstr "AIRSPACE"
+
+msgid "the one place for all of your leap motion apps."
+msgstr "あらゆるLeap Motionアプリのための場所です。"
+
+msgid "sign up to continue"
+msgstr "サインアップして続ける"
+
+msgid "sign in to an existing account"
+msgstr "既存のアカウントにサインインする"
+
+msgid "learn about the controller"
+msgstr "コントローラーについての説明を見る"
+
+msgid "reach out and experience what your device can do with the orientation app."
+msgstr "オリエンテーションアプリで端末の操作方法を確認して下さい。"
+
+msgid "launch orientation"
+msgstr "オリエンテーションを起動する"
+
+msgid "try your new apps"
+msgstr "新しいアプリを試す"
+
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
+msgstr "これから始める方々のために、いくつかの素晴らしいアプリを無料で提供しています。ぜひプレイ、作成、探索をお楽しみ下さい。"
+
+msgid "discover new apps"
+msgstr "新しいアプリを見つける"
+
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Airspace Storeは、最新ゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
+
+msgid "back"
+msgstr "戻る"
+
+msgid "next"
+msgstr "次へ"
+
+msgid "done"
+msgstr "完了"

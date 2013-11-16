@@ -450,3 +450,54 @@ msgstr "提供您的出生日期以确保使您获得与您的年龄相适应的
 
 msgid "don't worry. we will not share this information."
 msgstr "请勿担心，我们不会泄露该信息。"
+
+msgid "welcome to airspace home!"
+msgstr "欢迎来到 Airspace Home！"
+
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
+msgstr "启动您所有的 Leap Motion 应用，并访问商店发现全新精彩应用。"
+
+msgid "take a quick tour"
+msgstr "进入快速导览"
+
+msgid "airspace"
+msgstr "AIRSPACE"
+
+msgid "the one place for all of your leap motion apps."
+msgstr "您的所有 Leap Motion 应用汇聚于此。"
+
+msgid "sign up to continue"
+msgstr "注册并继续"
+
+msgid "sign in to an existing account"
+msgstr "登录到已有帐户"
+
+msgid "learn about the controller"
+msgstr "了解控制器"
+
+msgid "reach out and experience what your device can do with the orientation app."
+msgstr "使用 Orientation 应用，伸出双手体验您的设备能做什么。"
+
+msgid "launch orientation"
+msgstr "启动 Orientation"
+
+msgid "try your new apps"
+msgstr "试试您的全新应用"
+
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
+msgstr "我们已为您准备好一些超酷的免费应用，让您快速上手。是时候游玩、创造和探索了。"
+
+msgid "discover new apps"
+msgstr "发现全新应用"
+
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Airspace Store 是浏览和下载最新游戏、创意工具和更多精彩内容的绝佳地点。"
+
+msgid "back"
+msgstr "后退"
+
+msgid "next"
+msgstr "前进"
+
+msgid "done"
+msgstr "完成"

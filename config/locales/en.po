@@ -450,3 +450,54 @@ msgstr "Providing your birthday helps make sure you get the right Leap Motion ex
 
 msgid "don't worry. we will not share this information."
 msgstr "Don't worry. We will not share this information."
+
+msgid "welcome to airspace home!"
+msgstr "Welcome to Airspace Home!"
+
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
+msgstr "Launch all of your Leap Motion-powered apps and access the store to discover new ones."
+
+msgid "take a quick tour"
+msgstr "Take a Quick Tour"
+
+msgid "airspace"
+msgstr "AIRSPACE"
+
+msgid "the one place for all of your leap motion apps."
+msgstr "The one place for all of your Leap Motion apps."
+
+msgid "sign up to continue"
+msgstr "Sign up to continue"
+
+msgid "sign in to an existing account"
+msgstr "Sign in to an existing account"
+
+msgid "learn about the controller"
+msgstr "Learn about the Controller"
+
+msgid "reach out and experience what your device can do with the orientation app."
+msgstr "Reach out and experience what your device can do with the Orientation app."
+
+msgid "launch orientation"
+msgstr "Launch Orientation"
+
+msgid "try your new apps"
+msgstr "Try your new apps"
+
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
+msgstr "We've set you up with some great apps for free to get you started. It's time to play, create, and explore."
+
+msgid "discover new apps"
+msgstr "Discover new apps"
+
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Airspace Store is the place for you to browse and download the latest games, creative tools, and more."
+
+msgid "back"
+msgstr "Back"
+
+msgid "next"
+msgstr "Next"
+
+msgid "done"
+msgstr "Done"
