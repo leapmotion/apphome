@@ -48,7 +48,8 @@ function getTrackFn(eventName, namespace) {
       console.log('Tracking Mixpanel event: ' + eventName);
       namespace = namespace || uiGlobals.appName;
       window.mixpanel.track(namespace + ' - ' + eventName, _.extend({
-        version: uiGlobals.appVersion
+        version: uiGlobals.appVersion,
+        embeddedDevice: uiGlobals.embeddedDevice
       }, args));
     } else {
       console.log('Would have tracked Mixpanel event in a release build: ' + eventName);
