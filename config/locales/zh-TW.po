@@ -417,3 +417,84 @@ msgstr "全部解檔"
 
 msgid "click to reinstall"
 msgstr "點擊以重新安裝"
+
+msgid "i agree to the %1$s"
+msgstr "我同意遵守 %1$s"
+
+msgid "airspace terms of service"
+msgstr "Airspace 使用條款"
+
+msgid "day"
+msgstr "日"
+
+msgid "month"
+msgstr "月"
+
+msgid "year"
+msgstr "年"
+
+msgid "email has already been taken"
+msgstr "這個電子信箱已經有人使用"
+
+msgid "sign up to continue"
+msgstr "註冊以繼續"
+
+msgid "why is this required?"
+msgstr "為什麼需要提供？"
+
+msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
+msgstr "提供出生日期有助於確定您得到適合您年齡的 Leap Motion 使用經驗。"
+
+msgid "don't worry. we will not share this information."
+msgstr "請放心，我們不會透露您的個人資訊。"
+
+msgid "welcome to airspace home!"
+msgstr "歡迎來到 Airspace Home！"
+
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
+msgstr "啟動專為您的 Leap Motion 而設計的應用程式，進入商店發現新推出 App。"
+
+msgid "take a quick tour"
+msgstr "快速導覽"
+
+msgid "airspace"
+msgstr "AIRSPACE"
+
+msgid "the one place for all of your leap motion apps."
+msgstr "您需要的 Leap Motion 應用程式，這裡都有。"
+
+msgid "sign up to continue"
+msgstr "登錄帳號以繼續瀏覽"
+
+msgid "sign in to an existing account"
+msgstr "登入現有的帳號"
+
+msgid "learn about the controller"
+msgstr "了解控制器"
+
+msgid "reach out and experience what your device can do with the orientation app."
+msgstr "利用訓練專用 App 花點時間來體驗您的裝置能做什麼。"
+
+msgid "launch orientation"
+msgstr "開始訓練"
+
+msgid "try your new apps"
+msgstr "試用您的新 App"
+
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
+msgstr "我們提供您一些很棒的免費 APP，讓您開始使用控制器。玩遊戲、發揮創意、探索新事物，正是時候。"
+
+msgid "discover new apps"
+msgstr "發現新 App"
+
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Airspace Store 是您瀏覽和下載最新遊戲、創意工具和更多資源的好地方。"
+
+msgid "back"
+msgstr "回上頁"
+
+msgid "next"
+msgstr "下頁"
+
+msgid "done"
+msgstr "完成"

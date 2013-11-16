@@ -165,6 +165,18 @@ module.exports = LeapApp.extend({
     }
   },
 
+  _resetExecutable: function() {
+    var executable = this._findExecutable();
+    if (executable) {
+      this.set('executable', executable);
+      console.log('Reset executable to ' + executable);
+    } else {
+      this.set('state', LeapApp.States.NotYetInstalled);
+      console.log('Could not find executable for app: ' + this.get('name'));
+      return new Error('Could not find executable for app: ' + this.get('name'));
+    }
+  },
+
   _configureBinary: function(cb) {
     console.info('Configuring binary of ' + this.get('name'));
     try {
@@ -177,13 +189,7 @@ module.exports = LeapApp.extend({
       if (!fs.existsSync(userDataDir)) {
         fs.mkdirpSync(userDataDir);
       }
-      var err = null;
-      var executable = this._findExecutable();
-      if (executable) {
-        this.set('executable', executable);
-      } else {
-        err = new Error('Could not find executable for app: ' + this.get('name'));
-      }
+      var err = this._resetExecutable();
     } catch (e) {
       err = e;
       console.error('StoreLeapApp#_configureBinary. Unknown failure. ' + (err.stack || err));
@@ -224,24 +230,28 @@ module.exports = LeapApp.extend({
   },
 
   move: function(targetDirectory, cb) {
-    var sourceExe = this.get('executable');
-    if (!sourceExe) {
+    var sourceApp = this._appDir();
+    console.log('Moving app ' + sourceApp);
+    console.log('Moving to ' + targetDirectory);
+    if (!sourceApp) {
+      console.log("Source app not detected");
       cb && cb(null);
       return;
     }
 
-    var sourceDirectory = path.dirname(sourceExe);
+    var sourceDirectory = path.dirname(sourceApp);
 
     if (sourceDirectory == targetDirectory) {
+      console.log("Moving to same location");
       cb && cb(null);
       return;
     }
 
-    var targetExe = sourceExe.replace(sourceDirectory, targetDirectory);
+    var targetApp = sourceApp.replace(sourceDirectory, targetDirectory);
 
-    console.log('Moving ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
+    console.log('Moving ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
-    mv(sourceExe, targetExe, {mkdirp: true}, (function(err) {
+    mv(sourceApp, targetApp, {mkdirp: true}, (function(err) {
       if (err) {
         console.log('Error moving ' + this.get('name'));
         cb && cb(err);
@@ -250,18 +260,17 @@ module.exports = LeapApp.extend({
 
       // Force regeneration of app dir
       delete this.__appDir;
-
-      this.set('executable', targetExe);
+      this._resetExecutable();
 
       this.save();
 
-      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetExe), function(err3) {
+      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
         if (err3) {
           console.warn('xattr exec error, ignoring: ' + err3);
         }
       });
 
-      console.log('Moved ' + this.get('name') + ' from ' + sourceExe + ' to ' + targetExe);
+      console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
       cb && cb(null);
     }).bind(this));
@@ -331,11 +340,11 @@ module.exports = LeapApp.extend({
   _appDir: function() {
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
     var userSetInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
+    var platformAppDirs = config.PlatformAppDirs;
     if (userSetInstallDir) {
-      return path.join(userSetInstallDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
-    } else {
-      return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+      platformAppDirs[os.platform()] = [userSetInstallDir];
     }
+    return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
   },
 
   _userDataDir: function() {

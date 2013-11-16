@@ -39,6 +39,7 @@ function getEmbeddedDevice() {
           console.log('Device type: ' + devicetype);
           if (config.EmbeddedLeapTypes.indexOf(devicetype) !== -1) {
             embeddedDevice = devicetype;
+            mixpanel.trackEvent('Embedded Leap Motion Controller Detected', { deviceType: embeddedDevice });
           }
         }
       }

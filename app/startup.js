@@ -178,7 +178,6 @@ function doFirstRun(cb) {
   } else {
     var firstRunView = new FirstRun({
       onLoggedIn: function() {
-        tutorial.makeGuides();
         cb && cb(null);
       }
     });
@@ -226,6 +225,10 @@ function startMainApp(cb) {
   $('body').addClass('loading');
 
   windowChrome.paintMainPage();
+
+  if (uiGlobals.isFirstRun) {
+    tutorial.makeGuides();
+  }
 
   // Completely install our prebundled apps before connecting to the store server
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {

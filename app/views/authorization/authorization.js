@@ -125,8 +125,8 @@ module.exports = BaseView.extend({
 
     $contents.find('.auth-form form .control-group:nth-child(6) h4')
       .wrap($('<div>').addClass('clearfix').attr('id', 'birthday-label'))
-      .after($('<span>').addClass('birthday-why').text(i18n.translate('Why is this required?')))
-      .after($('<div>').addClass('birthday-explanation').html(i18n.translate("Providing your birthday helps make sure you get the right Leap Motion experience for your age.") + '<br /><br />' + i18n.translate("Don't worry.  We will not share this information.")));
+      .after($('<span>').addClass('birthday-why').text('Why is this required?'))
+      .after($('<div>').addClass('birthday-explanation').html(i18n.translate("Providing your birthday helps make sure you get the right Leap Motion experience for your age.") + '<br /><br />' + i18n.translate("Don't worry. We will not share this information.")));
 
     $contents.find('.birthday-why').hover(function mousein() {
       $contents.find('.birthday-explanation').show();
@@ -177,7 +177,7 @@ module.exports = BaseView.extend({
   _translateIframeContents: function() {
     var $contents = $('iframe.oauth').contents();
 
-    $contents.find('.auth-form').find('*').each(function() {
+    $contents.find('.auth-form').add($contents.find('.auth-links')).find('*').each(function() {
       if ($(this).text() && $(this).text() == $(this).html() && isNaN($(this).text())) {
         $(this).text(i18n.translate($(this).text()));
       }
@@ -187,9 +187,14 @@ module.exports = BaseView.extend({
           $(this).prop('value', i18n.translate($(this).prop('value')));
         }
 
-        if (($(this).prop('type') == 'text') && $(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
+        if ($(this).prop('placeholder') && isNaN($(this).prop('placeholder'))) {
           $(this).prop('placeholder', i18n.translate($(this).prop('placeholder')));
         }
+      }
+
+      if (($(this).prop('tagName') == 'LABEL') && $(this).hasClass('checkbox')) {
+        $(this).html($(this).html().replace(/I agree to the .*a>\./, i18n.translate('I agree to the %1$s').fetch('<a href="https://www.leapmotion.com/legal/airspace_store_terms_of_service" data-airspace-home-popup="true" target="_blank">' + i18n.translate('Airspace Terms of Service') + '</a>.')));
+        $(this).html($(this).html().replace('Email me Leap Motion news and updates.', i18n.translate('Email me Leap Motion news and updates.')));
       }
     });
   },

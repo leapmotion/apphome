@@ -450,3 +450,54 @@ msgstr "Compartir su fecha de nacimiento ayuda a que nos aseguremos de que obtie
 
 msgid "don't worry. we will not share this information."
 msgstr "No te preocupes. No compartiremos esta información."
+
+msgid "welcome to airspace home!"
+msgstr "¡Bienvenidos a Airspace Home!"
+
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
+msgstr "Inicia todas tus aplicaciones impulsadas por Leap Motions y accede a la tienda para descubrir nuevas."
+
+msgid "take a quick tour"
+msgstr "Haz un recorrido rápido."
+
+msgid "airspace"
+msgstr "AIRSPACE"
+
+msgid "the one place for all of your leap motion apps."
+msgstr "El único lugar para todas tus aplicaciones de Leap Motion."
+
+msgid "sign up to continue"
+msgstr "Regístrate para continuar"
+
+msgid "sign in to an existing account"
+msgstr "Inicia sesión en una cuenta existente"
+
+msgid "learn about the controller"
+msgstr "Aprende acerca el Controlador"
+
+msgid "reach out and experience what your device can do with the orientation app."
+msgstr "Averigüa y experimenta lo que tu aparato puede hacer con la aplicacion de Orientación."
+
+msgid "launch orientation"
+msgstr "Inicia la Orientación"
+
+msgid "try your new apps"
+msgstr "Usa tus aplicaciones nuevas"
+
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
+msgstr "Tienes algunas aplicaciones grandiosas y gratuitas disponibles para empezar. Es hora de jugar, crear y explorar."
+
+msgid "discover new apps"
+msgstr "Descubre aplicaciones nuevas"
+
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Airspace Store es el lugar para que busques y descargues los juegos y herramientas creativas más recientes y mucho más."
+
+msgid "back"
+msgstr "Atrás"
+
+msgid "next"
+msgstr "Siguiente"
+
+msgid "done"
+msgstr "Listo"
