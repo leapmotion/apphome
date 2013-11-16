@@ -213,6 +213,10 @@ var LeapApp = BaseModel.extend({
   },
 
   getShortDescription: function() {
+    if (this.get('name') in config.NonStandardAppDescriptions) {
+      return config.NonStandardAppDescriptions[this.get('name')];
+    }
+
     if (this.get('tagline')) {
       return this.get('tagline');
     }
