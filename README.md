@@ -3,6 +3,14 @@
 ### Prerequisite
 
 [Node.js v0.10.x](http://nodejs.org/download/)
+[Node.js WebToolkit (OSX)](https://s3.amazonaws.com/node-webkit/v0.8.1/node-webkit-v0.8.1-rc1-osx-ia32.zip)
+[Node.js WebToolkit (Windows)](https://s3.amazonaws.com/node-webkit/v0.8.1/node-webkit-v0.8.1-rc1-win-ia32.zip)
+[Node.js WebToolkit (Linux x64)](https://s3.amazonaws.com/node-webkit/v0.8.1/node-webkit-v0.8.1-rc1-linux-x64.tar.gz)
+[Node.js WebToolkit (Linux x32)](https://s3.amazonaws.com/node-webkit/v0.8.1/node-webkit-v0.8.1-rc1-linux-ia32.tar.gz)
+
+### Copy Node.js WebToolkit to your /opt/local or equivalent directory (i.e.):
+
+    sudo cp -r /Users/sjanis/Downloads/node-webkit-v0.8.1-rc1-osx-ia32/node-webkit.app /opt/local/Libraries/node-webkit-v0.8.1-rc1-osx-ia32/ 
 
 ### Running (dev mode)
 
