@@ -316,7 +316,7 @@ function sendDeviceData(cb) {
   var dataDir = config.PlatformLeapDataDirs[os.platform()];
   if (!dataDir) {
     console.error('Leap Motion data dir unknown for operating system: ' + os.platform());
-    return;
+    return cb && cb(new Error('Leap Motion data dir unknown for operating system: ' + os.platform()));
   }
 
   var authDataFile = path.join(dataDir, 'lastauth');
@@ -324,25 +324,24 @@ function sendDeviceData(cb) {
   fs.readFile(authDataFile, 'utf-8', function(err, authData) {
     if (err) {
       console.warn('Error reading auth data file.');
-      return cb && cb(err);
+      return cb && cb(null);
     }
 
     if (!authData) {
       console.warn('Auth data file is empty.');
-      cb && cb(null);
-      return;
+      return cb && cb(null);
     }
 
     oauth.getAccessToken(function(err, accessToken) {
       if (err) {
         console.warn('Failed to get an access token: ' + (err.stack || err));
-        return cb && cb(err);
+        return cb && cb(null);
       }
 
       httpHelper.post(config.DeviceDataEndpoint, { access_token: accessToken, data: authData }, function(err) {
         if (err) {
           console.error('Failed to send device data: ' + (err.stack || err));
-          return cb && cb(err);
+          return cb && cb(null);
         } else {
           console.log('Sent device data.');
           return cb && cb(null);
