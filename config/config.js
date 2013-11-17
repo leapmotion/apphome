@@ -145,6 +145,7 @@ var config = {
   ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
+  CommunityForumsUrl: 'https://community.leapmotion.com',
 
   ModulePaths: {
 //    LeapJs: '../../utils/leap.js',
