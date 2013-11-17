@@ -316,7 +316,7 @@ function sendDeviceData(cb) {
   var dataDir = config.PlatformLeapDataDirs[os.platform()];
   if (!dataDir) {
     console.error('Leap Motion data dir unknown for operating system: ' + os.platform());
-    return cb && cb('Leap Motion data dir unknown for operating system: ' + os.platform());
+    return cb && cb(new Error('Leap Motion data dir unknown for operating system: ' + os.platform()));
   }
 
   var authDataFile = path.join(dataDir, 'lastauth');
