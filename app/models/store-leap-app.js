@@ -259,7 +259,7 @@ module.exports = LeapApp.extend({
       }
 
       // Force regeneration of app dir
-      delete this.__appDir;
+      this.set('appDir', null);
       this._resetExecutable();
 
       this.save();
@@ -351,7 +351,7 @@ module.exports = LeapApp.extend({
     }
 
     appDir = this._getDir(config.PlatformAppDirs, '__appDir', suffix);
-    this.set('appDir');
+    this.set('appDir', appDir);
     this.save();
 
     return appDir;
