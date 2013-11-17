@@ -418,6 +418,9 @@ msgstr "全部解檔"
 msgid "click to reinstall"
 msgstr "點擊以重新安裝"
 
+msgid "set install directory..."
+msgstr "設定安裝目錄..."
+
 msgid "i agree to the %1$s"
 msgstr "我同意遵守 %1$s"
 
