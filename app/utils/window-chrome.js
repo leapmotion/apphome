@@ -104,7 +104,7 @@ function rebuildMenuBar(enableLogOut) {
     console.log('Changed app install location to ' + newAppDir);
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
 
-    uiGlobals.myApps.move(path.join(newAppDir, String(uiGlobals.user_id)));
+    uiGlobals.myApps.move(newAppDir);
 
     $('input#installLocation').attr('nwdirectory', newAppDir);
   });

@@ -42,7 +42,7 @@ window.guiders = (function($) {
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     shouldSkip: function() {}, // Optional handler allows you to skip a guider if returns true.
     title: "Sample title goes here",
-    width: 400,
+    width: 450,
     xButton: true // This places a closer "x" button in the top right of the guider.
   };
 

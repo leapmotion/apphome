@@ -32,7 +32,7 @@ function makeGuides() {
   });
 
   guiders.createGuider({
-    buttons: [{name: String(i18n.translate('Back')), classString: 'back'}, {name: String(i18n.translate('Next')), classString: 'next'}],
+    buttons: [{name: String(i18n.translate('Back')), classString: 'back', onclick: guiders.prev}, {name: String(i18n.translate('Next')), classString: 'next', onclick: guiders.next}],
     description: String(i18n.translate("We've set you up with some great apps for free to get you started. It's time to play, create, and explore.")),
     id: 'g_apps',
     next: 'g_store',
@@ -44,7 +44,7 @@ function makeGuides() {
   });
 
   guiders.createGuider({
-    buttons: [{name: String(i18n.translate('Back')), classString: 'back'}, {name: String(i18n.translate('Done')), classString: 'primary', onclick: guiders.hideAll}],
+    buttons: [{name: String(i18n.translate('Back')), classString: 'back', onclick: guiders.prev}, {name: String(i18n.translate('Done')), classString: 'primary', onclick: guiders.hideAll}],
     description: String(i18n.translate("Airspace Store is the place for you to browse and download the latest games, creative tools, and more.")),
     id: 'g_store',
     title: String(i18n.translate('Discover new apps')),
