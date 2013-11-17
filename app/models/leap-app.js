@@ -1,6 +1,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var markdown = require('markdown').markdown;
+var mv = require('mv');
 var os = require('os');
 var path = require('path');
 var url = require('url');
@@ -9,6 +10,7 @@ var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
+var i18n = require('../utils/i18n.js');
 var enumerable = require('../utils/enumerable.js');
 var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
@@ -213,8 +215,14 @@ var LeapApp = BaseModel.extend({
   },
 
   getShortDescription: function() {
-    if (this.get('name') in config.NonStandardAppDescriptions) {
-      return config.NonStandardAppDescriptions[this.get('name')];
+    var NonStandardAppDescriptions = {
+      'Airspace Store': i18n.translate("Airspace Store is the place for you to browse and download new games, creative tools, and more."),
+      "Orientation": i18n.translate("Reach out and experience what your controller can do."),
+      "Google Earth": i18n.translate("Interact with the world in a whole new way.")
+    };
+
+    if (this.get('name') in NonStandardAppDescriptions) {
+      return NonStandardAppDescriptions[this.get('name')];
     }
 
     if (this.get('tagline')) {
@@ -263,17 +271,17 @@ var LeapApp = BaseModel.extend({
       console.log('Getting asset for app ' + this.get('name') + ' (' + urlAttrName + '): ' + assetUrl);
       if (url.parse(assetUrl).protocol == null) {
         var sourcePath = path.join(config.PlatformTempDirs[os.platform()], 'frozen', assetUrl);
-        var err = this._moveAssetToAppDataDir(sourcePath, destPath, pathAttrName);
-        cb && cb(err);
+        this._moveAssetToAppDataDir(sourcePath, destPath, pathAttrName, cb);
       } else {
         var tempPath = workingFile.newTempFilePath('png');
         httpHelper.getToDisk(assetUrl, { destPath: tempPath }, function(err) {
           if (!err) {
-            err = this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName);
+            this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName, cb);
           } else {
             console.error(err.stack || err);
+            cb && cb(err);
           }
-          cb && cb(err);
+
         }.bind(this));
       }
     } else {
@@ -281,17 +289,18 @@ var LeapApp = BaseModel.extend({
     }
   },
 
-  _moveAssetToAppDataDir: function(sourcePath, destPath, pathAttrName) {
-    try {
-      fs.renameSync(sourcePath, destPath);
-      this.set(pathAttrName, destPath, { silent: true });
-      this.trigger('change:' + pathAttrName);
-      this.save();
-      return null;
-    } catch(err) {
-      console.error('Failed to move asset to ' + this.get('name') + ' data dir: ' + (err.stack || err));
-      return err;
-    }
+  _moveAssetToAppDataDir: function(sourcePath, destPath, pathAttrName, cb) {
+    mv(sourcePath, destPath, function(err) {
+      if (err) {
+        console.err(err.stack || err);
+        cb && cb(err);
+      } else {
+        this.set(pathAttrName, destPath, { silent: true });
+        this.trigger('change:' + pathAttrName);
+        this.save();
+        cb && cb(null);
+      }
+    }.bind(this));
   },
 
   cleanAppName: function() {

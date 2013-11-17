@@ -259,7 +259,7 @@ module.exports = LeapApp.extend({
       }
 
       // Force regeneration of app dir
-      delete this.__appDir;
+      this.set('appDir', null);
       this._resetExecutable();
 
       this.save();
@@ -338,13 +338,23 @@ module.exports = LeapApp.extend({
   },
 
   _appDir: function() {
+    var appDir = this.get('appDir');
+    if (appDir) {
+      return appDir;
+    }
+
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
     var userSetInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
     var platformAppDirs = config.PlatformAppDirs;
     if (userSetInstallDir) {
       platformAppDirs[os.platform()] = [userSetInstallDir];
     }
-    return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+
+    appDir = this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+    this.set('appDir', appDir);
+    this.save();
+
+    return appDir;
   },
 
   _userDataDir: function() {
@@ -362,7 +372,7 @@ module.exports = LeapApp.extend({
         throw new Error('No app name specified.');
       }
       var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
-      dir = path.join(baseDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
+      dir = path.join(baseDir, this.cleanAppName() + suffix);
       this[attributeName] = dir;
     }
     return dir;

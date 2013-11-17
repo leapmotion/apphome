@@ -2,6 +2,7 @@ var AdmZip = require('adm-zip');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var os = require('os');
+var mv = require('mv');
 var path = require('path');
 var plist = require('plist');
 var unzip = require('unzip');
@@ -87,6 +88,17 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
   }
 
   unzipFile(src, dest, shellUnzipOnly, function(err) {
+    function chmodRecursiveSync(file) {
+      if (fs.statSync(file).isDirectory()) {
+        fs.readdirSync(file).forEach(function(subFile) {
+          chmodRecursiveSync(path.join(file, subFile));
+        });
+      } else {
+        fs.chmodSync(file, 0777); // make sure file has write permissions
+      }
+    }
+
+    console.log("unzipping " + src);
     if (err) {
       return cb && cb(err);
     }
@@ -99,31 +111,22 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
             possibleAppDirs.push(extractedFile);
           }
         });
+        console.log("found possible app dirs: " + JSON.stringify(possibleAppDirs));
         if (possibleAppDirs.length === 1 && fs.statSync(path.join(dest, possibleAppDirs[0])).isDirectory()) {
           // application has a single top-level directory, so pull the contents out of that
           var topLevelDir = path.join(dest, possibleAppDirs[0]);
-          function renameSyncRecursive(from, to) {
-            if (fs.statSync(from).isDirectory()) {
-              fs.mkdirpSync(to);
-              fs.readdirSync(from).forEach(function(subFile) {
-                renameSyncRecursive(path.join(from, subFile), path.join(to, subFile));
-              });
-              fs.rmdirSync(from);
-            } else {
-              fs.chmodSync(from, 0777); // make sure file has write permissions
-              fs.renameSync(from, to);
-            }
-          }
-          fs.readdirSync(topLevelDir).forEach(function (appFile) {
-            renameSyncRecursive(path.join(topLevelDir, appFile), path.join(dest, appFile));
-          });
-          fs.rmdirSync(topLevelDir);
+          console.log("Moving " + topLevelDir + ' to ' + dest);
+          chmodRecursiveSync(topLevelDir);
+          mv(topLevelDir, dest, {mkdirp: true}, cb);
+        } else {
+          cb && cb(null);
         }
       } catch (err) {
         cb && cb(err);
       }
+    } else {
+      cb && cb(null);
     }
-    cb && cb(null);
   });
 }
 
