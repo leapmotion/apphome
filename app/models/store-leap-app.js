@@ -372,7 +372,7 @@ module.exports = LeapApp.extend({
         throw new Error('No app name specified.');
       }
       var baseDir = path.join.apply(path, dirsByPlatform[os.platform()]);
-      dir = path.join(baseDir, String(uiGlobals.user_id), this.cleanAppName() + suffix);
+      dir = path.join(baseDir, this.cleanAppName() + suffix);
       this[attributeName] = dir;
     }
     return dir;

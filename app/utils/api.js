@@ -87,6 +87,14 @@ function handleAppJson(appJson) {
         console.log('Upgrade available for ' + app.get('name') + '. New version: ' + app.get('version'));
         existingApp.set('availableUpdate', app);
         getAppDetails(app);
+      } else {
+        setTimeout(function() {
+          getAppDetails(app, function() {
+            var appJson = app.toJSON();
+            delete appJson.state;
+            existingApp.set(appJson);
+          });
+        }, _.random(5, 10)); // Random delay to update details for already installed apps
       }
     } else {
       if (appsAdded >= 40) {
@@ -96,10 +104,10 @@ function handleAppJson(appJson) {
         return;
       }
       try {
-        app.set('firstSeenAt', (new Date()).getTime());
-        getAppDetails(app);
         myApps.add(app);
         appsAdded += 1;
+
+        getAppDetails(app);
       } catch (err) {
         console.error('Corrupt app data from api: ' + appJson + '\n' + (err.stack || err));
       }

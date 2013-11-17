@@ -208,14 +208,7 @@ function authorize(cb) {
     if (err) {
       setTimeout(authorize, 50); // Keep on trying...
     } else {
-
-      api.getUserInformation(function(err) {
-        if (err) {
-          cb && cb(err);
-        } else {
-          api.sendDeviceData(cb);
-        }
-      });
+      cb && cb(null);
     }
   });
 }
@@ -232,7 +225,13 @@ function startMainApp(cb) {
 
   // Completely install our prebundled apps before connecting to the store server
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
-    handlePrebundledApps(api.connectToStoreServer);
+    async.series([
+      handlePrebundledApps,
+      api.sendDeviceData(cb),
+    ], function(err) {
+      if (err) { cb && cb(err); }
+      api.connectToStoreServer();
+    });
   } else {
     api.connectToStoreServer();
   }
