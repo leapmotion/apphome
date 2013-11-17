@@ -338,13 +338,23 @@ module.exports = LeapApp.extend({
   },
 
   _appDir: function() {
+    var appDir = this.get('appDir');
+    if (appDir) {
+      return appDir;
+    }
+
     var suffix = (os.platform() === 'darwin' ? '.app' : '');
     var userSetInstallDir = db.fetchObj(config.DbKeys.AppInstallDir);
     var platformAppDirs = config.PlatformAppDirs;
     if (userSetInstallDir) {
       platformAppDirs[os.platform()] = [userSetInstallDir];
     }
-    return  this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+
+    appDir = this._getDir(config.PlatformAppDirs, '__appDir', suffix);
+    this.set('appDir');
+    this.save();
+
+    return appDir;
   },
 
   _userDataDir: function() {
