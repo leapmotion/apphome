@@ -149,12 +149,6 @@ var config = {
   ModulePaths: {
 //    LeapJs: '../../utils/leap.js',
     Pubnub: 'pubnub'
-  },
-
-  NonStandardAppDescriptions: {
-    'Airspace Store': "Airspace Store is the place for you to browse and download new games, creative tools, and more.",
-    "Orientation": "Reach out and experience what your controller can do.",
-    "Google Earth": "Interact with the world in a whole new way."
   }
 
 };

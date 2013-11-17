@@ -501,3 +501,12 @@ msgstr "次へ"
 
 msgid "done"
 msgstr "完了"
+
+msgid "reach out and experience what your controller can do."
+msgstr "コントローラーの操作方法を拡張し、新しい体験を。"
+
+msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
+msgstr "Airspace Storeは、新しいゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
+
+msgid "interact with the world in a whole new way."
+msgstr "全く新しい方法で世界と触れ合います。"

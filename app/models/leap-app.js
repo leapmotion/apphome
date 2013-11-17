@@ -9,6 +9,7 @@ var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
+var i18n = require('../utils/i18n.js');
 var enumerable = require('../utils/enumerable.js');
 var mixpanel = require('../utils/mixpanel.js');
 var semver = require('../utils/semver.js');
@@ -213,8 +214,14 @@ var LeapApp = BaseModel.extend({
   },
 
   getShortDescription: function() {
-    if (this.get('name') in config.NonStandardAppDescriptions) {
-      return config.NonStandardAppDescriptions[this.get('name')];
+    var NonStandardAppDescriptions = {
+      'Airspace Store': i18n.translate("Airspace Store is the place for you to browse and download new games, creative tools, and more."),
+      "Orientation": i18n.translate("Reach out and experience what your controller can do."),
+      "Google Earth": i18n.translate("Interact with the world in a whole new way.")
+    };
+
+    if (this.get('name') in NonStandardAppDescriptions) {
+      return NonStandardAppDescriptions[this.get('name')];
     }
 
     if (this.get('tagline')) {

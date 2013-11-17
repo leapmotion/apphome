@@ -498,3 +498,12 @@ msgstr "下頁"
 
 msgid "done"
 msgstr "完成"
+
+msgid "reach out and experience what your controller can do."
+msgstr "花點時間來體驗您的控制器能做什麼。"
+
+msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
+msgstr "Airspace Store 是您瀏覽和下載最新遊戲、創意工具和更多資源的好地方。"
+
+msgid "interact with the world in a whole new way."
+msgstr "以全新方式與世界互動。"

@@ -501,3 +501,12 @@ msgstr "Aller"
 
 msgid "done"
 msgstr "Tout fait"
+
+msgid "reach out and experience what your controller can do."
+msgstr "Découvrez les possibilités offertes par votre contrôleur."
+
+msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
+msgstr "Airspace Store est l'endroit où vous pourrez rechercher et télécharger de nouveaux jeux, outils de création et bien plus."
+
+msgid "interact with the world in a whole new way."
+msgstr "Interagissez avec le monde d'une toute nouvelle manière."
