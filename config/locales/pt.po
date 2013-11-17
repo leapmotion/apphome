@@ -143,7 +143,7 @@ msgid "you need to sign in or sign up before continuing."
 msgstr "Você precisa criar uma conta ou entrar, antes de continuar."
 
 msgid "account email"
-msgstr "email"
+msgstr "e-mail da conta"
 
 msgid "password"
 msgstr "senha"
