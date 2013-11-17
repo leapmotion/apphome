@@ -130,6 +130,12 @@ msgstr "About Airspace Home"
 msgid "community forums..."
 msgstr "Community Forums..."
 
+msgid "get support"
+msgstr "Get Support"
+
+msgid "get support..."
+msgstr "Get Support..."
+
 msgid "airspace home"
 msgstr "Airspace Home"
 

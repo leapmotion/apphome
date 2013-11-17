@@ -38,12 +38,14 @@ module.exports = BaseView.extend({
     this.$el.append(this.templateHtml({
       trash_label: i18n.translate('Trash'),
       download_label: i18n.translate('Download All'),
+      get_support_label: i18n.translate('Get Support'),
       update_label: i18n.translate('Update All'),
       cancel_label: i18n.translate('Cancel All'),
       nwworkingdir: nwworkingdir
     }));
     this._initCarousel();
     this._initDownloadControls();
+    this._initGetSupport();
     this._initTrash();
     this._initSearchField();
     this._setupResizeBehavior();
@@ -94,6 +96,12 @@ module.exports = BaseView.extend({
         // True makes it fade in
         installManager.showAppropriateDownloadControl(true);
     }, 1500);
+  },
+
+  _initGetSupport: function() {
+    this.$('#get-support').click(function(evt) {
+      nwGui.Shell.openExternal(config.GetSupportUrl);
+    });
   },
 
   _initTrash: function() {
