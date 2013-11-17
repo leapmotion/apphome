@@ -1,59 +1,59 @@
-msgid "Welcome to Airspace Home!"
+msgid "welcome to airspace home!"
 msgstr "Airspace Home에 오신 것을 환영합니다!"
 
-msgid "Launch all of your Leap Motion-powered apps and access the store to discover new ones."
+msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
 msgstr "당신의 모든 립모션 기반 앱을 실행하고, 스토어에 접속하여 새로운 앱들을 발견해 보세요."
 
-msgid "Take a quick tour"
+msgid "take a quick tour"
 msgstr "즉석 투어로 경험하기"
 
-msgid "AIRSPACE"
+msgid "airspace"
 msgstr "AIRSPACE"
 
-msgid "The one place for all of your Leap Motion apps."
+msgid "the one place for all of your leap motion apps."
 msgstr "모든 립모션 앱을 만날 수 있는 단 한곳."
 
-msgid "Sign up to continue"
+msgid "sign up to continue"
 msgstr "가입하여 계속하기"
 
-msgid "Sign in to an existing account"
+msgid "sign in to an existing account"
 msgstr "기존의 계정으로 로그인하기"
 
-msgid "Learn about the Controller"
+msgid "learn about the controller"
 msgstr "컨트롤러에 관해 알아보기"
 
-msgid "Reach out and experience what your device can do with the Orientation app."
+msgid "reach out and experience what your device can do with the orientation app."
 msgstr "손을 내밀어서, 당신의 단말에서 오리엔테이션 앱으로 무엇이 가능한지 경험해 보세요."
 
-msgid "Launch Orientation"
+msgid "launch orientation"
 msgstr "오리엔테이션을 시작하기"
 
-msgid "Try your new apps"
+msgid "try your new apps"
 msgstr "새로운 앱을 사용해 보기"
 
-msgid "We've set you up with some great apps for free to get you started. It's time to play, create, and explore."
+msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
 msgstr "당신의 새로운 시작을 위해 몇 가지 훌륭한 무료 앱을 준비했습니다. 자, 이제 플레이하고, 창작하고, 탐험을 시작할 시간입니다."
 
-msgid "Discover new apps"
+msgid "discover new apps"
 msgstr "새로운 앱 발견하기"
 
-msgid "Airspace Store is the place for you to browse and download the latest games, creative tools, and more."
+msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
 msgstr "Airspace 스토어는 최신 게임, 창작 도구 등을 검색하고 다운로드 할 수 있는 곳입니다."
 
-msgid "Back"
+msgid "back"
 msgstr "뒤로"
 
-msgid "Next"
+msgid "next"
 msgstr "다음"
 
-msgid "Done"
+msgid "done"
 msgstr "완료"
 
-msgid "Reach out and experience what your controller can do."
+msgid "reach out and experience what your controller can do."
 msgstr "손을 내밀어 당신의 컨트롤러로 무엇이 가능한지 경험하세요."
 
-msgid "Airspace Store is the place for you to browse and download new games, creative tools, and more."
+msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
 msgstr "Airspace Store는 새로운 게임들과 창작 도구, 그 밖의 여러가지를 둘러 보고 다운로드 할 수 있는 곳입니다."
 
-msgid "Interact with the world in a whole new way."
+msgid "interact with the world in a whole new way."
 msgstr "전혀 새로운 방식으로 세상과 소통하세요."
