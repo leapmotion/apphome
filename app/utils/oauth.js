@@ -36,7 +36,12 @@ function oauthRequest(params, cb) {
   // console.log('oauthRequest', url.format(urlParts), params, cb);
   httpHelper.post(url.format(urlParts), params, function(error, data) {
     // console.log('got result', error, data);
-    data = JSON.parse(data);
+    try {
+      data = JSON.parse(data);
+    } catch (e) {
+      data = {};
+    }
+
     cb && cb(error, data);
   });
 }
