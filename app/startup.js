@@ -261,7 +261,7 @@ function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-  api.sendAppVersionData()
+  api.sendAppVersionData();
 
   cb && cb(null);
 }
