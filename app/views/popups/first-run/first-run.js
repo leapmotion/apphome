@@ -77,7 +77,7 @@ module.exports = BaseView.extend({
   },
 
   _showAuth: function(newUser) {
-    this.$el.hide();
+    this.$el.remove();
     this.authorizationView.authorize(function(err) {
       if (err) {
         console.warn('Error logging in: ' + err.stack || err);
