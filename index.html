@@ -77,11 +77,26 @@
 
     <script>
 
+    var win = nwGui.Window.get();
+
     $('#scene').parallax();
 
     new Konami(function() {
-      nwGui.Window.get().showDevTools();
+      win.showDevTools();
     });
+
+    function makeVisible() {
+      if (win.x < 0) {
+        win.moveTo(50, win.y);
+      }
+
+      if (win.y < 0) {
+        win.moveTo(win.x, 50);
+      }
+    }
+
+    win.on('resize', makeVisible);
+    win.on('unmaximize', makeVisible);
 
 //    (function() {
 //      var ctl = new Leap.Controller({enableGestures: true});

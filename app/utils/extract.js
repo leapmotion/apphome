@@ -89,12 +89,11 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
 
   unzipFile(src, dest, shellUnzipOnly, function(err) {
     function chmodRecursiveSync(file) {
+      fs.chmodSync(file, 0777); // make sure file has write permissions
       if (fs.statSync(file).isDirectory()) {
         fs.readdirSync(file).forEach(function(subFile) {
           chmodRecursiveSync(path.join(file, subFile));
         });
-      } else {
-        fs.chmodSync(file, 0777); // make sure file has write permissions
       }
     }
 

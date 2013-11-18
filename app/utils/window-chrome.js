@@ -109,26 +109,35 @@ function rebuildMenuBar(enableLogOut) {
     $('input#installLocation').attr('nwdirectory', newAppDir);
   });
 
-  // TODO: support website links on both OS X and Windows
-  if (os.platform() === 'win32') {
-    var helpMenu = new nwGui.Menu();
-    helpMenu.append(new nwGui.MenuItem({
-      label: i18n.translate('Getting Started...'),
-      click: function() {
-        nwGui.Shell.openExternal(config.GettingStartedUrl);
-      }
-    }));
-    helpMenu.append(new nwGui.MenuItem({
-      label: i18n.translate('About Airspace Home'),
-      click: function() {
-        popup.open('about');
-      }
-    }));
-    mainMenu.append(new nwGui.MenuItem({
-      label: i18n.translate('Help'),
-      submenu: helpMenu
-    }));
-  }
+  var helpMenu = new nwGui.Menu();
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Getting Started...'),
+    click: function() {
+      nwGui.Shell.openExternal(config.GettingStartedUrl);
+    }
+  }));
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Community Forums...'),
+    click: function() {
+      nwGui.Shell.openExternal(config.CommunityForumsUrl);
+    }
+  }));
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Get Support...'),
+    click: function() {
+      nwGui.Shell.openExternal(config.GetSupportUrl);
+    }
+  }));
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('About Airspace Home'),
+    click: function() {
+      popup.open('about');
+    }
+  }));
+  mainMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Help'),
+    submenu: helpMenu
+  }));
 
   nwGui.Window.get().menu = mainMenu;
 }

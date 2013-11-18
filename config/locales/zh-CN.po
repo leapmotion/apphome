@@ -127,6 +127,9 @@ msgstr "帐户"
 msgid "about airspace home"
 msgstr "关于 Airspace 主页"
 
+msgid "community forums..."
+msgstr "社区论坛..."
+
 msgid "airspace home"
 msgstr "Airspace 主页"
 
