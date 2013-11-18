@@ -127,6 +127,9 @@ msgstr "Conta"
 msgid "about airspace home"
 msgstr "Sobre a Página Inicial do Airspace"
 
+msgid "community forums..."
+msgstr "Fóruns da Comunidade..."
+
 msgid "airspace home"
 msgstr "Página Inicial do Airspace"
 
