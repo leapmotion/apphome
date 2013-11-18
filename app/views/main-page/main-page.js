@@ -20,15 +20,6 @@ module.exports = BaseView.extend({
   initialize: function() {
     window.ondragover = function(evt) { evt.preventDefault(); return false; }; // ignore dragged in files
     window.ondrop = function(evt) { evt.preventDefault(); return false; };
-    window.onresize = function(evt) {
-      if (window.screenX < 0) {
-        window.moveTo(0, window.screenY);
-      }
-
-      if (window.screenY < 0) {
-        window.moveTo(window.screenX, 0);
-      }
-    };
 
     var nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) || path.join.apply(null, config.PlatformAppDirs[os.platform()]);
 

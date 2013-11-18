@@ -36,16 +36,6 @@ module.exports = BaseView.extend({
     this.$noInternet = this.$('.no-internet');
     this.$waiting = this.$('.waiting');
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
-
-    window.onresize = function(evt) {
-      if (window.screenX < 0) {
-        window.moveTo(0, window.screenY);
-      }
-
-      if (window.screenY < 0) {
-        window.moveTo(window.screenX, 0);
-      }
-    };
   },
 
   authorize: function(cb, newUser) {
