@@ -24,6 +24,10 @@ Running without specifying test file(s) will run the entire set of test suites.
 
 ### Building
 
+If this is your first install OR the package.json file has changed which modules are included (or their version number), run
+
+    npm install
+
 If it's a release build, first run:
 
     node bin/release [version]
