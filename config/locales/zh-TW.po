@@ -130,6 +130,12 @@ msgstr "關於 Airspace 主頁"
 msgid "community forums..."
 msgstr "討論區..."
 
+msgid "get support"
+msgstr "取得支援"
+
+msgid "get support..."
+msgstr "取得支援..."
+
 msgid "airspace home"
 msgstr "Airspace 主頁"
 

@@ -130,6 +130,12 @@ msgstr "Airspace Homeについて"
 msgid "community forums..."
 msgstr "コミュニティフォーラム..."
 
+msgid "get support"
+msgstr "サポートを要請"
+
+msgid "get support..."
+msgstr "サポートを要請..."
+
 msgid "airspace home"
 msgstr "Airspace Home"
 
