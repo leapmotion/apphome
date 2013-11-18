@@ -302,24 +302,28 @@ module.exports = BaseView.extend({
     if (!this.$waiting.hasClass('after')) {
       this.$waiting.show().removeClass('after logout').addClass('before');
     }
+    this.$el.css('margin-top', -225);
   },
 
   _showLoggingInMessage: function() {
     this.$noInternet.hide();
     this.$iframe.hide();
     this.$waiting.show().removeClass('before logout').addClass('after');
+    this.$el.css('margin-top', -225);
   },
 
   _showNoInternetMessage: function() {
     this.$iframe.hide();
     this.$waiting.hide();
     this.$noInternet.show();
+    this.$el.css('margin-top', -250);
   },
 
   _showLoggingOutMessage: function() {
     this.$iframe.hide();
     this.$noInternet.hide();
     this.$waiting.show().removeClass('before after').addClass('logout');
+    this.$el.css('margin-top', -250);
   },
 
   _interceptPopupLinks: function($elem) {
@@ -349,7 +353,21 @@ module.exports = BaseView.extend({
         this.$iframe.width(declaredWidth);
       }
       this.$iframe.height(0);
-      this.$iframe.height(Math.min(1.5*$(iframeWindow.document).height(), $(window).height() - 10));
+      this.$iframe.height(1.5 * $(iframeWindow.document).height());
+
+      var iframeBodyHeight = $('iframe.oauth').contents().find('html').height();
+      var logoHeight = $('#icon').height();
+      $('.authorization').css('margin-top', -(iframeBodyHeight + logoHeight)/2);
+
+      console.log((iframeBodyHeight + logoHeight) + ' ' + $(window).height());
+
+      var authHeight = iframeBodyHeight + logoHeight;
+
+      if (authHeight > $(window).height()) {
+        $('.authorization').css('-webkit-transform', 'scale(' + 0.85 * $(window).height() / authHeight + ')');
+      } else {
+        $('.authorization').css('-webkit-transform', 'none');
+      }
     }
   },
 
