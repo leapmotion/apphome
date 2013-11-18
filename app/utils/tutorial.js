@@ -20,7 +20,14 @@ function makeGuides() {
   }).show();
 
   guiders.createGuider({
-    buttons: [{name: String(i18n.translate('Launch Orientation')), classString: 'next', onclick: function() { _launchOrientation(); setTimeout(guiders.next, 1000); }}],
+    buttons: [{name: String(i18n.translate('Launch Orientation')), classString: 'next', onclick: function() { _launchOrientation();
+      var tilesReady = setInterval(function() {
+        if ($('.tile.store').length) {
+          clearInterval(tilesReady);
+          guiders.next();
+        }
+      }, 50);
+    }}],
     description: String(i18n.translate("Reach out and experience what your device can do with the Orientation app.")),
     id: 'g_orientation',
     next: 'g_apps',
