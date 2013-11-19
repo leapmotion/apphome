@@ -118,7 +118,7 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
           chmodRecursiveSync(topLevelDir);
 
           var moves = [];
-          fs.readdirSync(toplevelDir).forEach(function(appFile) {
+          fs.readdirSync(topLevelDir).forEach(function(appFile) {
             moves.push(function(cb) {
               mv(path.join(topLevelDir, appFile), path.join(dest, appFile), {mkdirp: true}, cb);
             });
