@@ -1,4 +1,5 @@
 var AdmZip = require('adm-zip');
+var async = require('async');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var os = require('os');
