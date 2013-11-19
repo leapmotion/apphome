@@ -227,7 +227,7 @@ function startMainApp(cb) {
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
     async.series([
       handlePrebundledApps,
-      api.sendDeviceData(cb),
+      api.sendDeviceData,
     ], function(err) {
       if (err) { cb && cb(err); }
       api.connectToStoreServer();
@@ -261,7 +261,7 @@ function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
 
-  api.sendAppVersionData()
+  api.sendAppVersionData();
 
   cb && cb(null);
 }

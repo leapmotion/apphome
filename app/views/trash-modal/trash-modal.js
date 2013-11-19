@@ -51,16 +51,22 @@ module.exports = Modal.extend({
       this.$('.content').append(view.$el);
     }).bind(this));
 
-    this.$('.button.reinstall-all').click((function() {
-      while(uiGlobals.uninstalledApps.length) {
-        var app = uiGlobals.uninstalledApps.shift();
+    if (window.navigator.onLine) {
+      this.$('.button.reinstall-all').click((function() {
+        while(uiGlobals.uninstalledApps.length) {
+          var app = uiGlobals.uninstalledApps.shift();
 
-        reinstallApp(app);
-      }
+          reinstallApp(app);
+        }
 
-      this.options.onClose(true);
-      this.remove();
-    }).bind(this));
+        this.options.onClose(true);
+        this.remove();
+      }).bind(this));
+    } else {
+      this.$('.button.reinstall-all')
+        .addClass('disabled')
+        .attr('title', i18n.translate('No Internet connection'));
+    }
   }
 
 });
