@@ -44,7 +44,14 @@ module.exports = Modal.extend({
       }
     }.bind(this));
 
-    this.$('.button.confirm').hide().click(this.options.onConfirm);
+    if (!window.navigator.onLine) {
+      this.$('.confirm').addClass('disabled')
+        .attr('title', i18n.translate('No internet connection'));
+    } else {
+      this.$('.confirm').click(this.options.onConfirm);
+    }
+
+    this.$('.button.confirm').hide();
     this.$('.button.launch').hide().click(this.options.onLaunch);
     if (leapApp.isUpdatable()) {
       this.$('.button.launch').show();
