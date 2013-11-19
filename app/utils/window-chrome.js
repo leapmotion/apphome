@@ -100,10 +100,38 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
     submenu: accountMenu
   }));
 
+
+  // Build from source because node webkit's implementation of the file picker
+  // doesn't actually accept changes to the nwworkingdir attribute
+  var createFileInput = function(defaultDir) {
+    $('input#installLocation').remove();
+
+    $fileInput = $('<input>').attr({
+      id: 'installLocation',
+      type: 'file',
+      nwdirectory: true,
+      nwworkingdir: defaultDir,
+      style: 'display:none;',
+    });
+
+    $fileInput.appendTo('body');
+  };
+
+  if (!disableSetInstallDir) {
+    var nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) || path.join.apply(null, config.PlatformAppDirs[os.platform()]);
+    console.log('Current install directory: ' + nwworkingdir);
+    createFileInput(nwworkingdir);
+  }
+
   $('input#installLocation').change(function() {
     if (!$(this).val()) {
+      console.log("Reported a blank new install location.  Not moving anything.");
       return;
     }
+
+    console.log($(this).val());
+    var installLocationInput = $('input#installLocation');
+    installLocationInput.remove();
 
     rebuildMenuBar(true, true);
     var newAppDir = $(this).val();
@@ -112,10 +140,9 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
 
     uiGlobals.myApps.move(newAppDir, function() {
+      console.log('~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~');
       rebuildMenuBar(true);
     });
-
-    $('input#installLocation').attr('nwdirectory', newAppDir);
   });
 
   var helpMenu = new nwGui.Menu();
