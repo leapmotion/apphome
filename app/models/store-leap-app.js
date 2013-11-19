@@ -275,11 +275,13 @@ module.exports = LeapApp.extend({
 
       this.save();
 
-      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
-        if (err3) {
-          console.warn('xattr exec error, ignoring: ' + err3);
-        }
-      });
+      if (os.platform() == 'darwin') {
+        exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
+          if (err3) {
+            console.warn('xattr exec error, ignoring: ' + err3);
+          }
+        });
+      }
 
       console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
