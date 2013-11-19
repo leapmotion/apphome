@@ -241,8 +241,7 @@ module.exports = LeapApp.extend({
     this.set('state', LeapApp.States.Moving);
 
     var sourceApp = this._appDir();
-    console.log('Moving app ' + sourceApp);
-    console.log('Moving to ' + targetDirectory);
+    console.log('Moving app ' + sourceApp + ' to ' + targetDirectory);
     if (!sourceApp) {
       console.log("Source app not detected");
       cb && cb(null);
