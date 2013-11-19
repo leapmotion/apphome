@@ -238,9 +238,10 @@ module.exports = LeapApp.extend({
   },
 
   move: function(targetDirectory, cb) {
+    this.set('state', LeapApp.States.Moving);
+
     var sourceApp = this._appDir();
-    console.log('Moving app ' + sourceApp);
-    console.log('Moving to ' + targetDirectory);
+    console.log('Moving app ' + sourceApp + ' to ' + targetDirectory);
     if (!sourceApp) {
       console.log("Source app not detected");
       cb && cb(null);
@@ -273,14 +274,17 @@ module.exports = LeapApp.extend({
 
       this.save();
 
-      exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
-        if (err3) {
-          console.warn('xattr exec error, ignoring: ' + err3);
-        }
-      });
+      if (os.platform() == 'darwin') {
+        exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
+          if (err3) {
+            console.warn('xattr exec error, ignoring: ' + err3);
+          }
+        });
+      }
 
       console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
+      this.set('state', LeapApp.States.Ready);
       cb && cb(null);
     }).bind(this));
   },

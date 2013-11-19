@@ -66,6 +66,7 @@ var Tile = BaseView.extend({
       connecting_label:     i18n.translate('Connecting...'),
       downloading_label:    i18n.translate('Downloading...'),
       installing_label:     i18n.translate('Installing...'),
+      moving_label:         i18n.translate('Moving...'),
       opening_label:        i18n.translate('Opening...'),
       launching_label:      i18n.translate('Launching...'),
       clickToInstall_label: i18n.translate('Click to Install')

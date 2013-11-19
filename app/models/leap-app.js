@@ -25,16 +25,24 @@ var LeapAppStates = enumerable.make([
   'Connecting',
   'Downloading',
   'Installing',
+  'Moving',
   'Ready',
   'Uninstalling',
   'Uninstalled'
 ], 'LeapAppStates');
 
 var LeapApp = BaseModel.extend({
-
   initialize: function() {
     var state = this.get('state');
-    if (!state ||
+    if (state === LeapApp.States.Moving ||
+        (this.hasUpdate() && (
+          state === LeapApp.States.Waiting ||
+          state === LeapApp.States.Connecting ||
+          state === LeapApp.States.Downloading ||
+          state === LeapApp.States.Installing)
+        )) {
+      this.set('state', LeapApp.States.Ready);
+    } else if (!state ||
         state === LeapApp.States.Waiting ||
         state === LeapApp.States.Connecting ||
         state === LeapApp.States.Downloading ||

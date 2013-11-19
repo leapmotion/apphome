@@ -359,8 +359,6 @@ module.exports = BaseView.extend({
       var logoHeight = $('#icon').height();
       $('.authorization').css('margin-top', -(iframeBodyHeight + logoHeight)/2);
 
-      console.log((iframeBodyHeight + logoHeight) + ' ' + $(window).height());
-
       var authHeight = iframeBodyHeight + logoHeight;
 
       if (authHeight > $(window).height()) {

@@ -34,6 +34,7 @@ messageState(state, tileOpacity = .7)
   messageState(waiting, .5)
   messageState(connecting, .5)
   messageState(installing, 1)
+  messageState(moving, 1)
   messageState(launching, .7)
 
   &.downloading
@@ -172,7 +173,7 @@ messageState(state, tileOpacity = .7)
     top 50%
     width 60%
 
-    .notyetinstalled, .waiting, .installing, .connecting, .launching
+    .notyetinstalled, .waiting, .installing, .moving, .connecting, .launching
       display none
 
   .progress

@@ -1,5 +1,5 @@
 var fs = require('fs');
-var path = require('path'); 
+var path = require('path');
 var os = require('os');
 
 var config = require('../../config/config.js');
@@ -36,7 +36,7 @@ function getLogger(level) {
     if (isProduction && (level === 'warn' || level === 'error')) {
       window.Raven.captureMessage(str);
     }
-  }
+  };
 }
 
 console.log = window.console.log = getLogger('log');
