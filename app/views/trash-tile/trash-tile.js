@@ -18,7 +18,10 @@ module.exports = Tile.extend({
 
     this._showOrHideIcon();
 
-    this.$el.click(this.options.onReinstall);
-
+    if (window.navigator.onLine) {
+      this.$el.click(this.options.onReinstall);
+    } else {
+      this.$el.addClass('disabled');
+    }
   }
 });
