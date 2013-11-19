@@ -6,7 +6,11 @@ var config = require('../../config/config.js');
 var mixpanel = require('./mixpanel.js');
 
 function makeGuides() {
-  uiGlobals.inTutorial = true;
+  if (uiGlobals.inTutorial) {
+    return;
+  } else {
+    uiGlobals.inTutorial = true;
+  }
 
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Take a quick tour')), classString: 'primary', onclick: guiders.next}],

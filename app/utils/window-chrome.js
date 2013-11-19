@@ -9,6 +9,7 @@ var db = require('./db.js');
 var i18n = require('./i18n.js');
 var mixpanel = require('./mixpanel.js');
 var popup = require('../views/popups/popup.js');
+var tutorial = require('./tutorial.js');
 
 var MainPage = require('../views/main-page/main-page.js');
 
@@ -58,7 +59,7 @@ function paintMainPage() {
   $('body').append(uiGlobals.mainPageView.$el);
 }
 
-function rebuildMenuBar(enableLogOut) {
+function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
   var mainMenu = new nwGui.Menu({ type: 'menubar' });
 
   if (os.platform() === 'win32') {
@@ -91,22 +92,57 @@ function rebuildMenuBar(enableLogOut) {
     label: i18n.translate('Set Install Directory...'),
     click: function() {
       $('input#installLocation').trigger('click');
-    }
+    },
+    enabled: !disableSetInstallDir
   }));
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Account'),
     submenu: accountMenu
   }));
 
+
+  // Build from source because node webkit's implementation of the file picker
+  // doesn't actually accept changes to the nwworkingdir attribute
+  var createFileInput = function(defaultDir) {
+    $('input#installLocation').remove();
+
+    $fileInput = $('<input>').attr({
+      id: 'installLocation',
+      type: 'file',
+      nwdirectory: true,
+      nwworkingdir: defaultDir,
+      style: 'display:none;',
+    });
+
+    $fileInput.appendTo('body');
+  };
+
+  if (!disableSetInstallDir) {
+    var nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) || path.join.apply(null, config.PlatformAppDirs[os.platform()]);
+    console.log('Current install directory: ' + nwworkingdir);
+    createFileInput(nwworkingdir);
+  }
+
   $('input#installLocation').change(function() {
+    if (!$(this).val()) {
+      console.log("Reported a blank new install location.  Not moving anything.");
+      return;
+    }
+
+    console.log($(this).val());
+    var installLocationInput = $('input#installLocation');
+    installLocationInput.remove();
+
+    rebuildMenuBar(true, true);
     var newAppDir = $(this).val();
 
-    console.log('Changed app install location to ' + newAppDir);
+    console.log('Changing app install location to ' + newAppDir);
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
 
-    uiGlobals.myApps.move(newAppDir);
-
-    $('input#installLocation').attr('nwdirectory', newAppDir);
+    uiGlobals.myApps.move(newAppDir, function() {
+      console.log('~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~');
+      rebuildMenuBar(true);
+    });
   });
 
   var helpMenu = new nwGui.Menu();
@@ -114,6 +150,12 @@ function rebuildMenuBar(enableLogOut) {
     label: i18n.translate('Getting Started...'),
     click: function() {
       nwGui.Shell.openExternal(config.GettingStartedUrl);
+    }
+  }));
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Launch Tutorial...'),
+    click: function() {
+      tutorial.makeGuides();
     }
   }));
   helpMenu.append(new nwGui.MenuItem({

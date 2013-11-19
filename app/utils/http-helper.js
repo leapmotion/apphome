@@ -48,7 +48,6 @@ function downloadChunk(requestUrl, start, end, cb) {
   xhr.onload = function () {
     nwGui.App.clearCache();
     if (this.status >= 200 && this.status <= 299) {
-      console.log('Request returned in ' + (Date.now() - startTime));
       // Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
       cb && cb(null, new Buffer(new window.Uint8Array(this.response)));
     } else {
@@ -60,7 +59,7 @@ function downloadChunk(requestUrl, start, end, cb) {
     cb && cb(err);
     cb = null;
   };
-  xhr.timeout = 5000;
+  xhr.timeout = 10000;
   xhr.ontimeout = function() {
     cb && cb(new Error('Chunk download timed out.'));
   };

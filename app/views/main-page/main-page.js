@@ -21,10 +21,6 @@ module.exports = BaseView.extend({
     window.ondragover = function(evt) { evt.preventDefault(); return false; }; // ignore dragged in files
     window.ondrop = function(evt) { evt.preventDefault(); return false; };
 
-    var nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) || path.join.apply(null, config.PlatformAppDirs[os.platform()]);
-
-    console.log('Current install directory: ' + nwworkingdir);
-
     this.injectCss();
     this.$el.append(this.templateHtml({
       trash_label: i18n.translate('Trash'),
@@ -32,7 +28,6 @@ module.exports = BaseView.extend({
       get_support_label: i18n.translate('Get Support'),
       update_label: i18n.translate('Update All'),
       cancel_label: i18n.translate('Cancel All'),
-      nwworkingdir: nwworkingdir
     }));
     this._initCarousel();
     this._initDownloadControls();
