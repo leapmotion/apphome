@@ -227,7 +227,7 @@ function startMainApp(cb) {
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
     async.series([
       handlePrebundledApps,
-      api.sendDeviceData(cb),
+      api.sendDeviceData,
     ], function(err) {
       if (err) { cb && cb(err); }
       api.connectToStoreServer();
