@@ -268,6 +268,7 @@ module.exports = LeapApp.extend({
 
       // Force regeneration of app dir
       this.set('appDir', null);
+      delete this.__appDir;
       this._resetExecutable();
 
       this.save();
