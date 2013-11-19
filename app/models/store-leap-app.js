@@ -44,8 +44,10 @@ module.exports = LeapApp.extend({
       this.set(this.get('availableUpdate').pick('binaryUrl', 'tileUrl', 'iconUrl'));
 
       // refresh icon and tile
-      this.downloadIcon();
-      this.downloadTile();
+      if (navigator.onLine) {
+        this.downloadIcon();
+        this.downloadTile();
+      }
 
       this._installFromServer(function(err) {
         if (!err) {
@@ -105,6 +107,12 @@ module.exports = LeapApp.extend({
       }
     } else {
       var downloadProgress;
+
+      if (!window.navigator.onLine) {
+        var error = new Error('No internet connection');
+        error.cancelled = true;
+        return cb && cb(error);
+      }
 
       this.set('state', LeapApp.States.Connecting);
 
@@ -260,6 +268,7 @@ module.exports = LeapApp.extend({
 
       // Force regeneration of app dir
       this.set('appDir', null);
+      delete this.__appDir;
       this._resetExecutable();
 
       this.save();

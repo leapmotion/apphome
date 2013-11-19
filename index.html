@@ -87,11 +87,11 @@
 
     function makeVisible() {
       if (win.x < 0) {
-        win.moveTo(50, win.y);
+        win.moveTo(screen.availLeft, win.y);
       }
 
       if (win.y < 0) {
-        win.moveTo(win.x, 50);
+        win.moveTo(win.x, screen.availTop);
       }
     }
 
