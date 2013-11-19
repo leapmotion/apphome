@@ -9,6 +9,7 @@ var db = require('./db.js');
 var i18n = require('./i18n.js');
 var mixpanel = require('./mixpanel.js');
 var popup = require('../views/popups/popup.js');
+var tutorial = require('./tutorial.js');
 
 var MainPage = require('../views/main-page/main-page.js');
 
@@ -58,7 +59,7 @@ function paintMainPage() {
   $('body').append(uiGlobals.mainPageView.$el);
 }
 
-function rebuildMenuBar(enableLogOut) {
+function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
   var mainMenu = new nwGui.Menu({ type: 'menubar' });
 
   if (os.platform() === 'win32') {
@@ -91,7 +92,8 @@ function rebuildMenuBar(enableLogOut) {
     label: i18n.translate('Set Install Directory...'),
     click: function() {
       $('input#installLocation').trigger('click');
-    }
+    },
+    enabled: !disableSetInstallDir
   }));
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Account'),
@@ -99,12 +101,19 @@ function rebuildMenuBar(enableLogOut) {
   }));
 
   $('input#installLocation').change(function() {
+    if (!$(this).val()) {
+      return;
+    }
+
+    rebuildMenuBar(true, true);
     var newAppDir = $(this).val();
 
-    console.log('Changed app install location to ' + newAppDir);
+    console.log('Changing app install location to ' + newAppDir);
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
 
-    uiGlobals.myApps.move(newAppDir);
+    uiGlobals.myApps.move(newAppDir, function() {
+      rebuildMenuBar(true);
+    });
 
     $('input#installLocation').attr('nwdirectory', newAppDir);
   });
@@ -114,6 +123,12 @@ function rebuildMenuBar(enableLogOut) {
     label: i18n.translate('Getting Started...'),
     click: function() {
       nwGui.Shell.openExternal(config.GettingStartedUrl);
+    }
+  }));
+  helpMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Launch Tutorial...'),
+    click: function() {
+      tutorial.makeGuides();
     }
   }));
   helpMenu.append(new nwGui.MenuItem({

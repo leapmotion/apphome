@@ -39,13 +39,14 @@ module.exports = window.Backbone.Collection.extend({
     return leapApp.sortScore();
   },
 
-  move: function(newAppDirectory) {
+  move: function(newAppDirectory, done) {
     var appMoveQueue = async.queue(function(app, cb) {
       app.move(newAppDirectory, cb);
     }, 5);
 
     appMoveQueue.drain = function() {
       console.log('All apps moved to ' + newAppDirectory + ' successfully.');
+      done();
     };
 
     this.filter(function(app) {

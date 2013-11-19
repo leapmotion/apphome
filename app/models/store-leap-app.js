@@ -238,6 +238,8 @@ module.exports = LeapApp.extend({
   },
 
   move: function(targetDirectory, cb) {
+    this.set('state', LeapApp.States.Moving);
+
     var sourceApp = this._appDir();
     console.log('Moving app ' + sourceApp);
     console.log('Moving to ' + targetDirectory);
@@ -281,6 +283,7 @@ module.exports = LeapApp.extend({
 
       console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
+      this.set('state', LeapApp.States.Ready);
       cb && cb(null);
     }).bind(this));
   },
