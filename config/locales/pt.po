@@ -170,7 +170,7 @@ msgid "invalid email or password."
 msgstr "Email ou senha inválidos."
 
 msgid "account email"
-msgstr "email"
+msgstr "e-mail da conta"
 
 msgid "please enter an email address."
 msgstr "Insira um endereço de email"
