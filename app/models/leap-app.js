@@ -298,12 +298,29 @@ var LeapApp = BaseModel.extend({
   },
 
   _moveAssetToAppDataDir: function(sourcePath, destPath, pathAttrName, cb) {
+    if (!fs.existsSync(sourcePath)) {
+      var jpgVersion = sourcePath.replace(/png$/, 'jpg'),
+        pngVersion = sourcePath.replace(/jpg$/, 'png');
+
+      if (fs.existsSync(pngVersion)) {
+        sourcePath = pngVersion;
+      } else if (fs.existsSync(jpgVersion)) {
+        sourcePath = jpgVersion;
+      } else {
+        var err = new Error('Source asset does not exist');
+        err.sourcePath = sourcePath;
+        return cb && cb(err);
+      }
+    }
+
     mv(sourcePath, destPath, function(err) {
       if (err) {
         console.err(err.stack || err);
         cb && cb(err);
       } else {
-        this.set(pathAttrName, destPath, { silent: true });
+        this.set(pathAttrName, destPath, {
+          silent: true
+        });
         this.trigger('change:' + pathAttrName);
         this.save();
         cb && cb(null);
