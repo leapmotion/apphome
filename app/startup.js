@@ -195,7 +195,7 @@ function handleLocalTiles(cb) {
         setInterval(function() {
           LocalLeapApp.localAppScan(manifest);
         }, config.FsScanIntervalMs);
-      }, 6000);
+      }, config.FsScanIntervalMs);
     } else {
       console.warn('Local manifest missing, skipping local tiles.');
     }
