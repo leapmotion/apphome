@@ -57,3 +57,9 @@ msgstr "Airspace Store는 새로운 게임들과 창작 도구, 그 밖의 여�
 
 msgid "interact with the world in a whole new way."
 msgstr "전혀 새로운 방식으로 세상과 소통하세요."
+
+msgid "moving..."
+msgstr "이동 중..."
+
+msgid "launch tutorial..."
+msgstr "튜토리얼 실행..."

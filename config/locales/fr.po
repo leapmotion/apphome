@@ -519,3 +519,9 @@ msgstr "Airspace Store est l'endroit où vous pourrez rechercher et télécharge
 
 msgid "interact with the world in a whole new way."
 msgstr "Interagissez avec le monde d'une toute nouvelle manière."
+
+msgid "moving..."
+msgstr "Déplacement..."
+
+msgid "launch tutorial..."
+msgstr "Lancer didacticiel..."

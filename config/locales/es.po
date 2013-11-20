@@ -519,3 +519,9 @@ msgstr "Airspace Store es el sitio para que explores y descargues nuevos juegos,
 
 msgid "interact with the world in a whole new way."
 msgstr "Interactúa con el mundo de una forma completamente nueva."
+
+msgid "moving..."
+msgstr "Desplazando..."
+
+msgid "launch tutorial..."
+msgstr "Iniciar el Tutorial..."
