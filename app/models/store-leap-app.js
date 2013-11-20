@@ -44,7 +44,7 @@ module.exports = LeapApp.extend({
       this.set(this.get('availableUpdate').pick('binaryUrl', 'tileUrl', 'iconUrl'));
 
       // refresh icon and tile
-      if (navigator.onLine) {
+      if (window.navigator.onLine) {
         this.downloadIcon();
         this.downloadTile();
       }
