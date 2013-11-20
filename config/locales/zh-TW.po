@@ -519,3 +519,9 @@ msgstr "Airspace Store 是您瀏覽和下載最新遊戲、創意工具和更多
 
 msgid "interact with the world in a whole new way."
 msgstr "以全新方式與世界互動。"
+
+msgid "moving..."
+msgstr "正在搬移..."
+
+msgid "launch tutorial..."
+msgstr "啟動教學指引..."

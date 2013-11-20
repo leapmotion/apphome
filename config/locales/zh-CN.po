@@ -519,3 +519,9 @@ msgstr "在 Airspace Store，你可以浏览下载新游戏、创意工具等内
 
 msgid "interact with the world in a whole new way."
 msgstr "以一种全新的方式与这个世界展开互动。"
+
+msgid "moving..."
+msgstr "正在移动..."
+
+msgid "launch tutorial..."
+msgstr "启动导览..."

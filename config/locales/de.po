@@ -519,3 +519,9 @@ msgstr "Airspace Store ist der Ort, an dem du dir neue Spiele, Kreativitäts-Wer
 
 msgid "interact with the world in a whole new way."
 msgstr "Gehe auf ganz neue Art und Weise mit der Welt um."
+
+msgid "moving..."
+msgstr "Wird verschoben..."
+
+msgid "launch tutorial..."
+msgstr "Anleitung starten..."
