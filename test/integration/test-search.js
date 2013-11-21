@@ -34,7 +34,7 @@ describe('search', function() {
           elements[0].text().should.eventually.equal('Orientation').and.notify(done);
         });
     });
-        
+
     it('should accept a name with a leading upper-case character', function(done) {
       browser
         .elementByCssSelector('#search').type('Orientation')
@@ -42,7 +42,7 @@ describe('search', function() {
           elements.length.should.equal(1);
         }).then(done, done);
     });
-        
+
     it('should accept all upper-case names', function(done) {
       browser
         .elementByCssSelector('#search').type('ORIENTATION')
@@ -50,7 +50,7 @@ describe('search', function() {
           elements.length.should.equal(1);
         }).then(done, done);
     });
-        
+
     it('should accept mixed-case names', function(done) {
       browser
         .elementByCssSelector('#search').type('oRiEnTaTiOn')
@@ -59,7 +59,7 @@ describe('search', function() {
         }).then(done, done);
     });
   });
-  
+
   after(function(done) {
     this.timeout(10000);
     browser
