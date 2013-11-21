@@ -260,33 +260,44 @@ module.exports = LeapApp.extend({
 
     console.log('Moving ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
 
-    mv(sourceApp, targetApp, {mkdirp: true}, (function(err) {
-      if (err) {
-        console.log('Error moving ' + this.get('name'));
-        cb && cb(err);
-        return;
-      }
-
-      // Force regeneration of app dir
+    if (!fs.existsSync(sourceApp)) {
+      // Just update the source
+      this.set('state', LeapApp.States.NotYetInstalled);
       this.set('appDir', null);
       delete this.__appDir;
-      this._resetExecutable();
-
       this.save();
 
-      if (os.platform() == 'darwin') {
-        exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
-          if (err3) {
-            console.warn('xattr exec error, ignoring: ' + err3);
-          }
-        });
-      }
-
-      console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
-
-      this.set('state', LeapApp.States.Ready);
       cb && cb(null);
-    }).bind(this));
+    } else {
+      // Move all the things
+      mv(sourceApp, targetApp, {mkdirp: true}, (function(err) {
+        if (err) {
+          console.log('Error moving ' + this.get('name'));
+          cb && cb(err);
+          return;
+        }
+
+        // Force regeneration of app dir
+        this.set('appDir', null);
+        delete this.__appDir;
+        this._resetExecutable();
+
+        this.save();
+
+        if (os.platform() == 'darwin') {
+          exec('xattr -rd com.apple.quarantine ' + shell.escape(targetApp), function(err3) {
+            if (err3) {
+              console.warn('xattr exec error, ignoring: ' + err3);
+            }
+          });
+        }
+
+        console.log('Moved ' + this.get('name') + ' from ' + sourceApp + ' to ' + targetApp);
+
+        this.set('state', LeapApp.States.Ready);
+        cb && cb(null);
+      }).bind(this));
+    }
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
@@ -345,7 +356,22 @@ module.exports = LeapApp.extend({
       uiGlobals.myApps.remove(this);
       uiGlobals.uninstalledApps.add(this);
       this.set('state', LeapApp.States.Uninstalled);
-      this.set('availableUpdate', null);
+
+      // Erase information about where it used to be installed, so if the directory
+      // moves before it gets reinstalled, it gets installed to the new directory.
+      this.set('appDir', null);
+      delete this.__appDir;
+
+      if (this.get('availableUpdate')) {
+        // On reinstall, we will be downloading the new binary, etc
+        // But since it won't register as an "update" we won't fetch new app details
+        // So take the update we know about and push it into the app we're deleting.
+        var newAppJson = this.get('availableUpdate').toJSON();
+        delete newAppJson.state;
+        this.set(newAppJson);
+        this.set('availableUpdate', null);
+      }
+
       this.trigger('uninstall');
     }
   },
