@@ -345,7 +345,17 @@ module.exports = LeapApp.extend({
       uiGlobals.myApps.remove(this);
       uiGlobals.uninstalledApps.add(this);
       this.set('state', LeapApp.States.Uninstalled);
-      this.set('availableUpdate', null);
+
+      if (this.get('availableUpdate')) {
+        // On reinstall, we will be downloading the new binary, etc
+        // But since it won't register as an "update" we won't fetch new app details
+        // So take the update we know about and push it into the app we're deleting.
+        var newAppJson = this.get('availableUpdate').toJSON();
+        delete newAppJson.state;
+        this.set(newAppJson);
+        this.set('availableUpdate', null);
+      }
+
       this.trigger('uninstall');
     }
   },

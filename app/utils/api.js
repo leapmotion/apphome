@@ -197,7 +197,7 @@ function getUserInformation(cb) {
 
 function connectToStoreServer() {
   _getStoreManifest(function(messages) {
-    console.log('Connected to store server.');
+    console.log('Connected to store server. Got messages: ', JSON.stringify(messages));
     $('body').removeClass('loading');
     messages.forEach(function(message) {
       if (message.auth_id && message.secret_token) {
