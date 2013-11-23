@@ -59,10 +59,6 @@ function downloadChunk(requestUrl, start, end, cb) {
     cb && cb(err);
     cb = null;
   };
-  xhr.timeout = 10000;
-  xhr.ontimeout = function() {
-    cb && cb(new Error('Chunk download timed out.'));
-  };
   xhr.send();
   return xhr;
 }
