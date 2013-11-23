@@ -49,11 +49,15 @@ var mockFs = {
 function mockFsScannerForPlatform(platform, filter) {
   var FsScanner = rewire('../../../app/utils/fs-scanner.js');
   if (mockExec[platform]) {
+    var registry = rewire('../../../app/utils/registry.js');
+    registry.__set__('exec', mockExec[platform]);
+    registry.__set__('os', { platform: function() { return platform; }});
     var plist = rewire('../../../app/utils/plist.js');
     plist.__set__('exec', mockExec[platform]);
     plist.__set__('os', { platform: function() { return platform; }});
     FsScanner.__set__('exec', mockExec[platform]);
     FsScanner.__set__('plist', plist);
+    FsScanner.__set__('registry', registry);
   }
   if (mockFs[platform]) {
     FsScanner.__set__('fs', mockFs[platform]);

@@ -38,17 +38,7 @@ module.exports = BaseView.extend({
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
   },
 
-  authorize: function(cb, newUser) {
-    this.__newUser = newUser;
-
-    if (process.env.LEAPHOME_LOGIN_EMAIL && didAutoLogout === false) {
-      didAutoLogout = true;
-      // start logged out
-      this.logOut(function() {
-        this.authorize(cb);
-      }.bind(this));
-      return;
-    }
+  authorize: function(cb) {
     this.$el.appendTo('body');
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
@@ -214,14 +204,7 @@ module.exports = BaseView.extend({
   _performActionBasedOnUrl: function(url, cb) {
     var urlParts = urlParse(url, true);
     if (/^\/users/.test(urlParts.pathname)) {
-      if (process.env.LEAPHOME_LOGIN_EMAIL) {
-        this._loginAs({
-          email: process.env.LEAPHOME_LOGIN_EMAIL,
-          password: process.env.LEAPHOME_LOGIN_PASSWORD
-        });
-      } else {
-        this._waitForUserToSignIn();
-      }
+      this._waitForUserToSignIn();
     } else if (/^\/oauth\/authorize/.test(urlParts.pathname)) {
       this._allowOauthAuthorization();
     } else if (urlParts.query && urlParts.query.code) {
@@ -230,16 +213,6 @@ module.exports = BaseView.extend({
     } else {
       cb(new Error('Unknown URL: ' + url));
     }
-  },
-
-  _loginAs: function(userobj) {
-    console.log('_loginAs', userobj);
-    this._showLoginForm();
-    var iframeWindow = this.$iframe.prop('contentWindow');
-    $('#user_email', iframeWindow.document).val(userobj.email);
-    $('#user_password', iframeWindow.document).val(userobj.password);
-    $('form', iframeWindow.document).submit();
-    this._showLoggingInMessage();
   },
 
   _waitForUserToSignIn: function() {

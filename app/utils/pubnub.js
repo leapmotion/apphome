@@ -1,7 +1,7 @@
 var config = require('../../config/config.js');
 var domain = require('domain');
 var events = require('events');
-var pubnubInit = window.PUBNUB.init;
+var pubnubInit = window.PUBNUB && window.PUBNUB.init;
 
 
 var pubnubSubscriptions = {};
@@ -14,11 +14,19 @@ pubnubDomain.on('error', function(err) {
 });
 
 pubnubDomain.run(function() {
-  pubnub = pubnubInit({
-    subscribe_key: config.PubnubSubscribeKey,
-    ssl: true,
-    jsonp: true // force http transport to work better with http proxies
-  });
+  if (pubnubInit) {
+    pubnub = pubnubInit({
+      subscribe_key: config.PubnubSubscribeKey,
+      ssl: true,
+      jsonp: true // force http transport to work better with http proxies
+    });
+  } else {
+    // stub for tests
+    pubnub = {
+      subscribe: function() {},
+      unsubscribe: function() {}
+    };
+  }
 });
 
 function unsubscribeAll(resubscribe) {

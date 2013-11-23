@@ -1,10 +1,16 @@
 #!/usr/bin/env node
-// pull in all files we want tested and run them
-var fs = require('fs');
-var path = require('path');
+var spawn = require('child_process').spawn;
+var fs = require('fs-extra');
 var Mocha = require('mocha');
+var os = require('os');
+var path = require('path');
 
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
+process.env.BOOTSTRAP_SCRIPT_PATH = path.join(__dirname, '..', 'test', 'support', 'pre-run.js');
+process.env.LEAPHOME_LOGIN_EMAIL = 'pbaumgart+test@leapmotion.com';
+process.env.LEAPHOME_LOGIN_PASSWORD = 'abc123';
+
+// pull in all files we want tested and run them
 
 var projectDir = path.join(__dirname, '..');
 var queue = [];
@@ -13,7 +19,7 @@ if (testFiles.length === 0) {
   queue = [ path.join(projectDir, 'test') ];
 } else {
   for (var i = 0; i < testFiles.length; i++) {
-    var testFile = testFiles[i];
+    var testFile = path.join(process.cwd(), testFiles[i]);
     if (fs.statSync(testFile).isDirectory()) {
       queue.push(testFile);
       testFiles.splice(i, 1);
@@ -21,7 +27,6 @@ if (testFiles.length === 0) {
     }
   }
 }
-
 
 while (queue.length > 0) {
   var currentFile = queue.shift();
@@ -36,8 +41,79 @@ while (queue.length > 0) {
 
 console.log('Testing file' + (testFiles.length > 1 ? 's' : '') + ': ' + testFiles.join(', '));
 
-var mocha = new Mocha();
-testFiles.forEach(function(testFile) {
-  mocha.addFile(testFile);
-});
-mocha.run(process.exit);
+
+var NodeWebkitVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8')).nwVersion;
+var PlatformChromeDriverPathSuffixes = {
+  win32:  'win-ia32\\chromedriver2_server.exe',
+  darwin: 'osx-ia32/chromedriver2_server',
+  linux:  'linux-ia32/chromedriver2_server'
+};
+
+function startSeleniumServer(cb) {
+  var chromeDriverPath = path.join(__dirname, '..', 'nw', 'node-webkit-v' + NodeWebkitVersion + '-' + PlatformChromeDriverPathSuffixes[os.platform()]);
+  var seleniumJarPath = path.join(__dirname, '..', 'test', 'selenium-server.jar');
+  var seleniumArgs = [ '-Dwebdriver.chrome.driver=' + chromeDriverPath ];
+  var fullArgs = [ '-jar', seleniumJarPath ].concat(seleniumArgs);
+  console.log('Starting Selenium server with command: java "' + fullArgs.join('" "') + '" ...');
+  var seleniumServer = spawn('java', fullArgs);
+  seleniumServer.stdout.on('data', function(data) {
+    if (/Started org\.openqa\.jetty\.jetty\.Server/.test(data)) {
+      cb && cb(null, seleniumServer);
+      cb = null;
+    }
+  });
+  seleniumServer.stderr.on('data', function(data) {
+    if (/Error:/.test(data)) {
+      cb && cb(new Error(data), seleniumServer);
+      cb = null;
+    }
+  });
+  seleniumServer.on('error', function(err) {
+    cb && cb(err);
+    cb = null;
+  });
+}
+
+function runTests() {
+  var mocha = new Mocha({reporter: 'spec'});
+  testFiles.forEach(mocha.addFile.bind(mocha));
+  mocha.run(process.exit);
+}
+
+var runningIntegrationTest = false;
+for (var i = 0, len = testFiles.length; i < len; i++) {
+  if (/integration/.test(testFiles[i])) {
+    runningIntegrationTest = true;
+    break;
+  }
+}
+
+if (runningIntegrationTest) {
+  startSeleniumServer(function(err, seleniumServer) {
+    if (err) {
+      if (err.code === 'ENOENT') {
+        console.log('You need to install the Java Runtime.');
+      } else {
+        console.log(err.message);
+      }
+      process.exit();
+    } else {
+      console.log('started.');
+
+      seleniumServer.on('exit', function(code) {
+        console.log('Selenium server exited with code: ' + code);
+        process.exit();
+      });
+
+      process.on('exit', function() {
+        seleniumServer.removeAllListeners('exit');
+        seleniumServer.kill();
+      });
+
+      runTests();
+    }
+  });
+} else {
+  runTests();
+}
+
