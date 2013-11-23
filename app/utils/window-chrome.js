@@ -155,7 +155,7 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
   helpMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Launch Tutorial...'),
     click: function() {
-      tutorial.makeGuides();
+      tutorial.start();
     }
   }));
   helpMenu.append(new nwGui.MenuItem({
