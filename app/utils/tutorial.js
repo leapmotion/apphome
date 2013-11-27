@@ -5,6 +5,8 @@ var i18n = require('./i18n.js');
 var config = require('../../config/config.js');
 var mixpanel = require('./mixpanel.js');
 
+var guidesMade = false;
+
 function makeGuides() {
   if (uiGlobals.inTutorial) {
     return;
@@ -21,7 +23,7 @@ function makeGuides() {
     title: String(i18n.translate('Welcome to Airspace Home!')),
     xButton: true,
     onClose: onClose
-  }).show();
+  });
 
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Launch Orientation')), classString: 'next', onclick: function() { _launchOrientation();
@@ -68,6 +70,8 @@ function makeGuides() {
       uiGlobals.inTutorial = false;
     }
   });
+
+  guidesMade = true;
 }
 
 function onClose() {
@@ -83,5 +87,13 @@ var _launchOrientation =  function() {
   }
 };
 
+var start = function() {
+  if (!guidesMade) {
+    makeGuides();
+  }
 
-module.exports.makeGuides = makeGuides;
+  guiders.show('g_start');
+};
+
+
+module.exports.start = start;

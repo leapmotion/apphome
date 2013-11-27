@@ -220,7 +220,7 @@ function startMainApp(cb) {
   windowChrome.paintMainPage();
 
   if (uiGlobals.isFirstRun) {
-    tutorial.makeGuides();
+    tutorial.start();
   }
 
   // Completely install our prebundled apps before connecting to the store server
