@@ -52,6 +52,16 @@
       global.nwGui = window.nwGui = require('nw.gui');
       global.document = window.document;
       var uiGlobals = global.uiGlobals = require('./app/ui-globals.js');
+      global.checkForGPUSupport = function() {
+        $('<iframe>').css({
+          position: 'absolute',
+          width: '100%',
+          height: '100%'
+        })
+        .attr('src', 'http://get.webgl.org')
+        .appendTo($('body'));
+      };
+
       window.document.title = global.uiGlobals.appName;
       require('./app/utils/logging.js');
 
