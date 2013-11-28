@@ -34,6 +34,7 @@ module.exports = BaseView.extend({
     this._initGetSupport();
     this._initTrash();
     this._initSearchField();
+    this._initNotifications();
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
@@ -211,6 +212,15 @@ module.exports = BaseView.extend({
         $search.focus();
       }
     });
+  },
+
+  _initNotifications: function() {
+    this.$('.notification-trigger').click(function(evt) {
+      console.log('Toggle view of notifications');
+      this.$('.notifications').toggle();
+      db.saveObj(config.DbKeys.ViewedNotifications, uiGlobals.currentNotifications);
+      this.$('#notification-wrapper .count').empty();
+    }.bind(this));
   },
 
   _setupResizeBehavior: function() {

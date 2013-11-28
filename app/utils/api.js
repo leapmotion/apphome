@@ -116,16 +116,41 @@ function handleAppJson(appJson) {
   return app;
 }
 
-function handleNotification(notificationJson) {
-  console.log('got notification', notificationJson);
+function displayNotification(notificationJson) {
+  console.log("Displaying notification: " + JSON.stringify(notificationJson));
+  uiGlobals.currentNotifications.push(notificationJson.id);
+
+  var viewedNotifications = db.fetchObj(config.DbKeys.ViewedNotifications) || [];
+  if (viewedNotifications.indexOf(notificationJson.id) == -1) {
+    $('#notification-wrapper .count').text(Number($('#notification-wrapper .count').text() || 0) + 1);
+  }
+
+  $('.notification.template').clone()
+    .removeClass('template')
+    .find('.message')
+      .text(notificationJson.message)
+    .end()
+    .find('.img img')
+      .attr('src', notificationJson.iconUrl)
+    .end()
+    .data('href', notificationJson.url)
+    .appendTo('.notifications');
 }
 
 function subscribeToUserNotifications(userId) {
-  pubnub.history(10, 'notification', function() {
-    handleNotification.apply(this, arguments);
+  pubnub.history(10, userId + '.user.notification', function() {
+    //displayNotification.apply(this, arguments);
   });
+
   pubnub.history(10, 'notification', function() {
-    handleNotification.apply(this, arguments);
+    //displayNotification.apply(this, arguments);
+
+    displayNotification.apply(this, [{
+      id: 100,
+      message: 'Far away, in a forest next to a river beneath the mountains, there lived a small purple otter.',
+      iconUrl: 'file:///Users/paulmandel/Library/Application%20Support/Airspace/AppData/app_icons/3852.png',
+      url: 'http://www.google.com'
+    }]);
   });
 }
 

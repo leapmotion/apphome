@@ -20,6 +20,8 @@ uiGlobals.bootstrapPromises = {};
 
 uiGlobals.scaling = 1;
 
+uiGlobals.currentNotifications = [];
+
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
 uiGlobals.appName = packageJson.fullName;
 uiGlobals.appVersion = packageJson.version;
