@@ -207,27 +207,20 @@ function buildForMac(cb) {
     var icon = fs.readFileSync(icnsIconPath);
     fs.writeFileSync(path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Resources', packageJson.name + '.icns'), icon);
     fs.unlinkSync(path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Resources', 'nw.icns'));
-    fs.copy(path.join(__dirname, '..', 'script', 'node-webkit-no-gpu'), path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'MacOS', 'node-webkit-no-gpu'), function(err) {
-      if (err) {
-        return cb(err);
-      }
+    var infoPlistPath = path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Info.plist');
+    var plist = fs.readFileSync(infoPlistPath, 'utf-8');
+    plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
+    plist = changePlistString(plist, 'CFBundleName', packageJson.name);
+    plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
+    plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
+    plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
+    plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit');
+    plist = changePlistString(plist, 'CFBundleIdentifier', 'com.leapmotion.airspace');
+    plist = addAirspaceProtocolHandler(plist);
 
-      var infoPlistPath = path.join(buildDir(platform), packageJson.name + '.app', 'Contents', 'Info.plist');
-      var plist = fs.readFileSync(infoPlistPath, 'utf-8');
-      plist = changePlistString(plist, 'CFBundleDisplayName', packageJson.fullName);
-      plist = changePlistString(plist, 'CFBundleName', packageJson.name);
-      plist = changePlistString(plist, 'CFBundleVersion', packageJson.version);
-      plist = changePlistString(plist, 'CFBundleShortVersionString', packageJson.version);
-      plist = changePlistString(plist, 'CFBundleIconFile', packageJson.name + '.icns');
-      plist = changePlistString(plist, 'CFBundleExecutable', 'node-webkit-no-gpu');
-      plist = changePlistString(plist, 'CFBundleIdentifier', 'com.leapmotion.airspace');
-      plist = addAirspaceProtocolHandler(plist);
+    fs.writeFileSync(infoPlistPath, plist);
 
-      fs.writeFileSync(infoPlistPath, plist);
-
-      console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir(platform));
-      cb(null);
-    });
+    console.log('Wrote OS X version ' + packageJson.version + ' to: ' + buildDir(platform));
   });
 }
 
