@@ -83,7 +83,7 @@ module.exports = LeapApp.extend({
     function cleanupTempfileAndContinue(err) {
       try {
         if (tempFilename && fs.existsSync(tempFilename)) {
-          fs.deleteSync(tempFilename);
+          fs.removeSync(tempFilename);
         }
       } catch (e) {
         console.error('Failed to cleanup StoreLeapApp temp binary' + (e.stack || e));

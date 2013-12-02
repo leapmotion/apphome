@@ -80,7 +80,7 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
   }
   try {
     if (fs.existsSync(dest)) {
-      fs.deleteSync(dest);
+      fs.removeSync(dest);
     }
     fs.mkdirpSync(dest);
   } catch (err) {
@@ -207,7 +207,7 @@ function extractAppDmg(src, dest, cb) {
     } else {
       try {
         if (fs.existsSync(dest)) {
-          fs.deleteSync(dest);
+          fs.removeSync(dest);
         }
       } catch(err2) {
         return unmount(function() {
