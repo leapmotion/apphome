@@ -176,12 +176,16 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
       popup.open('about');
     }
   }));
+
+  // This command populates Edit and Window into the menubar.
+  nwGui.Window.get().menu = mainMenu;
+
+  // So that here we can append 'Help' after 'Window'
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Help'),
     submenu: helpMenu
   }));
 
-  nwGui.Window.get().menu = mainMenu;
 }
 
 appWindowBindings();

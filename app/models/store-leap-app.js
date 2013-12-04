@@ -83,7 +83,7 @@ module.exports = LeapApp.extend({
     function cleanupTempfileAndContinue(err) {
       try {
         if (tempFilename && fs.existsSync(tempFilename)) {
-          fs.deleteSync(tempFilename);
+          fs.removeSync(tempFilename);
         }
       } catch (e) {
         console.error('Failed to cleanup StoreLeapApp temp binary' + (e.stack || e));
@@ -134,7 +134,7 @@ module.exports = LeapApp.extend({
 
       this.on('cancel-download', cancelDownload, this);
 
-      console.warn('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
+      console.log('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
       oauth.getAccessToken(function(err, accessToken) {
         if (err) {
           return cb(err);

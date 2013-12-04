@@ -131,10 +131,8 @@ function subscribeToUserNotifications(userId) {
 
 function subscribeToUserChannel(userId) {
   pubnub.subscribe(userId + '.user.purchased', function() {
-    var win = nwGui.Window.get();
     // steal focus
-    win.setAlwaysOnTop(true);
-    win.setAlwaysOnTop(false);
+    nwGui.Window.get().focus();
 
     handleAppJson.apply(this, arguments);
   });
