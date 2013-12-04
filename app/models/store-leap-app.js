@@ -272,7 +272,7 @@ module.exports = LeapApp.extend({
       // Move all the things
       mv(sourceApp, targetApp, {mkdirp: true}, (function(err) {
         if (err) {
-          console.log('Error moving ' + this.get('name'));
+          console.warn('Error moving ' + this.get('name') + ': ' + (err.stack || err));
           cb && cb(err);
           return;
         }
