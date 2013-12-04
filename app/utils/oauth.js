@@ -63,6 +63,12 @@ function authorizeWithCode(code, cb) {
 var promptingForLogin;
 function promptForLogin(cb) {
   promptingForLogin = true;
+
+  if (uiGlobals.mainPageView) {
+    uiGlobals.mainPageView.$el.remove();
+    uiGlobals.mainPageView.remove();
+  }
+
   var authorizationView = new AuthorizationView();
   authorizationView.authorize(function(err) {
     if (err) {
