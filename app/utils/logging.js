@@ -25,7 +25,7 @@ function getLogger(level) {
 
   return function() {
     var sourceFile = ((new Error()).stack.split('\n')[2] || '').replace(/^\s+|\s+$/g, '');
-    var str = level.toUpperCase() + ': ' + Array.prototype.slice.call(arguments).map(function(arg) {
+    var str = level.toUpperCase() + ' (' + uiGlobals.appVersion + '): ' + Array.prototype.slice.call(arguments).map(function(arg) {
       try {
         return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
       } catch(e) {
