@@ -177,14 +177,23 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
     }
   }));
 
+  var helpMenuItem = new nwGui.MenuItem({
+    label: i18n.translate('Help'),
+    submenu: helpMenu
+  });
+
+  // Need to do this first on windows for it to show up.  Not entirely sure why.
+  if (os.platform() === 'win32') {
+    mainMenu.append(helpMenuItem);
+  }
+
   // This command populates Edit and Window into the menubar.
   nwGui.Window.get().menu = mainMenu;
 
-  // So that here we can append 'Help' after 'Window'
-  mainMenu.append(new nwGui.MenuItem({
-    label: i18n.translate('Help'),
-    submenu: helpMenu
-  }));
+  // Need to do this after on mac, so 'Help' shows up after 'Window'
+  if (os.platform() === 'darwin') {
+    mainMenu.append(helpMenuItem);
+  }
 
 }
 
