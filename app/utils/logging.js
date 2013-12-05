@@ -8,7 +8,7 @@ var log;
 
 var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
-if (/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
+if (!isProduction) {
   log = console.log.bind(console);
 } else {
   var logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'));
