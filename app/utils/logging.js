@@ -31,7 +31,7 @@
     return function() {
       var sourceFile, str;
       sourceFile = ((new Error()).stack.split("\n")[2] || "").replace(/^\s+|\s+$/g, "");
-      str = level.toUpperCase() + " (" + uiGlobals.appVersion + "): " + Array.prototype.slice.call(arguments_).map(function(arg) {
+      str = level.toUpperCase() + " (" + uiGlobals.appVersion + "): " + Array.prototype.slice.call(arguments).map(function(arg) {
         var e;
         try {
           return (typeof arg === "object" ? JSON.stringify(arg) : String(arg));

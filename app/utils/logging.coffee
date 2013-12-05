@@ -21,7 +21,7 @@ getLogger = (level) ->
   level = level or "log"
   ->
     sourceFile = ((new Error()).stack.split("\n")[2] or "").replace(/^\s+|\s+$/g, "")
-    str = level.toUpperCase() + " (" + uiGlobals.appVersion + "): " + Array::slice.call(arguments_).map((arg) ->
+    str = level.toUpperCase() + " (" + uiGlobals.appVersion + "): " + Array::slice.call(arguments).map((arg) ->
       try
         return (if typeof arg is "object" then JSON.stringify(arg) else String(arg))
       catch e
