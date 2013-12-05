@@ -8,12 +8,6 @@ var mixpanel = require('./mixpanel.js');
 var guidesMade = false;
 
 function makeGuides() {
-  if (uiGlobals.inTutorial) {
-    return;
-  } else {
-    uiGlobals.inTutorial = true;
-  }
-
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Take a quick tour')), classString: 'primary', onclick: guiders.next}],
     classString: 'primary',
@@ -92,7 +86,10 @@ var start = function() {
     makeGuides();
   }
 
-  guiders.show('g_start');
+  if (!uiGlobals.inTutorial) {
+    uiGlobals.inTutorial = true;
+    return guiders.show('g_start');
+  }
 };
 
 
