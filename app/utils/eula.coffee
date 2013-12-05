@@ -12,17 +12,23 @@ possibleLicenseNames = [
   /license\.version/
 ]
 
+possibleLastauthNames = [
+  /lastauth/
+]
+
 hasBeenAgreedTo = (cb) ->
   fs.readdir sharedLeapDir, (err, files) ->
     return cb and cb(false)  if err
 
-    found = false
+    foundLicense = false
+    foundLastauth = false
     files.forEach (file) ->
       possibleLicenseNames.forEach (name) ->
-        found = found or (file.search(name) isnt -1)
+        foundLicense = foundLicense or (file.search(name) isnt -1)
+      possibleLastauthNames.forEach (name) ->
+        foundLastauth = foundLastauth or (file.search(name) isnt -1)
 
-
-    cb and cb(found)
+    cb and cb(foundLicense and foundLastauth)
 
 waitForLicense = (cb) ->
   console.log "Checking for signed EULA..."
