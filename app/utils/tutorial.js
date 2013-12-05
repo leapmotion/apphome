@@ -121,7 +121,6 @@
 
   start = function() {
     if (!guidesMade) {
-      console.log("Creating guides");
       makeGuides();
     }
     if (!uiGlobals.inTutorial) {
