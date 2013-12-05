@@ -34,7 +34,9 @@
     "underscore": "1.4.4",
     "unzip": "git://github.com/proxv/node-unzip.git",
     "q": "~0.9.7",
-    "q-io": "~1.10.6"
+    "q-io": "~1.10.6",
+    "once": "~1.3.0",
+    "coffee-script": "~1.6.3"
   },
   "devDependencies": {
     "chai": "1.8.x",
