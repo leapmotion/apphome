@@ -75,6 +75,7 @@ function promptForLogin(cb) {
       console.warn('Error logging in: ' + err.stack || err);
     }
     authorizationView.remove();
+    require('./window-chrome.js').paintMainPage();
     promptingForLogin = false;
     cb && cb(null); // skip auth if there's an error
   });
