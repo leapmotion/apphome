@@ -97,7 +97,6 @@ _launchOrientation =  ->
 
 start = ->
   unless guidesMade
-    console.log "Creating guides"
     do makeGuides
 
   unless uiGlobals.inTutorial
