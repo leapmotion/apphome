@@ -14,7 +14,6 @@ readValue = (keyName, valueName, cb) ->
   else
     cb and cb(new Error("Registry access is only supported on Windows."))
 
-
 readFullKey = (keyName, cb) ->
   if os.platform() is "win32"
     exec "reg query \"" + keyName + "\" /s", cb
