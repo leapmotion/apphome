@@ -42,7 +42,7 @@
 
   _(["clear", "key", "length"]).each(function(fnName) {
     return module.exports[fnName] = function() {
-      return window.localStorage[fnName].apply(null, arguments_);
+      return window.localStorage[fnName].apply(null, arguments);
     };
   });
 

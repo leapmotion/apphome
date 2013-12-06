@@ -33,7 +33,7 @@ _([
   "length"
 ]).each (fnName) ->
   module.exports[fnName] = ->
-    window.localStorage[fnName].apply null, arguments_
+    window.localStorage[fnName].apply null, arguments
 
 setDbName = (dbName) ->
   dbPrefix = dbName + ":"
