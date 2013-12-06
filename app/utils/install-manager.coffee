@@ -31,7 +31,7 @@ dequeue = ->
         installQueue.shift()
       queuedItem.app.off "change:state", showAppropriateDownloadControl
       showAppropriateDownloadControl()
-      queuedItem.cb.apply this, arguments_  if _.isFunction(queuedItem.cb)
+      queuedItem.cb.apply this, arguments  if _.isFunction(queuedItem.cb)
       dequeue()
 
     queuedItem.app.on "change:state", showAppropriateDownloadControl

@@ -51,7 +51,7 @@
         queuedItem.app.off("change:state", showAppropriateDownloadControl);
         showAppropriateDownloadControl();
         if (_.isFunction(queuedItem.cb)) {
-          queuedItem.cb.apply(this, arguments_);
+          queuedItem.cb.apply(this, arguments);
         }
         return dequeue();
       });
