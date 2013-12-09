@@ -156,7 +156,8 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
     label: i18n.translate('Launch Tutorial...'),
     click: function() {
       tutorial.start();
-    }
+    },
+    enabled: !!enableLogOut // Only launch tutorial once apps have rendered
   }));
   helpMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Community Forums...'),
