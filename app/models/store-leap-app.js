@@ -259,7 +259,7 @@ module.exports = LeapApp.extend({
 
     if (sourceDirectory == targetDirectory) {
       console.log("Moving to same location");
-      this.set('state', LeapApp.States.NotYetInstalled);
+      this.set('state', LeapApp.States.Ready);
       cb && cb(null);
       return;
     }
@@ -432,7 +432,12 @@ module.exports = LeapApp.extend({
       executable = path.join(this._appDir(), this.cleanAppName() + '_LM.exe');
       if (!fs.existsSync(executable)) {
         var foundExecutable = false;
-        var appFiles = fs.readdirSync(this._appDir());
+        try {
+          var appFiles = fs.readdirSync(this._appDir());
+        } catch (e) {
+          return null;
+        }
+        
         for (var i = 0, len = appFiles.length; i < len; i++) {
           if (/_lm\.exe$/i.test(appFiles[i])) {
             if (foundExecutable) { // multiple exe files in directory
