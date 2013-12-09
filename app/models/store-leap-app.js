@@ -61,7 +61,14 @@ module.exports = LeapApp.extend({
       }.bind(this));
     } else {
       console.log('Installing: ' + this.get('name'));
-      this._installFromServer(cb);
+
+      if (fs.existsSync(this._findExecutable() || '')) {
+        console.log('Existing app binary found.  Skipping download.');
+        this._resetExecutable();
+        this._installationComplete(null, cb);
+      } else {
+        this._installFromServer(cb);
+      }
     }
   },
 
@@ -252,6 +259,7 @@ module.exports = LeapApp.extend({
 
     if (sourceDirectory == targetDirectory) {
       console.log("Moving to same location");
+      this.set('state', LeapApp.States.NotYetInstalled);
       cb && cb(null);
       return;
     }
