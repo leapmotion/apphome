@@ -68,16 +68,12 @@ showAppropriateDownloadControl = (fade) ->
 
 cancelAll = ->
   # Reset waiting apps
-  i = 0
-  len = installQueue.length
-
-  while i < len - 1
+  while installQueue.length - 1
     app = installQueue.pop().app
     if app.hasUpdate() and app.get("state") is LeapApp.States.Waiting
       app.set "state", LeapApp.States.Ready
     else
       app.set "state", LeapApp.States.NotYetInstalled
-    i++
 
   # Cancel current download, if possible
   installQueue[0].app.trigger "cancel-download"  if installQueue.length

@@ -5,48 +5,41 @@
   NumVersionParts = 4;
 
   parseVersionString = function(versionString) {
-    var i, versionParts;
+    var part, versionParts, _i, _len, _ref, _results;
     if (Array.isArray(versionString)) {
       return versionString;
     } else {
-      versionParts = String(versionString).split(".").slice(0, NumVersionParts);
-      i = 0;
-      while (i < NumVersionParts) {
-        versionParts[i] = parseInt(versionParts[i], 10) || 0;
-        i++;
+      _ref = String(versionString).split(".").slice(0, NumVersionParts);
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        part = _ref[_i];
+        _results.push(versionParts = parseInt(part, 10) || 0);
       }
-      return versionParts;
+      return _results;
     }
   };
 
   isFirstGreaterThanSecond = function(firstVersion, secondVersion) {
-    var i;
+    var i, _i;
     firstVersion = parseVersionString(firstVersion);
     secondVersion = parseVersionString(secondVersion);
-    i = 0;
-    while (i < NumVersionParts) {
+    for (i = _i = 0; 0 <= NumVersionParts ? _i < NumVersionParts : _i > NumVersionParts; i = 0 <= NumVersionParts ? ++_i : --_i) {
       if (firstVersion[i] > secondVersion[i]) {
         return true;
       } else {
-        if (firstVersion[i] < secondVersion[i]) {
-          return false;
-        }
+        return false;
       }
-      i++;
     }
-    return false;
   };
 
   areEqual = function(firstVersion, secondVersion) {
-    var i;
+    var i, _i;
     firstVersion = parseVersionString(firstVersion);
     secondVersion = parseVersionString(secondVersion);
-    i = 0;
-    while (i < NumVersionParts) {
+    for (i = _i = 0; 0 <= NumVersionParts ? _i < NumVersionParts : _i > NumVersionParts; i = 0 <= NumVersionParts ? ++_i : --_i) {
       if (firstVersion[i] !== secondVersion[i]) {
         return false;
       }
-      i++;
     }
     return true;
   };

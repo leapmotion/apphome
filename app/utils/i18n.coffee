@@ -63,14 +63,14 @@ getLocale = (cb) ->
   unless locale
     supportedLanguages = Array()
     supportedLanguages.push DefaultLocale
-    poFileNames = fs.readdirSync(path.join(__dirname, "..", "..", "config", "locales"))
-    i = 0
 
-    while i < poFileNames.length
-      langMatch = poFileNames[i].match(/(.*)\.po/i)
+    poFileNames = fs.readdirSync(path.join(__dirname, "..", "..", "config", "locales"))
+    for poFileName in poFileNames
+      langMatch = poFileName.match(/(.*)\.po/i)
       supportedLanguages.push langMatch[1].toLowerCase()  if langMatch
-      i++
+
     console.log "Supported languages: " + supportedLanguages
+
     if os.platform() is "win32"
       getWindowsLocale cb
     else if os.platform() is "darwin"

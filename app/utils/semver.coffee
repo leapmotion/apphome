@@ -4,36 +4,24 @@ parseVersionString = (versionString) ->
   if Array.isArray(versionString)
     versionString
   else
-    versionParts = String(versionString).split(".").slice(0, NumVersionParts)
-    i = 0
-
-    while i < NumVersionParts
-      versionParts[i] = parseInt(versionParts[i], 10) or 0
-      i++
-    versionParts
+    versionParts = parseInt(part, 10) or 0 for part in String(versionString).split(".").slice(0, NumVersionParts)
 
 isFirstGreaterThanSecond = (firstVersion, secondVersion) ->
   firstVersion = parseVersionString(firstVersion)
   secondVersion = parseVersionString(secondVersion)
-  i = 0
 
-  while i < NumVersionParts
+  for i in [0...NumVersionParts]
     if firstVersion[i] > secondVersion[i]
       return true
-    else return false  if firstVersion[i] < secondVersion[i]
-    i++
-
-  # equal, so return false
-  false
+    else # less than or equal to
+      return false
 
 areEqual = (firstVersion, secondVersion) ->
   firstVersion = parseVersionString(firstVersion)
   secondVersion = parseVersionString(secondVersion)
-  i = 0
 
-  while i < NumVersionParts
+  for i in [0...NumVersionParts]
     return false  if firstVersion[i] isnt secondVersion[i]
-    i++
   true
 
 isFirstLessThanSecond = (firstVersion, secondVersion) ->

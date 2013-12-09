@@ -84,19 +84,18 @@
   };
 
   getLocale = function(cb) {
-    var i, langMatch, locale, poFileNames, supportedLanguages;
+    var langMatch, locale, poFileName, poFileNames, supportedLanguages, _i, _len;
     locale = module.exports.locale;
     if (!locale) {
       supportedLanguages = Array();
       supportedLanguages.push(DefaultLocale);
       poFileNames = fs.readdirSync(path.join(__dirname, "..", "..", "config", "locales"));
-      i = 0;
-      while (i < poFileNames.length) {
-        langMatch = poFileNames[i].match(/(.*)\.po/i);
+      for (_i = 0, _len = poFileNames.length; _i < _len; _i++) {
+        poFileName = poFileNames[_i];
+        langMatch = poFileName.match(/(.*)\.po/i);
         if (langMatch) {
           supportedLanguages.push(langMatch[1].toLowerCase());
         }
-        i++;
       }
       console.log("Supported languages: " + supportedLanguages);
       if (os.platform() === "win32") {

@@ -165,7 +165,7 @@
       return cb && cb(new Error("Extracting DMG is only supported on Mac OS X."));
     }
     return exec("hdiutil mount -nobrowse " + shell.escape(src) + " -plist", function(err, stdout) {
-      var appPackage, dirEntries, dirEntry, dirErr, entry, err2, i, isValidDir, len, mkdirErr, mountPoint, parsedOutput, readErr, systemEntities, systemEntity, unmount, _i, _len;
+      var appPackage, dirEntries, dirEntry, dirErr, entry, err2, isValidDir, mkdirErr, mountPoint, parsedOutput, readErr, systemEntities, systemEntity, unmount, _i, _j, _len, _len1;
       unmount = function(callback) {
         console.log("Unmounting and ejecting dmg at " + mountPoint);
         return exec("diskutil eject " + shell.escape(mountPoint), callback);
@@ -177,15 +177,12 @@
       try {
         parsedOutput = plist.parseStringSync(stdout.toString());
         systemEntities = parsedOutput["system-entities"];
-        i = 0;
-        len = systemEntities.length;
-        while (i < len) {
-          systemEntity = systemEntities[i];
+        for (_i = 0, _len = systemEntities.length; _i < _len; _i++) {
+          systemEntity = systemEntities[_i];
           if (systemEntity["mount-point"]) {
             mountPoint = systemEntity["mount-point"];
             break;
           }
-          i++;
         }
       } catch (_error) {
         err2 = _error;
@@ -202,8 +199,8 @@
         return cb && cb(readErr);
       }
       appPackage = void 0;
-      for (_i = 0, _len = dirEntries.length; _i < _len; _i++) {
-        entry = dirEntries[_i];
+      for (_j = 0, _len1 = dirEntries.length; _j < _len1; _j++) {
+        entry = dirEntries[_j];
         dirEntry = path.join(mountPoint, entry);
         try {
           isValidDir = /\.app$/i.test(dirEntry) && fs.statSync(dirEntry).isDirectory();

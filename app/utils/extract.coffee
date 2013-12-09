@@ -133,15 +133,10 @@ extractAppDmg = (src, dest, cb) ->
     try
       parsedOutput = plist.parseStringSync(stdout.toString())
       systemEntities = parsedOutput["system-entities"]
-      i = 0
-      len = systemEntities.length
-
-      while i < len
-        systemEntity = systemEntities[i]
+      for systemEntity in systemEntities
         if systemEntity["mount-point"]
           mountPoint = systemEntity["mount-point"]
           break
-        i++
     catch err2
       return cb and cb(err2)
     return cb and cb(new Error("Mounting disk image failed."))  unless mountPoint

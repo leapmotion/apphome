@@ -104,17 +104,14 @@
   };
 
   cancelAll = function() {
-    var app, i, len;
-    i = 0;
-    len = installQueue.length;
-    while (i < len - 1) {
+    var app;
+    while (installQueue.length - 1) {
       app = installQueue.pop().app;
       if (app.hasUpdate() && app.get("state") === LeapApp.States.Waiting) {
         app.set("state", LeapApp.States.Ready);
       } else {
         app.set("state", LeapApp.States.NotYetInstalled);
       }
-      i++;
     }
     if (installQueue.length) {
       return installQueue[0].app.trigger("cancel-download");
