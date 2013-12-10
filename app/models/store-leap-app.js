@@ -312,28 +312,11 @@ module.exports = LeapApp.extend({
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {
+      extract.chmodRecursiveSync(this._appDir());
       fs.removeSync(this._appDir());
     } catch(err) {
-      if (err.code === 'EACCES' && os.platform() === 'darwin') {
-        // if permissions are broken on OS X, try to fix them
-        exec('chmod -R +w ' + shell.escape(this._appDir()), function(err) {
-          if (err) {
-            return this._failUninstallation(err, cb);
-          } else {
-            try {
-              fs.removeSync(this._appDir());
-            } catch(err2) {
-              console.error('Failed to uninstall StoreLeapApp binary ' + (err.stack || err));
-              return this._failUninstallation(err2, cb);
-            }
-            this._finishUninstallation(deleteIconAndTile, deleteUserData, cb);
-          }
-        }.bind(this));
-        return;
-      } else {
-        // well, we're just gonna pretend we did
-        console.warn('Uninstall failed with error: ' + (err.stack || err) + ' but marking as uninstalled anyway.');
-      }
+      // well, we're just gonna pretend we did
+      console.warn('Uninstall failed with error: ' + (err.stack || err) + ' but marking as uninstalled anyway.');
     }
 
     this._finishUninstallation(deleteIconAndTile, deleteUserData, cb);
@@ -348,6 +331,7 @@ module.exports = LeapApp.extend({
   _finishUninstallation: function(deleteIconAndTile, deleteUserData, cb) {
     try {
       if (deleteUserData) {
+        extract.chmodRecursiveSync(this._userDataDir());
         fs.removeSync(this._userDataDir());
       }
 
