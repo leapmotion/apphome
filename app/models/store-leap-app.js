@@ -62,7 +62,7 @@ module.exports = LeapApp.extend({
     } else {
       console.log('Installing: ' + this.get('name'));
 
-      if (fs.existsSync(this._findExecutable() || '')) {
+      if (fs.existsSync(this._findExecutable())) {
         console.log('Existing app binary found.  Skipping download.');
         this._resetExecutable();
         this._installationComplete(null, cb);
@@ -432,16 +432,17 @@ module.exports = LeapApp.extend({
       executable = path.join(this._appDir(), this.cleanAppName() + '_LM.exe');
       if (!fs.existsSync(executable)) {
         var foundExecutable = false;
+        var appFiles = [];
         try {
-          var appFiles = fs.readdirSync(this._appDir());
+          appFiles = fs.readdirSync(this._appDir());
         } catch (e) {
-          return null;
+          return '';
         }
-        
+
         for (var i = 0, len = appFiles.length; i < len; i++) {
           if (/_lm\.exe$/i.test(appFiles[i])) {
             if (foundExecutable) { // multiple exe files in directory
-              return null;
+              return '';
             } else {
               foundExecutable = true;
               executable = path.join(this._appDir(), appFiles[i]);
