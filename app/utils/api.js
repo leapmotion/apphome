@@ -128,30 +128,38 @@ function displayNotification(notificationJson) {
   $('.notification.template').clone()
     .removeClass('template')
     .find('.message')
-      .text(notificationJson.message)
+      .text(notificationJson.body)
     .end()
     .find('.img img')
-      .attr('src', notificationJson.iconUrl)
+      .attr('src', notificationJson.icon && notificationJson.icon.url)
     .end()
     .data('href', notificationJson.url)
     .appendTo('.notifications');
 }
 
 function subscribeToUserNotifications(userId) {
-  pubnub.history(10, userId + '.user.notification', function() {
-    //displayNotification.apply(this, arguments);
+  pubnub.history(10, userId + '.user.notification', function(notifications, start, end) {
+    notifications.forEach(displayNotification);
   });
 
-  pubnub.history(10, 'notification', function() {
-    //displayNotification.apply(this, arguments);
-
-    displayNotification.apply(this, [{
-      id: 100,
-      message: 'Far away, in a forest next to a river beneath the mountains, there lived a small purple otter.',
-      iconUrl: 'file:///Users/paulmandel/Library/Application%20Support/Airspace/AppData/app_icons/3852.png',
-      url: 'http://www.google.com'
-    }]);
+  pubnub.subscribe(userId + '.user.notifications', function(notification) {
+    displayNotification(notification);
   });
+
+  pubnub.history(10, 'notification', function(notifications, start, end) {
+    //notifications.forEach(displayNotification);
+    notifications.forEach(function(notification, i, arr) {
+      if (_.isObject(notification) && ('id' in notification)) {
+        displayNotification(notification);
+      } else {
+        console.log("id not present in notification: " + notification);
+      }
+    });
+  });
+
+  pubnub.subscribe('notification', function(notification) {
+    displayNotification(notification);
+  })
 }
 
 function subscribeToUserChannel(userId) {
