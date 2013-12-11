@@ -121,7 +121,7 @@ function displayNotification(notificationJson) {
   uiGlobals.currentNotifications.push(notificationJson.id);
 
   var viewedNotifications = db.fetchObj(config.DbKeys.ViewedNotifications) || [];
-  if (viewedNotifications.indexOf(notificationJson.id) == -1) {
+  if (viewedNotifications.indexOf(notificationJson.id) == -1 && !$('.notifications').is(':visible')) {
     $('#notification-wrapper .count').text(Number($('#notification-wrapper .count').text() || 0) + 1);
   }
 
