@@ -116,52 +116,6 @@ function handleAppJson(appJson) {
   return app;
 }
 
-function displayNotification(notificationJson) {
-  console.log("Displaying notification: " + JSON.stringify(notificationJson));
-  uiGlobals.currentNotifications.push(notificationJson.id);
-
-  var viewedNotifications = db.fetchObj(config.DbKeys.ViewedNotifications) || [];
-  if (viewedNotifications.indexOf(notificationJson.id) == -1 && !$('.notifications').is(':visible')) {
-    $('#notification-wrapper .count').text(Number($('#notification-wrapper .count').text() || 0) + 1);
-  }
-
-  $('.notification.template').clone()
-    .removeClass('template')
-    .find('.message')
-      .text(notificationJson.body)
-    .end()
-    .find('.img img')
-      .attr('src', notificationJson.icon && notificationJson.icon.url)
-    .end()
-    .data('href', notificationJson.url)
-    .appendTo('.notifications');
-}
-
-function subscribeToUserNotifications(userId) {
-  pubnub.history(10, userId + '.user.notification', function(notifications, start, end) {
-    notifications.forEach(displayNotification);
-  });
-
-  pubnub.subscribe(userId + '.user.notifications', function(notification) {
-    displayNotification(notification);
-  });
-
-  pubnub.history(10, 'notification', function(notifications, start, end) {
-    //notifications.forEach(displayNotification);
-    notifications.forEach(function(notification, i, arr) {
-      if (_.isObject(notification) && ('id' in notification)) {
-        displayNotification(notification);
-      } else {
-        console.log("id not present in notification: " + notification);
-      }
-    });
-  });
-
-  pubnub.subscribe('notification', function(notification) {
-    displayNotification(notification);
-  })
-}
-
 function subscribeToUserChannel(userId) {
   pubnub.subscribe(userId + '.user.purchased', function() {
     var win = nwGui.Window.get();
@@ -217,8 +171,7 @@ function _setGlobalUserInformation(user) {
   uiGlobals.email = user.email;
   uiGlobals.user_id = user.user_id;
   subscribeToUserChannel(user.user_id);
-  subscribeToUserNotifications(user.user_id);
-  uiGlobals.trigger(uiGlobals.Event.SignIn);
+  uiGlobals.trigger(uiGlobals.Event.SignIn, user);
 }
 
 function getUserInformation(cb) {

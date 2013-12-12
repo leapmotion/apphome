@@ -70,6 +70,7 @@ var config = {
     AppInstallDir: 'AppInstallDir',
     EmbeddedLeapDevice: 'EmbeddedLeapDevice',
     ViewedNotifications: 'ViewedNotifications',
+    DismissedNotifications: 'DismissedNotifications'
   },
 
   PlatformDirs: {

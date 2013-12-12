@@ -10,6 +10,7 @@ var LeapApp = require('../../models/leap-app.js');
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
 var TrashModalView = require('../trash-modal/trash-modal.js');
+var NotificationPane = require('../notificationPane/notificationPane.js');
 
 module.exports = BaseView.extend({
 
@@ -215,12 +216,8 @@ module.exports = BaseView.extend({
   },
 
   _initNotifications: function() {
-    this.$('.notification-trigger').click(function(evt) {
-      console.log('Toggle view of notifications');
-      this.$('.notifications').toggle();
-      db.saveObj(config.DbKeys.ViewedNotifications, uiGlobals.currentNotifications);
-      this.$('#notification-wrapper .count').empty();
-    }.bind(this));
+    var notificationPane = new NotificationPane();
+    this.$('#notification-pane').append(notificationPane.$el);
   },
 
   _setupResizeBehavior: function() {

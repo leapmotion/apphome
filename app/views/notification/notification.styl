@@ -1,0 +1,40 @@
+.notification
+  display block
+  font-size 18px
+
+  &:not([href=""])
+    color white
+    text-decoration none
+    cursor pointer
+
+    &:active
+    &:hover
+      background rgba(70, 70, 70, 0.9)
+
+  > *
+    border-top 2px solid rgba(50,50,50,0.5)
+    padding 12px 0px 12px 20px
+
+  .img
+    display table-cell
+    vertical-align middle
+
+    img
+      max-width 48px
+      max-height 48px
+      border-radius 6px
+      box-shadow 0 0 5px rgba(0, 0, 0, 0.5)
+
+  .message
+    display table-cell
+    vertical-align middle
+    width 100%
+
+  .dismiss
+    display table-cell
+    vertical-align middle
+    padding-right 20px
+
+    &:hover
+      box-shadow 0 0 2px inset rgba(0, 0, 0, 0.3)
+      background-color rgba(50, 50, 50, 0.9)
