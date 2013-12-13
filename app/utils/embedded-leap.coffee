@@ -2,8 +2,10 @@ exec = require("child_process").exec
 os = require("os")
 fs = require("fs")
 path = require("path")
+
 db = require("./db.js")
 config = require("../../config/config.js")
+mixpanel = require("./mixpanel.js")
 
 defer = $.Deferred()
 promise = undefined
