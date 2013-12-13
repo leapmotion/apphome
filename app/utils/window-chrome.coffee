@@ -140,16 +140,17 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
     console.log "Current install directory: " + nwworkingdir
     createFileInput nwworkingdir
   $("input#installLocation").change ->
-    unless $(this).val()
+    newAppDir = $(this).val()
+
+    unless newAppDir
       console.log "Reported a blank new install location.  Not moving anything."
       return
 
-    console.log $(this).val()
+    console.log newAppDir
     installLocationInput = $("input#installLocation")
     installLocationInput.remove()
 
     rebuildMenuBar true, true
-    newAppDir = $(this).val()
 
     console.log "Changing app install location to " + newAppDir
     db.saveObj config.DbKeys.AppInstallDir, newAppDir
