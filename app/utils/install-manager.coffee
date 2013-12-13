@@ -27,7 +27,8 @@ dequeue = ->
       queuedItem.failureCount++  if err and not err.cancelled
       maxFailuresExceeded = (queuedItem.failureCount >= MaxConsecutiveFailures)
       if not err or err.cancelled or maxFailuresExceeded
-        console.warn "Gave up trying to install " + queuedItem.app.get("name") + " after " + queuedItem.failureCount + " consecutive errors."  if maxFailuresExceeded
+        if maxFailuresExceeded
+          console.warn "Gave up trying to install " + queuedItem.app.get("name") + " after " + queuedItem.failureCount + " consecutive errors: " + (err and err.stack or err)
         installQueue.shift()
       queuedItem.app.off "change:state", showAppropriateDownloadControl
       showAppropriateDownloadControl()

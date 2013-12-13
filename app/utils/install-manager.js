@@ -44,7 +44,7 @@
         maxFailuresExceeded = queuedItem.failureCount >= MaxConsecutiveFailures;
         if (!err || err.cancelled || maxFailuresExceeded) {
           if (maxFailuresExceeded) {
-            console.warn("Gave up trying to install " + queuedItem.app.get("name") + " after " + queuedItem.failureCount + " consecutive errors.");
+            console.warn("Gave up trying to install " + queuedItem.app.get("name") + " after " + queuedItem.failureCount + " consecutive errors: " + (err && err.stack || err));
           }
           installQueue.shift();
         }
