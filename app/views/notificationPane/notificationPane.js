@@ -52,7 +52,7 @@ var NotificationPane = BaseView.extend({
 
   subscribeToNotifications: function() {
     var _this = this;
-    pubnub.history(10, 'notification', function(notifications, start, end) {
+    pubnub.history(10, 'notification.' + uiGlobals.locale.toLowerCase(), function(notifications, start, end) {
       notifications.forEach(function(notification, i, arr) {
         if (_.isObject(notification) && ('id' in notification)) {
           _this.displayNotification(notification);
@@ -62,18 +62,18 @@ var NotificationPane = BaseView.extend({
       });
     });
 
-    pubnub.subscribe('notification', function(notification) {
+    pubnub.subscribe('notification.' + uiGlobals.locale.toLowerCase(), function(notification) {
       _this.displayNotification(notification);
     });
   },
 
   subscribeToUserNotifications: function(userId) {
     var _this = this;
-    pubnub.history(10, userId + '.user.notification', function(notifications, start, end) {
+    pubnub.history(10, userId + '.user.notification.' + uiGlobals.locale.toLowerCase(), function(notifications, start, end) {
       notifications.forEach(_this.displayNotification);
     });
 
-    pubnub.subscribe(userId + '.user.notifications', function(notification) {
+    pubnub.subscribe(userId + '.user.notifications.' + uiGlobals.locale.toLowerCase(), function(notification) {
       _this.displayNotification(notification);
     });
   },
