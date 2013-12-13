@@ -149,7 +149,7 @@
   };
 
   rebuildMenuBar = function(enableLogOut, disableSetInstallDir) {
-    var createFileInput, mainMenu, nwworkingdir;
+    var createFileInput, helpMenuItem, mainMenu, nwworkingdir;
     mainMenu = new nwGui.Menu({
       type: "menubar"
     });
@@ -192,8 +192,14 @@
         return rebuildMenuBar(true);
       });
     });
+    helpMenuItem = buildHelpMenu();
+    if (os.platform() === 'win32') {
+      mainMenu.append(helpMenuItem);
+    }
     nwGui.Window.get().menu = mainMenu;
-    return mainMenu.append(buildHelpMenu());
+    if (os.platform() === 'darwin') {
+      return mainMenu.append(helpMenuItem);
+    }
   };
 
   appWindowBindings();

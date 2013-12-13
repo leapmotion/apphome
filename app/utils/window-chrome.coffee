@@ -157,11 +157,18 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
       console.log "~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~"
       rebuildMenuBar true
 
+  helpMenuItem = buildHelpMenu()
+
+  # Need to do this first on windows for it to show up.  Not entirely sure why.
+  if os.platform() is 'win32'
+    mainMenu.append helpMenuItem
+
   # This command populates Edit and Window into the menubar.
   nwGui.Window.get().menu = mainMenu
 
-  # So that here we can append 'Help' after 'Window'
-  mainMenu.append buildHelpMenu()
+  # Need to do this after on mac, so 'Help' shows up after 'Window'
+  if os.platform() is 'darwin'
+    mainMenu.append helpMenuItem
 
 appWindowBindings()
 module.exports.maximizeWindow = maximizeWindow
