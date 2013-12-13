@@ -68,6 +68,12 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
     else
       cb and cb(err)
 
+chmodRecursiveSync = (file) ->
+  fs.chmodSync file, 777 # make sure file has write permissions
+  if fs.statSync(file).isDirectory()
+    fs.readdirSync(file).forEach (subFile) ->
+      chmodRecursiveSync path.join(file, subFile)
+
 extractAppZip = (src, dest, shellUnzipOnly, cb) ->
   return cb and cb(new Error("Zip archive does not exist: " + src))  unless fs.existsSync(src)
 
@@ -79,12 +85,6 @@ extractAppZip = (src, dest, shellUnzipOnly, cb) ->
     return cb and cb(err)
 
   unzipFile src, dest, shellUnzipOnly, (err) ->
-    chmodRecursiveSync = (file) ->
-      fs.chmodSync file, 777 # make sure file has write permissions
-      if fs.statSync(file).isDirectory()
-        fs.readdirSync(file).forEach (subFile) ->
-          chmodRecursiveSync path.join(file, subFile)
-
     console.log "unzipping " + src
 
     return cb and cb(err)  if err
@@ -168,7 +168,9 @@ extractAppDmg = (src, dest, cb) ->
         cb new Error("No .app directory found in DMG.")
     else
       try
-        fs.removeSync dest  if fs.existsSync(dest)
+        if fs.existsSync(dest)
+          chmodRecursiveSync dest
+          fs.removeSync dest
       catch err2
         return unmount(->
           cb and cb(err2)
@@ -194,3 +196,4 @@ extractAppDmg = (src, dest, cb) ->
 module.exports.unzip = unzipFile
 module.exports.unzipApp = extractAppZip
 module.exports.undmgApp = extractAppDmg
+module.exports.chmodRecursiveSync = chmodRecursiveSync
