@@ -122,7 +122,8 @@
       label: i18n.translate("Launch Tutorial..."),
       click: function() {
         return tutorial.start();
-      }
+      },
+      enabled: !!enableLogOut
     }));
     helpMenu.append(new nwGui.MenuItem({
       label: i18n.translate("Community Forums..."),
