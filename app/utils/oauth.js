@@ -80,6 +80,7 @@
         console.warn("Error logging in: " + err.stack || err);
       }
       authorizationView.remove();
+      require('./window-chrome.js').paintMainPage();
       promptingForLogin = false;
       return cb && cb(null);
     });

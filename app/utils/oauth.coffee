@@ -56,7 +56,8 @@ promptForLogin = (cb) ->
   authorizationView = new AuthorizationView()
   authorizationView.authorize (err) ->
     console.warn "Error logging in: " + err.stack or err  if err
-    authorizationView.remove()
+    do authorizationView.remove
+    do require('./window-chrome.js').paintMainPage
     promptingForLogin = false
     cb and cb(null) # skip auth if there's an error
 
