@@ -34,7 +34,10 @@ function getLogger(level) {
     }).join(' ') + ' (' + sourceFile + ')';
     log(str);
     if (isProduction && (level === 'warn' || level === 'error')) {
-      window.Raven.captureMessage(str);
+      window.Raven.captureMessage(str, {tags: {
+        'appVersion': uiGlobals.appVersion,
+        'embeddedDevice': uiGlobals.embeddedDevice
+      }});
     }
   };
 }

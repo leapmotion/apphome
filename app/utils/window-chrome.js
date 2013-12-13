@@ -124,17 +124,18 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
   }
 
   $('input#installLocation').change(function() {
-    if (!$(this).val()) {
+    var newAppDir = $(this).val();
+
+    if (!newAppDir) {
       console.log("Reported a blank new install location.  Not moving anything.");
       return;
     }
 
-    console.log($(this).val());
+    console.log(newAppDir);
     var installLocationInput = $('input#installLocation');
     installLocationInput.remove();
 
     rebuildMenuBar(true, true);
-    var newAppDir = $(this).val();
 
     console.log('Changing app install location to ' + newAppDir);
     db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
@@ -155,8 +156,9 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
   helpMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Launch Tutorial...'),
     click: function() {
-      tutorial.makeGuides();
-    }
+      tutorial.start();
+    },
+    enabled: !!enableLogOut // Only launch tutorial once apps have rendered
   }));
   helpMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Community Forums...'),
@@ -176,12 +178,25 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
       popup.open('about');
     }
   }));
-  mainMenu.append(new nwGui.MenuItem({
+
+  var helpMenuItem = new nwGui.MenuItem({
     label: i18n.translate('Help'),
     submenu: helpMenu
-  }));
+  });
 
+  // Need to do this first on windows for it to show up.  Not entirely sure why.
+  if (os.platform() === 'win32') {
+    mainMenu.append(helpMenuItem);
+  }
+
+  // This command populates Edit and Window into the menubar.
   nwGui.Window.get().menu = mainMenu;
+
+  // Need to do this after on mac, so 'Help' shows up after 'Window'
+  if (os.platform() === 'darwin') {
+    mainMenu.append(helpMenuItem);
+  }
+
 }
 
 appWindowBindings();

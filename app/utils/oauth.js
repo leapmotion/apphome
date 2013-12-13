@@ -63,12 +63,19 @@ function authorizeWithCode(code, cb) {
 var promptingForLogin;
 function promptForLogin(cb) {
   promptingForLogin = true;
+
+  if (uiGlobals.mainPageView) {
+    uiGlobals.mainPageView.$el.remove();
+    uiGlobals.mainPageView.remove();
+  }
+
   var authorizationView = new AuthorizationView();
   authorizationView.authorize(function(err) {
     if (err) {
       console.warn('Error logging in: ' + err.stack || err);
     }
     authorizationView.remove();
+    require('./window-chrome.js').paintMainPage();
     promptingForLogin = false;
     cb && cb(null); // skip auth if there's an error
   });

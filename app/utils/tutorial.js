@@ -5,13 +5,9 @@ var i18n = require('./i18n.js');
 var config = require('../../config/config.js');
 var mixpanel = require('./mixpanel.js');
 
-function makeGuides() {
-  if (uiGlobals.inTutorial) {
-    return;
-  } else {
-    uiGlobals.inTutorial = true;
-  }
+var guidesMade = false;
 
+function makeGuides() {
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Take a quick tour')), classString: 'primary', onclick: guiders.next}],
     classString: 'primary',
@@ -21,7 +17,7 @@ function makeGuides() {
     title: String(i18n.translate('Welcome to Airspace Home!')),
     xButton: true,
     onClose: onClose
-  }).show();
+  });
 
   guiders.createGuider({
     buttons: [{name: String(i18n.translate('Launch Orientation')), classString: 'next', onclick: function() { _launchOrientation();
@@ -68,6 +64,8 @@ function makeGuides() {
       uiGlobals.inTutorial = false;
     }
   });
+
+  guidesMade = true;
 }
 
 function onClose() {
@@ -83,5 +81,16 @@ var _launchOrientation =  function() {
   }
 };
 
+var start = function() {
+  if (!guidesMade) {
+    makeGuides();
+  }
 
-module.exports.makeGuides = makeGuides;
+  if (!uiGlobals.inTutorial) {
+    uiGlobals.inTutorial = true;
+    return guiders.show('g_start');
+  }
+};
+
+
+module.exports.start = start;

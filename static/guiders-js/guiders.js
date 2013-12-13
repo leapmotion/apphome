@@ -62,7 +62,6 @@ window.guiders = (function($) {
 
   guiders._arrowSize = 42; // This is the arrow's width and height.
   guiders._backButtonTitle = "Back";
-  guiders._buttonAttributes = {"href": "javascript:void(0);"};
   guiders._buttonClassName = "guiders_button"; // Override this if you use a different class name for your buttons.
   guiders._buttonClickEvent = "click touch"; // Using click touch allows this to trigger with iPad/iPhone taps, as well as browser clicks
   guiders._buttonElement = "<a></a>"; // Override this if you want to use a different element for your buttons, like spans.
@@ -104,7 +103,7 @@ window.guiders = (function($) {
     for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $(guiders._buttonElement,
-        $.extend({"class" : guiders._buttonClassName, "html" : thisButton.name }, guiders._buttonAttributes, thisButton.html || {})
+        $.extend({"class" : guiders._buttonClassName, "html" : thisButton.name }, thisButton.html || {})
       );
 
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
@@ -537,6 +536,9 @@ window.guiders = (function($) {
     } else {
       guiders._hideOverlay();
     }
+
+    guiders._currentGuiderID = undefined;
+
     return guiders;
   };
 
@@ -598,8 +600,10 @@ window.guiders = (function($) {
 
   guiders.reposition = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    guiders._attach(currentGuider);
-    guiders._showOverlay(currentGuider);
+    if (currentGuider) {
+      guiders._attach(currentGuider);
+      guiders._showOverlay(currentGuider);
+    }
   };
 
   guiders.scrollToCurrent = function() {

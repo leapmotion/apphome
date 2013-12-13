@@ -74,13 +74,23 @@ function unzipFile(src, dest, shellUnzipOnly, cb) {
   });
 }
 
+function chmodRecursiveSync(file, permissions) {
+  fs.chmodSync(file, permissions || 0777); // make sure file has write permissions
+  if (fs.statSync(file).isDirectory()) {
+    fs.readdirSync(file).forEach(function(subFile) {
+      chmodRecursiveSync(path.join(file, subFile));
+    });
+  }
+}
+
 function extractAppZip(src, dest, shellUnzipOnly, cb) {
   if (!fs.existsSync(src)) {
     return cb && cb(new Error('Zip archive does not exist: ' + src));
   }
   try {
     if (fs.existsSync(dest)) {
-      fs.deleteSync(dest);
+      chmodRecursiveSync(dest);
+      fs.removeSync(dest);
     }
     fs.mkdirpSync(dest);
   } catch (err) {
@@ -89,15 +99,6 @@ function extractAppZip(src, dest, shellUnzipOnly, cb) {
   }
 
   unzipFile(src, dest, shellUnzipOnly, function(err) {
-    function chmodRecursiveSync(file) {
-      fs.chmodSync(file, 0777); // make sure file has write permissions
-      if (fs.statSync(file).isDirectory()) {
-        fs.readdirSync(file).forEach(function(subFile) {
-          chmodRecursiveSync(path.join(file, subFile));
-        });
-      }
-    }
-
     console.log("unzipping " + src);
     if (err) {
       return cb && cb(err);
@@ -207,7 +208,8 @@ function extractAppDmg(src, dest, cb) {
     } else {
       try {
         if (fs.existsSync(dest)) {
-          fs.deleteSync(dest);
+          chmodRecursiveSync(dest);
+          fs.removeSync(dest);
         }
       } catch(err2) {
         return unmount(function() {
@@ -244,4 +246,5 @@ function extractAppDmg(src, dest, cb) {
 module.exports.unzip = unzipFile;
 module.exports.unzipApp = extractAppZip;
 module.exports.undmgApp = extractAppDmg;
+module.exports.chmodRecursiveSync = chmodRecursiveSync;
 

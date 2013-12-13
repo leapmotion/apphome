@@ -5,6 +5,7 @@ var path = require('path');
 
 var db = require('./db.js');
 var config = require('../../config/config.js');
+var mixpanel = require('./mixpanel.js');
 
 var defer = $.Deferred();
 var promise;
