@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 #windows version of package_installer_inputs.sh build step
 
@@ -23,10 +23,11 @@ _winnode=$(echo "${NODE}" | sed 's/\//\\/g' | sed 's/\\c\\/C:\\/')
 cd "${AIRSPACE_REPO_DIR}/build"
 
 if [ -d build_products ]; then
-  /bin/rm -rf build_products
+  mv build_products build_products_old
+  rm -rf build_products_old
 fi
 
-cp -r windows build_products
+mv windows build_products
 
 echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt
 git rev-parse HEAD > build_products/head_sha.txt

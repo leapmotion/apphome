@@ -1,4 +1,4 @@
-﻿msgid "Welcome"
+msgid "welcome"
 msgstr "Willkommen"
 
 msgid "welcome to a whole new world"

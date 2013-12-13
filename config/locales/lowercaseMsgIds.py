@@ -1,16 +1,25 @@
+import sys
 import os
 
-for filename in filter(lambda f: 'po' in f, os.listdir('.')):
+def lowercasePoFile(filename):
     with open(filename) as f:
         lines = f.readlines()
 
     newlines = []
 
     for l in lines:
+        print l
         if l.startswith('msgid'):
+            print l
             newlines.append(l.lower())
         else:
             newlines.append(l)
 
     with open(filename, 'w') as f:
         f.writelines(newlines)
+
+if len(sys.argv) > 1:
+    lowercasePoFile(sys.argv[1])
+else:
+    for filename in filter(lambda f: 'po' in f, os.listdir('.')):
+        lowercasePoFile(filename)
