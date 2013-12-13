@@ -42,7 +42,12 @@
       }).join(" ") + " (" + sourceFile + ")";
       log(str);
       if (isProduction && (level === "warn" || level === "error")) {
-        return window.Raven.captureMessage(str);
+        return window.Raven.captureMessage(str, {
+          tags: {
+            appVersion: uiGlobals.appVersion,
+            embeddedDevice: uiGlobals.embeddedDevice
+          }
+        });
       }
     };
   };
