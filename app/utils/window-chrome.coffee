@@ -81,7 +81,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
     submenu: accountMenu
   )
 
-buildHelpMenu = ->
+buildHelpMenu = (enableLogOut) ->
   helpMenu = new nwGui.Menu()
   helpMenu.append new nwGui.MenuItem(
     label: i18n.translate("Getting Started...")
@@ -159,7 +159,7 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
       console.log "~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~"
       rebuildMenuBar true
 
-  helpMenuItem = buildHelpMenu()
+  helpMenuItem = buildHelpMenu(enableLogOut)
 
   # Need to do this first on windows for it to show up.  Not entirely sure why.
   if os.platform() is 'win32'

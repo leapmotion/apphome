@@ -109,7 +109,7 @@
     });
   };
 
-  buildHelpMenu = function() {
+  buildHelpMenu = function(enableLogOut) {
     var helpMenu;
     helpMenu = new nwGui.Menu();
     helpMenu.append(new nwGui.MenuItem({
@@ -193,7 +193,7 @@
         return rebuildMenuBar(true);
       });
     });
-    helpMenuItem = buildHelpMenu();
+    helpMenuItem = buildHelpMenu(enableLogOut);
     if (os.platform() === 'win32') {
       mainMenu.append(helpMenuItem);
     }
