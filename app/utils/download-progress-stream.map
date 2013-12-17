@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "download-progress-stream.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "app/utils/download-progress-stream.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,KAAA,8BAAA;;CAAA,CAAA,CAAS,GAAT,CAAS,CAAA;;CAAT,CACA,CAAO,CAAP,EAAO,CAAA;;CADP,CAGA,CAAyB,MAAA,aAAzB;;CAHA,CAKA,EAAI,EAAwC,EAA5C,IAAA,UAAA;;CALA,CAOA,CAAiC,GAAjC,GAAwB,aAAF;CACpB,GAAA,MAAA;CACE,GAAC,EAAD,IAAA;CAAA,EACc,CAAb,EAAD,IAAA;CAFF,YAGE;MAHF;CAAA,YAKE;MAN6B;CAPjC,EAOiC;;CAPjC,CAeA,CAAuC,MAAf,GAAxB,UAAsB;CACnB,EAAa,CAAb,MAAD,CAAA;CAhBF,EAeuC;;CAfvC,CAkBA,CAAiB,GAAX,CAAN,eAlBA;CAAA"
+}

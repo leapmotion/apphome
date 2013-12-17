@@ -63,3 +63,7 @@
   console.error = window.console.error = getLogger("error");
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=logging.map
+*/

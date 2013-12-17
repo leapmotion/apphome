@@ -63,3 +63,7 @@
   module.exports.getEmbeddedDevice = getEmbeddedDevice;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=embedded-leap.map
+*/

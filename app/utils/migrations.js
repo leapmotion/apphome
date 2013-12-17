@@ -69,3 +69,7 @@
   module.exports.migrate = migrate;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=migrations.map
+*/

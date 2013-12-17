@@ -15,3 +15,7 @@
   module.exports.escape = (os.platform() === "win32" ? escapeWindows : escapeBash);
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=shell.map
+*/

@@ -212,3 +212,7 @@
   module.exports.paintMainPage = paintMainPage;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=window-chrome.map
+*/

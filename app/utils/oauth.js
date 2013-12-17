@@ -149,3 +149,7 @@
   module.exports.logOutUrl = logOutUrl;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=oauth.map
+*/

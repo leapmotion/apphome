@@ -20,3 +20,7 @@
   module.exports.convertToPng = convertToPng;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=ico.map
+*/

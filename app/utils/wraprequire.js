@@ -29,3 +29,7 @@
   module.exports.override = overrideModule;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=wraprequire.map
+*/

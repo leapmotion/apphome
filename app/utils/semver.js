@@ -55,3 +55,7 @@
   module.exports.isFirstLessThanSecond = isFirstGreaterThanSecond;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=semver.map
+*/

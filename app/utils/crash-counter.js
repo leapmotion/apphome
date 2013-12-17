@@ -25,3 +25,7 @@
   module.exports.reset = reset;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=crash-counter.map
+*/

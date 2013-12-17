@@ -36,3 +36,7 @@
   module.exports.readFullKey = readFullKey;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=registry.map
+*/

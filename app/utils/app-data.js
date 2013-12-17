@@ -55,3 +55,7 @@
   module.exports.writeFile = writeFile;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=app-data.map
+*/

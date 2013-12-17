@@ -116,3 +116,7 @@
   module.exports.unsubscribeAll = unsubscribeAll;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=pubnub.map
+*/

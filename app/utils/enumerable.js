@@ -35,3 +35,7 @@
   module.exports.make = makeEnum;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=enumerable.map
+*/

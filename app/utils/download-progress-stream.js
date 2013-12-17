@@ -27,3 +27,7 @@
   module.exports = DownloadProgressStream;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=download-progress-stream.map
+*/

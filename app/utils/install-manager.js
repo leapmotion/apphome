@@ -125,3 +125,7 @@
   module.exports.showAppropriateDownloadControl = showAppropriateDownloadControl;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=install-manager.map
+*/

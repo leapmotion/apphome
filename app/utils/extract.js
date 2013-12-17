@@ -269,3 +269,7 @@
   module.exports.chmodRecursiveSync = chmodRecursiveSync;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=extract.map
+*/

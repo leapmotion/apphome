@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "shell.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "app/utils/shell.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,KAAA,uBAAA;;CAAA,CAAA,CAAK,CAAA,GAAA;;CAAL,CAEA,CAAa,GAAA,GAAC,CAAd;CACe,CAAsB,CAAnC,CAAM,EAAA,CAAA,EAAA,EAAN;CAHF,EAEa;;CAFb,CAKA,CAAgB,GAAA,GAAC,IAAjB;CAEgB,CAA+B,CAAtC,CAAP,CAAO,CAAA,CAAA,IAAP,EAAO;CAPT,EAKgB;;CALhB,CASA,CAAyB,EAAqB,CAAxC,CAAQ,CAAe,EAAJ,GAAC;CAT1B"
+}

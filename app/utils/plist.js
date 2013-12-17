@@ -42,3 +42,7 @@
   module.exports.parse = parse;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=plist.map
+*/

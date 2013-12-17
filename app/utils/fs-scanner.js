@@ -201,3 +201,7 @@
   module.exports = FsScanner;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=fs-scanner.map
+*/
