@@ -18,7 +18,7 @@ possibleLastauthNames = [
 
 hasBeenAgreedTo = (cb) ->
   fs.readdir sharedLeapDir, (err, files) ->
-    return cb and cb(false)  if err
+    return cb?(false)  if err
 
     foundLicense = false
     foundLastauth = false
@@ -28,7 +28,7 @@ hasBeenAgreedTo = (cb) ->
       possibleLastauthNames.forEach (name) ->
         foundLastauth = foundLastauth or (file.search(name) isnt -1)
 
-    cb and cb(foundLicense and foundLastauth)
+    cb?(foundLicense and foundLastauth)
 
 waitForLicense = (cb) ->
   console.log "Checking for signed EULA..."
@@ -37,7 +37,7 @@ waitForLicense = (cb) ->
       if exists
         console.log "...signed EULA found."
         clearInterval watch
-        cb and cb(null)
+        cb?(null)
 
   , 150)
 

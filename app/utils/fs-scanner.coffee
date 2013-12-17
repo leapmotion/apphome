@@ -20,11 +20,11 @@ FsScanner:: =
     platform = os.platform()
 
     cleanData = (err, apps) ->
-      cb and cb(err)  if err
+      cb?(err)  if err
       apps = _.uniq(_(apps).compact(), (app) ->
         app.get "id"
       )
-      cb and cb(null, apps)
+      cb?(null, apps)
 
     try
       if platform is "win32"
@@ -32,21 +32,21 @@ FsScanner:: =
       else if platform is "darwin"
         @_scanForMacApps cleanData
       else
-        cb and cb(new Error("Unknown system platform: " + platform))
+        cb?(new Error("Unknown system platform: " + platform))
     catch err
-      cb and cb(err)
+      cb?(err)
 
   _scanForMacApps: (cb) ->
     userAppsDir = path.join(process.env.HOME or "", "Applications")
     fs.mkdirSync userAppsDir  unless fs.existsSync(userAppsDir)
     # remove empty last path
     exec "find ~/Applications /Applications -maxdepth 4 -name Info.plist", (err, stdout) =>
-      return cb and cb(err)  if err
+      return cb?(err)  if err
       plistPaths = stdout.toString().split("\n")
       do plistPaths.pop
       async.mapLimit plistPaths, 1, @_createLeapAppFromPlistPath.bind(this), (err, leapApps) ->
         return cb(err)  if err
-        cb and cb(null, leapApps)
+        cb?(null, leapApps)
 
   _createLeapAppFromPlistPath: (plistPath, cb) ->
     plist.parseFile plistPath, (err, parsedPlist) =>
@@ -64,7 +64,7 @@ FsScanner:: =
         icon = icon + ".icns"  unless path.extname(icon)
         attributes.rawIconFile = path.join(keyFile, "Contents", "Resources", icon)
 
-      cb and cb(null, @_createLocalLeapApp(attributes))
+      cb?(null, @_createLocalLeapApp(attributes))
 
   _scanForWindowsApps: (cb) ->
     registryQueries = [
@@ -83,8 +83,8 @@ FsScanner:: =
       registryChunks = _.invoke(stdouts, "toString").join("\n").split(/^HKEY_LOCAL_MACHINE|^HKEY_CURRENT_USER/m)
       registryChunks.shift() # remove empty first chunk
       async.map registryChunks, @_createLeapAppFromRegistryChunk.bind(this), (err, leapApps) ->
-        return cb and cb(err)  if err
-        cb and cb(null, leapApps)
+        return cb?(err)  if err
+        cb?(null, leapApps)
 
   _createLeapAppFromRegistryChunk: (registryChunk, cb) ->
     extractValueForKey = (key, type) ->
@@ -104,7 +104,7 @@ FsScanner:: =
       attributes.relativeExePath = allowedApp.relativeExePath
       attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath)
 
-    cb and cb(null, @_createLocalLeapApp(attributes))
+    cb?(null, @_createLocalLeapApp(attributes))
 
   _createLocalLeapApp: (attributes) ->
     return null  if not attributes.keyFile or not attributes.name or not attributes.version or not @_isAllowedApp(attributes.name, attributes.version)

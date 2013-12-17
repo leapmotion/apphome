@@ -66,24 +66,24 @@
         var installErr;
         if (err) {
           console.error("Failed to expand prebundle. " + (err.stack || err));
-          return cb && cb(new Error("Failed to expand prebundle."));
+          return typeof cb === "function" ? cb(new Error("Failed to expand prebundle.")) : void 0;
         } else if (manifest) {
           try {
             db.setItem(config.PrebundlingComplete, true);
-            return cb && cb(null, manifest);
+            return typeof cb === "function" ? cb(null, manifest) : void 0;
           } catch (_error) {
             installErr = _error;
             console.error("Failed to initialize prebundled apps. " + (installErr.stack || installErr));
-            return cb && cb(new Error("Failed to initialize prebundled apps."));
+            return typeof cb === "function" ? cb(new Error("Failed to initialize prebundled apps.")) : void 0;
           }
         } else {
           console.error("Found prebundle but manifest is missing.");
-          return cb && cb(new Error("Found prebundle but manifest is missing."));
+          return typeof cb === "function" ? cb(new Error("Found prebundle but manifest is missing.")) : void 0;
         }
       });
     } else {
       console.log("No prebundle on this system.");
-      return cb && cb(new Error("No prebundle on this system."));
+      return typeof cb === "function" ? cb(new Error("No prebundle on this system.")) : void 0;
     }
   };
 
@@ -94,7 +94,7 @@
     return extract.unzip(bundlePath, dest, true, function(err) {
       if (err) {
         console.error("Failed to unzip " + bundlePath + ": " + (err.stack || err));
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       } else {
         console.info("Unzipped prebundled apps at " + bundlePath + " to " + dest);
         try {
@@ -105,14 +105,14 @@
           if (manifest) {
             console.log("Caching prebundled manifest " + JSON.stringify(manifest));
             db.setItem(config.DbKeys.OriginalPrebundlingManifest, JSON.stringify(manifest));
-            return cb && cb(null, manifest);
+            return typeof cb === "function" ? cb(null, manifest) : void 0;
           } else {
-            return cb && cb(new Error("No freeze dried apps manifest found."));
+            return typeof cb === "function" ? cb(new Error("No freeze dried apps manifest found.")) : void 0;
           }
         } catch (_error) {
           err = _error;
           console.error("Corrupt myapps.json prebundled manifest: " + (err.stack || err));
-          return cb && cb(err);
+          return typeof cb === "function" ? cb(err) : void 0;
         }
       }
     });

@@ -11,15 +11,15 @@
       return exec("reg query \"" + keyName + "\" /v \"" + valueName + "\"", function(err, stdout) {
         var lines, resultParts;
         if (/^ERROR:/.test(stdout)) {
-          return cb && cb(new Error(stdout));
+          return typeof cb === "function" ? cb(new Error(stdout)) : void 0;
         } else {
           lines = stdout.replace(/^\s+|\s+$/, "").split(/\r?\n/);
           resultParts = (lines[1] || "").replace(/^\s+|\s+$/, "").split(/\s+/);
-          return cb && cb(null, resultParts[2], resultParts[1]);
+          return typeof cb === "function" ? cb(null, resultParts[2], resultParts[1]) : void 0;
         }
       });
     } else {
-      return cb && cb(new Error("Registry access is only supported on Windows."));
+      return typeof cb === "function" ? cb(new Error("Registry access is only supported on Windows.")) : void 0;
     }
   };
 
@@ -27,7 +27,7 @@
     if (os.platform() === "win32") {
       return exec("reg query \"" + keyName + "\" /s", cb);
     } else {
-      return cb && cb(new Error("Registry access is only supported on Windows."));
+      return typeof cb === "function" ? cb(new Error("Registry access is only supported on Windows.")) : void 0;
     }
   };
 

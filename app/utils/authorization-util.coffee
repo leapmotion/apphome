@@ -10,7 +10,7 @@ withAuthorization = (cb) ->
   if not oauth.getRefreshToken()
     oauth.getAccessToken cb;
   else
-    cb and cb null
+    cb? null
 
 
 logOutUser = ->

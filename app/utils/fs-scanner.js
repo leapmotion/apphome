@@ -40,12 +40,14 @@
       platform = os.platform();
       cleanData = function(err, apps) {
         if (err) {
-          cb && cb(err);
+          if (typeof cb === "function") {
+            cb(err);
+          }
         }
         apps = _.uniq(_(apps).compact(), function(app) {
           return app.get("id");
         });
-        return cb && cb(null, apps);
+        return typeof cb === "function" ? cb(null, apps) : void 0;
       };
       try {
         if (platform === "win32") {
@@ -53,11 +55,11 @@
         } else if (platform === "darwin") {
           return this._scanForMacApps(cleanData);
         } else {
-          return cb && cb(new Error("Unknown system platform: " + platform));
+          return typeof cb === "function" ? cb(new Error("Unknown system platform: " + platform)) : void 0;
         }
       } catch (_error) {
         err = _error;
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
     },
     _scanForMacApps: function(cb) {
@@ -70,7 +72,7 @@
       return exec("find ~/Applications /Applications -maxdepth 4 -name Info.plist", function(err, stdout) {
         var plistPaths;
         if (err) {
-          return cb && cb(err);
+          return typeof cb === "function" ? cb(err) : void 0;
         }
         plistPaths = stdout.toString().split("\n");
         plistPaths.pop();
@@ -78,7 +80,7 @@
           if (err) {
             return cb(err);
           }
-          return cb && cb(null, leapApps);
+          return typeof cb === "function" ? cb(null, leapApps) : void 0;
         });
       });
     },
@@ -102,7 +104,7 @@
           }
           attributes.rawIconFile = path.join(keyFile, "Contents", "Resources", icon);
         }
-        return cb && cb(null, _this._createLocalLeapApp(attributes));
+        return typeof cb === "function" ? cb(null, _this._createLocalLeapApp(attributes)) : void 0;
       });
     },
     _scanForWindowsApps: function(cb) {
@@ -129,9 +131,9 @@
         registryChunks.shift();
         return async.map(registryChunks, _this._createLeapAppFromRegistryChunk.bind(_this), function(err, leapApps) {
           if (err) {
-            return cb && cb(err);
+            return typeof cb === "function" ? cb(err) : void 0;
           }
-          return cb && cb(null, leapApps);
+          return typeof cb === "function" ? cb(null, leapApps) : void 0;
         });
       });
     },
@@ -155,7 +157,7 @@
         attributes.relativeExePath = allowedApp.relativeExePath;
         attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath);
       }
-      return cb && cb(null, this._createLocalLeapApp(attributes));
+      return typeof cb === "function" ? cb(null, this._createLocalLeapApp(attributes)) : void 0;
     },
     _createLocalLeapApp: function(attributes) {
       var LocalLeapApp, localLeapApp;

@@ -12,7 +12,7 @@ initialize = (cb) ->
       window.mixpanel.identify mixpanelDistinctId
     else
       console.log "Auto-generating Mixpanel Distinct Id"
-    cb and cb(null)
+    cb?(null)
 
   mixpanelDistinctId = db.getItem(config.DbKeys.MixpanelDistinctId)
   if mixpanelDistinctId

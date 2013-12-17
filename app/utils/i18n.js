@@ -38,14 +38,14 @@
       locale = DefaultLocale;
     }
     module.exports.locale = locale;
-    return cb && cb(null, locale);
+    return typeof cb === "function" ? cb(null, locale) : void 0;
   };
 
   getWindowsLocale = function(cb) {
     return registry.readValue("HKCU\\Control Panel\\Desktop", "PreferredUILanguages", function(err, fullLocale) {
       if (err) {
         console.warn(err.stack || err);
-        return cb && cb(null, DefaultLocale);
+        return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
       } else {
         if (fullLocale) {
           return sanitizeLocale(fullLocale, cb);
@@ -53,12 +53,12 @@
           return registry.readValue("HKCU\\Control Panel\\Desktop\\MuiCached", "MachinePreferredUILanguages", function(err, fullLocale) {
             if (err) {
               console.warn(err.stack || err);
-              return cb && cb(null, DefaultLocale);
+              return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
             } else {
               if (fullLocale) {
                 return sanitizeLocale(fullLocale, cb);
               } else {
-                return cb && cb(null, DefaultLocale);
+                return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
               }
             }
           });
@@ -75,10 +75,10 @@
       var locale;
       if (err) {
         console.warn(err.stack || err);
-        return cb && cb(null, DefaultLocale);
+        return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
       } else {
         locale = module.exports.locale = window.$.trim(stdout).replace("_", "-") || DefaultLocale;
-        return cb && cb(null, locale);
+        return typeof cb === "function" ? cb(null, locale) : void 0;
       }
     });
   };
@@ -104,10 +104,10 @@
         return getOSXLocale(supportedLanguages, cb);
       } else {
         locale = module.exports.locale = "en";
-        return cb && cb(null, locale);
+        return typeof cb === "function" ? cb(null, locale) : void 0;
       }
     } else {
-      return cb && cb(null, locale);
+      return typeof cb === "function" ? cb(null, locale) : void 0;
     }
   };
 
@@ -131,14 +131,14 @@
     return getLocale(function(err, locale) {
       var err2, localeData;
       if (err) {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
       localeData = void 0;
       try {
         localeData = po2json.parseSync(poFileForLocale(locale));
       } catch (_error) {
         err2 = _error;
-        return cb && cb(err2);
+        return typeof cb === "function" ? cb(err2) : void 0;
       }
       i18n = new Jed({
         domain: locale,
@@ -147,7 +147,7 @@
         },
         locale_data: localeData
       });
-      return cb && cb(null, locale);
+      return typeof cb === "function" ? cb(null, locale) : void 0;
     });
   };
 

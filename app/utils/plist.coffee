@@ -6,11 +6,11 @@ shell = require("./shell.js")
 
 parseFile = (plistPath, cb) ->
   parseResult = (err, result) ->
-    return cb and cb(err)  if err
+    return cb?(err)  if err
     try
-      return cb and cb(null, parse(result.toString()))
+      return cb?(null, parse(result.toString()))
     catch err2
-      return cb and cb(err2)
+      return cb?(err2)
   if os.platform() is "darwin"
     exec "plutil -convert xml1 -o - " + shell.escape(plistPath), parseResult
   else

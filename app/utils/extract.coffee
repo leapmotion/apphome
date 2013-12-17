@@ -17,15 +17,15 @@ unzipViaNodeUnzip = (src, dest, cb) ->
   outputStream = unzip.Extract(path: dest)
 
   inputStream.on "error", (err) ->
-    cb and cb(err)
+    cb?(err)
     cb = null
 
   outputStream.on "close", ->
-    cb and cb(null)
+    cb?(null)
     cb = null
 
   outputStream.on "error", (err) ->
-    cb and cb(err)
+    cb?(err)
     cb = null
 
   console.log "Unzipping " + src + " to " + dest + " with node-unzip."
@@ -36,9 +36,9 @@ unzipViaAdmZip = (src, dest, cb) ->
     zip = new AdmZip(src)
     console.log "Unzipping " + src + " to " + dest + " with AdmZip."
     zip.extractAllTo dest, true
-    cb and cb(null)
+    cb?(null)
   catch err
-    cb and cb(err)
+    cb?(err)
 
 unzipViaShell = (src, dest, cb) ->
   command = undefined
@@ -66,7 +66,7 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
       else
         unzipViaAdmZip src, dest, cb
     else
-      cb and cb(err)
+      cb?(err)
 
 chmodRecursiveSync = (file) ->
   fs.chmodSync file, 777 # make sure file has write permissions
@@ -75,19 +75,19 @@ chmodRecursiveSync = (file) ->
       chmodRecursiveSync path.join(file, subFile)
 
 extractAppZip = (src, dest, shellUnzipOnly, cb) ->
-  return cb and cb(new Error("Zip archive does not exist: " + src))  unless fs.existsSync(src)
+  return cb?(new Error("Zip archive does not exist: " + src))  unless fs.existsSync(src)
 
   try
     fs.removeSync dest  if fs.existsSync(dest)
     fs.mkdirpSync dest
   catch err
     console.warn "Error deleting directory \"" + dest + "\": " + (err.stack or err)
-    return cb and cb(err)
+    return cb?(err)
 
   unzipFile src, dest, shellUnzipOnly, (err) ->
     console.log "unzipping " + src
 
-    return cb and cb(err)  if err
+    return cb?(err)  if err
 
     if os.platform() is "win32"
       try
@@ -111,22 +111,22 @@ extractAppZip = (src, dest, shellUnzipOnly, cb) ->
 
           async.series moves, cb
         else
-          cb and cb(null)
+          cb?(null)
       catch err
-        cb and cb(err)
+        cb?(err)
     else
-      cb and cb(null)
+      cb?(null)
 
 extractAppDmg = (src, dest, cb) ->
-  return cb and cb(new Error("Disk image does not exist: " + src))  unless fs.existsSync(src)
+  return cb?(new Error("Disk image does not exist: " + src))  unless fs.existsSync(src)
 
-  return cb and cb(new Error("Extracting DMG is only supported on Mac OS X."))  if os.platform() isnt "darwin"
+  return cb?(new Error("Extracting DMG is only supported on Mac OS X."))  if os.platform() isnt "darwin"
 
   exec "hdiutil mount -nobrowse " + shell.escape(src) + " -plist", (err, stdout) ->
     unmount = (callback) ->
       console.log "Unmounting and ejecting dmg at " + mountPoint
       exec "diskutil eject " + shell.escape(mountPoint), callback
-    return cb and cb(err)  if err
+    return cb?(err)  if err
 
     mountPoint = undefined
 
@@ -138,14 +138,14 @@ extractAppDmg = (src, dest, cb) ->
           mountPoint = systemEntity["mount-point"]
           break
     catch err2
-      return cb and cb(err2)
-    return cb and cb(new Error("Mounting disk image failed."))  unless mountPoint
+      return cb?(err2)
+    return cb?(new Error("Mounting disk image failed."))  unless mountPoint
 
     try
       dirEntries = fs.readdirSync(mountPoint)
     catch readErr
       console.error "Failed to read mount point"
-      return cb and cb(readErr)
+      return cb?(readErr)
 
     appPackage = undefined
     for entry in dirEntries
@@ -158,7 +158,7 @@ extractAppDmg = (src, dest, cb) ->
       if isValidDir
         if appPackage
           unmount ->
-            cb and cb(new Error("Multiple .app directories encountered in DMG: " + appPackage + ", " + dirEntry))
+            cb?(new Error("Multiple .app directories encountered in DMG: " + appPackage + ", " + dirEntry))
 
         else
           appPackage = dirEntry
@@ -173,20 +173,20 @@ extractAppDmg = (src, dest, cb) ->
           fs.removeSync dest
       catch err2
         return unmount(->
-          cb and cb(err2)
+          cb?(err2)
         )
 
       try
         fs.mkdirpSync path.dirname(dest)
       catch mkdirErr
-        return cb and cb(mkdirErr)
+        return cb?(mkdirErr)
 
       console.log "Installing app from " + appPackage + " to " + dest
 
       exec "cp -r " + shell.escape(appPackage) + " " + shell.escape(dest), (err) ->
         if err
           unmount (err2) ->
-            cb and cb(err or err2 or null)
+            cb?(err or err2 or null)
         else
           exec "xattr -rd com.apple.quarantine " + shell.escape(dest), (err3) ->
             console.warn "xattr exec error, ignoring: " + err3  if err3

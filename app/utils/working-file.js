@@ -83,17 +83,17 @@
       });
     };
     setTimeout(sequentialRemove, 5000);
-    return cb && cb(null);
+    return typeof cb === "function" ? cb(null) : void 0;
   };
 
   ensureDir = function(dirpath, cb) {
     return fs.exists(dirpath, function(doesExist) {
       if (!doesExist) {
         return fs.mkdirs(dirpath, function(mkdirErr) {
-          return cb && cb(mkdirErr);
+          return typeof cb === "function" ? cb(mkdirErr) : void 0;
         });
       } else {
-        return cb && cb(null);
+        return typeof cb === "function" ? cb(null) : void 0;
       }
     });
   };

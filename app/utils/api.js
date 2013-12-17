@@ -214,7 +214,7 @@
   getUserInformation = function(cb) {
     return _getStoreManifest(function(manifest) {
       _setGlobalUserInformation(manifest.shift());
-      return cb && cb(null);
+      return typeof cb === "function" ? cb(null) : void 0;
     });
   };
 
@@ -263,7 +263,9 @@
       if (appId && platform) {
         return oauth.getAccessToken(function(err, accessToken) {
           if (err) {
-            cb && cb(err);
+            if (typeof cb === "function") {
+              cb(err);
+            }
             return getAppDetailsForNextInQueue();
           }
           url = config.AppDetailsEndpoint;
@@ -273,19 +275,25 @@
           console.log("Getting app details via url: " + url);
           return httpHelper.getJson(url, function(err, appDetails) {
             if (err) {
-              cb && cb(err);
+              if (typeof cb === "function") {
+                cb(err);
+              }
             } else {
               app.set(cleanUpAppJson(appDetails && appDetails.app_version));
               app.set("gotDetails", true);
               app.save();
-              cb && cb(null);
+              if (typeof cb === "function") {
+                cb(null);
+              }
             }
             cb = null;
             return getAppDetailsForNextInQueue();
           });
         });
       } else {
-        cb && cb(new Error("appId and platform must be valid"));
+        if (typeof cb === "function") {
+          cb(new Error("appId and platform must be valid"));
+        }
         return getAppDetailsForNextInQueue();
       }
     }
@@ -343,7 +351,7 @@
       } else {
         createWebLinkApps(manifest.web);
         platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] || [];
-        return cb && cb(platformApps);
+        return typeof cb === "function" ? cb(platformApps) : void 0;
       }
     });
   };
@@ -353,22 +361,22 @@
     dataDir = config.PlatformLeapDataDirs[os.platform()];
     if (!dataDir) {
       console.error("Leap Motion data dir unknown for operating system: " + os.platform());
-      return cb && cb(new Error("Leap Motion data dir unknown for operating system: " + os.platform()));
+      return typeof cb === "function" ? cb(new Error("Leap Motion data dir unknown for operating system: " + os.platform())) : void 0;
     }
     authDataFile = path.join(dataDir, "lastauth");
     return fs.readFile(authDataFile, "utf-8", function(err, authData) {
       if (err) {
         console.warn("Error reading auth data file.");
-        return cb && cb(null);
+        return typeof cb === "function" ? cb(null) : void 0;
       }
       if (!authData) {
         console.warn("Auth data file is empty.");
-        return cb && cb(null);
+        return typeof cb === "function" ? cb(null) : void 0;
       }
       return oauth.getAccessToken(function(err, accessToken) {
         if (err) {
           console.warn("Failed to get an access token: " + (err.stack || err));
-          return cb && cb(null);
+          return typeof cb === "function" ? cb(null) : void 0;
         }
         return httpHelper.post(config.DeviceDataEndpoint, {
           access_token: accessToken,
@@ -376,10 +384,10 @@
         }, function(err) {
           if (err) {
             console.error("Failed to send device data: " + (err.stack || err));
-            return cb && cb(null);
+            return typeof cb === "function" ? cb(null) : void 0;
           } else {
             console.log("Sent device data.");
-            return cb && cb(null);
+            return typeof cb === "function" ? cb(null) : void 0;
           }
         });
       });
@@ -411,7 +419,7 @@
     return oauth.getAccessToken(function(err, accessToken) {
       if (err) {
         console.warn("Failed to get an access token: " + (err.stack || err));
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       } else {
         return httpHelper.post(config.AppVersionDataEndpoint, {
           access_token: accessToken,
@@ -419,10 +427,10 @@
         }, function(err, res) {
           if (err) {
             console.error("Failed to send app version data: " + (err.stack || err));
-            return cb && cb(err);
+            return typeof cb === "function" ? cb(err) : void 0;
           } else {
             console.log("Sent app version data.  Got " + res);
-            return cb && cb(null, res);
+            return typeof cb === "function" ? cb(null, res) : void 0;
           }
         });
       }
@@ -460,7 +468,7 @@
     });
     return async.parallelLimit(installationFunctions, 2, function(err) {
       installManager.showAppropriateDownloadControl();
-      return cb && cb(err);
+      return typeof cb === "function" ? cb(err) : void 0;
     });
   };
 

@@ -47,20 +47,20 @@ _getFrozenApps = (cb) ->
     _expandFreezeDriedApps freezeDriedBundlePath, (err, manifest) ->
       if err
         console.error "Failed to expand prebundle. " + (err.stack or err)
-        cb and cb(new Error("Failed to expand prebundle."))
+        cb?(new Error("Failed to expand prebundle."))
       else if manifest
         try
           db.setItem config.PrebundlingComplete, true
-          cb and cb(null, manifest)
+          cb?(null, manifest)
         catch installErr
           console.error "Failed to initialize prebundled apps. " + (installErr.stack or installErr)
-          cb and cb(new Error("Failed to initialize prebundled apps."))
+          cb?(new Error("Failed to initialize prebundled apps."))
       else
         console.error "Found prebundle but manifest is missing."
-        cb and cb(new Error("Found prebundle but manifest is missing."))
+        cb?(new Error("Found prebundle but manifest is missing."))
   else
     console.log "No prebundle on this system."
-    cb and cb(new Error("No prebundle on this system."))
+    cb?(new Error("No prebundle on this system."))
 
 _expandFreezeDriedApps = (bundlePath, cb) ->
   dest = path.join(config.PlatformTempDirs[os.platform()], "frozen")
@@ -69,7 +69,7 @@ _expandFreezeDriedApps = (bundlePath, cb) ->
   extract.unzip bundlePath, dest, true, (err) ->
     if err
       console.error "Failed to unzip " + bundlePath + ": " + (err.stack or err)
-      cb and cb(err)
+      cb?(err)
     else
       console.info "Unzipped prebundled apps at " + bundlePath + " to " + dest
       try
@@ -81,11 +81,11 @@ _expandFreezeDriedApps = (bundlePath, cb) ->
           console.log "Caching prebundled manifest " + JSON.stringify(manifest)
           #May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
           db.setItem config.DbKeys.OriginalPrebundlingManifest, JSON.stringify(manifest)
-          cb and cb(null, manifest)
+          cb?(null, manifest)
         else
-          cb and cb(new Error("No freeze dried apps manifest found."))
+          cb?(new Error("No freeze dried apps manifest found."))
       catch err
         console.error "Corrupt myapps.json prebundled manifest: " + (err.stack or err)
-        cb and cb(err)
+        cb?(err)
 
 module.exports.prebundledManifestPromise = prebundledManifestPromise

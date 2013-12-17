@@ -23,13 +23,13 @@ sanitizeLocale = (fullLocale, cb) ->
     locale = fullLocale.split("-").shift()
   locale = DefaultLocale  if supportedLanguages.indexOf(locale) is -1
   module.exports.locale = locale
-  cb and cb(null, locale)
+  cb?(null, locale)
 
 getWindowsLocale = (cb) ->
   registry.readValue "HKCU\\Control Panel\\Desktop", "PreferredUILanguages", (err, fullLocale) ->
     if err
       console.warn err.stack or err
-      cb and cb(null, DefaultLocale)
+      cb?(null, DefaultLocale)
     else
       if fullLocale
         sanitizeLocale fullLocale, cb
@@ -37,12 +37,12 @@ getWindowsLocale = (cb) ->
         registry.readValue "HKCU\\Control Panel\\Desktop\\MuiCached", "MachinePreferredUILanguages", (err, fullLocale) ->
           if err
             console.warn err.stack or err
-            cb and cb(null, DefaultLocale)
+            cb?(null, DefaultLocale)
           else
             if fullLocale
               sanitizeLocale fullLocale, cb
             else
-              cb and cb(null, DefaultLocale)
+              cb?(null, DefaultLocale)
 
 
 getOSXLocale = (supportedLanguages, cb) ->
@@ -53,10 +53,10 @@ getOSXLocale = (supportedLanguages, cb) ->
   exec command, (err, stdout) ->
     if err
       console.warn err.stack or err
-      cb and cb(null, DefaultLocale)
+      cb?(null, DefaultLocale)
     else
       locale = module.exports.locale = window.$.trim(stdout).replace("_", "-") or DefaultLocale
-      cb and cb(null, locale)
+      cb?(null, locale)
 
 getLocale = (cb) ->
   locale = module.exports.locale
@@ -77,9 +77,9 @@ getLocale = (cb) ->
       getOSXLocale supportedLanguages, cb
     else
       locale = module.exports.locale = "en"
-      cb and cb(null, locale)
+      cb?(null, locale)
   else
-    cb and cb(null, locale)
+    cb?(null, locale)
 
 poFileForLocale = (locale) ->
   poFile = path.join(__dirname, "../../config/locales", locale + ".po")
@@ -94,12 +94,12 @@ poFileForLocale = (locale) ->
 i18n = undefined
 initialize = (cb) ->
   getLocale (err, locale) ->
-    return cb and cb(err)  if err
+    return cb?(err)  if err
     localeData = undefined
     try
       localeData = po2json.parseSync(poFileForLocale(locale))
     catch err2
-      return cb and cb(err2)
+      return cb?(err2)
     i18n = new Jed(
       domain: locale
       missing_key_callback: (key) ->
@@ -107,7 +107,7 @@ initialize = (cb) ->
 
       locale_data: localeData
     )
-    cb and cb(null, locale)
+    cb?(null, locale)
 
 translate = (str) ->
   if i18n

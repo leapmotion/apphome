@@ -65,15 +65,15 @@ cleanupTempFiles = (cb) ->
 
   #Don't want to actually clean up the files until we're idle
   setTimeout sequentialRemove, 5000
-  cb and cb(null)
+  cb?(null)
 
 ensureDir = (dirpath, cb) ->
   fs.exists dirpath, (doesExist) ->
     unless doesExist
       fs.mkdirs dirpath, (mkdirErr) ->
-        cb and cb(mkdirErr)
+        cb?(mkdirErr)
     else
-      cb and cb(null)
+      cb?(null)
 
 
 module.exports.newTempFilePath = newTempFilePath

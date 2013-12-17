@@ -164,7 +164,7 @@ _setGlobalUserInformation = (user) ->
 getUserInformation = (cb) ->
   _getStoreManifest (manifest) ->
     _setGlobalUserInformation manifest.shift()
-    cb and cb(null)
+    cb?(null)
 
 connectToStoreServer = ->
   _getStoreManifest (messages) ->
@@ -196,7 +196,7 @@ getAppDetails = (app, cb) ->
     if appId and platform
       oauth.getAccessToken (err, accessToken) ->
         if err
-          cb and cb(err)
+          cb?(err)
           return do getAppDetailsForNextInQueue
         url = config.AppDetailsEndpoint
         url = url.replace(":id", appId)
@@ -205,16 +205,16 @@ getAppDetails = (app, cb) ->
         console.log "Getting app details via url: " + url
         httpHelper.getJson url, (err, appDetails) ->
           if err
-            cb and cb(err)
+            cb?(err)
           else
             app.set cleanUpAppJson(appDetails and appDetails.app_version)
             app.set "gotDetails", true
             app.save()
-            cb and cb(null)
+            cb?(null)
           cb = null
           do getAppDetailsForNextInQueue
     else
-      cb and cb(new Error("appId and platform must be valid"))
+      cb?(new Error("appId and platform must be valid"))
       do getAppDetailsForNextInQueue
 
 createWebLinkApps = (webAppData) ->
@@ -258,29 +258,29 @@ getLocalAppManifest = (cb) ->
     else
       createWebLinkApps manifest.web
       platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] or []
-      cb and cb(platformApps)
+      cb?(platformApps)
 
 sendDeviceData = (cb) ->
   dataDir = config.PlatformLeapDataDirs[os.platform()]
   unless dataDir
     console.error "Leap Motion data dir unknown for operating system: " + os.platform()
-    return cb and cb(new Error("Leap Motion data dir unknown for operating system: " + os.platform()))
+    return cb?(new Error("Leap Motion data dir unknown for operating system: " + os.platform()))
 
   authDataFile = path.join(dataDir, "lastauth")
 
   fs.readFile authDataFile, "utf-8", (err, authData) ->
     if err
       console.warn "Error reading auth data file."
-      return cb and cb(null)
+      return cb?(null)
 
     unless authData
       console.warn "Auth data file is empty."
-      return cb and cb(null)
+      return cb?(null)
 
     oauth.getAccessToken (err, accessToken) ->
       if err
         console.warn "Failed to get an access token: " + (err.stack or err)
-        return cb and cb(null)
+        return cb?(null)
 
       httpHelper.post config.DeviceDataEndpoint,
         access_token: accessToken
@@ -288,10 +288,10 @@ sendDeviceData = (cb) ->
       , (err) ->
         if err
           console.error "Failed to send device data: " + (err.stack or err)
-          cb and cb(null)
+          cb?(null)
         else
           console.log "Sent device data."
-          cb and cb(null)
+          cb?(null)
 
 sendAppVersionData = (cb) ->
   myAppsVersionData = uiGlobals.myApps.filter((app) ->
@@ -317,7 +317,7 @@ sendAppVersionData = (cb) ->
   oauth.getAccessToken (err, accessToken) ->
     if err
       console.warn "Failed to get an access token: " + (err.stack or err)
-      cb and cb(err)
+      cb?(err)
     else
       httpHelper.post config.AppVersionDataEndpoint,
         access_token: accessToken
@@ -325,10 +325,10 @@ sendAppVersionData = (cb) ->
       , (err, res) ->
         if err
           console.error "Failed to send app version data: " + (err.stack or err)
-          cb and cb(err)
+          cb?(err)
         else
           console.log "Sent app version data.  Got " + res
-          cb and cb(null, res)
+          cb?(null, res)
 
 
 parsePrebundledManifest = (manifest, cb) ->
@@ -356,7 +356,7 @@ parsePrebundledManifest = (manifest, cb) ->
 
   async.parallelLimit installationFunctions, 2, (err) ->
     installManager.showAppropriateDownloadControl()
-    cb and cb(err)
+    cb?(err)
 
 
 module.exports.connectToStoreServer = connectToStoreServer

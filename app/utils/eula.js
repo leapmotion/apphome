@@ -22,7 +22,7 @@
     return fs.readdir(sharedLeapDir, function(err, files) {
       var foundLastauth, foundLicense;
       if (err) {
-        return cb && cb(false);
+        return typeof cb === "function" ? cb(false) : void 0;
       }
       foundLicense = false;
       foundLastauth = false;
@@ -34,7 +34,7 @@
           return foundLastauth = foundLastauth || (file.search(name) !== -1);
         });
       });
-      return cb && cb(foundLicense && foundLastauth);
+      return typeof cb === "function" ? cb(foundLicense && foundLastauth) : void 0;
     });
   };
 
@@ -46,7 +46,7 @@
         if (exists) {
           console.log("...signed EULA found.");
           clearInterval(watch);
-          return cb && cb(null);
+          return typeof cb === "function" ? cb(null) : void 0;
         }
       });
     }, 150);

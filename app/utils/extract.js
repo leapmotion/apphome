@@ -33,15 +33,21 @@
       path: dest
     });
     inputStream.on("error", function(err) {
-      cb && cb(err);
+      if (typeof cb === "function") {
+        cb(err);
+      }
       return cb = null;
     });
     outputStream.on("close", function() {
-      cb && cb(null);
+      if (typeof cb === "function") {
+        cb(null);
+      }
       return cb = null;
     });
     outputStream.on("error", function(err) {
-      cb && cb(err);
+      if (typeof cb === "function") {
+        cb(err);
+      }
       return cb = null;
     });
     console.log("Unzipping " + src + " to " + dest + " with node-unzip.");
@@ -54,10 +60,10 @@
       zip = new AdmZip(src);
       console.log("Unzipping " + src + " to " + dest + " with AdmZip.");
       zip.extractAllTo(dest, true);
-      return cb && cb(null);
+      return typeof cb === "function" ? cb(null) : void 0;
     } catch (_error) {
       err = _error;
-      return cb && cb(err);
+      return typeof cb === "function" ? cb(err) : void 0;
     }
   };
 
@@ -87,7 +93,7 @@
           return unzipViaAdmZip(src, dest, cb);
         }
       } else {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
     });
   };
@@ -104,7 +110,7 @@
   extractAppZip = function(src, dest, shellUnzipOnly, cb) {
     var err;
     if (!fs.existsSync(src)) {
-      return cb && cb(new Error("Zip archive does not exist: " + src));
+      return typeof cb === "function" ? cb(new Error("Zip archive does not exist: " + src)) : void 0;
     }
     try {
       if (fs.existsSync(dest)) {
@@ -114,13 +120,13 @@
     } catch (_error) {
       err = _error;
       console.warn("Error deleting directory \"" + dest + "\": " + (err.stack || err));
-      return cb && cb(err);
+      return typeof cb === "function" ? cb(err) : void 0;
     }
     return unzipFile(src, dest, shellUnzipOnly, function(err) {
       var extractedFiles, moves, possibleAppDirs, topLevelDir;
       console.log("unzipping " + src);
       if (err) {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
       if (os.platform() === "win32") {
         try {
@@ -146,24 +152,24 @@
             });
             return async.series(moves, cb);
           } else {
-            return cb && cb(null);
+            return typeof cb === "function" ? cb(null) : void 0;
           }
         } catch (_error) {
           err = _error;
-          return cb && cb(err);
+          return typeof cb === "function" ? cb(err) : void 0;
         }
       } else {
-        return cb && cb(null);
+        return typeof cb === "function" ? cb(null) : void 0;
       }
     });
   };
 
   extractAppDmg = function(src, dest, cb) {
     if (!fs.existsSync(src)) {
-      return cb && cb(new Error("Disk image does not exist: " + src));
+      return typeof cb === "function" ? cb(new Error("Disk image does not exist: " + src)) : void 0;
     }
     if (os.platform() !== "darwin") {
-      return cb && cb(new Error("Extracting DMG is only supported on Mac OS X."));
+      return typeof cb === "function" ? cb(new Error("Extracting DMG is only supported on Mac OS X.")) : void 0;
     }
     return exec("hdiutil mount -nobrowse " + shell.escape(src) + " -plist", function(err, stdout) {
       var appPackage, dirEntries, dirEntry, dirErr, entry, err2, isValidDir, mkdirErr, mountPoint, parsedOutput, readErr, systemEntities, systemEntity, unmount, _i, _j, _len, _len1;
@@ -172,7 +178,7 @@
         return exec("diskutil eject " + shell.escape(mountPoint), callback);
       };
       if (err) {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
       mountPoint = void 0;
       try {
@@ -187,17 +193,17 @@
         }
       } catch (_error) {
         err2 = _error;
-        return cb && cb(err2);
+        return typeof cb === "function" ? cb(err2) : void 0;
       }
       if (!mountPoint) {
-        return cb && cb(new Error("Mounting disk image failed."));
+        return typeof cb === "function" ? cb(new Error("Mounting disk image failed.")) : void 0;
       }
       try {
         dirEntries = fs.readdirSync(mountPoint);
       } catch (_error) {
         readErr = _error;
         console.error("Failed to read mount point");
-        return cb && cb(readErr);
+        return typeof cb === "function" ? cb(readErr) : void 0;
       }
       appPackage = void 0;
       for (_j = 0, _len1 = dirEntries.length; _j < _len1; _j++) {
@@ -212,7 +218,7 @@
         if (isValidDir) {
           if (appPackage) {
             unmount(function() {
-              return cb && cb(new Error("Multiple .app directories encountered in DMG: " + appPackage + ", " + dirEntry));
+              return typeof cb === "function" ? cb(new Error("Multiple .app directories encountered in DMG: " + appPackage + ", " + dirEntry)) : void 0;
             });
           } else {
             appPackage = dirEntry;
@@ -232,20 +238,20 @@
         } catch (_error) {
           err2 = _error;
           return unmount(function() {
-            return cb && cb(err2);
+            return typeof cb === "function" ? cb(err2) : void 0;
           });
         }
         try {
           fs.mkdirpSync(path.dirname(dest));
         } catch (_error) {
           mkdirErr = _error;
-          return cb && cb(mkdirErr);
+          return typeof cb === "function" ? cb(mkdirErr) : void 0;
         }
         console.log("Installing app from " + appPackage + " to " + dest);
         return exec("cp -r " + shell.escape(appPackage) + " " + shell.escape(dest), function(err) {
           if (err) {
             return unmount(function(err2) {
-              return cb && cb(err || err2 || null);
+              return typeof cb === "function" ? cb(err || err2 || null) : void 0;
             });
           } else {
             return exec("xattr -rd com.apple.quarantine " + shell.escape(dest), function(err3) {

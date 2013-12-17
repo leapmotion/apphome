@@ -45,7 +45,7 @@
       if (!error) {
         data = JSON.parse(data);
       }
-      return cb && cb(error, data);
+      return typeof cb === "function" ? cb(error, data) : void 0;
     });
   };
 
@@ -55,12 +55,12 @@
       code: code
     }, function(err, result) {
       if (err) {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       } else if (result.error) {
-        return cb && cb(new Error(result.error_description));
+        return typeof cb === "function" ? cb(new Error(result.error_description)) : void 0;
       } else {
         saveRefreshToken(result.refresh_token);
-        return cb && cb(null);
+        return typeof cb === "function" ? cb(null) : void 0;
       }
     });
   };
@@ -82,7 +82,7 @@
       authorizationView.remove();
       require('./window-chrome.js').paintMainPage();
       promptingForLogin = false;
-      return cb && cb(null);
+      return typeof cb === "function" ? cb(null) : void 0;
     });
   };
 
@@ -95,7 +95,9 @@
     now = (new Date()).getTime();
     if (accessToken && accessTokenExpiry && (now < accessTokenExpiry)) {
       console.log("Using cached OAUTH access token.");
-      cb && cb(null, accessToken);
+      if (typeof cb === "function") {
+        cb(null, accessToken);
+      }
       return;
     }
     console.log("Getting OAUTH access token.");
@@ -109,10 +111,10 @@
         refresh_token: getRefreshToken()
       }, function(err, result) {
         if (err) {
-          return cb && cb(err);
+          return typeof cb === "function" ? cb(err) : void 0;
         } else if (result.error) {
           if (promptingForLogin) {
-            return cb && cb(new Error(result.error));
+            return typeof cb === "function" ? cb(new Error(result.error)) : void 0;
           } else {
             return promptForLogin(function() {
               return getAccessToken(cb);
@@ -121,7 +123,7 @@
         } else {
           accessToken = result.access_token;
           accessTokenExpiry = now + config.oauth.auth_token_expiration_time;
-          return cb && cb(null, accessToken);
+          return typeof cb === "function" ? cb(null, accessToken) : void 0;
         }
       });
     }

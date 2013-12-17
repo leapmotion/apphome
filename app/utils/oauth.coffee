@@ -30,7 +30,7 @@ oauthRequest = (params, cb) ->
 
   httpHelper.post url.format(urlParts), params, (error, data) ->
     data = JSON.parse(data)  unless error
-    cb and cb(error, data)
+    cb?(error, data)
 
 authorizeWithCode = (code, cb) ->
   oauthRequest
@@ -38,12 +38,12 @@ authorizeWithCode = (code, cb) ->
     code: code
   , (err, result) ->
     if err
-      cb and cb(err)
+      cb?(err)
     else if result.error
-      cb and cb(new Error(result.error_description))
+      cb?(new Error(result.error_description))
     else
       saveRefreshToken result.refresh_token
-      cb and cb(null)
+      cb?(null)
 
 promptingForLogin = undefined
 promptForLogin = (cb) ->
@@ -59,7 +59,7 @@ promptForLogin = (cb) ->
     do authorizationView.remove
     do require('./window-chrome.js').paintMainPage
     promptingForLogin = false
-    cb and cb(null) # skip auth if there's an error
+    cb?(null) # skip auth if there's an error
 
 accessTokenExpiry = undefined
 accessToken = undefined
@@ -67,7 +67,7 @@ getAccessToken = (cb) ->
   now = (new Date()).getTime()
   if accessToken and accessTokenExpiry and (now < accessTokenExpiry)
     console.log "Using cached OAUTH access token."
-    cb and cb(null, accessToken)
+    cb?(null, accessToken)
     return
 
   console.log "Getting OAUTH access token."
@@ -82,17 +82,17 @@ getAccessToken = (cb) ->
       refresh_token: getRefreshToken()
     , (err, result) ->
       if err
-        cb and cb(err)
+        cb?(err)
       else if result.error
         if promptingForLogin
-          cb and cb(new Error(result.error))
+          cb?(new Error(result.error))
         else
           promptForLogin ->
             getAccessToken cb
       else
         accessToken = result.access_token
         accessTokenExpiry = now + config.oauth.auth_token_expiration_time
-        cb and cb(null, accessToken)
+        cb?(null, accessToken)
 
 logOut = ->
   db.removeItem config.DbKeys.OauthRefreshToken

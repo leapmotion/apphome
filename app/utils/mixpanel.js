@@ -22,7 +22,7 @@
       } else {
         console.log("Auto-generating Mixpanel Distinct Id");
       }
-      return cb && cb(null);
+      return typeof cb === "function" ? cb(null) : void 0;
     };
     mixpanelDistinctId = db.getItem(config.DbKeys.MixpanelDistinctId);
     if (mixpanelDistinctId) {

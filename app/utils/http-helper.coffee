@@ -7,6 +7,9 @@ path = require("path")
 qs = require("querystring")
 url = require("url")
 
+Q = require "q"
+qhttp = require "q-io/http"
+
 config = require("../../config/config.js")
 
 DownloadProgressStream = require("./download-progress-stream.js")
@@ -23,16 +26,16 @@ getFileSize = (requestUrl, cb) ->
       @abort()
       nwGui.App.clearCache()
       fileSize = evt.total
-      cb and cb(null, fileSize)
+      cb?(null, fileSize)
       cb = null
 
   xhr.onload = (evt) ->
     if typeof fileSize is "undefined"
-      cb and cb(new Error("Could not determine filesize for URL: " + requestUrl))
+      cb?(new Error("Could not determine filesize for URL: " + requestUrl))
       cb = null
 
   xhr.onerror = (evt) ->
-    cb and cb(evt)
+    cb?(evt)
     cb = null
 
   xhr.send()
@@ -48,13 +51,13 @@ downloadChunk = (requestUrl, start, end, cb) ->
     nwGui.App.clearCache()
     if @status >= 200 and @status <= 299
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
-      cb and cb(null, new Buffer(new window.Uint8Array(@response)))
+      cb?(null, new Buffer(new window.Uint8Array(@response)))
     else
-      cb and cb(new Error("Got status code: " + @status + " for chunk."))
+      cb?(new Error("Got status code: " + @status + " for chunk."))
     cb = null
 
   xhr.onerror = (err) ->
-    cb and cb(err)
+    cb?(err)
     cb = null
 
   xhr.send()
@@ -80,7 +83,7 @@ getToDisk = (requestUrl, opts, cb) ->
   currentRequest = undefined
   getFileSize requestUrl, (err, fileSize) ->
     if err
-      cb and cb(err)
+      cb?(err)
     else
       numChunks = Math.ceil(fileSize / DownloadChunkSize)
       console.debug "Downloading " + fileSize + " bytes in " + numChunks + " chunks (" + requestUrl + ")"
@@ -96,7 +99,7 @@ getToDisk = (requestUrl, opts, cb) ->
             if err
               console.info "Downloading chunk failed: " + start + " - " + end + " of " + fileSize + " " + (err.stack or err) + " (" + requestUrl + ")"
               fs.close fd
-              cb and cb(err)
+              cb?(err)
               cb = null
             else
               bytesSoFar += chunk.length
@@ -105,7 +108,7 @@ getToDisk = (requestUrl, opts, cb) ->
                 if err
                   console.info "Writing chunk failed: " + start + " - " + end + " of " + fileSize + " " + (err.stack or err) + " (" + requestUrl + ")"
                   fs.close fd
-                  cb and cb(err)
+                  cb?(err)
                   cb = null
                 else
                   downloadAllChunks numRemainingChunks - 1
@@ -115,11 +118,11 @@ getToDisk = (requestUrl, opts, cb) ->
         else
           fs.close fd, (err) ->
             if err
-              cb and cb(err)
+              cb?(err)
             else if bytesSoFar isnt fileSize
-              cb and cb(new Error("Expected file of size: " + fileSize + " but got: " + bytesSoFar))
+              cb?(new Error("Expected file of size: " + fileSize + " but got: " + bytesSoFar))
             else
-              cb and cb(null, destPath)
+              cb?(null, destPath)
             cb = null
 
       downloadAllChunks numChunks
@@ -138,7 +141,7 @@ getToDisk = (requestUrl, opts, cb) ->
 
     err = new Error("Download cancelled.")
     err.cancelled = true
-    cb and cb(err)
+    cb?(err)
     cb = null
 
   progressStream
@@ -146,9 +149,9 @@ getToDisk = (requestUrl, opts, cb) ->
 getJson = (requestUrl, cb) ->
   window.$.getJSON(requestUrl, null, (json) ->
     nwGui.App.clearCache()
-    cb and cb(null, json)
+    cb?(null, json)
   ).fail ->
-    cb and cb(new Error("GET failed: " + requestUrl))
+    cb?(new Error("GET failed: " + requestUrl))
 
 post = (requestUrl, data, cb) ->
   xhr = new window.XMLHttpRequest()
@@ -156,11 +159,11 @@ post = (requestUrl, data, cb) ->
   xhr.setRequestHeader "Content-type", "application/x-www-form-urlencoded"
   xhr.onload = ->
     nwGui.App.clearCache()
-    cb and cb(null, @responseText)
+    cb?(null, @responseText)
     cb = null
 
   xhr.onerror = (err) ->
-    cb and cb(err)
+    cb?(err)
     cb = null
 
   xhr.send qs.stringify(data)

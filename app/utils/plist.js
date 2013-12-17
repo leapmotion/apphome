@@ -17,13 +17,13 @@
     parseResult = function(err, result) {
       var err2;
       if (err) {
-        return cb && cb(err);
+        return typeof cb === "function" ? cb(err) : void 0;
       }
       try {
-        return cb && cb(null, parse(result.toString()));
+        return typeof cb === "function" ? cb(null, parse(result.toString())) : void 0;
       } catch (_error) {
         err2 = _error;
-        return cb && cb(err2);
+        return typeof cb === "function" ? cb(err2) : void 0;
       }
     };
     if (os.platform() === "darwin") {

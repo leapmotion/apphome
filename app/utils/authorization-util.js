@@ -18,7 +18,7 @@
     if (!oauth.getRefreshToken()) {
       return oauth.getAccessToken(cb);
     } else {
-      return cb && cb(null);
+      return typeof cb === "function" ? cb(null) : void 0;
     }
   };
 
