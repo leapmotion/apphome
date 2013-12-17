@@ -1,7 +1,9 @@
 async = require "async"
 path = require "path"
 os = require "os"
-fs = require "fs-extra"
+fs = require "q-io/fs"
+Q = require "q"
+
 
 config = require "../../config/config.js"
 
@@ -16,10 +18,8 @@ possibleLastauthNames = [
   /lastauth/
 ]
 
-hasBeenAgreedTo = (cb) ->
-  fs.readdir sharedLeapDir, (err, files) ->
-    return cb?(false)  if err
-
+hasBeenAgreedTo = ->
+  fs.list(sharedLeapDir).then (files) ->
     foundLicense = false
     foundLastauth = false
     files.forEach (file) ->
@@ -28,18 +28,23 @@ hasBeenAgreedTo = (cb) ->
       possibleLastauthNames.forEach (name) ->
         foundLastauth = foundLastauth or (file.search(name) isnt -1)
 
-    cb?(foundLicense and foundLastauth)
+    foundLicense and foundLastauth
 
-waitForLicense = (cb) ->
+waitForLicense = ->
+  deferred = Q.defer()
+
   console.log "Checking for signed EULA..."
-  watch = setInterval(->
-    hasBeenAgreedTo (exists) ->
+  watch = setInterval ->
+    hasBeenAgreedTo().then (exists) ->
       if exists
         console.log "...signed EULA found."
         clearInterval watch
-        cb?(null)
+        deferred.resolve true
+    , (reason) ->
+      deferred.reject(reason)
+  , 150
 
-  , 150)
+  return deferred.promise
 
 module.exports.hasBeenAgreedTo = hasBeenAgreedTo
 module.exports.waitForLicense = waitForLicense

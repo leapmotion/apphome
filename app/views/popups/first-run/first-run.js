@@ -50,13 +50,13 @@ module.exports = BaseView.extend({
       this.$activateImage.show();
       this._center();
 
-      eula.waitForLicense((function() {
+      eula.waitForLicense().then(function() {
         this._setupBindings();
 
         this.$activateImage.hide();
         this.$el.find('#actions').removeClass('disabled');
         this._center();
-      }).bind(this));
+      }.bind(this));
     } else {
       this._setupBindings();
     }
