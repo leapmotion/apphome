@@ -68,8 +68,12 @@ showAppropriateDownloadControl = (fade) ->
       $control.show()
 
 cancelAll = ->
+  if installQueue.length is 0
+    return
+
   # Reset waiting apps
-  while installQueue.length - 1
+  while installQueue.length - 1 > 0
+    console.log installQueue.length
     app = installQueue.pop().app
     if app.hasUpdate() and app.get("state") is LeapApp.States.Waiting
       app.set "state", LeapApp.States.Ready
