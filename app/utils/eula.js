@@ -57,3 +57,7 @@
   module.exports.waitForLicense = waitForLicense;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=eula.map
+*/

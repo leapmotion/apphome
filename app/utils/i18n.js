@@ -169,3 +169,7 @@
   module.exports.translate = translate;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=i18n.map
+*/

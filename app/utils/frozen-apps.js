@@ -121,3 +121,7 @@
   module.exports.prebundledManifestPromise = prebundledManifestPromise;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=frozen-apps.map
+*/

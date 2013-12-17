@@ -487,3 +487,7 @@
   module.exports.parsePrebundledManifest = parsePrebundledManifest;
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=api.map
+*/

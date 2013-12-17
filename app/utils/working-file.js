@@ -107,7 +107,3 @@
   module.exports.cleanupTempFiles = cleanupTempFiles;
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=working-file.map
-*/
