@@ -173,6 +173,8 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
     mainMenu.append helpMenuItem
 
 appWindowBindings()
+
+
 module.exports.maximizeWindow = maximizeWindow
 module.exports.rebuildMenuBar = rebuildMenuBar
 module.exports.paintMainPage = paintMainPage
