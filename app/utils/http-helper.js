@@ -203,12 +203,10 @@
     return progressStream;
   };
 
-  getJson = function(requestUrl, cb) {
-    return window.$.getJSON(requestUrl, null, function(json) {
+  getJson = function(requestUrl) {
+    return Q(window.$.getJSON(requestUrl)).then(function(json) {
       nwGui.App.clearCache();
-      return typeof cb === "function" ? cb(null, json) : void 0;
-    }).fail(function() {
-      return typeof cb === "function" ? cb(new Error("GET failed: " + requestUrl)) : void 0;
+      return json;
     });
   };
 

@@ -5,6 +5,9 @@ os = require("os")
 path = require("path")
 qs = require("querystring")
 url = require("url")
+
+Q = require("q")
+
 config = require("../../config/config.js")
 db = require("./db.js")
 httpHelper = require("./http-helper.js")
@@ -145,13 +148,13 @@ _getStoreManifest = (cb) ->
         access_token: accessToken
         platform: platform
       )
-      httpHelper.getJson apiEndpoint, (err, messages) ->
-        if err
-          reconnectAfterError err
-        else if messages.errors
-          reconnectAfterError new Error(messages.errors)
-        else
-          cb messages
+      httpHelper.getJson(apiEndpoint).then (messages) ->
+          if messages.errors
+            reconnectAfterError new Error(messages.errors)
+          else
+            cb messages
+        , (reason) ->
+          reconnectAfterError(reason)
 
 _setGlobalUserInformation = (user) ->
   uiGlobals.username = user.username
@@ -202,17 +205,17 @@ getAppDetails = (app, cb) ->
         url = url.replace(":id", appId)
         url = url.replace(":platform", platform)
         url += "?access_token=" + accessToken
+
         console.log "Getting app details via url: " + url
-        httpHelper.getJson url, (err, appDetails) ->
-          if err
-            cb?(err)
-          else
-            app.set cleanUpAppJson(appDetails and appDetails.app_version)
-            app.set "gotDetails", true
-            app.save()
-            cb?(null)
+        httpHelper.getJson(url).then (appDetails) ->
+          app.set cleanUpAppJson(appDetails and appDetails.app_version)
+          app.set "gotDetails", true
+          console.log "Got details for", app.get('name')
+          app.save()
+        .fin ->
           cb = null
           do getAppDetailsForNextInQueue
+        .nodeify(cb)
     else
       cb?(new Error("appId and platform must be valid"))
       do getAppDetailsForNextInQueue
@@ -248,17 +251,19 @@ createWebLinkApps = (webAppData) ->
       uiGlobals.myApps.remove oldWebApp
       do oldWebApp.save
 
-getLocalAppManifest = (cb) ->
-  httpHelper.getJson config.NonStoreAppManifestUrl, (err, manifest) ->
-    if err
-      console.warn "Failed to get app manifest (retrying): " + err and err.stack
-      setTimeout (->
-        getLocalAppManifest cb
-      ), config.S3ConnectRetryMs
-    else
-      createWebLinkApps manifest.web
-      platformApps = manifest[NodePlatformToServerPlatform[os.platform()]] or []
-      cb?(platformApps)
+getLocalAppManifest = ->
+  httpHelper.getJson(config.NonStoreAppManifestUrl).then (manifest) ->
+    createWebLinkApps manifest.web
+    manifest[NodePlatformToServerPlatform[os.platform()]] or []
+  , (reason) ->
+    console.warn "Failed to get app manifest (retrying): " + err and err.stack
+    deferred = Q.deferred()
+
+    setTimeout (->
+      deferred.resolve(getLocalAppManifest())
+    ), config.S3ConnectRetryMs
+
+    deferred.promise
 
 sendDeviceData = (cb) ->
   dataDir = config.PlatformLeapDataDirs[os.platform()]

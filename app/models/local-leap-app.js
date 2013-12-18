@@ -228,13 +228,7 @@ function localManifestPromise() {
   if (_manifestPromise) {
     return _manifestPromise;
   }
-  var defer = $.Deferred();
-  _manifestPromise = defer.promise();
-
-  api.getLocalAppManifest(function(manifest) {
-    defer.resolve(manifest);
-  });
-
+  _manifestPromise = api.getLocalAppManifest();
   return _manifestPromise;
 }
 

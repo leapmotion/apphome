@@ -146,12 +146,10 @@ getToDisk = (requestUrl, opts, cb) ->
 
   progressStream
 
-getJson = (requestUrl, cb) ->
-  window.$.getJSON(requestUrl, null, (json) ->
+getJson = (requestUrl) ->
+  Q(window.$.getJSON(requestUrl)).then (json) ->
     nwGui.App.clearCache()
-    cb?(null, json)
-  ).fail ->
-    cb?(new Error("GET failed: " + requestUrl))
+    json
 
 post = (requestUrl, data, cb) ->
   xhr = new window.XMLHttpRequest()
