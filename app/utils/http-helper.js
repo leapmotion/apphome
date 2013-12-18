@@ -31,36 +31,25 @@
   DownloadChunkSize = 1024 * 1024 * 5;
 
   getFileSize = function(requestUrl, cb) {
-    var fileSize, xhr;
+    var deferred, fileSize, xhr;
     fileSize = void 0;
     xhr = new window.XMLHttpRequest();
-    xhr.open("GET", requestUrl);
-    xhr.onprogress = function(evt) {
-      if (evt.total) {
-        this.abort();
-        nwGui.App.clearCache();
-        fileSize = evt.total;
-        if (typeof cb === "function") {
-          cb(null, fileSize);
-        }
-        return cb = null;
-      }
-    };
+    deferred = Q.defer();
+    xhr.open("HEAD", requestUrl);
     xhr.onload = function(evt) {
-      if (typeof fileSize === "undefined") {
-        if (typeof cb === "function") {
-          cb(new Error("Could not determine filesize for URL: " + requestUrl));
-        }
-        return cb = null;
+      console.log("Getting size from ", requestUrl);
+      fileSize = Number(this.getResponseHeader('Content-Length'));
+      if (fileSize == null) {
+        return deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl));
+      } else {
+        return deferred.resolve(fileSize);
       }
     };
     xhr.onerror = function(evt) {
-      if (typeof cb === "function") {
-        cb(evt);
-      }
-      return cb = null;
+      return deferred.reject(evt);
     };
-    return xhr.send();
+    xhr.send();
+    return deferred.promise.nodeify(cb);
   };
 
   downloadChunk = function(requestUrl, start, end, cb) {

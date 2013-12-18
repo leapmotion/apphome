@@ -19,26 +19,24 @@ DownloadChunkSize = 1024 * 1024 * 5 # 5 MB
 getFileSize = (requestUrl, cb) ->
   fileSize = undefined
   xhr = new window.XMLHttpRequest()
-  xhr.open "GET", requestUrl
+  deferred = Q.defer()
 
-  xhr.onprogress = (evt) ->
-    if evt.total
-      @abort()
-      nwGui.App.clearCache()
-      fileSize = evt.total
-      cb?(null, fileSize)
-      cb = null
+  xhr.open "HEAD", requestUrl
 
   xhr.onload = (evt) ->
-    if typeof fileSize is "undefined"
-      cb?(new Error("Could not determine filesize for URL: " + requestUrl))
-      cb = null
+    console.log "Getting size from ", requestUrl
+    fileSize = Number @getResponseHeader 'Content-Length'
+
+    unless fileSize?
+      deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
+    else
+      deferred.resolve(fileSize)
 
   xhr.onerror = (evt) ->
-    cb?(evt)
-    cb = null
+    deferred.reject(evt)
 
   xhr.send()
+  deferred.promise.nodeify(cb)
 
 downloadChunk = (requestUrl, start, end, cb) ->
   xhr = new window.XMLHttpRequest()
