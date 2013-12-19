@@ -56,6 +56,8 @@ var config = {
   FsScanIntervalMs: 5 * 1000, // 3 seconds
   AuthLoadTimeoutMs: 30 * 1000, // 30 seconds
 
+  DownloadChunkSize: 1024 * 1024 * 5, // 5 MB
+
   DbKeys: {
     AlreadyDidFirstRun: 'AlreadyDidFirstRun',
     OauthRefreshToken: 'OauthRefreshToken',
