@@ -42,12 +42,12 @@ getToDisk = (targetUrl, opts, cb) ->
   downloadStream.pipe writeStream
 
   writeStream.on 'finish', ->
-    if downloadStream.cancelled?
+    if downloadStream.cancelled
       try
         fs.unlinkSync destPath  if fs.existsSync(destPath)
       catch err
         console.warn "Could not cleanup cancelled download: " + (err.stack or err)
-        deferred.reject(err)
+        deferred.reject err
 
       err = new Error "Cancelled download of " + targetUrl
       err.cancelled = true

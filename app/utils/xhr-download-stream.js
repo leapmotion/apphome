@@ -23,7 +23,7 @@
       if (fileSize == null) {
         return deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl));
       } else {
-        console.log('Downloading file of size', Math.round(fileSize / 1049000), 'MB from', requestUrl);
+        console.log('Downloading', Math.round(fileSize / 1049000), 'MB file from', requestUrl);
         return deferred.resolve(fileSize);
       }
     };
@@ -88,7 +88,7 @@
   XHRDownloadStream.prototype._read = function(size) {
     var chunkSize,
       _this = this;
-    console.log(chunkSize = this._chunkSize || size);
+    chunkSize = this._chunkSize || size;
     this.currentRequestPromise = downloadChunk(this._targetUrl, this._bytesSoFar, this._bytesSoFar + chunkSize);
     return this.currentRequestPromise.then(function(data) {
       if ((data == null) && _this._bytesSoFar !== _this._fileSize) {
@@ -103,7 +103,6 @@
       if (_this._fileSize) {
         percentComplete = (_this._bytesSoFar + bytesLoadedByCurrentRequest) / _this._fileSize;
       }
-      console.log("Progress", percentComplete);
       return _this.progressStream.emit("progress", percentComplete);
     }).done();
   };

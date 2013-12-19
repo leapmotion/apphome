@@ -50,7 +50,7 @@
     downloadStream.pipe(writeStream);
     writeStream.on('finish', function() {
       var err;
-      if (downloadStream.cancelled != null) {
+      if (downloadStream.cancelled) {
         try {
           if (fs.existsSync(destPath)) {
             fs.unlinkSync(destPath);

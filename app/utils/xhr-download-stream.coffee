@@ -18,7 +18,7 @@ getFileSize = (requestUrl, cb) ->
     unless fileSize?
       deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
     else
-      console.log 'Downloading file of size', Math.round(fileSize / 1049000), 'MB from', requestUrl
+      console.log 'Downloading', Math.round(fileSize / 1049000), 'MB file from', requestUrl
       deferred.resolve(fileSize)
 
   xhr.onerror = (evt) ->
@@ -78,7 +78,7 @@ XHRDownloadStream = (targetUrl, chunkSize) ->
 util.inherits(XHRDownloadStream, stream.Readable)
 
 XHRDownloadStream::_read = (size) ->
-  console.log chunkSize = @_chunkSize or size
+  chunkSize = @_chunkSize or size
   @currentRequestPromise = downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize)
   @currentRequestPromise.then (data) =>
     if not data? and @_bytesSoFar isnt @_fileSize
@@ -89,7 +89,6 @@ XHRDownloadStream::_read = (size) ->
     @emit "error", reason
   , (bytesLoadedByCurrentRequest) =>
     percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
-    console.log "Progress", percentComplete
     @progressStream.emit "progress", percentComplete
   .done()
 
