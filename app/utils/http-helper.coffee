@@ -1,20 +1,23 @@
 Buffer = require("buffer").Buffer
-fs = require("fs")
-http = require("http")
-https = require("https")
-os = require("os")
-path = require("path")
-qs = require("querystring")
-url = require("url")
+fs = require "fs"
+http = require "http"
+https = require "https"
+os = require "os"
+path = require "path"
+qs = require "querystring"
+stream = require "stream"
+url = require "url"
+util = require "util"
+through = require "through"
 
 Q = require "q"
 qhttp = require "q-io/http"
 
-config = require("../../config/config.js")
+config = require "../../config/config.js"
 
-DownloadProgressStream = require("./download-progress-stream.js")
-workingFile = require("./working-file.js")
-DownloadChunkSize = 1024 * 1024 * 5 # 5 MB
+workingFile = require "./working-file.js"
+DownloadProgressStream = require "./download-progress-stream.js"
+
 
 getFileSize = (requestUrl, cb) ->
   fileSize = undefined
@@ -24,44 +27,79 @@ getFileSize = (requestUrl, cb) ->
   xhr.open "HEAD", requestUrl
 
   xhr.onload = (evt) ->
-    console.log "Getting size from ", requestUrl
     fileSize = Number @getResponseHeader 'Content-Length'
 
     unless fileSize?
       deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
     else
+      console.log 'Downloading file of size', Math.round(fileSize / 1049000), 'MB from', requestUrl
       deferred.resolve(fileSize)
 
   xhr.onerror = (evt) ->
-    deferred.reject(evt)
+    deferred.reject new Error "Error determining filesize for URL: " + requestUrl
 
   xhr.send()
-  deferred.promise.nodeify(cb)
+  deferred.promise
 
-downloadChunk = (requestUrl, start, end, cb) ->
+downloadChunk = (requestUrl, start, end) ->
   xhr = new window.XMLHttpRequest()
-  xhr.open "GET", requestUrl, true
+  xhr.open "GET", requestUrl
   xhr.responseType = "arraybuffer"
   xhr.setRequestHeader "range", "bytes=" + start + "-" + end
-  startTime = Date.now()
+
+  deferred = Q.defer()
+  deferred.promise.cancel = ->
+    do xhr.abort
 
   xhr.onload = ->
     nwGui.App.clearCache()
     if @status >= 200 and @status <= 299
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
-      cb?(null, new Buffer(new window.Uint8Array(@response)))
+      deferred.resolve(new Buffer(new window.Uint8Array(@response)))
+    else if @status == 416
+      deferred.resolve(null)
     else
-      cb?(new Error("Got status code: " + @status + " for chunk."))
-    cb = null
+      deferred.reject(new Error("Got status code: " + @status + " for chunk."))
 
-  xhr.onerror = (err) ->
-    cb?(err)
-    cb = null
+  xhr.onprogress = (evt) ->
+    if evt.lengthComputable
+      deferred.notify evt.loaded
 
-  xhr.send()
-  xhr
+  xhr.onerror = (evt) ->
+    deferred.reject new Error "Error downloading chunk " + start + '-' + end
+
+  do xhr.send
+
+  deferred.promise
+
+XhrBinaryStream = (targetUrl) ->
+  stream.Readable.call this
+
+  @bytesSoFar = 0
+  @chunkSize = config.DownloadChunkSize
+  @_targetUrl = targetUrl
+
+util.inherits(XhrBinaryStream, stream.Readable)
+
+XhrBinaryStream::_read = (size) ->
+  @currentRequestPromise = downloadChunk(@_targetUrl, @bytesSoFar, @bytesSoFar + @chunkSize)
+  @currentRequestPromise.then (data) =>
+    @bytesSoFar += data?.length or 0
+    @push data
+  , (reason) =>
+    @emit "error", reason
+  , (bytesLoadedByCurrentRequest) =>
+    @emit "progress", @bytesSoFar + bytesLoadedByCurrentRequest
+  .done()
+
+XhrBinaryStream::cancel = ->
+  @currentRequestPromise.cancel()
+  @cancelled = true
+  @push null
 
 getToDisk = (requestUrl, opts, cb) ->
+  deferred = Q.defer()
+
   opts = opts or {}
   return cb(new Error("No source url specified."))  unless requestUrl
 
@@ -77,70 +115,48 @@ getToDisk = (requestUrl, opts, cb) ->
   destPath = opts.destPath or workingFile.newTempPlatformArchive()
   progressStream = new DownloadProgressStream()
 
-  fd = fs.openSync(destPath, "w")
-  currentRequest = undefined
-  getFileSize requestUrl, (err, fileSize) ->
-    if err
-      cb?(err)
-    else
-      numChunks = Math.ceil(fileSize / DownloadChunkSize)
-      console.debug "Downloading " + fileSize + " bytes in " + numChunks + " chunks (" + requestUrl + ")"
-      bytesSoFar = 0
+  binaryStream = new XhrBinaryStream requestUrl
+  writeStream = fs.createWriteStream destPath
 
-      # Called recursively to get and write all chunks.
-      downloadAllChunks = (numRemainingChunks) ->
-        progressStream.emit "progress", bytesSoFar / fileSize
-        if numRemainingChunks > 0
-          start = (numChunks - numRemainingChunks) * DownloadChunkSize
-          end = Math.min(start + DownloadChunkSize - 1, fileSize)
-          currentRequest = downloadChunk requestUrl, start, end, (err, chunk) ->
-            if err
-              console.info "Downloading chunk failed: " + start + " - " + end + " of " + fileSize + " " + (err.stack or err) + " (" + requestUrl + ")"
-              fs.close fd
-              cb?(err)
-              cb = null
-            else
-              bytesSoFar += chunk.length
-              fs.write fd, chunk, 0, chunk.length, start, (err) ->
-                chunk = null
-                if err
-                  console.info "Writing chunk failed: " + start + " - " + end + " of " + fileSize + " " + (err.stack or err) + " (" + requestUrl + ")"
-                  fs.close fd
-                  cb?(err)
-                  cb = null
-                else
-                  downloadAllChunks numRemainingChunks - 1
+  binaryStream.on 'error', (err) ->
+    console.warn "Downloading chunk failed: " + (err.stack or err) + " (" + requestUrl + ")"
+    deferred.reject err
 
-          currentRequest.onprogress = (evt) ->
-            progressStream.emit "progress", (bytesSoFar + evt.loaded) / fileSize  if evt.lengthComputable
-        else
-          fs.close fd, (err) ->
-            if err
-              cb?(err)
-            else if bytesSoFar isnt fileSize
-              cb?(new Error("Expected file of size: " + fileSize + " but got: " + bytesSoFar))
-            else
-              cb?(null, destPath)
-            cb = null
+  writeStream.on 'error', (err) ->
+    console.warn "Writing chunk failed: " + (err.stack or err) + " (" + destPath + ")"
+    deferred.reject err
 
-      downloadAllChunks numChunks
+  getFileSize(requestUrl).then (fileSize)->
+    binaryStream.pipe writeStream
+
+    binaryStream.on 'progress', (bytesSoFar) ->
+      progressStream.emit "progress", bytesSoFar / fileSize
+
+    binaryStream.on 'end', ->
+      if @bytesSoFar isnt fileSize
+        deferred.reject new Error "Expected file of size: " + fileSize + " but got: " + @bytesSoFar
+      else
+        deferred.resolve destPath.toString()
+
+    deferred.promise
 
   # Tell the progress stream what to do when cancelling a download
   progressStream.setCanceller ->
+    do binaryStream.unpipe
+    do binaryStream.cancel
+    do writeStream.end
+
     try
-      fs.closeSync fd
       fs.unlinkSync destPath  if fs.existsSync(destPath)
     catch err
       console.warn "Could not cleanup cancelled download: " + (err.stack or err)
+      deferred.reject(err)
 
-    if currentRequest
-      currentRequest.abort()
-      nwGui.App.clearCache()
-
-    err = new Error("Download cancelled.")
+    err = new Error "Cancelled download of " + requestUrl
     err.cancelled = true
-    cb?(err)
-    cb = null
+    deferred.reject err
+
+  deferred.promise.nodeify cb
 
   progressStream
 
