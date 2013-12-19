@@ -99,7 +99,14 @@
   };
 
   chmodRecursiveSync = function(file) {
-    fs.chmodSync(file, 777);
+    var error;
+    try {
+      fs.chmodSync(file, 777);
+    } catch (_error) {
+      error = _error;
+      console.warn(error);
+      return;
+    }
     if (fs.statSync(file).isDirectory()) {
       return fs.readdirSync(file).forEach(function(subFile) {
         return chmodRecursiveSync(path.join(file, subFile));

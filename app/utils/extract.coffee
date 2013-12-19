@@ -69,7 +69,12 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
       cb?(err)
 
 chmodRecursiveSync = (file) ->
-  fs.chmodSync file, 777 # make sure file has write permissions
+  try
+    fs.chmodSync file, 777 # make sure file has write permissions
+  catch error
+    console.warn error
+    return
+
   if fs.statSync(file).isDirectory()
     fs.readdirSync(file).forEach (subFile) ->
       chmodRecursiveSync path.join(file, subFile)
