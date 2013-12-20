@@ -57,7 +57,6 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
     if err and not shellUnzipOnly
       stats = fs.statSync(src)
 
-
       if os.platform() is "win32" and
         (stats.size > 290000000 or  # 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
          stats.size is 11247281 or  # special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
