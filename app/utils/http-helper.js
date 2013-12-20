@@ -79,25 +79,21 @@
     });
   };
 
-  post = function(targetUrl, data, cb) {
-    var xhr;
+  post = function(targetUrl, data) {
+    var deferred, xhr;
+    deferred = Q.defer();
     xhr = new window.XMLHttpRequest();
     xhr.open("POST", targetUrl);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
       nwGui.App.clearCache();
-      if (typeof cb === "function") {
-        cb(null, this.responseText);
-      }
-      return cb = null;
+      return deferred.resolve(this.responseText);
     };
     xhr.onerror = function(err) {
-      if (typeof cb === "function") {
-        cb(err);
-      }
-      return cb = null;
+      return deferred.reject(err);
     };
-    return xhr.send(qs.stringify(data));
+    xhr.send(qs.stringify(data));
+    return deferred.promise;
   };
 
   module.exports.getToDisk = getToDisk;

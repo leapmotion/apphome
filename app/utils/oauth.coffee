@@ -28,9 +28,9 @@ oauthRequest = (params, cb) ->
   urlParts = url.parse(config.oauth.endpoint)
   urlParts.pathname += "token"
 
-  httpHelper.post url.format(urlParts), params, (error, data) ->
-    data = JSON.parse(data)  unless error
-    cb?(error, data)
+  httpHelper.post((url.format urlParts), params).then (data) ->
+    data = JSON.parse data
+  .nodeify cb
 
 authorizeWithCode = (code, cb) ->
   oauthRequest

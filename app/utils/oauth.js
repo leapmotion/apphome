@@ -41,12 +41,9 @@
     });
     urlParts = url.parse(config.oauth.endpoint);
     urlParts.pathname += "token";
-    return httpHelper.post(url.format(urlParts), params, function(error, data) {
-      if (!error) {
-        data = JSON.parse(data);
-      }
-      return typeof cb === "function" ? cb(error, data) : void 0;
-    });
+    return httpHelper.post(url.format(urlParts), params).then(function(data) {
+      return data = JSON.parse(data);
+    }).nodeify(cb);
   };
 
   authorizeWithCode = function(code, cb) {

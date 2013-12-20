@@ -65,20 +65,22 @@ getJson = (targetUrl) ->
     nwGui.App.clearCache()
     json
 
-post = (targetUrl, data, cb) ->
+post = (targetUrl, data) ->
+  deferred = Q.defer()
+
   xhr = new window.XMLHttpRequest()
   xhr.open "POST", targetUrl
   xhr.setRequestHeader "Content-type", "application/x-www-form-urlencoded"
   xhr.onload = ->
     nwGui.App.clearCache()
-    cb?(null, @responseText)
-    cb = null
+    deferred.resolve @responseText
 
   xhr.onerror = (err) ->
-    cb?(err)
-    cb = null
+    deferred.reject err
 
   xhr.send qs.stringify(data)
+
+  deferred.promise
 
 module.exports.getToDisk = getToDisk
 module.exports.getJson = getJson

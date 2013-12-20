@@ -290,13 +290,12 @@ sendDeviceData = (cb) ->
       httpHelper.post config.DeviceDataEndpoint,
         access_token: accessToken
         data: authData
-      , (err) ->
-        if err
-          console.error "Failed to send device data: " + (err.stack or err)
-          cb?(null)
-        else
-          console.log "Sent device data."
-          cb?(null)
+      .then ->
+        console.log "Sent device data."
+      , (reason) ->
+        console.error "Failed to send device data: " + (reason.stack or reason)
+        throw reason
+      .nodeify cb
 
 sendAppVersionData = (cb) ->
   myAppsVersionData = uiGlobals.myApps.filter((app) ->
@@ -327,14 +326,12 @@ sendAppVersionData = (cb) ->
       httpHelper.post config.AppVersionDataEndpoint,
         access_token: accessToken
         installations: JSON.stringify(appVersionData)
-      , (err, res) ->
-        if err
-          console.error "Failed to send app version data: " + (err.stack or err)
-          cb?(err)
-        else
-          console.log "Sent app version data.  Got " + res
-          cb?(null, res)
-
+      .then (result) ->
+        console.log "Sent app version data.  Got " + result
+      , (reason) ->
+        console.error "Failed to send app version data: " + (reason.stack or reason)
+        throw reason
+      .nodeify cb
 
 parsePrebundledManifest = (manifest, cb) ->
   console.log "\n\n\nExamining prebundle manifest \n" + JSON.stringify(manifest or {}, null, 2)

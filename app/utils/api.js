@@ -375,15 +375,12 @@
         return httpHelper.post(config.DeviceDataEndpoint, {
           access_token: accessToken,
           data: authData
-        }, function(err) {
-          if (err) {
-            console.error("Failed to send device data: " + (err.stack || err));
-            return typeof cb === "function" ? cb(null) : void 0;
-          } else {
-            console.log("Sent device data.");
-            return typeof cb === "function" ? cb(null) : void 0;
-          }
-        });
+        }).then(function() {
+          return console.log("Sent device data.");
+        }, function(reason) {
+          console.error("Failed to send device data: " + (reason.stack || reason));
+          throw reason;
+        }).nodeify(cb);
       });
     });
   };
@@ -418,15 +415,12 @@
         return httpHelper.post(config.AppVersionDataEndpoint, {
           access_token: accessToken,
           installations: JSON.stringify(appVersionData)
-        }, function(err, res) {
-          if (err) {
-            console.error("Failed to send app version data: " + (err.stack || err));
-            return typeof cb === "function" ? cb(err) : void 0;
-          } else {
-            console.log("Sent app version data.  Got " + res);
-            return typeof cb === "function" ? cb(null, res) : void 0;
-          }
-        });
+        }).then(function(result) {
+          return console.log("Sent app version data.  Got " + result);
+        }, function(reason) {
+          console.error("Failed to send app version data: " + (reason.stack || reason));
+          throw reason;
+        }).nodeify(cb);
       }
     });
   };
