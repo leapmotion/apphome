@@ -146,12 +146,8 @@ module.exports = LeapApp.extend({
         if (err) {
           return cb(err);
         }
-        downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
+        downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }).then(function(tempFilename) {
           this.off('cancel-download');
-
-          if (err) {
-            return cb(err);
-          }
           this.set('state', LeapApp.States.Installing);
           console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
@@ -162,19 +158,19 @@ module.exports = LeapApp.extend({
           } else {
             return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
           }
+        }.bind(this), function(reason) {
+          return cb && cb(reason);
+        }, function(progress) {
+          if (this._shouldCancelDownload) {
+            cancelDownload();
+          } else {
+            this.set('state', LeapApp.States.Downloading);
+            this.trigger('progress', progress);
+          }
         }.bind(this));
 
         if (this._shouldCancelDownload) {
           cancelDownload();
-        } else {
-          downloadProgress.on('progress', function(progress) {
-            if (this._shouldCancelDownload) {
-              cancelDownload();
-            } else {
-              this.set('state', LeapApp.States.Downloading);
-              this.trigger('progress', progress);
-            }
-          }.bind(this));
         }
       }.bind(this));
     }

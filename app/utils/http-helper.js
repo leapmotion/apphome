@@ -20,16 +20,12 @@
 
   XHRDownloadStream = require("./xhr-download-stream.js");
 
-  getToDisk = function(targetUrl, opts, cb) {
+  getToDisk = function(targetUrl, opts) {
     var deferred, destPath, downloadStream, urlParts, writeStream;
     deferred = Q.defer();
     opts = opts || {};
     if (!targetUrl) {
-      return cb(new Error("No source url specified."));
-    }
-    if (!cb && _.isFunction(opts)) {
-      cb = opts;
-      opts = {};
+      deferred.reject(new Error("No source url specified."));
     }
     if (opts.accessToken) {
       urlParts = url.parse(targetUrl, true);
@@ -49,26 +45,31 @@
     });
     downloadStream.pipe(writeStream);
     writeStream.on('finish', function() {
-      var err;
-      if (downloadStream.cancelled) {
-        try {
-          if (fs.existsSync(destPath)) {
-            fs.unlinkSync(destPath);
-          }
-        } catch (_error) {
-          err = _error;
-          console.warn("Could not cleanup cancelled download: " + (err.stack || err));
-          deferred.reject(err);
-        }
-        err = new Error("Cancelled download of " + targetUrl);
-        err.cancelled = true;
-        return deferred.reject(err);
-      } else {
+      if (!downloadStream.cancelled) {
         return deferred.resolve(destPath.toString());
       }
     });
-    deferred.promise.nodeify(cb);
-    return downloadStream.progressStream;
+    downloadStream.on('progress', function(percentComplete) {
+      return deferred.notify(percentComplete);
+    });
+    deferred.promise.cancel = function() {
+      var err;
+      downloadStream.cancel();
+      writeStream.end();
+      try {
+        if (fs.existsSync(destPath)) {
+          fs.unlinkSync(destPath);
+        }
+      } catch (_error) {
+        err = _error;
+        console.warn("Could not cleanup cancelled download: " + (err.stack || err));
+        deferred.reject(err);
+      }
+      err = new Error("Cancelled download of " + targetUrl);
+      err.cancelled = true;
+      return deferred.reject(err);
+    };
+    return deferred.promise;
   };
 
   getJson = function(targetUrl) {

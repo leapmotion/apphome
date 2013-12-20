@@ -282,15 +282,14 @@ var LeapApp = BaseModel.extend({
         this._moveAssetToAppDataDir(sourcePath, destPath, pathAttrName, cb);
       } else {
         var tempPath = workingFile.newTempFilePath('png');
-        httpHelper.getToDisk(assetUrl, { destPath: tempPath }, function(err) {
-          if (!err) {
-            this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName, cb);
-          } else {
-            console.error(err.stack || err);
-            cb && cb(err);
-          }
-
-        }.bind(this));
+        httpHelper.getToDisk(assetUrl, { destPath: tempPath }).then(function(result) {
+          this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName, cb);
+        }.bind(this), function(reason) {
+          console.error(err.stack || err);
+          cb && cb(err);
+        }).fail(function(reason) {
+          cb && cb(reason);
+        });
       }
     } else {
       cb && cb(new Error('Asset url is undefined.'));

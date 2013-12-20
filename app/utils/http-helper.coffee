@@ -11,15 +11,11 @@ config = require "../../config/config.js"
 workingFile = require "./working-file.js"
 XHRDownloadStream = require "./xhr-download-stream.js"
 
-getToDisk = (targetUrl, opts, cb) ->
+getToDisk = (targetUrl, opts) ->
   deferred = Q.defer()
 
   opts = opts or {}
-  return cb(new Error("No source url specified."))  unless targetUrl
-
-  if not cb and _.isFunction(opts)
-    cb = opts
-    opts = {}
+  deferred.reject new Error "No source url specified." unless targetUrl
 
   if opts.accessToken
     urlParts = url.parse(targetUrl, true)
@@ -42,22 +38,27 @@ getToDisk = (targetUrl, opts, cb) ->
   downloadStream.pipe writeStream
 
   writeStream.on 'finish', ->
-    if downloadStream.cancelled
-      try
-        fs.unlinkSync destPath  if fs.existsSync(destPath)
-      catch err
-        console.warn "Could not cleanup cancelled download: " + (err.stack or err)
-        deferred.reject err
-
-      err = new Error "Cancelled download of " + targetUrl
-      err.cancelled = true
-      deferred.reject err
-    else
+    unless downloadStream.cancelled
       deferred.resolve destPath.toString()
 
-  deferred.promise.nodeify cb
+  downloadStream.on 'progress', (percentComplete) ->
+    deferred.notify percentComplete
 
-  downloadStream.progressStream
+  deferred.promise.cancel = ->
+    do downloadStream.cancel
+    do writeStream.end
+
+    try
+      fs.unlinkSync destPath  if fs.existsSync(destPath)
+    catch err
+      console.warn "Could not cleanup cancelled download: " + (err.stack or err)
+      deferred.reject err
+
+    err = new Error "Cancelled download of " + targetUrl
+    err.cancelled = true
+    deferred.reject err
+
+  deferred.promise
 
 getJson = (targetUrl) ->
   Q(window.$.getJSON(targetUrl)).then (json) ->

@@ -1,25 +1,26 @@
 Buffer = require("buffer").Buffer
 events = require "events"
 stream = require "stream"
+filesize = require "filesize"
 util = require "util"
 
 Q = require "q"
 
 getFileSize = (requestUrl, cb) ->
-  fileSize = undefined
+  size = undefined
   xhr = new window.XMLHttpRequest()
   deferred = Q.defer()
 
   xhr.open "HEAD", requestUrl
 
   xhr.onload = (evt) ->
-    fileSize = Number @getResponseHeader 'Content-Length'
+    size = Number @getResponseHeader 'Content-Length'
 
-    unless fileSize?
+    unless size?
       deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
     else
-      console.log 'Downloading', Math.round(fileSize / 1049000), 'MB file from', requestUrl
-      deferred.resolve(fileSize)
+      console.log 'Downloading', filesize(size), 'file from', requestUrl
+      deferred.resolve(size)
 
   xhr.onerror = (evt) ->
     deferred.reject new Error "Error determining filesize for URL: " + requestUrl
@@ -66,10 +67,6 @@ XHRDownloadStream = (targetUrl, chunkSize) ->
   @_chunkSize = chunkSize
   @_targetUrl = targetUrl
 
-  @progressStream = new ProgressStream()
-  @progressStream.setCanceller =>
-    do @cancel
-
   getFileSize(targetUrl).then (fileSize) =>
     @_fileSize = fileSize
 
@@ -89,26 +86,12 @@ XHRDownloadStream::_read = (size) ->
     @emit "error", reason
   , (bytesLoadedByCurrentRequest) =>
     percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
-    @progressStream.emit "progress", percentComplete
+    @emit "progress", percentComplete
   .done()
 
 XHRDownloadStream::cancel = ->
-  @cancelled = true
   do @unpipe
   do @currentRequestPromise.cancel
 
-ProgressStream = ->
-
-util.inherits ProgressStream, events.EventEmitter
-
-ProgressStream::cancel = ->
-  if @_canceller
-    @_canceller()
-    true
-  else
-    false
-
-ProgressStream::setCanceller = (canceller) ->
-  @_canceller = canceller
 
 module.exports = XHRDownloadStream
