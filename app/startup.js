@@ -233,7 +233,10 @@ function startMainApp(cb) {
       api.connectToStoreServer();
     });
   } else {
-    api.connectToStoreServer();
+    api.sendDeviceData(function(err) {
+      if (err) { cb && cb(err); }
+      api.connectToStoreServer();
+    });
   }
 
   cb && cb(null);
