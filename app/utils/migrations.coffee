@@ -31,10 +31,22 @@ Migrations = [
 
   # Factor out home directory from user apps, so we check home dir on startup
   v1_to_v2 = ->
-    myAppsJson = db.fetchObj(config.DbKeys.InstalledApps)
-    uninstalledAppsJson = db.fetchObj(config.DbKeys.UninstalledApps)
+    myAppsJson = db.fetchObj config.DbKeys.InstalledApps
+    uninstalledAppsJson = db.fetchObj config.DbKeys.UninstalledApps
+
     uninstalledAppsJson.forEach LeapApp.abstractUserHomeDir
     myAppsJson.forEach LeapApp.abstractUserHomeDir
+
+    db.saveObj config.DbKeys.InstalledApps, myAppsJson
+    db.saveObj config.DbKeys.UninstalledApps, uninstalledAppsJson
+
+  v2_to_v3 = ->
+    myAppsJson = db.fetchObj config.DbKeys.InstalledApps
+    uninstalledAppsJson = db.fetchObj config.DbKeys.UninstalledApps
+
+    _.extend(appJson, {cleaned: true}) for appJson in myAppsJson
+    _.extend(appJson, {cleaned: true}) for appJson in uninstalledAppsJson
+
     db.saveObj config.DbKeys.InstalledApps, myAppsJson
     db.saveObj config.DbKeys.UninstalledApps, uninstalledAppsJson
 ]
