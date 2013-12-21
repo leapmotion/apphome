@@ -20,15 +20,22 @@ var NotificationView = BaseView.extend({
       iconUrl: notification.get('icon_url')
     }));
 
-    this.$('.dismiss').click(function() {
+    this.$('.dismiss').click(function(evt) {
+      console.log('Dismissing notification ' + this.uuid);
       this.dismiss();
+      evt.stopPropagation();
+    }.bind(this));
+
+    this.$el.click(function() {
+      nwGui.Shell.openExternal(notification.get('url'));
     }.bind(this));
   },
 
   dismiss: function() {
     var dismissedNotifications = db.fetchObj(config.DbKeys.DismissedNotifications) || [];
-    dismissedNotifications.push(this.notification.get('id'));
+    dismissedNotifications.push(this.notification.get('uuid'));
     db.saveObj(config.DbKeys.DismissedNotifications, dismissedNotifications);
+    this.$el.remove();
   }
 });
 

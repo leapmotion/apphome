@@ -40,7 +40,7 @@ var NotificationPane = BaseView.extend({
   },
 
   show: function() {
-    db.saveObj(config.DbKeys.ViewedNotifications, _.pluck(this.notifications, 'id'));
+    db.saveObj(config.DbKeys.ViewedNotifications, _.pluck(this.notifications, 'uuid'));
     this.notifications.forEach(function(notification) {
       notification.set('new', false);
     });
@@ -54,10 +54,10 @@ var NotificationPane = BaseView.extend({
     var _this = this;
     pubnub.history(10, 'notification.' + uiGlobals.locale.toLowerCase(), function(notifications, start, end) {
       notifications.forEach(function(notification, i, arr) {
-        if (_.isObject(notification) && ('id' in notification)) {
+        if (_.isObject(notification) && ('uuid' in notification)) {
           _this.displayNotification(notification);
         } else {
-          console.log("id not present in notification: " + notification);
+          console.log("uuid not present in notification: " + notification);
         }
       });
     });
@@ -81,7 +81,7 @@ var NotificationPane = BaseView.extend({
   displayNotification: function(notificationJson) {
     // Just don't even process dismissed notifications
     var dismissedNotifications = db.fetchObj(config.DbKeys.DismissedNotifications) || [];
-    if (dismissedNotifications.indexOf(notificationJson.id) !== -1) {
+    if (dismissedNotifications.indexOf(notificationJson.uuid) !== -1) {
       console.log('Skipping dismissed notification: ' + JSON.stringify(notificationJson));
       return;
     }
