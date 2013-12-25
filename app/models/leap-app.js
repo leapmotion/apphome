@@ -87,6 +87,18 @@ var LeapApp = BaseModel.extend({
     }.bind(this));
   },
 
+  validate: function(appJson) {
+    // Skip apps that haven't been cleaned yet
+    if (!appJson.cleaned) {
+      throw new Error("Skipping unclean appJson " + JSON.stringify(appJson));
+    }
+
+    // Skip apps that aren't valid for this platform
+    if (appJson.platform !== os.platform()) {
+      throw new Error("Can only create apps for the current platform");
+    }
+  },
+
   save: function() {
     var uninstalledAppsJson = uiGlobals.uninstalledApps.toJSON();
     var myAppsJson = uiGlobals.myApps.toJSON();
