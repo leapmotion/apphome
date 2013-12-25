@@ -128,6 +128,11 @@ var Tile = BaseView.extend({
     this._setupDragging();
   },
 
+  remove: function() {
+    this.$el.remove();
+    this.stopListening();
+  },
+
   _makeFileUrl: function(filePath, forceRefresh) {
     return 'file://' + filePath + (forceRefresh ? '#' + (new Date()).getTime() : '');
   },

@@ -12,6 +12,7 @@ var SlideView = BaseView.extend({
     args = args || {};
     this.injectCss();
     this.$el.append(this.templateHtml());
+    this.tiles = [];
 
     this.$el.width(config.Layout.slideWidth);
     this.$el.height(config.Layout.slideHeight);
@@ -27,16 +28,15 @@ var SlideView = BaseView.extend({
   },
 
   addTile: function(args) {
-    var view = new Tile(args);
-    this.$el.append(view.$el);
+    var tile = new Tile(args);
+    this.tiles.push(tile);
+    this.$el.append(tile.$el);
   },
 
-  removeTileById: function(tileId) {
-    this._existingTileById(tileId).remove();
-  },
-
-  _existingTileById: function(tileId) {
-    return this.$('.tile[tile_id=' + tileId + ']');
+  remove: function() {
+    while(this.tiles.length) {
+      this.tiles.shift().remove();
+    }
   },
 
   position: function(left, top) {
