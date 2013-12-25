@@ -78,12 +78,10 @@ var LeapApp = BaseModel.extend({
 
     this.on('add', function() {
       if (this._shouldDownloadTile()) {
-        this.downloadTile(function() {
-          if (this._shouldDownloadIcon()) {
-            this.downloadIcon();
-          }
-        }.bind(this));
-      } else if (this._shouldDownloadIcon()) {
+        this.downloadTile();
+      }
+
+      if (this._shouldDownloadIcon()) {
         this.downloadIcon();
       }
     }.bind(this));
