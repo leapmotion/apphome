@@ -54,13 +54,14 @@ var Tile = BaseView.extend({
 
   initialize: function(args) {
     var leapApp = args.leapApp;
+    this.leapApp = leapApp;
 
     this.initializeTile(leapApp);
 
     this.setElement(this.templateHtml({
-      app:                  this.appJson,
+      app:                  leapApp.toJSON(),
       store_app:            leapApp.isStoreApp(),
-      app_slug:             urlify(this.appJson.name),
+      app_slug:             urlify(this.leapApp.get('name')),
       short_description:    leapApp.getShortDescription(),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
@@ -132,7 +133,7 @@ var Tile = BaseView.extend({
   },
 
   _setupDragging: function() {
-    var leapApp = this.options.leapApp;
+    var leapApp = this.leapApp;
     if (leapApp.isUninstallable()) {
       this.$el.attr('draggable', 'true');
       this.$el.css('-webkit-user-drag', 'element');
@@ -165,7 +166,7 @@ var Tile = BaseView.extend({
   },
 
   _promptForInstall: function() {
-    var leapApp = this.options.leapApp;
+    var leapApp = this.leapApp;
 
     if (leapApp.isStoreApp()) {
       var downloadModal = new DownloadModalView({
@@ -182,7 +183,7 @@ var Tile = BaseView.extend({
   },
 
   _promptForUpdate: function() {
-    var leapApp = this.options.leapApp;
+    var leapApp = this.leapApp;
 
     var downloadModal = new DownloadModalView({
       leapApp: leapApp,
@@ -205,7 +206,7 @@ var Tile = BaseView.extend({
 
     this._currentlyLaunching = true;
     this.$el.addClass('launching');
-    this.options.leapApp.launch();
+    this.leapApp.launch();
     setTimeout(this._markLaunchComplete.bind(this), 12000);
   },
 
@@ -215,7 +216,7 @@ var Tile = BaseView.extend({
   },
 
   _showOrHideIcon: function() {
-    if (this.options.leapApp.showIcon()) {
+    if (this.leapApp.showIcon()) {
       this.$('.icon').show();
     } else {
       this.$('.icon').hide();

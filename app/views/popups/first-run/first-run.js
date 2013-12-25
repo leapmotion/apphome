@@ -30,7 +30,9 @@ module.exports = BaseView.extend({
 
   options: config.Layout,
 
-  initialize: function() {
+  initialize: function(options) {
+    _.extend(this.options, options);
+
     this.injectCss();
     this.$el.append(this.templateHtml({
       subheader_label:     i18n.translate('Welcome to a whole new world'),

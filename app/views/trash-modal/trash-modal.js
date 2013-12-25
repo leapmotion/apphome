@@ -13,7 +13,9 @@ module.exports = Modal.extend({
 
   className: 'trash-modal',
 
-  initialize: function() {
+  initialize: function(options) {
+    this.options = options;
+
     this.initializeModal();
 
     this.$el.append(this.templateHtml({

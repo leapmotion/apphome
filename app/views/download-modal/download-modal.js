@@ -8,7 +8,9 @@ module.exports = Modal.extend({
 
   className: 'download-modal',
 
-  initialize: function() {
+  initialize: function(options) {
+    this.options = options;
+
     this.initializeModal();
 
     var leapApp = this.options.leapApp;

@@ -11,23 +11,20 @@ var CarouselView = BaseView.extend({
 
   className: 'carousel',
 
-  options: config.Layout,
-
-  initialize: function() {
-    var opts = this.options;
-    this.collection = opts.collection;
+  initialize: function(options) {
+    this.position = options.position;
 
     this.injectCss();
     this.$el.append(this.templateHtml());
 
-    this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
+    this._tilesPerSlide = config.Layout.columnsPerSlide * config.Layout.rowsPerSlide;
     this._currentSlideIndex = 0;
     this._currentPosition = 0;
     this._animating = false;
     this._slides = [];
 
     var $emptyMessage = this.$('.empty-message');
-    $emptyMessage.text(opts.emptyMessage || i18n.translate('No apps to display.'));
+    $emptyMessage.text(options.emptyMessage || i18n.translate('No apps to display.'));
     $emptyMessage.height(config.Layout.emptyMessageHeight);
 
     this._updateSlides();
@@ -307,7 +304,7 @@ var CarouselView = BaseView.extend({
   },
 
   position: function() {
-    return this.options.position;
+    return this.position;
   },
 
   setTop: function(top) {
