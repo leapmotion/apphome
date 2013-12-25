@@ -20,6 +20,8 @@ module.exports = LeapApp.extend({
 
   idAttribute: 'appId',
 
+  className: 'StoreLeapApp',
+
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
 

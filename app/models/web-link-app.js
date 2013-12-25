@@ -9,6 +9,7 @@ var oauth = require('../utils/oauth.js');
 var LeapApp = require('./leap-app.js');
 
 var WebLinkApp = LeapApp.extend({
+  className: 'WebLinkApp',
 
   constructor: function(args) {
     args = args || {};

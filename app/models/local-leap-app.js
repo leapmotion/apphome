@@ -14,6 +14,8 @@ var LeapApp = require('./leap-app.js');
 
 
 var LocalLeapApp = LeapApp.extend({
+  className: 'LocalLeapApp',
+
   constructor: function(args) {
     if (!args.keyFile && args.relativeExePath) {
       try {
