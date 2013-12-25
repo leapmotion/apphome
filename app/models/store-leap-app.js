@@ -43,7 +43,8 @@ module.exports = LeapApp.extend({
       console.log('Upgrading: ' + this.get('name'));
 
       // update binary, tile, and icon urls from the new app version
-      this.set(this.get('availableUpdate').pick('binaryUrl', 'tileUrl', 'iconUrl'));
+      var updatedAppJson = this.get('availableUpdate');
+      this.set(_.pick(updatedAppJson, ('binaryUrl', 'tileUrl', 'iconUrl')));
 
       // refresh icon and tile
       if (window.navigator.onLine) {
@@ -53,11 +54,11 @@ module.exports = LeapApp.extend({
 
       this._installFromServer(function(err) {
         if (!err) {
-          var newAppJson = this.get('availableUpdate').toJSON();
-          delete newAppJson.state;
-          console.log('Update to version ' + newAppJson.versionId + ' successful');
-          this.set(newAppJson);
+          delete updatedAppJson.state;
+          console.log('Update to version ' + updatedAppJson.versionId + ' successful');
+          this.set(updatedAppJson);
           this.set('availableUpdate', null);
+          this.save();
         }
         cb && cb(err);
       }.bind(this));
@@ -356,7 +357,7 @@ module.exports = LeapApp.extend({
         // On reinstall, we will be downloading the new binary, etc
         // But since it won't register as an "update" we won't fetch new app details
         // So take the update we know about and push it into the app we're deleting.
-        var newAppJson = this.get('availableUpdate').toJSON();
+        var newAppJson = this.get('availableUpdate');
         delete newAppJson.state;
         this.set(newAppJson);
         this.set('availableUpdate', null);

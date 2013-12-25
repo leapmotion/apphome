@@ -20,11 +20,7 @@ module.exports = Modal.extend({
     appJson.description = leapApp.getMarkdown('description');
 
     if (leapApp.isUpdatable()) {
-      var updateApp = leapApp.get('availableUpdate');
-      if (_.isFunction(updateApp.toJSON)) {
-        _(appJson).extend(updateApp.toJSON());
-        appJson.changelog = updateApp.getMarkdown('changelog');
-      }
+      _(appJson).extend(leapApp.get('availableUpdate'));
     }
 
     this.$el.append(this.templateHtml({
