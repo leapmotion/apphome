@@ -11,11 +11,16 @@ module.exports = window.Backbone.Collection.extend({
 
   initialize: function() {
     this.on('add', function(app) {
-      if (app.isStoreApp() &&
-          app.get('state') === LeapApp.States.NotYetInstalled &&
-          !app.get('noAutoInstall')) {
+      if (app.get('state') === LeapApp.States.NotYetInstalled && !app.get('noAutoInstall')) {
         app.set('noAutoInstall', true);
-        installManager.enqueue(app);
+
+        if (app.isStoreApp()) {
+          console.log('Enqueuing', app.get('name'), Date.now() - uiGlobals.startTimes[app.get('name')]);
+          //installManager.enqueue(app);
+          console.log('Done enqueueing', app.get('name'), 'at', Date.now() - uiGlobals.startTimes[app.get('name')]);
+        } else if (app.isLocalApp()) {
+          app.install();
+        }
       }
     });
   },
