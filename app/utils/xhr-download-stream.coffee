@@ -93,5 +93,4 @@ XHRDownloadStream::cancel = ->
   do @unpipe
   do @currentRequestPromise.cancel
 
-
 module.exports = XHRDownloadStream
