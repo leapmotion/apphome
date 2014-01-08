@@ -35,6 +35,7 @@ var NotificationView = BaseView.extend({
     var dismissedNotifications = db.fetchObj(config.DbKeys.DismissedNotifications) || [];
     dismissedNotifications.push(this.notification.get('uuid'));
     db.saveObj(config.DbKeys.DismissedNotifications, dismissedNotifications);
+    this.trigger('dismissed');
     this.$el.remove();
   }
 });

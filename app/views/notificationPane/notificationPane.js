@@ -92,6 +92,11 @@ var NotificationPane = BaseView.extend({
     var notificationView = new NotificationView(notification);
     this.$('.notifications').append(notificationView.$el);
 
+    notificationView.on('dismissed', function() {
+      this.notifications = _.without(this.notifications, notification);
+      this.showOrHideEmpty();
+    }.bind(this));
+
     this.showOrHideEmpty();
     this.updateBadgeCount();
   },
@@ -105,7 +110,13 @@ var NotificationPane = BaseView.extend({
   },
 
   updateBadgeCount: function() {
-    this.$('.count').text(_.where(this.notifications, {"new": true}));
+    var count = 0;
+    this.notifications.forEach(function(notification) {
+      if (notification.get('new')) {
+        count++;
+      }
+    });
+    this.$('.count').text(count || '');
   }
 
 });
