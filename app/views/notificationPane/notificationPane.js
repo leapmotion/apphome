@@ -53,9 +53,9 @@ var NotificationPane = BaseView.extend({
   subscribeToNotifications: function() {
     var _this = this;
     pubnub.history(10, 'notification.' + uiGlobals.locale.toLowerCase(), function(notifications, start, end) {
-      notifications.forEach(function(notification, i, arr) {
-        if (_.isObject(notification) && ('uuid' in notification)) {
-          _this.displayNotification(notification);
+      notifications.forEach(function(notificationJson, i, arr) {
+        if (_.isObject(notificationJson) && ('uuid' in notificationJson)) {
+          _this.displayNotification(notificationJson);
         } else {
           console.log("uuid not present in notification: " + notification);
         }
@@ -73,8 +73,8 @@ var NotificationPane = BaseView.extend({
       notifications.forEach(_this.displayNotification);
     });
 
-    pubnub.subscribe(userId + '.user.notifications.' + uiGlobals.locale.toLowerCase(), function(notification) {
-      _this.displayNotification(notification);
+    pubnub.subscribe(userId + '.user.notification.' + uiGlobals.locale.toLowerCase(), function(notificationJson) {
+      _this.displayNotification(notificationJson);
     });
   },
 
