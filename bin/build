@@ -72,6 +72,9 @@ function setFullVersionNumber(cb) {
 function copyFileSync(source, dest) {
   fs.mkdirpSync(path.dirname(dest));
   fs.writeFileSync(dest, fs.readFileSync(source), { mode: fs.statSync(source).mode });
+  if (source.indexOf('bin/') == 0) {
+    fs.chmodSync(dest, "777");
+  }
 }
 
 function copyFilesToDir(dir) {
