@@ -10,12 +10,18 @@ isProduction = not /^(development|test)$/.test(process.env.LEAPHOME_ENV)
 unless isProduction
   log = console.log.bind(console)
 else
-  logStream = fs.createWriteStream(path.join(config.PlatformDirs[os.platform()], "Airspace", "log.txt"))
+  pathToLog = path.join config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'
+  saveLogIfNeeded pathToLog
+  logStream = fs.createWriteStream path.join pathToLog
   log = (message) ->
     logStream.write message + "\r\n", "utf-8"
 
   process.on "exit", ->
     do logStream.close
+
+saveLogIfNeeded = (pathToLog) ->
+  if /^(WARN|ERROR):/g.test fs.readFileSync pathToLog
+    fs.renameSync pathToLog, pathToLog + '.' + Date.now()
 
 getLogger = (level) ->
   level = level or "log"
