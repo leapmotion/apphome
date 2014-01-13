@@ -72,9 +72,6 @@ function setFullVersionNumber(cb) {
 function copyFileSync(source, dest) {
   fs.mkdirpSync(path.dirname(dest));
   fs.writeFileSync(dest, fs.readFileSync(source), { mode: fs.statSync(source).mode });
-  if (source.indexOf('bin/') == 0) {
-    fs.chmodSync(dest, "777");
-  }
 }
 
 function copyFilesToDir(dir) {
@@ -96,6 +93,9 @@ function copyFilesToDir(dir) {
     } else if (path.basename(fileToInclude).toLowerCase().indexOf("test") == -1) {
       console.log(fileToInclude);
       copyFileSync(fullPath, path.join(dir, fileToInclude));
+      if (fileToInclude.indexOf('bin/') == 0) {
+        fs.chmodSync(path.join(dir, fileToInclude), "777");
+      }
     }
   }
 }
