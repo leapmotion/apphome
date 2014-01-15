@@ -137,7 +137,6 @@ var LocalLeapApp = LeapApp.extend({
     this.set('state', LeapApp.States.Uninstalled);
     cb && cb(null);
   }
-
 });
 
 
