@@ -142,8 +142,8 @@ var LocalLeapApp = LeapApp.extend({
 
 
 
-function explicitPathApps(manifest) {
-  var relevantApps = manifest.filter(function(appJson) {
+function explicitPathApps(appJsonList) {
+  var relevantApps = appJsonList.filter(function(appJson) {
     return !appJson.findByScanning;
   });
 
@@ -153,9 +153,8 @@ function explicitPathApps(manifest) {
 }
 
 var isScanningFileSystem = false;
-
-function localAppScan(manifest) {
-  if (!manifest) {
+function localAppScan(appJsonList) {
+  if (!appJsonList) {
     isScanningFileSystem = false;
     return;
   }
@@ -164,7 +163,7 @@ function localAppScan(manifest) {
   }
   isScanningFileSystem = true;
 
-  var fsScanner = new FsScanner(manifest);
+  var fsScanner = new FsScanner(appJsonList);
   Q.nfcall(fsScanner.scan.bind(fsScanner)).then(function(appJsonList) {
     api.syncToCollection(appJsonList, uiGlobals.myApps, function(app) {
       return app.isLocalApp() && app.get('findbyScanning');
