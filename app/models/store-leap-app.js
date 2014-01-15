@@ -139,7 +139,7 @@ module.exports = LeapApp.extend({
             return _this._cleanupTempFile(tempFilename);
           });
         },
-        undefined,
+        undefined, // Pass through error handler
         function(progress) {
           _this.trigger('progress', progress);
         });

@@ -72,6 +72,9 @@ module.exports = window.Backbone.Collection.extend({
 
   save: function() {
     if (this.length) {
+      // Saving a model saves the collection right now.
+      // So just save the first model in the collection
+      // See model.save()
       this.at(0).save();
     }
   }
