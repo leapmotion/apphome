@@ -16,9 +16,8 @@ var Tile = BaseView.extend({
   initializeTile: function(app) {
     this.injectCss();
 
-    this.appJson = app.toJSON();
-    this.appJson.iconPath = (this.appJson.iconPath ? this._makeFileUrl(this.appJson.iconPath) : '');
-    this.appJson.tilePath = this._makeFileUrl(this.appJson.tilePath || config.DefaultTilePath);
+    this.iconPath = app.get('iconPath') ? this._makeFileUrl(app.get('iconPath')) : '';
+    this.tilePath = this._makeFileUrl(app.get('tilePath') || config.DefaultTilePath);
 
     this.listenTo(app, 'change:iconPath', function() {
       this.$('.icon').attr('src', this._makeFileUrl(app.get('iconPath'), true));
@@ -28,7 +27,7 @@ var Tile = BaseView.extend({
     this.listenTo(app, 'change:tilePath', function() {
       var tilePath = app.get('tilePath');
       if (tilePath) {
-        this.$('.tile-bg').attr('src', this._makeFileUrl(app.get('tilePath'), true));
+        this.$('.tile-bg').attr('src', this._makeFileUrl(tilePath, true));
       } else {
         this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
       }
@@ -59,7 +58,7 @@ var Tile = BaseView.extend({
     this.initializeTile(leapApp);
 
     this.setElement(this.templateHtml({
-      app:                  leapApp.toJSON(),
+      app:                  _.extend(leapApp.toJSON(), {iconPath: this.iconPath, tilePath: this.tilePath}),
       store_app:            leapApp.isStoreApp(),
       app_slug:             urlify(this.leapApp.get('name')),
       short_description:    leapApp.getShortDescription(),
