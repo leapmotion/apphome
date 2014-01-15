@@ -68,14 +68,14 @@
       }
       _this._bytesSoFar += (data != null ? data.length : void 0) || 0;
       return _this.push(data);
-    }, function(reason) {
-      return _this.emit("error", reason);
-    }, function(bytesLoadedByCurrentRequest) {
+    }, void 0, function(bytesLoadedByCurrentRequest) {
       var percentComplete;
       if (_this._fileSize) {
         percentComplete = (_this._bytesSoFar + bytesLoadedByCurrentRequest) / _this._fileSize;
       }
       return _this.emit("progress", percentComplete);
+    }).fail(function(reason) {
+      return _this.emit("error", reason);
     }).done();
   };
 

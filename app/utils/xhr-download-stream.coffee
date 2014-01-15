@@ -54,11 +54,12 @@ XHRDownloadStream::_read = (size) ->
       throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
     @_bytesSoFar += data?.length or 0
     @push data
-  , (reason) =>
-    @emit "error", reason
+  , undefined
   , (bytesLoadedByCurrentRequest) =>
     percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
     @emit "progress", percentComplete
+  .fail (reason) =>
+    @emit "error", reason
   .done()
 
 XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
