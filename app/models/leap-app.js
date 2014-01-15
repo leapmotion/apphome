@@ -94,7 +94,7 @@ var LeapApp = BaseModel.extend({
     }
 
     // Skip apps that aren't valid for this platform
-    if (appJson.platform !== os.platform()) {
+    if (appJson.platform && appJson.platform !== os.platform()) {
       throw new Error("Can only create apps for the current platform");
     }
   },
@@ -327,10 +327,7 @@ var LeapApp = BaseModel.extend({
         console.err(err.stack || err);
         cb && cb(err);
       } else {
-        this.set(pathAttrName, destPath, {
-          silent: true
-        });
-        this.trigger('change:' + pathAttrName);
+        this.set(pathAttrName, destPath);
         this.save();
         cb && cb(null);
       }
