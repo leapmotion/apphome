@@ -51,31 +51,9 @@ var WebLinkApp = LeapApp.extend({
 
 });
 
-function createWebLinkApps(webAppData) {
-  var existingWebAppsById;
-  console.log('Found', webAppData.length, 'web apps.');
-  webAppData = webAppData || [];
-  existingWebAppsById = {};
-
-  uiGlobals.myApps.forEach(function(app) {
-    if (app.isWebLinkApp()) {
-      existingWebAppsById[app.get("id")] = app;
-    }
-  });
-
-  webAppData.forEach(function(app) {
-    delete existingWebAppsById[app.id];
-    api.handleAppJson(app);
-  });
-
-  Object.keys(existingWebAppsById).forEach(function(id) {
-    var oldWebApp;
-    oldWebApp = existingWebAppsById[id];
-    if (oldWebApp.isBuiltinTile()) {
-      console.log("Deleting old builtin web link: " + oldWebApp.get("name"));
-      uiGlobals.myApps.remove(oldWebApp);
-      oldWebApp.save();
-    }
+function createWebLinkApps(appJsonList) {
+  api.syncToCollection(appJsonList, uiGlobals.myApps, function(app) {
+    return app.isWebLinkApp() && app.isBuiltinTile();
   });
 }
 
