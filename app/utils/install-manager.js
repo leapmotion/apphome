@@ -109,7 +109,6 @@
       return;
     }
     while (installQueue.length - 1 > 0) {
-      console.log(installQueue.length);
       app = installQueue.pop().app;
       if (app.hasUpdate() && app.get("state") === LeapApp.States.Waiting) {
         app.set("state", LeapApp.States.Ready);
