@@ -9,13 +9,13 @@ extract = require("./extract.js")
 _manifestPromise = undefined
 prebundledManifestPromise = ->
   return _manifestPromise  if _manifestPromise
-  defer = $.Deferred()
-  _manifestPromise = defer.promise()
+  deferred = Q.defer()
+  _manifestPromise = deferred.promise
 
   originalManifest = db.getItem(config.DbKeys.OriginalPrebundlingManifest)
   if originalManifest
     console.log originalManifest
-    defer.resolve JSON.parse(originalManifest)
+    defer.resolve JSON.parse originalManifest
   else
     _getFrozenApps (err, manifest) ->
       console.log "Unzipped frozen apps: " + err + manifest
