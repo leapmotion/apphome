@@ -34,8 +34,6 @@ module.exports = window.Backbone.Collection.extend({
       app = new StoreLeapApp(appJson, options);
     } else if (appJson.name) {
       app = new LocalLeapApp(appJson, options);
-    } else {
-      console.error('unknown app type: ' + JSON.stringify(appJson, null, 2));
     }
 
     app.on('invalid', function(model, error) {
@@ -46,7 +44,8 @@ module.exports = window.Backbone.Collection.extend({
       console.log('Created', app.className, app.get('id') + ':', app.get('name'));
       return app;
     } else {
-      return false;
+      console.error('unknown app type: ' + JSON.stringify(appJson, null, 2));
+      return {'validationError': 'unknown app type: ' + JSON.stringify(appJson, null, 2)};
     }
   },
 
