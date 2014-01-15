@@ -39,14 +39,14 @@ var CarouselView = BaseView.extend({
       this.prev();
     }.bind(this)));
 
-    uiGlobals.on('search', _.debounce((function(searchString) {
+    uiGlobals.on('search', _.debounce(function(searchString) {
       if (!this._animating) {
         this._searchString = $.trim(searchString).toLowerCase();
         this._updateSlides(true);
         this._updateEmptyState();
         this._updateSlideIndicator();
       }
-    }).bind(this)));
+    }.bind(this), 200));
 
     this._initAddRemoveRepainting();
 
@@ -99,21 +99,21 @@ var CarouselView = BaseView.extend({
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
-    this.listenTo(collection, 'add', function() {
+    this.listenTo(collection, 'add', _.debounce(function() {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-    }, this);
+    }.bind(this), 150));
 
-    this.listenTo(collection, 'remove', function() {
+    this.listenTo(collection, 'remove', _.debounce(function() {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-    }, this);
+    }.bind(this), 150));
 
-    this.listenTo(collection, 'sort', function() {
+    this.listenTo(collection, 'sort', _.debounce(function() {
       this._updateSlides();
-    }, this);
+    }.bind(this), 150));
 
     this.listenTo(collection, 'change:state', function(leapApp) {
       if (!uiGlobals.inTutorial && leapApp.get('state') === LeapApp.States.Connecting ||
