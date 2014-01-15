@@ -10,16 +10,14 @@ Q = require("q")
 
 config = require("../../config/config.js")
 db = require("./db.js")
-httpHelper = require("./http-helper.js")
-installManager = require("./install-manager.js")
 drm = require("./drm.js")
 enumerable = require("./enumerable.js")
 httpHelper = require("./http-helper.js")
+installManager = require("./install-manager.js")
 oauth = require("./oauth.js")
 pubnub = require("./pubnub.js")
-semver = require("./semver.js")
+
 LeapApp = require("../models/leap-app.js")
-WebLinkApp = require("../models/web-link-app.js")
 
 
 NodePlatformToServerPlatform =
@@ -32,10 +30,10 @@ Object.keys(NodePlatformToServerPlatform).forEach (key) ->
 
 appsAdded = 0
 
-cleanUpAppJson = (appJson) ->
+cleanAppJson = (appJson) ->
   appJson = appJson or {}
   releaseDate = appJson.certified_at or appJson.created_at
-  cleanAppJson =
+  cleanedAppJson =
     id: appJson.app_id
     appId: appJson.app_id
     versionId: appJson.id
@@ -50,61 +48,60 @@ cleanUpAppJson = (appJson) ->
     tagline: appJson.tagline
     releaseDate: (if releaseDate then new Date(releaseDate).toLocaleDateString() else null)
     noAutoInstall: appJson.noAutoInstall
+    cleaned: true
 
-  Object.keys(cleanAppJson).forEach (key) ->
-    delete cleanAppJson[key]  unless cleanAppJson[key]
+  Object.keys(cleanedAppJson).forEach (key) ->
+    delete cleanedAppJson[key]  unless cleanedAppJson[key]
 
-  cleanAppJson
+  cleanedAppJson
 
-createAppModel = (appJson) ->
-  cleanAppJson = cleanUpAppJson(appJson)
-  if cleanAppJson.platform is os.platform()
-    StoreLeapApp = require("../models/store-leap-app.js")
-    newApp = new StoreLeapApp(cleanAppJson)
-    newApp.set "firstSeenAt", (new Date()).getTime()
-    newApp
-  else
-    null
+handleAppJson = (appJson, silent=false) ->
+  unless appJson.cleaned
+    appJson = cleanAppJson appJson
 
-handleAppJson = (appJson) ->
-  app = createAppModel(appJson)
-  if app
-    myApps = uiGlobals.myApps
-    uninstalledApps = uiGlobals.uninstalledApps
-    existingApp = myApps.get(app.get("appId")) or uninstalledApps.get(app.get("appId"))
-    if existingApp
-      if existingApp.isInstallable()
-        getAppDetails app, ->
-          appJson = app.toJSON()
-          delete appJson.state
-          existingApp.set appJson
-      else if app.get("versionId") > existingApp.get("versionId")
-        console.log "Upgrade available for " + app.get("name") + ". New version: " + app.get("version")
-        existingApp.set "availableUpdate", app
-        getAppDetails app
-      else
-        setTimeout ->
-          getAppDetails app, ->
-            appJson = do app.toJSON
-            delete appJson.state
+  unless appJson.urlToLaunch? or appJson.findByScanning? or (appJson.platform? and appJson.platform is os.platform())
+    console.warn "Skipping invalid app for this platform"
+    return
 
-            existingApp.set appJson
-
-        , _.random(5, 10) # Random delay to update details for already installed apps
+  myApps = uiGlobals.myApps
+  uninstalledApps = uiGlobals.uninstalledApps
+  existingApp = myApps.get(appJson.appId) or uninstalledApps.get(appJson.appId)
+  if existingApp
+    if appJson.versionId > existingApp.get("versionId")
+      console.log "Upgrade available for " + existingApp.get("name") + ". New version: " + appJson.version
+      existingApp.set "availableUpdate", appJson
     else
-      if appsAdded >= 40
-        # workaround for v8 memory limit. If a user were to purchase so many apps, then
-        # switch to a second computer, must restart Airspace Home to obtain remaining apps
-        console.error "Downloaded metadata for too many apps. Please restart Airspace Home to see your remaining purchases."
-        return
-      try
-        myApps.add app
-        appsAdded += 1
+      existingApp.set appJson
 
-        getAppDetails app
-      catch err
-        console.error "Corrupt app data from api: " + appJson + "\n" + (err.stack or err)
-  app
+    return existingApp
+  else
+    console.log 'Adding', appJson.name
+
+    try
+      app = myApps.add appJson,
+        validate: true
+        silent: silent
+    catch err
+      console.error "Corrupt app data from api: " + appJson + "\n" + (err.stack or err)
+
+# Installs any new apps, updates properties for existing apps, and removes old apps
+syncToCollection = (appJsonList, collection, appTest) ->
+  existingAppsById = {}
+  collection.forEach (app) ->
+    if appTest app
+      existingAppsById[app.get('name')] = app
+
+  appJsonList.forEach (appJson) ->
+    existingApp = existingAppsById[appJson.name]
+    if existingApp
+      delete existingAppsById[appJson.name]
+    handleAppJson appJson
+
+  # remove old apps
+  _(existingAppsById).forEach (oldApp) ->
+    collection.remove oldApp
+
+  do collection.save
 
 handleNotification = (notificationJson) ->
   console.log "got notification", notificationJson
@@ -117,44 +114,63 @@ subscribeToUserNotifications = (userId) ->
     handleNotification.apply this, arguments
 
 subscribeToUserChannel = (userId) ->
-  pubnub.subscribe userId + ".user.purchased", ->
-
+  pubnub.subscribe userId + ".user.purchased", (appJson) ->
     # steal focus
     nwGui.Window.get().focus()
-    handleAppJson.apply this, arguments
+
+    getAppJson(appJson.app_id).then (appJson) ->
+      handleAppJson appJson
+    .done()
 
 subscribeToAppChannel = (appId) ->
   pubnub.subscribe appId + ".app.updated", (appJson) ->
-    handleAppJson appJson
-    installManager.showAppropriateDownloadControl()
+    getAppJson(appJson.app_id).then (appJson) ->
+      handleAppJson appJson
+      installManager.showAppropriateDownloadControl()
+    .done()
 
-reconnectionTimeoutId = undefined
+reconnectionPromise = undefined
 reconnectAfterError = (err) ->
   console.log "Failed to connect to store server (retrying in " + config.ServerConnectRetryMs + "ms):", (if err and err.stack then err.stack else err)
-  unless reconnectionTimeoutId
-    reconnectionTimeoutId = setTimeout(->
-      connectToStoreServer()
-    , config.ServerConnectRetryMs)
+  return reconnectionPromise if reconnectionPromise?
+  reconnectionPromise = connectToStoreServer.delay(config.ServerConnectRetryMs)
+    .then ->
+      reconnectionPromise = undefined
 
-_getStoreManifest = (cb) ->
-  reconnectionTimeoutId = null
+_getStoreManifest = ->
+  reconnectionPromise = undefined
 
-  oauth.getAccessToken (err, accessToken) ->
-    if err
-      reconnectAfterError err
-    else
+  Q.nfcall(oauth.getAccessToken).then (accessToken) ->
       platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
-      apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify(
+      apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify
         access_token: accessToken
         platform: platform
-      )
+      console.log "Getting store manifest from", apiEndpoint
       httpHelper.getJson(apiEndpoint).then (messages) ->
-          if messages.errors
-            reconnectAfterError new Error(messages.errors)
-          else
-            cb messages
-        , (reason) ->
-          reconnectAfterError(reason)
+        if messages.errors
+          reconnectAfterError new Error(messages.errors)
+        else
+          userInformation = messages.shift()
+          messages = (cleanAppJson message for message in messages)
+          messages.unshift userInformation
+          messages
+      , (reason) ->
+        reconnectAfterError reason
+  , (reason) ->
+    reconnectAfterError reason
+
+getNonStoreManifest = ->
+  httpHelper.getJson(config.NonStoreAppManifestUrl).then (manifest) ->
+    manifest.local = manifest[NodePlatformToServerPlatform[os.platform()]] or []
+
+    (appJson.cleaned = true) for appJson in manifest.web
+    (appJson.cleaned = true) for appJson in manifest.local
+    manifest
+  , (reason) ->
+    console.warn "Failed to get app manifest (retrying): " + err and err.stack
+    Q.delay config.S3ConnectRetryMs
+    .then ->
+      do _getNonStoreManifest
 
 _setGlobalUserInformation = (user) ->
   uiGlobals.username = user.username
@@ -170,79 +186,45 @@ getUserInformation = (cb) ->
     cb?(null)
 
 connectToStoreServer = ->
-  _getStoreManifest (messages) ->
-    console.log "Connected to store server. Got messages: ", JSON.stringify(messages)
+  console.warn "I AM A BANANA"
+  _getStoreManifest().then (messages) ->
+    console.log "Connected to store server.", messages.length - 1, "apps found."
     $("body").removeClass "loading"
+
+    _setGlobalUserInformation messages.shift();
+
     messages.forEach (message) ->
-      drm.writeXml message.auth_id, message.secret_token  if message.auth_id and message.secret_token
-      if message.user_id
-        _setGlobalUserInformation message
-      else
-        app = handleAppJson(message)
-        subscribeToAppChannel app.get("appId")  if app
+      _.defer ->
+        drm.writeXml message.auth_id, message.secret_token  if message.auth_id and message.secret_token
+        subscribeToAppChannel message.appId
+        handleAppJson message
 
-    do installManager.showAppropriateDownloadControl
+    installManager.showAppropriateDownloadControl
 
-appDetailsQueue = []
-getAppDetailsForNextInQueue = ->
-  queuedData = appDetailsQueue.shift()
-  getAppDetails queuedData.app, queuedData.cb  if queuedData
+getAppJson = (appId) ->
+  Q.nfcall(oauth.getAccessToken).then (accessToken) ->
+    platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
+    url = config.AppListingEndpoint + "?" + qs.stringify
+      access_token: accessToken
+      platform: platform
 
-getAppDetails = (app, cb) ->
-  if appDetailsQueue.length > 0
-    appDetailsQueue.push
-      app: app
-      cb: cb
-  else
-    appId = app.get("appId")
-    platform = NodePlatformToServerPlatform[os.platform()]
-    if appId and platform
-      oauth.getAccessToken (err, accessToken) ->
-        if err
-          cb?(err)
-          return do getAppDetailsForNextInQueue
-        url = config.AppDetailsEndpoint
-        url = url.replace(":id", appId)
-        url = url.replace(":platform", platform)
-        url += "?access_token=" + accessToken
+    url = url.replace(":id", appId)
 
-        console.log "Getting app details via url: " + url
-        httpHelper.getJson(url).then (appDetails) ->
-          app.set cleanUpAppJson(appDetails and appDetails.app_version)
-          app.set "gotDetails", true
-          console.log "Got details for", app.get('name')
-          app.save()
-        .fin ->
-          cb = null
-          do getAppDetailsForNextInQueue
-        .nodeify(cb)
-    else
-      cb?(new Error("appId and platform must be valid"))
-      do getAppDetailsForNextInQueue
+    console.log "Getting app details via url: " + url
+    httpHelper.getJson(url).then (appJson) ->
+      cleanAppJson appJson
 
 createWebLinkApps = (webAppData) ->
+  console.log 'Found', webAppData.length, 'web apps.'
   webAppData = webAppData or []
   existingWebAppsById = {}
 
   uiGlobals.myApps.forEach (app) ->
     existingWebAppsById[app.get("id")] = app  if app.isWebLinkApp()
 
-  webAppData.forEach (webAppDatum) ->
-    webApp = new WebLinkApp(webAppDatum)
-    id = webApp.get("id")
-    existingWebApp = existingWebAppsById[id]
-    if existingWebApp
-      existingWebApp.set webAppDatum
-      console.log "Updating existing web link: " + existingWebApp.get("name")
-      delete existingWebAppsById[id]
-      do existingWebApp.save
-    else
-      try
-        uiGlobals.myApps.add webApp
-      catch err
-        console.error "Corrupt webApp: " + webApp + "\n" + (err.stack or err)
-      console.log "Added web link: ", webApp.get("urlToLaunch")
-      do webApp.save
+  webAppData.forEach (app) ->
+    delete existingWebAppsById[app.id]
+    handleAppJson app
 
   Object.keys(existingWebAppsById).forEach (id) ->
     oldWebApp = existingWebAppsById[id]
@@ -251,42 +233,20 @@ createWebLinkApps = (webAppData) ->
       uiGlobals.myApps.remove oldWebApp
       do oldWebApp.save
 
-getLocalAppManifest = ->
-  httpHelper.getJson(config.NonStoreAppManifestUrl).then (manifest) ->
-    createWebLinkApps manifest.web
-    manifest[NodePlatformToServerPlatform[os.platform()]] or []
-  , (reason) ->
-    console.warn "Failed to get app manifest (retrying): " + err and err.stack
-    deferred = Q.deferred()
-
-    setTimeout (->
-      deferred.resolve(getLocalAppManifest())
-    ), config.S3ConnectRetryMs
-
-    deferred.promise
-
-sendDeviceData = (cb) ->
+sendDeviceData = ->
   dataDir = config.PlatformLeapDataDirs[os.platform()]
   unless dataDir
     console.error "Leap Motion data dir unknown for operating system: " + os.platform()
-    return cb?(new Error("Leap Motion data dir unknown for operating system: " + os.platform()))
+    return Q.reject new Error "Leap Motion data dir unknown for operating system: " + os.platform()
 
   authDataFile = path.join(dataDir, "lastauth")
 
-  fs.readFile authDataFile, "utf-8", (err, authData) ->
-    if err
-      console.warn "Error reading auth data file."
-      return cb?(null)
-
+  Q.nfcall(fs.readFile, authDataFile, "utf-8").then (authData) ->
     unless authData
       console.warn "Auth data file is empty."
-      return cb?(null)
+      throw new Error "Auth data file is empty."
 
-    oauth.getAccessToken (err, accessToken) ->
-      if err
-        console.warn "Failed to get an access token: " + (err.stack or err)
-        return cb?(null)
-
+    Q.nfcall(oauth.getAccessToken).then (accessToken) ->
       httpHelper.post config.DeviceDataEndpoint,
         access_token: accessToken
         data: authData
@@ -295,9 +255,15 @@ sendDeviceData = (cb) ->
       , (reason) ->
         console.error "Failed to send device data: " + (reason.stack or reason)
         throw reason
-      .nodeify cb
+    , (reason) ->
+      console.warn "Failed to get an access token: " + (err.stack or err)
+      throw reason
+  , (reason) ->
+    console.warn "Error reading auth data file."
+    throw reason
 
-sendAppVersionData = (cb) ->
+
+sendAppVersionData = ->
   myAppsVersionData = uiGlobals.myApps.filter((app) ->
     app.isStoreApp()
   ).map((app) ->
@@ -316,22 +282,17 @@ sendAppVersionData = (cb) ->
 
   appVersionData = myAppsVersionData.concat(uninstalledAppsVersionData)
 
-  console.log "Sending App Version Data:" + JSON.stringify(appVersionData, null, 2)
+  console.log "Sending app version data for", appVersionData.length, 'apps.'
 
-  oauth.getAccessToken (err, accessToken) ->
-    if err
-      console.warn "Failed to get an access token: " + (err.stack or err)
-      cb?(err)
-    else
-      httpHelper.post config.AppVersionDataEndpoint,
-        access_token: accessToken
-        installations: JSON.stringify(appVersionData)
-      .then (result) ->
-        console.log "Sent app version data.  Got " + result
-      , (reason) ->
-        console.error "Failed to send app version data: " + (reason.stack or reason)
-        throw reason
-      .nodeify cb
+  Q.nfcall(oauth.getAccessToken).then (accessToken) ->
+    httpHelper.post config.AppVersionDataEndpoint,
+      access_token: accessToken
+      installations: JSON.stringify(appVersionData)
+    .then (result) ->
+      console.log "Sent app version data.  Got " + result
+    , (reason) ->
+      console.error "Failed to send app version data: " + (reason.stack or reason)
+      throw reason
 
 parsePrebundledManifest = (manifest, cb) ->
   console.log "\n\n\nExamining prebundle manifest \n" + JSON.stringify(manifest or {}, null, 2)
@@ -339,22 +300,22 @@ parsePrebundledManifest = (manifest, cb) ->
   installationFunctions = []
   manifest.forEach (appJson) ->
     appJson.noAutoInstall = true
-    unless uiGlobals.myApps.get(appJson.app_id)
-      app = createAppModel(appJson)
-      if app
-        uiGlobals.myApps.add app
-        app.set "state", LeapApp.States.Waiting
-        installationFunctions.push (callback) ->
-          console.log "Installing prebundled app: " + app.get("name")
-          app.install (err) ->
-            if err
-              console.error "Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err.stack or err)
-            else
-              getAppDetails app
-              subscribeToAppChannel app.get("appId")
-            callback null
-      else
-        console.log "App model not created.  Skipping " + appJson.name
+    appJson.cleaned = true
+    app = handleAppJson appJson
+    app.set "state", LeapApp.States.Waiting
+    installationFunctions.push (callback) ->
+      console.log "Installing prebundled app: " + app.get "name"
+      app.install (err) ->
+        if err
+          console.error "Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err.stack or err)
+        else
+          getAppJson(app.get 'appId').then (appJson) ->
+            app.set appJson
+            do app.save
+          .done()
+
+          subscribeToAppChannel app.get("appId")
+        callback null
 
   async.parallelLimit installationFunctions, 2, (err) ->
     installManager.showAppropriateDownloadControl()
@@ -362,9 +323,11 @@ parsePrebundledManifest = (manifest, cb) ->
 
 
 module.exports.connectToStoreServer = connectToStoreServer
+module.exports.getNonStoreManifest = getNonStoreManifest
 module.exports.getUserInformation = getUserInformation
-module.exports.getLocalAppManifest = getLocalAppManifest
-module.exports.getAppDetails = getAppDetails
+module.exports.getAppJson = getAppJson
+module.exports.handleAppJson = handleAppJson
+module.exports.syncToCollection = syncToCollection
 module.exports.sendDeviceData = sendDeviceData
 module.exports.sendAppVersionData = sendAppVersionData
 module.exports.parsePrebundledManifest = parsePrebundledManifest
