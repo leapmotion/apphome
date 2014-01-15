@@ -3,11 +3,9 @@ path = require("path")
 os = require("os")
 config = require("../../config/config.js")
 
-log = undefined
-
 isProduction = false #not /^(development|test)$/.test(process.env.LEAPHOME_ENV)
 pathToLog = path.join config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'
-if /\n(WARN|ERROR)/g.test fs.readFileSync pathToLog, {encoding: 'utf8'}
+if (fs.existsSync pathToLog) and (/\n(WARN|ERROR)/g.test fs.readFileSync pathToLog, {encoding: 'utf8'})
   console.log "Saving previous log"
   fs.renameSync pathToLog, pathToLog + '.' + Date.now()
 logStream = fs.createWriteStream path.join pathToLog

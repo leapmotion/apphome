@@ -10,15 +10,13 @@
 
   config = require("../../config/config.js");
 
-  log = void 0;
-
   isProduction = false;
 
   pathToLog = path.join(config.PlatformDirs[os.platform()], 'Airspace', 'log.txt');
 
-  if (/\n(WARN|ERROR)/g.test(fs.readFileSync(pathToLog, {
+  if ((fs.existsSync(pathToLog)) && (/\n(WARN|ERROR)/g.test(fs.readFileSync(pathToLog, {
     encoding: 'utf8'
-  }))) {
+  })))) {
     console.log("Saving previous log");
     fs.renameSync(pathToLog, pathToLog + '.' + Date.now());
   }
