@@ -19,7 +19,7 @@ var config = {
   },
 
   AppListingEndpoint: WAREHOUSE + 'api/apps/myapps',
-  AppDetailsEndpoint: WAREHOUSE + 'api/apps/:id/homebase/:platform',
+  AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
 
   AuthWithAccessTokenUrl: CENTRAL,
 
