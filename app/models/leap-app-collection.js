@@ -1,4 +1,5 @@
 var async = require('async');
+var os = require("os");
 
 var LeapApp = require('./leap-app.js');
 var LocalLeapApp = require('./local-leap-app.js');
@@ -15,9 +16,7 @@ module.exports = window.Backbone.Collection.extend({
         app.set('noAutoInstall', true);
 
         if (app.isStoreApp()) {
-          console.log('Enqueuing', app.get('name'), Date.now() - uiGlobals.startTimes[app.get('name')]);
-          //installManager.enqueue(app);
-          console.log('Done enqueueing', app.get('name'), 'at', Date.now() - uiGlobals.startTimes[app.get('name')]);
+          installManager.enqueue(app);
         } else if (app.isLocalApp()) {
           app.install();
         }
@@ -25,18 +24,29 @@ module.exports = window.Backbone.Collection.extend({
     });
   },
 
-  model: function(attrs, options) {
-    console.info('Building leapApp model from attribs ' + JSON.stringify(attrs, null, 2));
-    if (attrs.urlToLaunch) {
-      return new WebLinkApp(attrs, options);
-    } else if (attrs.appId) {
-      var app = new StoreLeapApp(attrs, options);
-      console.log('Created StoreLeapApp ', app.id, ': ', app.get('name'));
-      return app;
-    } else if (attrs.name) {
-      return new LocalLeapApp(attrs, options);
+  model: function(appJson, options) {
+    //console.info('Building leapApp model from attribs ' + JSON.stringify(appJson));
+    var app;
+
+    if (appJson.urlToLaunch) {
+      app = new WebLinkApp(appJson, options);
+    } else if (appJson.appId) {
+      app = new StoreLeapApp(appJson, options);
+    } else if (appJson.name) {
+      app = new LocalLeapApp(appJson, options);
     } else {
-      console.error('unknown app type: ' + JSON.stringify(attrs, null, 2));
+      console.error('unknown app type: ' + JSON.stringify(appJson, null, 2));
+    }
+
+    app.on('invalid', function(model, error) {
+      console.warn('Invalid appJson', JSON.stringify(appJson, null, 2), error);
+    });
+
+    if (app) {
+      console.log('Created', app.className, app.get('id') + ':', app.get('name'), 'in', Date.now() - uiGlobals.startTimes[appJson.name]);
+      return app;
+    } else {
+      return false;
     }
   },
 
