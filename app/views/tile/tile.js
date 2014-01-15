@@ -96,7 +96,6 @@ var Tile = BaseView.extend({
     }, this);
 
     this.$el.click(function(evt) {
-
       if (leapApp.isInstallable()) {
         this._promptForInstall();
       } else if (leapApp.isUpdatable()) {
@@ -125,11 +124,6 @@ var Tile = BaseView.extend({
     }.bind(this));
 
     this._setupDragging();
-  },
-
-  remove: function() {
-    this.$el.remove();
-    this.stopListening();
   },
 
   _makeFileUrl: function(filePath, forceRefresh) {
