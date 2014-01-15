@@ -21,7 +21,7 @@
   XHRDownloadStream = require("./xhr-download-stream.js");
 
   getToDisk = function(targetUrl, opts) {
-    var deferred, destPath, downloadStream, urlParts, writeStream;
+    var canceller, deferred, destPath, downloadStream, urlParts, writeStream;
     deferred = Q.defer();
     opts = opts || {};
     if (!targetUrl) {
@@ -32,8 +32,9 @@
       urlParts.query.access_token = opts.accessToken;
       targetUrl = url.format(urlParts);
     }
+    canceller = opts.canceller;
     destPath = opts.destPath || workingFile.newTempPlatformArchive();
-    downloadStream = new XHRDownloadStream(targetUrl, config.DownloadChunkSize);
+    downloadStream = new XHRDownloadStream(targetUrl, canceller, config.DownloadChunkSize);
     writeStream = fs.createWriteStream(destPath);
     downloadStream.on('error', function(err) {
       console.warn("Downloading chunk failed: " + (err.stack || err) + " (" + targetUrl + ")");
@@ -43,32 +44,31 @@
       console.warn("Writing chunk failed: " + (err.stack || err) + " (" + destPath + ")");
       return deferred.reject(err);
     });
-    downloadStream.pipe(writeStream);
     writeStream.on('finish', function() {
-      if (!downloadStream.cancelled) {
-        return deferred.resolve(destPath.toString());
-      }
+      return deferred.resolve(destPath.toString());
     });
     downloadStream.on('progress', function(percentComplete) {
       return deferred.notify(percentComplete);
     });
-    deferred.promise.cancel = function() {
-      var err;
-      downloadStream.cancel();
-      writeStream.end();
-      try {
-        if (fs.existsSync(destPath)) {
-          fs.unlinkSync(destPath);
-        }
-      } catch (_error) {
-        err = _error;
-        console.warn("Could not cleanup cancelled download: " + (err.stack || err));
+    if (canceller != null) {
+      canceller.fin(function() {
+        var err;
+        err = new Error("Cancelled download of " + targetUrl);
+        err.cancelled = true;
         deferred.reject(err);
-      }
-      err = new Error("Cancelled download of " + targetUrl);
-      err.cancelled = true;
-      return deferred.reject(err);
-    };
+        return writeStream.end(function() {
+          try {
+            if (fs.existsSync(destPath)) {
+              return fs.unlinkSync(destPath);
+            }
+          } catch (_error) {
+            err = _error;
+            return console.warn("Could not cleanup cancelled download: " + (err.stack || err));
+          }
+        })();
+      });
+    }
+    downloadStream.pipe(writeStream);
     return deferred.promise;
   };
 

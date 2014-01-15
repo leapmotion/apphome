@@ -22,11 +22,14 @@ getToDisk = (targetUrl, opts) ->
     urlParts.query.access_token = opts.accessToken
     targetUrl = url.format(urlParts)
 
+  canceller = opts.canceller
+
   destPath = opts.destPath or workingFile.newTempPlatformArchive()
 
-  downloadStream = new XHRDownloadStream targetUrl, config.DownloadChunkSize
+  downloadStream = new XHRDownloadStream targetUrl, canceller, config.DownloadChunkSize
   writeStream = fs.createWriteStream destPath
 
+  # Set up error handlers
   downloadStream.on 'error', (err) ->
     console.warn "Downloading chunk failed: " + (err.stack or err) + " (" + targetUrl + ")"
     deferred.reject err
@@ -35,28 +38,26 @@ getToDisk = (targetUrl, opts) ->
     console.warn "Writing chunk failed: " + (err.stack or err) + " (" + destPath + ")"
     deferred.reject err
 
-  downloadStream.pipe writeStream
-
   writeStream.on 'finish', ->
-    unless downloadStream.cancelled
-      deferred.resolve destPath.toString()
+    # on cancel, this gets called after deferred is rejected, so is a noop
+    deferred.resolve destPath.toString()
 
   downloadStream.on 'progress', (percentComplete) ->
     deferred.notify percentComplete
 
-  deferred.promise.cancel = ->
-    do downloadStream.cancel
-    do writeStream.end
-
-    try
-      fs.unlinkSync destPath  if fs.existsSync(destPath)
-    catch err
-      console.warn "Could not cleanup cancelled download: " + (err.stack or err)
-      deferred.reject err
-
+  canceller?.fin ->
     err = new Error "Cancelled download of " + targetUrl
     err.cancelled = true
     deferred.reject err
+
+    do writeStream.end ->
+      try
+        fs.unlinkSync destPath  if fs.existsSync destPath
+      catch err
+        console.warn "Could not cleanup cancelled download: " + (err.stack or err)
+
+  # Get it flowing
+  downloadStream.pipe writeStream
 
   deferred.promise
 
