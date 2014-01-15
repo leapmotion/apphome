@@ -38,16 +38,19 @@
     scan: function(cb) {
       var cleanData, err, platform;
       platform = os.platform();
-      cleanData = function(err, apps) {
+      cleanData = function(err, appJsonList) {
+        var appJson, _i, _len;
         if (err) {
           if (typeof cb === "function") {
             cb(err);
           }
         }
-        apps = _.uniq(_(apps).compact(), function(app) {
-          return app.get("id");
-        });
-        return typeof cb === "function" ? cb(null, apps) : void 0;
+        appJsonList = _.uniq(_(appJsonList).compact());
+        for (_i = 0, _len = appJsonList.length; _i < _len; _i++) {
+          appJson = appJsonList[_i];
+          appJson.cleaned = true;
+        }
+        return typeof cb === "function" ? cb(null, appJsonList) : void 0;
       };
       try {
         if (platform === "win32") {
@@ -76,15 +79,15 @@
         }
         plistPaths = stdout.toString().split("\n");
         plistPaths.pop();
-        return async.mapLimit(plistPaths, 1, _this._createLeapAppFromPlistPath.bind(_this), function(err, leapApps) {
+        return async.mapLimit(plistPaths, 1, _this._createAppJsonFromPlistPath.bind(_this), function(err, appJsonList) {
           if (err) {
             return cb(err);
           }
-          return typeof cb === "function" ? cb(null, leapApps) : void 0;
+          return typeof cb === "function" ? cb(null, appJsonList) : void 0;
         });
       });
     },
-    _createLeapAppFromPlistPath: function(plistPath, cb) {
+    _createAppJsonFromPlistPath: function(plistPath, cb) {
       var _this = this;
       return plist.parseFile(plistPath, function(err, parsedPlist) {
         var attributes, icon, keyFile;
@@ -104,7 +107,7 @@
           }
           attributes.rawIconFile = path.join(keyFile, "Contents", "Resources", icon);
         }
-        return typeof cb === "function" ? cb(null, _this._createLocalLeapApp(attributes)) : void 0;
+        return typeof cb === "function" ? cb(null, _this._createAppJson(attributes)) : void 0;
       });
     },
     _scanForWindowsApps: function(cb) {
@@ -129,15 +132,15 @@
         }
         registryChunks = _.invoke(stdouts, "toString").join("\n").split(/^HKEY_LOCAL_MACHINE|^HKEY_CURRENT_USER/m);
         registryChunks.shift();
-        return async.map(registryChunks, _this._createLeapAppFromRegistryChunk.bind(_this), function(err, leapApps) {
+        return async.map(registryChunks, _this._createAppJsonFromRegistryChunk.bind(_this), function(err, appJsonList) {
           if (err) {
             return typeof cb === "function" ? cb(err) : void 0;
           }
-          return typeof cb === "function" ? cb(null, leapApps) : void 0;
+          return typeof cb === "function" ? cb(null, appJsonList) : void 0;
         });
       });
     },
-    _createLeapAppFromRegistryChunk: function(registryChunk, cb) {
+    _createAppJsonFromRegistryChunk: function(registryChunk, cb) {
       var allowedApp, attributes, extractValueForKey;
       extractValueForKey = function(key, type) {
         var firstGroup, match, regex;
@@ -157,10 +160,9 @@
         attributes.relativeExePath = allowedApp.relativeExePath;
         attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath);
       }
-      return typeof cb === "function" ? cb(null, this._createLocalLeapApp(attributes)) : void 0;
+      return typeof cb === "function" ? cb(null, this._createAppJson(attributes)) : void 0;
     },
-    _createLocalLeapApp: function(attributes) {
-      var LocalLeapApp, localLeapApp;
+    _createAppJson: function(attributes) {
       if (!attributes.keyFile || !attributes.name || !attributes.version || !this._isAllowedApp(attributes.name, attributes.version)) {
         return null;
       }
@@ -168,13 +170,7 @@
         attributes.deletable = true;
       }
       attributes.findByScanning = true;
-      LocalLeapApp = require("../models/local-leap-app.js");
-      localLeapApp = new LocalLeapApp(attributes);
-      if (localLeapApp.isValid()) {
-        return localLeapApp;
-      } else {
-        return null;
-      }
+      return attributes;
     },
     _getAllowedApp: function(appName) {
       return this._allowedApps && this._allowedApps[appName.toLowerCase()];

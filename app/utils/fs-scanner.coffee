@@ -19,12 +19,11 @@ FsScanner:: =
   scan: (cb) ->
     platform = os.platform()
 
-    cleanData = (err, apps) ->
+    cleanData = (err, appJsonList) ->
       cb?(err)  if err
-      apps = _.uniq(_(apps).compact(), (app) ->
-        app.get "id"
-      )
-      cb?(null, apps)
+      appJsonList = _.uniq _(appJsonList).compact()
+      (appJson.cleaned = true) for appJson in appJsonList
+      cb?(null, appJsonList)
 
     try
       if platform is "win32"
@@ -37,22 +36,22 @@ FsScanner:: =
       cb?(err)
 
   _scanForMacApps: (cb) ->
-    userAppsDir = path.join(process.env.HOME or "", "Applications")
+    userAppsDir = path.join process.env.HOME or "", "Applications"
     fs.mkdirSync userAppsDir  unless fs.existsSync(userAppsDir)
     # remove empty last path
     exec "find ~/Applications /Applications -maxdepth 4 -name Info.plist", (err, stdout) =>
       return cb?(err)  if err
-      plistPaths = stdout.toString().split("\n")
+      plistPaths = stdout.toString().split "\n"
       do plistPaths.pop
-      async.mapLimit plistPaths, 1, @_createLeapAppFromPlistPath.bind(this), (err, leapApps) ->
+      async.mapLimit plistPaths, 1, @_createAppJsonFromPlistPath.bind(this), (err, appJsonList) ->
         return cb(err)  if err
-        cb?(null, leapApps)
+        cb?(null, appJsonList)
 
-  _createLeapAppFromPlistPath: (plistPath, cb) ->
+  _createAppJsonFromPlistPath: (plistPath, cb) ->
     plist.parseFile plistPath, (err, parsedPlist) =>
       return cb(err)  if err
 
-      keyFile = path.dirname(path.dirname(plistPath))
+      keyFile = path.dirname path.dirname plistPath
 
       attributes =
         name: parsedPlist.CFBundleDisplayName or parsedPlist.CFBundleName or parsedPlist.CFBundleExecutable
@@ -64,7 +63,7 @@ FsScanner:: =
         icon = icon + ".icns"  unless path.extname(icon)
         attributes.rawIconFile = path.join(keyFile, "Contents", "Resources", icon)
 
-      cb?(null, @_createLocalLeapApp(attributes))
+      cb?(null, @_createAppJson(attributes))
 
   _scanForWindowsApps: (cb) ->
     registryQueries = [
@@ -82,11 +81,11 @@ FsScanner:: =
       return cb(err)  if err
       registryChunks = _.invoke(stdouts, "toString").join("\n").split(/^HKEY_LOCAL_MACHINE|^HKEY_CURRENT_USER/m)
       registryChunks.shift() # remove empty first chunk
-      async.map registryChunks, @_createLeapAppFromRegistryChunk.bind(this), (err, leapApps) ->
+      async.map registryChunks, @_createAppJsonFromRegistryChunk.bind(this), (err, appJsonList) ->
         return cb?(err)  if err
-        cb?(null, leapApps)
+        cb?(null, appJsonList)
 
-  _createLeapAppFromRegistryChunk: (registryChunk, cb) ->
+  _createAppJsonFromRegistryChunk: (registryChunk, cb) ->
     extractValueForKey = (key, type) ->
       type = type or "REG_SZ"
       regex = new RegExp(key + " +" + type + " +([^\\n]+)")
@@ -104,18 +103,13 @@ FsScanner:: =
       attributes.relativeExePath = allowedApp.relativeExePath
       attributes.rawIconFile = path.join(attributes.keyFile, attributes.relativeExePath)
 
-    cb?(null, @_createLocalLeapApp(attributes))
+    cb?(null, @_createAppJson(attributes))
 
-  _createLocalLeapApp: (attributes) ->
+  _createAppJson: (attributes) ->
     return null  if not attributes.keyFile or not attributes.name or not attributes.version or not @_isAllowedApp(attributes.name, attributes.version)
-
     attributes.deletable = true  if attributes.deletable isnt false
-
     attributes.findByScanning = true
-
-    LocalLeapApp = require("../models/local-leap-app.js")
-    localLeapApp = new LocalLeapApp(attributes)
-    (if localLeapApp.isValid() then localLeapApp else null)
+    attributes
 
   _getAllowedApp: (appName) ->
     @_allowedApps and @_allowedApps[appName.toLowerCase()]
