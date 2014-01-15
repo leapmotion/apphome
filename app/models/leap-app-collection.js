@@ -69,5 +69,11 @@ module.exports = window.Backbone.Collection.extend({
     }).forEach(function(app) {
       appMoveQueue.push(app);
     });
+  },
+
+  save: function() {
+    if (this.length) {
+      this.at(0).save();
+    }
   }
 });
