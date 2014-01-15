@@ -19,12 +19,12 @@
   _manifestPromise = void 0;
 
   prebundledManifestPromise = function() {
-    var defer, originalManifest;
+    var deferred, originalManifest;
     if (_manifestPromise) {
       return _manifestPromise;
     }
-    defer = $.Deferred();
-    _manifestPromise = defer.promise();
+    deferred = Q.defer();
+    _manifestPromise = deferred.promise;
     originalManifest = db.getItem(config.DbKeys.OriginalPrebundlingManifest);
     if (originalManifest) {
       console.log(originalManifest);
@@ -91,7 +91,7 @@
     var dest, manifest;
     dest = path.join(config.PlatformTempDirs[os.platform()], "frozen");
     manifest = void 0;
-    return extract.unzip(bundlePath, dest, true, function(err) {
+    return extract.unzipFile(bundlePath, dest, true, function(err) {
       if (err) {
         console.error("Failed to unzip " + bundlePath + ": " + (err.stack || err));
         return typeof cb === "function" ? cb(err) : void 0;

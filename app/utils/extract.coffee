@@ -9,10 +9,12 @@ plist = require("plist")
 unzip = require("unzip")
 shell = require("./shell.js")
 
+Q = require("q")
+
 IgnoredWindowsFileRegex = /^\.|^__macosx$/i
 MaxChildProcessBufferSize = 1024 * 1024 * 5 # 5 MB
 
-unzipViaNodeUnzip = (src, dest, cb) ->
+_unzipViaNodeUnzip = (src, dest, cb) ->
   inputStream = fs.createReadStream(src)
   outputStream = unzip.Extract(path: dest)
 
@@ -31,7 +33,7 @@ unzipViaNodeUnzip = (src, dest, cb) ->
   console.log "Unzipping " + src + " to " + dest + " with node-unzip."
   inputStream.pipe outputStream
 
-unzipViaAdmZip = (src, dest, cb) ->
+_unzipViaAdmZip = (src, dest, cb) ->
   try
     zip = new AdmZip(src)
     console.log "Unzipping " + src + " to " + dest + " with AdmZip."
@@ -40,7 +42,7 @@ unzipViaAdmZip = (src, dest, cb) ->
   catch err
     cb?(err)
 
-unzipViaShell = (src, dest, cb) ->
+_unzipViaShell = (src, dest, cb) ->
   command = undefined
   if os.platform() is "win32"
     command = shell.escape(path.join(__dirname, "..", "..", "bin", "unzip.exe")) + " -o " + shell.escape(src) + " -d " + shell.escape(dest)
@@ -78,7 +80,7 @@ chmodRecursiveSync = (file) ->
     fs.readdirSync(file).forEach (subFile) ->
       chmodRecursiveSync path.join(file, subFile)
 
-extractAppZip = (src, dest, shellUnzipOnly, cb) ->
+_extractAppZip = (src, dest, shellUnzipOnly, cb) ->
   return cb?(new Error("Zip archive does not exist: " + src))  unless fs.existsSync(src)
 
   try
@@ -121,7 +123,7 @@ extractAppZip = (src, dest, shellUnzipOnly, cb) ->
     else
       cb?(null)
 
-extractAppDmg = (src, dest, cb) ->
+_extractAppDmg = (src, dest, cb) ->
   return cb?(new Error("Disk image does not exist: " + src))  unless fs.existsSync(src)
 
   return cb?(new Error("Extracting DMG is only supported on Mac OS X."))  if os.platform() isnt "darwin"
@@ -173,7 +175,6 @@ extractAppDmg = (src, dest, cb) ->
     else
       try
         if fs.existsSync(dest)
-          chmodRecursiveSync dest
           fs.removeSync dest
       catch err2
         return unmount(->
@@ -196,8 +197,15 @@ extractAppDmg = (src, dest, cb) ->
             console.warn "xattr exec error, ignoring: " + err3  if err3
             unmount cb
 
+extractApp = (src, dest, shellUnzipOnly) ->
+  if os.platform() is 'win32'
+    Q.nfcall _extractAppZip, src, dest, shellUnzipOnly
+  else if os.platform() is 'darwin'
+    Q.nfcall _extractAppDmg, src, dest
+  else
+    Q.fail new Error "Don't know how to install apps on platform: " + os.platform()
 
-module.exports.unzip = unzipFile
-module.exports.unzipApp = extractAppZip
-module.exports.undmgApp = extractAppDmg
+
+module.exports.unzipFile = unzipFile
+module.exports.extractApp = extractApp
 module.exports.chmodRecursiveSync = chmodRecursiveSync

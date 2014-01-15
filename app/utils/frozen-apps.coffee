@@ -66,7 +66,7 @@ _expandFreezeDriedApps = (bundlePath, cb) ->
   dest = path.join(config.PlatformTempDirs[os.platform()], "frozen")
   manifest = undefined
 
-  extract.unzip bundlePath, dest, true, (err) ->
+  extract.unzipFile bundlePath, dest, true, (err) ->
     if err
       console.error "Failed to unzip " + bundlePath + ": " + (err.stack or err)
       cb?(err)
