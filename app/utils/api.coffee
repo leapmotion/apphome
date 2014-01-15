@@ -60,7 +60,7 @@ handleAppJson = (appJson, silent=false) ->
     appJson = cleanAppJson appJson
 
   unless appJson.urlToLaunch? or appJson.findByScanning? or (appJson.platform? and appJson.platform is os.platform())
-    console.warn "Skipping invalid app for this platform"
+    console.log "Skipping invalid app for this platform:", appJson.name
     return
 
   myApps = uiGlobals.myApps
@@ -95,7 +95,9 @@ syncToCollection = (appJsonList, collection, appTest) ->
     existingApp = existingAppsById[appJson.name]
     if existingApp
       delete existingAppsById[appJson.name]
-    handleAppJson appJson
+      existingApp.set appJson
+    else
+      handleAppJson appJson
 
   # remove old apps
   _(existingAppsById).forEach (oldApp) ->
@@ -186,7 +188,6 @@ getUserInformation = (cb) ->
     cb?(null)
 
 connectToStoreServer = ->
-  console.warn "I AM A BANANA"
   _getStoreManifest().then (messages) ->
     console.log "Connected to store server.", messages.length - 1, "apps found."
     $("body").removeClass "loading"
@@ -213,25 +214,6 @@ getAppJson = (appId) ->
     console.log "Getting app details via url: " + url
     httpHelper.getJson(url).then (appJson) ->
       cleanAppJson appJson
-
-createWebLinkApps = (webAppData) ->
-  console.log 'Found', webAppData.length, 'web apps.'
-  webAppData = webAppData or []
-  existingWebAppsById = {}
-
-  uiGlobals.myApps.forEach (app) ->
-    existingWebAppsById[app.get("id")] = app  if app.isWebLinkApp()
-
-  webAppData.forEach (app) ->
-    delete existingWebAppsById[app.id]
-    handleAppJson app
-
-  Object.keys(existingWebAppsById).forEach (id) ->
-    oldWebApp = existingWebAppsById[id]
-    if oldWebApp.isBuiltinTile()
-      console.log "Deleting old builtin web link: " + oldWebApp.get("name")
-      uiGlobals.myApps.remove oldWebApp
-      do oldWebApp.save
 
 sendDeviceData = ->
   dataDir = config.PlatformLeapDataDirs[os.platform()]
