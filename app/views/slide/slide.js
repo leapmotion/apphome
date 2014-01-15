@@ -35,8 +35,12 @@ var SlideView = BaseView.extend({
 
   remove: function() {
     while(this.tiles.length) {
-      this.tiles.shift().remove();
+      var tile = this.tiles.shift();
+      tile.remove();
+      tile = null;
     }
+
+    BaseView.prototype.remove.call(this);
   },
 
   position: function(left, top) {
