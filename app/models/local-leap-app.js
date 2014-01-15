@@ -165,7 +165,7 @@ function localAppScan(appJsonList) {
   var fsScanner = new FsScanner(appJsonList);
   Q.nfcall(fsScanner.scan.bind(fsScanner)).then(function(appJsonList) {
     api.syncToCollection(appJsonList, uiGlobals.myApps, function(app) {
-      return app.isLocalApp() && app.get('findbyScanning');
+      return app.isLocalApp() && app.get('findByScanning');
     });
   }.bind(this)).done();
 }
