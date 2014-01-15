@@ -43,7 +43,7 @@ module.exports = window.Backbone.Collection.extend({
     });
 
     if (app) {
-      console.log('Created', app.className, app.get('id') + ':', app.get('name'), 'in', Date.now() - uiGlobals.startTimes[appJson.name]);
+      console.log('Created', app.className, app.get('id') + ':', app.get('name'));
       return app;
     } else {
       return false;
