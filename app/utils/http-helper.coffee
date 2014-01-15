@@ -50,7 +50,7 @@ getToDisk = (targetUrl, opts) ->
     err.cancelled = true
     deferred.reject err
 
-    do writeStream.end ->
+    do writeStream?.end ->
       try
         fs.unlinkSync destPath  if fs.existsSync destPath
       catch err

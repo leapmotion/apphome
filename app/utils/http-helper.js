@@ -56,7 +56,7 @@
         err = new Error("Cancelled download of " + targetUrl);
         err.cancelled = true;
         deferred.reject(err);
-        return writeStream.end(function() {
+        return writeStream != null ? writeStream.end(function() {
           try {
             if (fs.existsSync(destPath)) {
               return fs.unlinkSync(destPath);
@@ -65,7 +65,7 @@
             err = _error;
             return console.warn("Could not cleanup cancelled download: " + (err.stack || err));
           }
-        })();
+        })() : void 0;
       });
     }
     downloadStream.pipe(writeStream);
