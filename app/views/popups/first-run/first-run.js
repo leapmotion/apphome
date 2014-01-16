@@ -80,12 +80,13 @@ module.exports = BaseView.extend({
 
   _showAuth: function(newUser) {
     this.$el.remove();
+
+    var _this = this;
     this.authorizationView.authorize(function(err) {
       if (err) {
         console.warn('Error logging in: ' + err.stack || err);
       } else {
-        this.$el.remove();
-        this.options.onLoggedIn();
+        _this.options.onLoggedIn();
       }
     }.bind(this), newUser);
   },

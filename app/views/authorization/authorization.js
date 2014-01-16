@@ -227,7 +227,7 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm && this.__newUser) {
+    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && !isShowingSignUpForm) {
       iframeWindow.location = signUpUrl;
       this._hasRedirectedToSignUp = true;
     } else {
@@ -256,7 +256,7 @@ module.exports = BaseView.extend({
       if (err) {
         console.warn(err);
       }
-      this.$el.remove();
+      this.remove();
       cb(err || null);
     }.bind(this));
   },
@@ -343,15 +343,15 @@ module.exports = BaseView.extend({
   },
 
   _clearLoadTimeout: function() {
-    if (this._loadTimeoutId) {
-      clearTimeout(this._loadTimeoutId);
+    if (this._loadTimeout) {
+      clearTimeout(this._loadTimeout);
       this._loadTimeoutId = null;
     }
   },
 
   _startLoadTimeout: function(cb) {
     this._clearLoadTimeout();
-    this._loadTimeoutId = setTimeout(function() {
+    this._loadTimeout = setTimeout(function() {
       cb(new Error('Connection to login server timed out.'));
     }, config.AuthLoadTimeoutMs);
   },
