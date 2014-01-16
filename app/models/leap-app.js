@@ -178,6 +178,10 @@ var LeapApp = BaseModel.extend({
     throw new Error('uninstall is an abstract method');
   },
 
+  createAppsFromManifest: function() {
+    throw new Error('createAppsFromManifest is an abstract method');
+  },
+
   launch: function() {
     var executable = this.get('executable');
     if (!executable) {

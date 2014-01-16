@@ -139,13 +139,22 @@ var LocalLeapApp = LeapApp.extend({
   }
 });
 
-
-
-function explicitPathApps(appJsonList) {
-  var relevantApps = appJsonList.filter(function(appJson) {
+function createAppsFromManifest(manifest) {
+  var explicitPathAppJsonList = manifest.filter(function(appJson) {
     return !appJson.findByScanning;
   });
 
+  explicitPathApps(explicitPathAppJsonList);
+
+  localAppScan(appJsonList);
+
+  // Keep looking for local apps (like Google Earth) every once in a while
+  setInterval(function() {
+      localAppScan(manifest);
+  }, config.FsScanIntervalMs);
+}
+
+function explicitPathApps(appJsonList) {
   api.syncToCollection(relevantApps, uiGlobals.myApps, function(app) {
     return app.isLocalApp() && !app.get('findByScanning');
   });

@@ -146,13 +146,7 @@ function prerunAsyncKickoff(cb) {
   // Contains information on Store, Orientation, Google Earth, etc.
   api.getNonStoreManifest().then(function(manifest) {
     WebLinkApp.createWebLinkApps(manifest.web);
-    LocalLeapApp.createExplicitPathApps(manifest.local);
-    LocalLeapApp.localAppScan(manifest.local);
-
-    // Keep looking for local apps (like Google Earth) every once in a while
-    setInterval(function() {
-      LocalLeapApp.localAppScan(manifest.local);
-    }, config.FsScanIntervalMs);
+    LocalLeapApp.createAppsFromManifest(manifest.local);
   }, function(reason) {
     console.warn('Failed to get non-store manifest', reason);
   }).done();
