@@ -27,20 +27,9 @@ var SlideView = BaseView.extend({
     }
   },
 
-  addTile: function(args) {
-    var tile = new Tile(args);
+  addTile: function(tile) {
     this.tiles.push(tile);
     this.$el.append(tile.$el);
-  },
-
-  remove: function() {
-    while(this.tiles.length) {
-      var tile = this.tiles.shift();
-      tile.remove();
-      tile = null;
-    }
-
-    BaseView.prototype.remove.call(this);
   },
 
   position: function(left, top) {
