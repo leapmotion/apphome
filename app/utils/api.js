@@ -194,16 +194,21 @@
       });
       console.log("Getting store manifest from", apiEndpoint);
       return httpHelper.getJson(apiEndpoint).then(function(messages) {
-        var appJson, userInformation, _i, _len;
+        var appJson, userInformation;
         if (messages.errors) {
           return reconnectAfterError(new Error(messages.errors));
         } else {
           userInformation = messages.shift();
-          for (_i = 0, _len = messages.length; _i < _len; _i++) {
-            appJson = messages[_i];
-            appJson(cleanAppJson(appJson));
-            message.appType = LeapApp.Types.StoreApp;
-          }
+          messages = (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = messages.length; _i < _len; _i++) {
+              appJson = messages[_i];
+              appJson.appType = LeapApp.Types.StoreApp;
+              _results.push(cleanAppJson(appJson));
+            }
+            return _results;
+          })();
           messages.unshift(userInformation);
           return messages;
         }
@@ -230,6 +235,7 @@
         appJson = _ref1[_j];
         appJson.cleaned = true;
         appJson.appType = LeapApp.Types.LocalApp;
+        appJson.platform = os.platform();
       }
       return manifest;
     }, function(reason) {

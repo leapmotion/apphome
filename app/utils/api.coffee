@@ -155,9 +155,9 @@ _getStoreManifest = ->
       else
         userInformation = messages.shift()
 
-        for appJson in messages
-          appJson cleanAppJson appJson
-          message.appType = LeapApp.Types.StoreApp
+        messages = for appJson in messages
+          appJson.appType = LeapApp.Types.StoreApp
+          cleanAppJson appJson
 
         messages.unshift userInformation
         messages
