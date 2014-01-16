@@ -40,7 +40,9 @@ var NotificationPane = BaseView.extend({
   },
 
   show: function() {
-    db.saveObj(config.DbKeys.ViewedNotifications, _.pluck(this.notifications, 'uuid'));
+    db.saveObj(config.DbKeys.ViewedNotifications, _.pluck(this.notifications.map(function(notification) {
+      return notification.toJSON();
+    }), 'uuid'));
     this.notifications.forEach(function(notification) {
       notification.set('new', false);
     });
