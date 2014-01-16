@@ -62,10 +62,8 @@ var LeapApp = BaseModel.extend({
       var state = this.get('state');
       if (!this.get('installedAt') && state !== LeapApp.States.NotYetInstalled) {
         this.set('installedAt', (new Date()).getTime());
-        uiGlobals.myApps.sort();
       } else if (state === LeapApp.States.Uninstalled) {
         this.set('installedAt', null);
-        uiGlobals.myApps.sort();
       }
       this.save();
     }.bind(this));
