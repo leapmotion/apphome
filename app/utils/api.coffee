@@ -144,21 +144,25 @@ _getStoreManifest = ->
   reconnectionPromise = undefined
 
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
-      platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
-      apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify
-        access_token: accessToken
-        platform: platform
-      console.log "Getting store manifest from", apiEndpoint
-      httpHelper.getJson(apiEndpoint).then (messages) ->
-        if messages.errors
-          reconnectAfterError new Error(messages.errors)
-        else
-          userInformation = messages.shift()
-          messages = (cleanAppJson message for message in messages)
-          messages.unshift userInformation
-          messages
-      , (reason) ->
-        reconnectAfterError reason
+    platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
+    apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify
+      access_token: accessToken
+      platform: platform
+    console.log "Getting store manifest from", apiEndpoint
+    httpHelper.getJson(apiEndpoint).then (messages) ->
+      if messages.errors
+        reconnectAfterError new Error(messages.errors)
+      else
+        userInformation = messages.shift()
+
+        for appJson in messages
+          appJson cleanAppJson appJson
+          message.appType = LeapApp.Types.StoreApp
+
+        messages.unshift userInformation
+        messages
+    , (reason) ->
+      reconnectAfterError reason
   , (reason) ->
     reconnectAfterError reason
 

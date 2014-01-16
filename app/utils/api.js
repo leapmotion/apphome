@@ -57,6 +57,7 @@
       id: appJson.app_id,
       appId: appJson.app_id,
       versionId: appJson.id,
+      appType: appJson.appType,
       name: appJson.name,
       platform: ServerPlatformToNodePlatform[appJson.platform] || appJson.platform,
       iconUrl: appJson.icon_url,
@@ -193,20 +194,16 @@
       });
       console.log("Getting store manifest from", apiEndpoint);
       return httpHelper.getJson(apiEndpoint).then(function(messages) {
-        var message, userInformation;
+        var appJson, userInformation, _i, _len;
         if (messages.errors) {
           return reconnectAfterError(new Error(messages.errors));
         } else {
           userInformation = messages.shift();
-          messages = (function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = messages.length; _i < _len; _i++) {
-              message = messages[_i];
-              _results.push(cleanAppJson(message));
-            }
-            return _results;
-          })();
+          for (_i = 0, _len = messages.length; _i < _len; _i++) {
+            appJson = messages[_i];
+            appJson(cleanAppJson(appJson));
+            message.appType = LeapApp.Types.StoreApp;
+          }
           messages.unshift(userInformation);
           return messages;
         }
@@ -226,11 +223,13 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         appJson = _ref[_i];
         appJson.cleaned = true;
+        appJson.appType = LeapApp.Types.WebApp;
       }
       _ref1 = manifest.local;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         appJson = _ref1[_j];
         appJson.cleaned = true;
+        appJson.appType = LeapApp.Types.LocalApp;
       }
       return manifest;
     }, function(reason) {
@@ -286,6 +285,7 @@
       url = url.replace(":id", appId);
       console.log("Getting app details via url: " + url);
       return httpHelper.getJson(url).then(function(appJson) {
+        appJson.appType = LeapApp.Types.StoreApp;
         return cleanAppJson(appJson);
       });
     });
