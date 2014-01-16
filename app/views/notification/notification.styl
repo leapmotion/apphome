@@ -1,15 +1,14 @@
 .notification
   display block
   font-size 18px
+  color white
 
-  &:not([href=""])
-    color white
+  &.link
     text-decoration none
     cursor pointer
 
-    &:active
     &:hover
-      background rgba(70, 70, 70, 0.9)
+      background rgba(80, 80, 80, 0.9)
 
   > *
     border-top 2px solid rgba(50,50,50,0.5)
@@ -34,6 +33,7 @@
     display table-cell
     vertical-align middle
     padding-right 20px
+    cursor pointer
 
     &:hover
       box-shadow 0 0 2px inset rgba(0, 0, 0, 0.3)

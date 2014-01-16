@@ -17,7 +17,8 @@ var NotificationView = BaseView.extend({
 
     this.setElement(this.templateHtml({
       message: notification.get('body'),
-      iconUrl: notification.get('icon_url')
+      iconUrl: notification.get('icon_url'),
+      link: !!notification.get('url')
     }));
 
     this.$('.dismiss').click(function(evt) {
