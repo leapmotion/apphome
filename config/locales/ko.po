@@ -531,3 +531,15 @@ msgstr "알림"
 
 msgid "no notifications to display"
 msgstr "표시할 알림이 없습니다"
+
+msgid "username is too long (maximum is 16 characters)"
+msgstr "유저명이 너무 깁니다 (최대 16자)"
+
+msgid "leap motion could not create your account."
+msgstr "Leap Motion이 당신의 계정을 생성할 수 없습니다."
+
+msgid "in order to have a leap motion account, you must meet certain age requirements.  to learn more about online child safety, visit the federal trade commission's website."
+msgstr "Leap Motion 계정을 생성하기 위해서는 특정 연령 조건을 충족해야 합니다. 어린이 안전에 관해 온라인으로 자세한 내용을 확인하려면, 미국 연방 거래위원회의 웹사이트를 방문하시기 바랍니다."
+
+msgid "you will receive an email with instructions about how to reset your password in a few minutes."
+msgstr "몇 분 이내에 당신의 암호를 초기화할 안내 이메일을 받을 것입니다."
