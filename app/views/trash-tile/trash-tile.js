@@ -7,13 +7,10 @@ module.exports = Tile.extend({
   viewDir: __dirname,
 
   initialize: function(options) {
-    var leapApp = options.leapApp;
-    this.leapApp = leapApp;
-
-    this.initializeTile(leapApp);
+    this.initializeTile();
 
     this.setElement($(this.templateHtml({
-        app: leapApp.toJSON(),
+        app: this.model.toJSON(),
         reinstall_label: i18n.translate('Click to Reinstall')
     })));
 

@@ -43,7 +43,7 @@ module.exports = Modal.extend({
 
     uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({
-        leapApp: app,
+        model: app,
         onReinstall: (function() {
           this.remove();
           uiGlobals.uninstalledApps.remove(app);
