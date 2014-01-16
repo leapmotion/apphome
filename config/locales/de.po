@@ -525,3 +525,9 @@ msgstr "Wird verschoben..."
 
 msgid "launch tutorial..."
 msgstr "Anleitung starten..."
+
+msgid "notifications"
+msgstr "Benachrichtigungen"
+
+msgid "no notifications to display"
+msgstr "Keine Benachrichtigungen anzuzeigen"

@@ -525,3 +525,9 @@ msgstr "Desplazando..."
 
 msgid "launch tutorial..."
 msgstr "Iniciar el Tutorial..."
+
+msgid "notifications"
+msgstr "Notificaciones"
+
+msgid "no notifications to display"
+msgstr "No hay notificaciones para mostrar"

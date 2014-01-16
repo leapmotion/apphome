@@ -525,3 +525,9 @@ msgstr "移動しています..."
 
 msgid "launch tutorial..."
 msgstr "チュートリアルを起動中です..."
+
+msgid "notifications"
+msgstr "通知"
+
+msgid "no notifications to display"
+msgstr "表示する通知はありません"

@@ -525,3 +525,9 @@ msgstr "Moving..."
 
 msgid "launch tutorial..."
 msgstr "Launch Tutorial..."
+
+msgid "notifications"
+msgstr "Notifications"
+
+msgid "no notifications to display"
+msgstr "No notifications to display"

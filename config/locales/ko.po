@@ -63,3 +63,9 @@ msgstr "이동 중..."
 
 msgid "launch tutorial..."
 msgstr "튜토리얼 실행..."
+
+msgid "notifications"
+msgstr "알림"
+
+msgid "no notifications to display"
+msgstr "표시할 알림이 없습니다"

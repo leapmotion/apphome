@@ -525,3 +525,9 @@ msgstr "正在移动..."
 
 msgid "launch tutorial..."
 msgstr "启动导览..."
+
+msgid "notifications"
+msgstr "通知"
+
+msgid "no notifications to display"
+msgstr "没有要显示的通知"
