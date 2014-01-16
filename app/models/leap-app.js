@@ -146,7 +146,9 @@ var LeapApp = BaseModel.extend({
   },
 
   isUninstallable: function() {
-    return this.get('state') === LeapApp.States.Ready && !this.isBuiltinTile();
+    return this.get('state') === LeapApp.States.Ready ||
+           this.get('state') === LeapApp.States.NotYetInstalled &&
+           !this.isBuiltinTile();
   },
 
   isInstallable: function() {
