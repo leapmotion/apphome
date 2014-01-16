@@ -177,6 +177,7 @@ getNonStoreManifest = ->
     for appJson in manifest.local
       appJson.cleaned = true
       appJson.appType = LeapApp.Types.LocalApp
+      appJson.platform = os.platform()
 
     manifest
   , (reason) ->
