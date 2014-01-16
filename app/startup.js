@@ -131,7 +131,6 @@ function ensureWorkingDirs(cb) {
 
 function migrateDatabase(cb) {
   migrations.migrate();
-
   cb && cb(null);
 }
 
@@ -145,8 +144,8 @@ function prerunAsyncKickoff(cb) {
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
   api.getNonStoreManifest().then(function(manifest) {
-    WebLinkApp.createWebLinkApps(manifest.web);
-    LocalLeapApp.createAppsFromManifest(manifest.local);
+    WebLinkApp.createWebAppsFromManifest(manifest.web);
+    LocalLeapApp.createLocalAppsFromManifest(manifest.local);
   }, function(reason) {
     console.warn('Failed to get non-store manifest', reason);
   }).done();

@@ -139,29 +139,29 @@ var LocalLeapApp = LeapApp.extend({
   }
 });
 
-function createAppsFromManifest(manifest) {
+function createLocalAppsFromManifest(manifest) {
   var explicitPathAppJsonList = manifest.filter(function(appJson) {
     return !appJson.findByScanning;
   });
 
-  explicitPathApps(explicitPathAppJsonList);
+  _explicitPathApps(explicitPathAppJsonList);
 
-  localAppScan(appJsonList);
+  _localAppScan(manifest);
 
   // Keep looking for local apps (like Google Earth) every once in a while
   setInterval(function() {
-      localAppScan(manifest);
+    _localAppScan(manifest);
   }, config.FsScanIntervalMs);
 }
 
-function explicitPathApps(appJsonList) {
-  api.syncToCollection(relevantApps, uiGlobals.myApps, function(app) {
+function _explicitPathApps(appJsonList) {
+  api.syncToCollection(appJsonList, uiGlobals.myApps, function(app) {
     return app.isLocalApp() && !app.get('findByScanning');
   });
 }
 
 var isScanningFileSystem = false;
-function localAppScan(appJsonList) {
+function _localAppScan(appJsonList) {
   if (!appJsonList) {
     isScanningFileSystem = false;
     return;
@@ -180,5 +180,4 @@ function localAppScan(appJsonList) {
 }
 
 module.exports = LocalLeapApp;
-module.exports.localAppScan = localAppScan;
-module.exports.createExplicitPathApps = explicitPathApps;
+module.exports.createLocalAppsFromManifest = createLocalAppsFromManifest;

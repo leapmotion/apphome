@@ -51,11 +51,11 @@ var WebLinkApp = LeapApp.extend({
 
 });
 
-function createAppsFromManifest(manifest) {
+function createWebAppsFromManifest(manifest) {
   api.syncToCollection(manifest, uiGlobals.myApps, function(app) {
     return app.isWebLinkApp() && app.isBuiltinTile();
   });
 }
 
 module.exports = WebLinkApp;
-module.exports.createWebLinkApps = createWebLinkApps;
+module.exports.createWebAppsFromManifest = createWebAppsFromManifest;
