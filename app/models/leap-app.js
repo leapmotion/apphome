@@ -31,6 +31,12 @@ var LeapAppStates = enumerable.make([
   'Uninstalled'
 ], 'LeapAppStates');
 
+var LeapAppTypes = enumerable.make([
+  'StoreApp',
+  'WebApp',
+  'LocalApp'
+], 'LeapAppTypes');
+
 var LeapApp = BaseModel.extend({
   initialize: function() {
     var state = this.get('state');
@@ -355,6 +361,7 @@ var LeapApp = BaseModel.extend({
 });
 
 LeapApp.States = LeapAppStates;
+LeapApp.Types = LeapAppTypes;
 
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');

@@ -9,6 +9,8 @@ registry = require("./registry.js")
 semver = require("./semver.js")
 shell = require("./shell.js")
 
+LeapApp = require('../models/leap-app.js')
+
 FsScanner = (allowedApps) ->
   if Array.isArray(allowedApps)
     @_allowedApps = {}
@@ -22,7 +24,9 @@ FsScanner:: =
     cleanData = (err, appJsonList) ->
       cb?(err)  if err
       appJsonList = _.uniq _(appJsonList).compact()
-      (appJson.cleaned = true) for appJson in appJsonList
+      for appJson in appJsonList
+        appJson.cleaned = true
+        appJson.appType = LeapApp.Types.LocalApp
       cb?(null, appJsonList)
 
     try

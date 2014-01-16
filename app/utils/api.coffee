@@ -37,6 +37,7 @@ cleanAppJson = (appJson) ->
     id: appJson.app_id
     appId: appJson.app_id
     versionId: appJson.id
+    appType: appJson.appType
     name: appJson.name
     platform: ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
     iconUrl: appJson.icon_url
@@ -165,8 +166,14 @@ getNonStoreManifest = ->
   httpHelper.getJson(config.NonStoreAppManifestUrl).then (manifest) ->
     manifest.local = manifest[NodePlatformToServerPlatform[os.platform()]] or []
 
-    (appJson.cleaned = true) for appJson in manifest.web
-    (appJson.cleaned = true) for appJson in manifest.local
+    for appJson in manifest.web
+      appJson.cleaned = true
+      appJson.appType = LeapApp.Types.WebApp
+
+    for appJson in manifest.local
+      appJson.cleaned = true
+      appJson.appType = LeapApp.Types.LocalApp
+
     manifest
   , (reason) ->
     console.warn "Failed to get app manifest (retrying): " + err and err.stack
@@ -213,6 +220,7 @@ getAppJson = (appId) ->
 
     console.log "Getting app details via url: " + url
     httpHelper.getJson(url).then (appJson) ->
+      appJson.appType = LeapApp.Types.StoreApp
       cleanAppJson appJson
 
 sendDeviceData = ->

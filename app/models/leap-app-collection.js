@@ -28,24 +28,28 @@ module.exports = window.Backbone.Collection.extend({
     //console.info('Building leapApp model from attribs ' + JSON.stringify(appJson));
     var app;
 
-    if (appJson.urlToLaunch) {
-      app = new WebLinkApp(appJson, options);
-    } else if (appJson.appId) {
-      app = new StoreLeapApp(appJson, options);
-    } else if (appJson.name) {
-      app = new LocalLeapApp(appJson, options);
+    switch (appJson.appType) {
+      case LeapApp.Types.WebApp:
+        app = new WebLinkApp(appJson, options);
+        break;
+      case LeapApp.Types.StoreApp:
+        app = new StoreLeapApp(appJson, options);
+        break;
+      case LeapApp.Types.LocalApp:
+        app = new LocalLeapApp(appJson, options);
+        break;
     }
 
-    app.on('invalid', function(model, error) {
-      console.warn('Invalid appJson', JSON.stringify(appJson, null, 2), error);
-    });
-
     if (app) {
+      app.on('invalid', function(model, error) {
+        console.warn('Invalid appJson', JSON.stringify(appJson, null, 2), error);
+      });
+
       console.log('Created', app.className, app.get('id') + ':', app.get('name'));
       return app;
     } else {
       console.error('unknown app type: ' + JSON.stringify(appJson, null, 2));
-      return {'validationError': 'unknown app type: ' + JSON.stringify(appJson, null, 2)};
+      return false;
     }
   },
 

@@ -49,6 +49,25 @@ Migrations = [
 
     db.saveObj config.DbKeys.InstalledApps, myAppsJson
     db.saveObj config.DbKeys.UninstalledApps, uninstalledAppsJson
+
+  v3_to_v4 = ->
+    setAppType = (appJson) ->
+      if appJson.urlToLaunch
+        appJson.appType = LeapApp.Types.WebApp
+      else if appJson.appId
+        appJson.appType = LeapApp.Types.StoreApp
+      else if appJson.name
+        appJson.appType = LeapApp.Types.LocalApp
+
+    myAppsJson = db.fetchObj config.DbKeys.InstalledApps
+    uninstalledAppsJson = db.fetchObj config.DbKeys.UninstalledApps
+
+    setAppType appJson for appJson in myAppsJson
+    setAppType appJson for appJson in uninstalledAppsJson
+
+    db.saveObj config.DbKeys.InstalledApps, myAppsJson
+    db.saveObj config.DbKeys.UninstalledApps, uninstalledAppsJson
+
 ]
 
 # Migrate database to latest version
