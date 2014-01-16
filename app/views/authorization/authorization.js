@@ -38,7 +38,8 @@ module.exports = BaseView.extend({
     new Spinner({ color: '#8c8c8c', width: 3, left: 186 }).spin(this.$waiting.find('.spinner-holder')[0]);
   },
 
-  authorize: function(cb) {
+  authorize: function(cb, newUser) {
+    this._newUser = newUser;
     this.$el.appendTo('body');
     this.$el.toggleClass('first-run', uiGlobals.isFirstRun);
 
@@ -227,7 +228,7 @@ module.exports = BaseView.extend({
       $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
     }
 
-    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && !isShowingSignUpForm) {
+    if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm && this._newUser) {
       iframeWindow.location = signUpUrl;
       this._hasRedirectedToSignUp = true;
     } else {
