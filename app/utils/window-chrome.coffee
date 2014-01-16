@@ -139,6 +139,7 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
     nwworkingdir = db.fetchObj(config.DbKeys.AppInstallDir) or path.join.apply(null, config.PlatformAppDirs[os.platform()])
     console.log "Current install directory: " + nwworkingdir
     createFileInput nwworkingdir
+
   $("input#installLocation").change ->
     newAppDir = $(this).val()
 
@@ -146,7 +147,6 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
       console.log "Reported a blank new install location.  Not moving anything."
       return
 
-    console.log newAppDir
     installLocationInput = $("input#installLocation")
     installLocationInput.remove()
 

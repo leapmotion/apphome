@@ -182,7 +182,6 @@
         console.log("Reported a blank new install location.  Not moving anything.");
         return;
       }
-      console.log(newAppDir);
       installLocationInput = $("input#installLocation");
       installLocationInput.remove();
       rebuildMenuBar(true, true);
