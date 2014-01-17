@@ -169,8 +169,8 @@ msgstr "password dimenticata?"
 msgid "invalid email or password."
 msgstr "e-mail o password non valida."
 
-msgid "account email address"
-msgstr "indirizzo e-mail account"
+msgid "account email"
+msgstr "e-mail account"
 
 msgid "please enter an email address."
 msgstr "inserisci un indirizzo e-mail."
@@ -349,8 +349,8 @@ msgstr "orientation bloccato. verificare che siano installati i driver per sched
 msgid "error report"
 msgstr "report errori"
 
-msgid "last time, the leap motion core services or one of its associated programs crashed. please send us this error report to help improve the software."
-msgstr "l'ultima volta, leap motion core services o uno dei programmi associati si sono bloccati. inviare il report errori per consentirci di ottimizzare il software."
+msgid "last time, the leap motion services or one of its associated programs crashed. please send us this error report to help improve the software."
+msgstr "l'ultima volta, leap motion services o uno dei programmi associati si sono bloccati. inviare il report errori per consentirci di ottimizzare il software."
 
 msgid "send error report"
 msgstr "invia report errori"
@@ -526,6 +526,12 @@ msgstr "spostamento in corso..."
 msgid "launch tutorial..."
 msgstr "avvia tutorial..."
 
+msgid "notifications"
+msgstr "Notifiche"
+
+msgid "no notifications to display"
+msgstr "Nessuna notifica da mostrare"
+
 msgid "username is too long (maximum is 16 characters)"
 msgstr "nome utente è troppo lungo (al massimo 16 caratteri)"
 
@@ -537,9 +543,3 @@ msgstr "per creare un account leap motion, devi rispettare determinati requisiti
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes.\n"
 msgstr "riceverai una e-mail con le istruzioni su come ripristinare la password entro alcuni minuti.\n"
-
-msgid "notifications"
-msgstr "Notifiche"
-
-msgid "no notifications to display"
-msgstr "Nessuna notifica da mostrare"
