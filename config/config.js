@@ -103,7 +103,7 @@ var config = {
   CrashReportingDirs: {
     win32:  'C:\\Users\\All Users\\Leap Motion',
     darwin: process.env.HOME + '/Library/Application Support/Leap Motion',
-    linux:  process.env.HOME + '/.config/Leap Motion'
+    linux:  process.env.HOME + '/.Leap Motion'
   },
 
   UserHomeDirs: {
