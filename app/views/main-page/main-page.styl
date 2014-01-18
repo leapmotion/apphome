@@ -20,18 +20,23 @@
       width 407px
       margin 0 auto
 
-      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
         background-image url(static/images/airspace-logo@2x.png)
         background-size 407px 28px
-      }
 
-    #search-form
+      @media (max-width: 1200px)
+        float left
+        margin-left 28px
+
+    .page-utility
       color #4a4f59
       font-size 21px
-      padding-right 28px
+      right 40px
       position absolute
-      right 0
       top 0
+
+    #search-form
+      right 80px
 
       .icon-search
         cursor pointer

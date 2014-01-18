@@ -10,6 +10,7 @@ var LeapApp = require('../../models/leap-app.js');
 var BaseView = require('../base-view.js');
 var Carousel = require('../carousel/carousel.js');
 var TrashModalView = require('../trash-modal/trash-modal.js');
+var NotificationPane = require('../notificationPane/notificationPane.js');
 
 module.exports = BaseView.extend({
 
@@ -34,6 +35,7 @@ module.exports = BaseView.extend({
     this._initGetSupport();
     this._initTrash();
     this._initSearchField();
+    this._initNotifications();
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
@@ -211,6 +213,11 @@ module.exports = BaseView.extend({
         $search.focus();
       }
     });
+  },
+
+  _initNotifications: function() {
+    var notificationPane = new NotificationPane();
+    this.$('#notification-pane').append(notificationPane.$el);
   },
 
   _setupResizeBehavior: function() {

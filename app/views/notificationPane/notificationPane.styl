@@ -1,0 +1,68 @@
+#notification-pane
+  &:hover i
+    color #a1abc9
+
+  i:hover
+    cursor pointer
+
+  .count
+    z-index 100
+    position absolute
+    top 18px
+    left 12px
+    display inline-block
+    min-width 10px
+    padding 0 7px 3px
+    font-size 14px
+    line-height 1
+    color #fff
+    text-align center
+    white-space nowrap
+    vertical-align baseline
+    background-color red
+    border-radius 10px
+
+    &:hover
+      cursor pointer
+
+    &:empty
+      display none
+
+  .notifications
+    display none
+    position absolute
+    cursor default
+    right 0px
+    top 27px
+    background rgba(102, 102, 102, 0.9)
+    border-radius 6px
+    //text-shadow 1px 1px 2px rgba(0, 0, 0, 0.5)
+    color white
+    width 480px
+    -webkit-transform-origin 100% 0
+    box-shadow 0 0 5px black
+    z-index 100
+
+    &:after
+      content ''
+      height 10px
+      display block
+      width 100%
+      border-top 2px solid rgba(50, 50, 50, 0.5)
+
+      &:empty
+        display none
+
+    h3.title
+      font-size 21px
+      font-weight bold
+      padding 12px 20px
+      margin 0
+
+    .empty
+      text-align center
+      font-size 16px
+      font-weight normal
+      color #aaa
+      border-top 2px solid rgba(50, 50, 50, 0.5)
+      padding 10px 0

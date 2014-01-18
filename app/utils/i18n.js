@@ -119,6 +119,9 @@ function initialize(cb) {
     if (err) {
       return cb && cb(err);
     }
+
+    uiGlobals.locale = locale;
+
     var localeData;
     try {
       localeData = po2json.parseSync(poFileForLocale(locale));
