@@ -68,7 +68,9 @@ var config = {
     TempFilesNeedingDeletionKey: 'temp_files_needing_deletion',
     MixpanelDistinctId: 'MixpanelDistinctId',
     AppInstallDir: 'AppInstallDir',
-    EmbeddedLeapDevice: 'EmbeddedLeapDevice'
+    EmbeddedLeapDevice: 'EmbeddedLeapDevice',
+    ViewedNotifications: 'ViewedNotifications',
+    DismissedNotifications: 'DismissedNotifications'
   },
 
   PlatformDirs: {
@@ -101,7 +103,7 @@ var config = {
   CrashReportingDirs: {
     win32:  'C:\\Users\\All Users\\Leap Motion',
     darwin: process.env.HOME + '/Library/Application Support/Leap Motion',
-    linux:  process.env.HOME + '/.config/Leap Motion'
+    linux:  process.env.HOME + '/.Leap Motion'
   },
 
   UserHomeDirs: {

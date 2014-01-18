@@ -93,6 +93,9 @@ function copyFilesToDir(dir) {
     } else if (path.basename(fileToInclude).toLowerCase().indexOf("test") == -1) {
       console.log(fileToInclude);
       copyFileSync(fullPath, path.join(dir, fileToInclude));
+      if (fileToInclude.indexOf('bin/') == 0) {
+        fs.chmodSync(path.join(dir, fileToInclude), "777");
+      }
     }
   }
 }

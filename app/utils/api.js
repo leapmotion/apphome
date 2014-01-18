@@ -116,19 +116,6 @@ function handleAppJson(appJson) {
   return app;
 }
 
-function handleNotification(notificationJson) {
-  console.log('got notification', notificationJson);
-}
-
-function subscribeToUserNotifications(userId) {
-  pubnub.history(10, 'notification', function() {
-    handleNotification.apply(this, arguments);
-  });
-  pubnub.history(10, 'notification', function() {
-    handleNotification.apply(this, arguments);
-  });
-}
-
 function subscribeToUserChannel(userId) {
   pubnub.subscribe(userId + '.user.purchased', function() {
     // steal focus
@@ -182,8 +169,7 @@ function _setGlobalUserInformation(user) {
   uiGlobals.email = user.email;
   uiGlobals.user_id = user.user_id;
   subscribeToUserChannel(user.user_id);
-  subscribeToUserNotifications(user.user_id);
-  uiGlobals.trigger(uiGlobals.Event.SignIn);
+  uiGlobals.trigger(uiGlobals.Event.SignIn, user);
 }
 
 function getUserInformation(cb) {

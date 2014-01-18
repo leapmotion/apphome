@@ -525,3 +525,21 @@ msgstr "Desplazando..."
 
 msgid "launch tutorial..."
 msgstr "Iniciar el Tutorial..."
+
+msgid "notifications"
+msgstr "Notificaciones"
+
+msgid "no notifications to display"
+msgstr "No hay notificaciones para mostrar"
+
+msgid "username is too long (maximum is 16 characters)"
+msgstr "El nombre de usuario es demasiado largo (máximo 16 caracteres)"
+
+msgid "leap motion could not create your account."
+msgstr "Leap Motion no pudo crear tu cuenta."
+
+msgid "in order to have a leap motion account, you must meet certain age requirements.  to learn more about online child safety, visit the federal trade commission's website."
+msgstr "Para tener una cuenta de Leap Motion debe cumplir con ciertos requisitos de edad. Para obtener más información acerca de la seguridad infantil en línea, visite el sitio web de la Comisión Federal de Comercio de EE. UU."
+
+msgid "you will receive an email with instructions about how to reset your password in a few minutes."
+msgstr "Recibirás un correo electrónico con instrucciones sobre como reestablecer tu contraseña en solo unos minutos."
