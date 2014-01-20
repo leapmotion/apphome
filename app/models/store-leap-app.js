@@ -104,7 +104,6 @@ module.exports = LeapApp.extend({
   _downloadBinary: function(cb) {
     var _this = this;
     var binaryUrl = this.get('binaryUrl');
-    console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
 
     if (!url.parse(binaryUrl).protocol) {
       // Prebundled apps
