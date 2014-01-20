@@ -9,6 +9,12 @@ config = require "../../config/config.js"
 
 sharedLeapDir = config.PlatformLeapDataDirs[os.platform()]
 
+# In addition to the license, we also look for the lastauth file.
+# Lastauth contains information about the last leap device connected to the system
+# It is required to give the correct entitlements to Pongo and Hops users.
+# There are edge cases (around uninstalling and reinstalling on a Pongo) where a
+# license file is present and a lastauth file isn't, so we have to check for both.
+
 possibleLicenseNames = [
   /eulahash-.+\.md5/
   /license\.version/
