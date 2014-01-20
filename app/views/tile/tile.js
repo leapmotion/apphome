@@ -165,7 +165,7 @@ var Tile = BaseView.extend({
         leapApp: this.model,
         onConfirm: function() {
           downloadModal.remove();
-          installManager.enqueue(this.model, this._setupDragging.bind(this), true);
+          installManager.enqueue(this.model, this._setupDragging.bind(this));
         }.bind(this)
       });
       downloadModal.show();
@@ -179,7 +179,7 @@ var Tile = BaseView.extend({
       leapApp: this.model,
       onConfirm: function() {
         downloadModal.remove();
-        installManager.enqueue(this.model, null, true);
+        installManager.enqueue(this.model, null);
       }.bind(this),
       onLaunch: function() {
         downloadModal.remove();
