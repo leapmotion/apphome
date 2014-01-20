@@ -39,6 +39,18 @@ var SlideView = BaseView.extend({
     });
   },
 
+  remove: function() {
+    this.stopListening();
+
+    // Detach to keep data and event listeners on the tile.
+    this.tiles.forEach(function(tile) {
+      tile.$el.detach();
+    });
+
+    // Now that the slide is empty, remove it.
+    this.$el.remove();
+  },
+
   enable: function() {
     this.$el.removeClass('disabled');
   },
