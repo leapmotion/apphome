@@ -2,13 +2,13 @@ msgid "welcome"
 msgstr "환영합니다"
 
 msgid "welcome to a whole new world"
-msgstr "신 세계에 오신것을  환영합니다"
+msgstr "신세계에 오신것을  환영합니다"
 
 msgid "below are a few tips to get you started"
-msgstr "아래는 시작을 위한 팁입니다 "
+msgstr "아래는 시작을 위한 팁입니다"
 
 msgid "i agree to the leap motion %1$s"
-msgstr "leap motion %1$s에 동의합니다"
+msgstr "Leap Motion %1$s에 동의합니다"
 
 msgid "end user license agreement"
 msgstr "최종 사용자 라이센스 약관"
@@ -17,31 +17,31 @@ msgid "continue"
 msgstr "계속"
 
 msgid "airspace, the leap motion app store"
-msgstr "airspace, leap motion의 앱 스토어"
+msgstr "Airspace, Leap Motion의 앱 스토어"
 
 msgid "discover, download, and launch your leap motion apps from airspace - the first-ever place for first-ever apps."
-msgstr "예전엔 없었던 앱을 위한 최초의 앱스토어 airspace에서 leap motion 앱을 찾고, 다운로드 하여 시작합니다
+msgstr "예전엔 없었던 앱을 위한 최초의 앱스토어 Airspace에서 Leap Motion 앱을 찾고, 다운로드 하여 시작합니다."
 
 msgid "launch airspace"
-msgstr "airspace 시작"
+msgstr "Airspace 시작"
 
 msgid "leap motion end user software license agreement"
-msgstr "leap motion 최종 사용자 소프트웨어 라이션스 약관"
+msgstr "Leap Motion 최종 사용자 소프트웨어 라이션스 약관"
 
 msgid "continue with mouse only"
 msgstr "마우스로만 계속"
 
 msgid "find and launch your leap motion apps"
-msgstr "leap motion 앱을 검색하고 시작합니다"
+msgstr "Leap Motion 앱을 검색하고 시작합니다"
 
 msgid "sync purchases across devices"
-msgstr "구매는 디바이스를 거쳐서 동시에 이뤄집니다. "
+msgstr "구매는 디바이스를 거쳐서 동시에 이뤄집니다 "
 
 msgid "discover games, utilities, music, and more in our store!"
-msgstr "우리 앱스토어에서 게임, 유틸리티, 음악, 그리고 더 많은 것들을 찾아보세요"
+msgstr "우리 앱스토어에서 게임, 유틸리티, 음악, 그리고 더 많은 것들을 찾아보세요!"
 
 msgid "use the same login for purchases, support, and more!"
-msgstr "구매, 지원, 그 외에도   동일 로그인으로 합니다”
+msgstr "구매, 지원, 그 외에도 동일 로그인으로 합니다!”
 
 msgid "connecting to authentication server..."
 msgstr "인증서버에 연결중..."
@@ -53,10 +53,10 @@ msgid "signing you out..."
 msgstr "로그 아웃 중..."
 
 msgid "no internet connection"
-msgstr "인터넷이 연결되지않았습니다"
+msgstr "인터넷이 연결되지 않았습니다"
 
 msgid "please ensure your internet connection is working properly."
-msgstr "인터넷이 정상적으로 연결되었는지 확인하십시오"
+msgstr "인터넷이 정상적으로 연결되었는지 확인하십시오."
 
 msgid "no apps to display."
 msgstr "앱이 없습니다."
@@ -71,7 +71,7 @@ msgid "downloading..."
 msgstr "다운로드 중..."
 
 msgid "installing..."
-msgstr "설치중..."
+msgstr "설치 중..."
 
 msgid "opening..."
 msgstr "열리는 중..."
@@ -125,7 +125,7 @@ msgid "account"
 msgstr "계정"
 
 msgid "about airspace home"
-msgstr "airspace home소개"
+msgstr "Airspace 홈 소개"
 
 msgid "community forums..."
 msgstr "커뮤니티 포럼..."
@@ -137,7 +137,7 @@ msgid "get support..."
 msgstr "지원 받기..."
 
 msgid "airspace home"
-msgstr "airspace home"
+msgstr "Airspace 홈"
 
 msgid "help"
 msgstr "도움말"
@@ -149,10 +149,10 @@ msgid "store"
 msgstr "스토어"
 
 msgid "you need to sign in or sign up before continuing."
-msgstr "계속하려면 로그 인 또는 로그 아웃 해야합니다"
+msgstr "계속하려면 로그 인 또는 로그 아웃 해야합니다."
 
 msgid "account email"
-msgstr "계정 이메일 "
+msgstr "계정 이메일"
 
 msgid "password"
 msgstr "비밀번호"
@@ -173,7 +173,7 @@ msgid "account email address"
 msgstr "계정 이메일 주소"
 
 msgid "please enter an email address."
-msgstr "이메일을 입력하십시오"
+msgstr "이메일을 입력하십시오."
 
 msgid "email can't be blank"
 msgstr "이메일을 꼭 입력해야 합니다"
@@ -242,10 +242,10 @@ msgid "december"
 msgstr "12월"
 
 msgid "i agree to the airspace terms of service"
-msgstr "airspace 이용약관에 동의합니다."
+msgstr "Airspace 이용약관에 동의합니다"
 
 msgid "email me leap motion news and updates."
-msgstr "leap motion 뉴스와 업데이트를 이메일로 보내주세요"
+msgstr "Leap Motion 뉴스와 업데이트를 이메일로 보내주세요."
 
 msgid "sign in to an existing account"
 msgstr "기존 계정으로 로그인"
@@ -275,7 +275,7 @@ msgid "setting a password is required"
 msgstr "비밀번호 설정 필수입니다"
 
 msgid "your username contains invalid characters"
-msgstr "아이디에 잘 못된 글자가 있습니다 "
+msgstr "아이디에 잘못된 글자가 있습니다"
 
 msgid "a complete birthdate is required"
 msgstr "생년월일 글자 위치가 맞아야합니다"
@@ -284,10 +284,10 @@ msgid "password is too short (minimum is 6 characters)"
 msgstr "비밀번호가 짧습니다 (최소 6글자)"
 
 msgid "about airspace"
-msgstr "airspace소개"
+msgstr "Airspace소개"
 
 msgid "hide airspace"
-msgstr "airspace 숨기기"
+msgstr "Airspace 숨기기"
 
 msgid "hide others"
 msgstr "다른 것들 숨기기"
@@ -296,7 +296,7 @@ msgid "show all"
 msgstr "모두 보기"
 
 msgid "quit airspace"
-msgstr "airspace 나가기"
+msgstr "Airspace 나가기"
 
 msgid "edit"
 msgstr "편집"
@@ -305,7 +305,7 @@ msgid "undo"
 msgstr "되돌리기"
 
 msgid "redo"
-msgstr "다시실행”  ??
+msgstr "다시실행”
 
 msgid "cut"
 msgstr "잘라내기"
@@ -344,13 +344,13 @@ msgid "changes will take effect on relaunch"
 msgstr "재 시작 시 변경이 적용될 것입니다"
 
 msgid "orientation has crashed. please make sure you have the latest graphics drivers installed."
-msgstr "오리엔테이션이 비정상적으로 중단됩니다. 최신 그래픽스 드라이버가 설치되어 있는지 확인하십시오 "
+msgstr "오리엔테이션이 비정상적으로 중단됩니다. 최신 그래픽스 드라이버가 설치되어 있는지 확인하십시오."
 
 msgid "error report"
 msgstr "오류 보고"
 
 msgid "last time, the leap motion service or one of its associated programs crashed. please send us this error report to help improve the software."
-msgstr "지난번에 leap motion service 또는 관련 프로그램이 비정상적으로 중단 되었습니다. 소프트웨어를 개선하기 위하여 당사에게 오류 리포트를 보내주시기 바랍니다."
+msgstr "지난번에 Leap Motion Service 또는 관련 프로그램이 비정상적으로 중단 되었습니다. 소프트웨어를 개선하기 위하여 당사에 오류 리포트를 보내주시기 바랍니다."
 
 msgid "send error report"
 msgstr "오류 리포트 보내기"
@@ -359,7 +359,7 @@ msgid "don't send"
 msgstr "보내지 않음"
 
 msgid "airspace store"
-msgstr "airspace store"
+msgstr "Airspace 스토어"
 
 msgid "app store"
 msgstr "앱 스토어"
@@ -425,16 +425,16 @@ msgid "unarchive all"
 msgstr "전체 보관 안함"
 
 msgid "click to reinstall"
-msgstr "재 설치하려면 클릭"
+msgstr "재설치하려면 클릭"
 
 msgid "set install directory..."
-msgstr "설치 디랙토리 설정"
+msgstr "설치 디랙토리 설정..."
 
 msgid "i agree to the %1$s"
 msgstr "%1$s에 동의합니다"
 
 msgid "airspace terms of service"
-msgstr "airspace 이용 약관"
+msgstr "Airspace 이용 약관"
 
 msgid "day"
 msgstr "일"
@@ -455,25 +455,25 @@ msgid "why is this required?"
 msgstr "이 항목이 왜 필수입니까?"
 
 msgid "providing your birthday helps make sure you get the right leap motion experience for your age."
-msgstr "귀하 연령에 맞는 leap motion 경험을 위해 귀하의 생년월일을 알려주시면 도움이 되겠읍니다. "
+msgstr "귀하 연령에 맞는 Leap Motion 경험을 위해 귀하의 생년월일을 알려주시면 도움이 되겠습니다."
 
 msgid "don't worry. we will not share this information."
-msgstr "당사는 이 정보를 공유하지 않습니다. 염려하지 않아도됩니다."
+msgstr "당사는 이 정보를 공유하지 않습니다. 염려하지 않아도 됩니다."
 
 msgid "welcome to airspace home!"
-msgstr "airspace home에 오신것을 환영합니다!"
+msgstr "Airspace 홈에 오신 것을 환영합니다!"
 
 msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
-msgstr "이미 다운로드한 leap motion 립모션 앱들을 시작해보고,  앱스토어에서 새로운 앱들을 찾아보세요"
+msgstr "이미 다운로드한 Leap Motion 앱들을 시작해보고, 앱스토어에서 새로운 앱들을 찾아보세요."
 
 msgid "take a quick tour"
 msgstr "간단히 둘러보기"
 
 msgid "airspace"
-msgstr "airspace"
+msgstr "Airspace"
 
 msgid "the one place for all of your leap motion apps."
-msgstr "모든 leap motion앱들이 있는 유일한 장소"
+msgstr "모든 Leap Motion앱들이 있는 유일한 장소."
 
 msgid "sign up to continue"
 msgstr "계속하려면 로그인하십시오"
@@ -485,22 +485,22 @@ msgid "learn about the controller"
 msgstr "controller 배우기"
 
 msgid "reach out and experience what your device can do with the orientation app."
-msgstr "립모션으로 할 수 있는 경험이 어떤 것인지 오셔서 오리엔테이션 앱으로 해보세요.”
+msgstr "오리엔테이션 앱으로 립모션을 경험하세요.”
 
 msgid "launch orientation"
 msgstr "오리엔테이션 시작"
 
 msgid "try your new apps"
-msgstr "해보세요 새로운 앱을"
+msgstr "새로운 앱을 해보세요"
 
 msgid "we've set you up with some great apps for free to get you started. it's time to play, create, and explore."
-msgstr  귀하는 대단히 재미있는0 앱들을 셋업을 하였고, 이제는 더 비용 들이지 않고 즐기거나, 만들어보거나,  탐험하는 걸  해보시면 됩니다.
+msgstr "귀하는 대단히 재미있는 앱들을 무료로 셋업 하였습니다. 이제 즐기고, 만들고, 탐험할 차례입니다."
 
 msgid "discover new apps"
 msgstr "새로운 앱들을 찾아 보세요"
 
 msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
-msgstr "airspace store는 최신 게임과 창의적인 도구, 그 외에  많은 것을 브라우징하거나,  다운로드하는 곳입니다 "
+msgstr "Airspace 스토어는 최신 게임과 창의적인 도구, 그 외에 많은 것을 브라우징하거나,  다운로드하는 곳입니다."
 
 msgid "back"
 msgstr "이전"
@@ -512,19 +512,19 @@ msgid "done"
 msgstr "완료"
 
 msgid "reach out and experience what your controller can do."
-msgstr "립모션 컨트롤러로 뭘 할 수 있는지 만나보고 경험하세요"
+msgstr "립모션 컨트롤러로 뭘 할 수 있는지 만나보고 경험하세요."
 
 msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
-msgstr  "airspace store는 최신 게임과 창의적인 도구, 그 외에  많은 것을 브라우징하거나,  다운로드하는 곳입니다 "
+msgstr "Airspace 스토어는 최신 게임과 창의적인 도구, 그 외에 많은 것을 브라우징하거나, 다운로드하는 곳입니다."
 
 msgid "interact with the world in a whole new way."
-msgstr "전혀 새로운 방법으로 세계와 상호 작용"
+msgstr "전혀 새로운 방법으로 세계와 상호 작용."
 
 msgid "moving..."
 msgstr "이동 중..."
 
 msgid "launch tutorial..."
-msgstr "튜토리얼 실행..."
+msgstr "튜토리얼 시작..."
 
 msgid "notifications"
 msgstr "알림"
@@ -533,13 +533,13 @@ msgid "no notifications to display"
 msgstr "표시할 알림이 없습니다"
 
 msgid "username is too long (maximum is 16 characters)"
-msgstr "유저명이 너무 깁니다 (최대 16자)"
+msgstr "아이디가 너무 깁니다 (최대 16자)"
 
 msgid "leap motion could not create your account."
-msgstr "Leap Motion이 당신의 계정을 생성할 수 없습니다."
+msgstr "Leap Motion이 귀하의 계정을 생성할 수 없습니다."
 
 msgid "in order to have a leap motion account, you must meet certain age requirements.  to learn more about online child safety, visit the federal trade commission's website."
-msgstr "Leap Motion 계정을 생성하기 위해서는 특정 연령 조건을 충족해야 합니다. 어린이 안전에 관해 온라인으로 자세한 내용을 확인하려면, 미국 연방 거래위원회의 웹사이트를 방문하시기 바랍니다."
+msgstr "Leap Motion 계정을 만들려면 연령제한을 준수해야 합니다. 온라인 아동 안전에 대해 더 알고 싶으면 연방거래위원회 웹사이트를 방문하십시오."
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
-msgstr "몇 분 이내에 당신의 암호를 초기화할 안내 이메일을 받을 것입니다."
+msgstr "비밀번호 재설정 안내 이메일을 몇 분 후에 받으실 것입니다."
