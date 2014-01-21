@@ -70,8 +70,14 @@ var config = {
     AppInstallDir: 'AppInstallDir',
     EmbeddedLeapDevice: 'EmbeddedLeapDevice',
     ViewedNotifications: 'ViewedNotifications',
-    DismissedNotifications: 'DismissedNotifications'
+    DismissedNotifications: 'DismissedNotifications',
+    LabOptionStates: 'LabOptionStates',
   },
+
+  LabOptions: [
+    'Store Integration',
+    'App Moving'
+  ],
 
   PlatformDirs: {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',

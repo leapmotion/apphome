@@ -92,6 +92,13 @@ function getConfiguration(cb) {
 
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 
+  uiGlobals.labOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
+  config.LabOptions.forEach(function(option) {
+    if (!_.has(uiGlobals.labOptions, option)) {
+      uiGlobals.labOptions[option] = false;
+    }
+  });
+
   cb && cb(null);
 }
 
