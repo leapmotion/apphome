@@ -155,7 +155,7 @@ msgid "account email"
 msgstr "Konto-E-Mail"
 
 msgid "password"
-msgstr "Password"
+msgstr "Passwort"
 
 msgid "sign in"
 msgstr "Anmelden"
