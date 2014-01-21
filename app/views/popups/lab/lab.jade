@@ -1,9 +1,12 @@
 .instructions= instructions
 
-form(role=form)
-  each option, state in options
+form(role="form")
+  each option in options
     div.checkbox
       label
-        input(class=option, type="checkbox")= option
+        input(class=option[2], data-option=option[0], type="checkbox")
+        span= option[0]
+
+  input(type="submit", value=save_label)
 
 

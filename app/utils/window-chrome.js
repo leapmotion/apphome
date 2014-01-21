@@ -95,6 +95,12 @@ function rebuildMenuBar(enableLogOut, disableSetInstallDir) {
     },
     enabled: !disableSetInstallDir
   }));
+  accountMenu.append(new nwGui.MenuItem({
+    label: i18n.translate('Airspace Labs'),
+    click: function () {
+      popup.open('lab');
+    }
+  }));
   mainMenu.append(new nwGui.MenuItem({
     label: i18n.translate('Account'),
     submenu: accountMenu
