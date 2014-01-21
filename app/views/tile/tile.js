@@ -1,6 +1,5 @@
 var os = require('os');
 var Spinner = require('spin');
-var urlify = require('django-urlify');
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
@@ -57,7 +56,7 @@ var Tile = BaseView.extend({
     this.setElement(this.templateHtml({
       app:                  _.extend(this.model.toJSON(), {iconPath: this.iconPath, tilePath: this.tilePath}),
       store_app:            this.model.isStoreApp(),
-      app_slug:             urlify(this.model.get('name')),
+      app_slug:             this.model.get('slug'),
       short_description:    this.model.getShortDescription(),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),

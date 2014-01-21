@@ -6,6 +6,8 @@ var os = require('os');
 var path = require('path');
 var url = require('url');
 
+var urlify = require('django-urlify');
+
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
@@ -79,6 +81,11 @@ var LeapApp = BaseModel.extend({
         this.downloadTile();
       }
     }.bind(this));
+
+    this.set('slug', urlify(this.get('name')));
+    this.on('change:name', function() {
+      this.set('slug', urlify(this.get('name')));
+    });
 
     this.on('add', function() {
       if (this._shouldDownloadTile()) {
