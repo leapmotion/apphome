@@ -543,3 +543,6 @@ msgstr "您必须达到一定的年龄要求才可持有 Leap Motion 账号。�
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "几分钟后您会收到一封电子邮件，可按邮件中的说明重设密码。"
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "与其他用户交流，一起探讨项目、创意和你最喜爱的应用程序"

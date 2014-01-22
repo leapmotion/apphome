@@ -543,3 +543,6 @@ msgstr "Leap Motionのアカウントを作成するには、一定の年齢制�
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "パスワードのリセット方法をご案内するメールが、数分以内に届きます。"
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "他のユーザーとつながり、プロジェクトやアイデア、お気に入りのアプリについて話し合おう"

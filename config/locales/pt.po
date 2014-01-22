@@ -543,3 +543,6 @@ msgstr "Para ter uma conta da Leap Motion, você precisa satisfazer alguns requi
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "Em alguns minutos, você receberá um e-mail com instruções sobre como redefinir sua senha."
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "Conecte-se a outros usuários para discutir projetos, ideias, e seus aplicativos favoritos"

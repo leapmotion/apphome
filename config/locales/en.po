@@ -533,13 +533,16 @@ msgid "no notifications to display"
 msgstr "No notifications to display"
 
 msgid "username is too long (maximum is 16 characters)"
-msgid "Username is too long (maximum is 16 characters)"
+msgstr "Username is too long (maximum is 16 characters)"
 
 msgid "leap motion could not create your account."
-msgid "Leap Motion could not create your account."
+msgstr "Leap Motion could not create your account."
 
 msgid "in order to have a leap motion account, you must meet certain age requirements.  to learn more about online child safety, visit the federal trade commission's website."
-msgid "In order to have a Leap Motion account, you must meet certain age requirements.  To learn more about online child safety, visit the federal trade commission's website."
+msgstr "In order to have a Leap Motion account, you must meet certain age requirements.  To learn more about online child safety, visit the federal trade commission's website."
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
-msgid "You will receive an email with instructions about how to reset your password in a few minutes."
+msgstr "You will receive an email with instructions about how to reset your password in a few minutes."
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "Connect with other users to discuss projects, ideas, and your favorite apps"

@@ -543,3 +543,6 @@ msgstr "Leap Motion 계정을 만들려면 연령제한을 준수해야 합니�
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "비밀번호 재설정 안내 이메일을 몇 분 후에 받으실 것입니다."
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "다른 사용자들과 프로젝트, 아이디어, 좋아하는 앱에 대해 이야기해 보세요"

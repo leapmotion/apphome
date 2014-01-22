@@ -543,3 +543,6 @@ msgstr "Pour créer un compte Leap Motion, vous devez avoir l'âge requis. Pour 
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "Vous recevrez dans quelques minutes un e-mail vous expliquant comment réinitialiser votre mot de passe."
+
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "Connectez-vous avec d'autres utilisateurs pour discuter de projets, d'idées et de vos applis préférées"
