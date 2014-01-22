@@ -8,9 +8,7 @@ def lowercasePoFile(filename):
     newlines = []
 
     for l in lines:
-        print l
         if l.startswith('msgid'):
-            print l
             newlines.append(l.lower())
         else:
             newlines.append(l)
