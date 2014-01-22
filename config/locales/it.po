@@ -128,7 +128,7 @@ msgid "about airspace home"
 msgstr "informazioni su airspace home"
 
 msgid "community forums..."
-msgstr "forum community..."
+msgstr "Forum della Community..."
 
 msgid "get support"
 msgstr "assistenza"
