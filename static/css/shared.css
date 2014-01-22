@@ -12,10 +12,6 @@ body {
   position: fixed;
 }
 
-body.loading {
-  cursor: progress;
-}
-
 body * {
   user-select: none;
   -webkit-user-select: none;
