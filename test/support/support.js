@@ -10,6 +10,8 @@ var chaiAsPromised = require('chai-as-promised');
 var wd = require('wd');
 chai.use(chaiAsPromised).should();
 
+var asserters = wd.asserters;
+
 chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 function pollingDeferred(pollFn, checkFn, interval) {
@@ -107,14 +109,14 @@ function login(browser, email, password) {
           .click();
       }
     })
-    .waitForElementByTagName('form')
+    .waitForElementByTagName('form', asserters.isDisplayed)
     .elementById('user_email')
     .type(email)
     .elementById('user_password')
     .type(password)
     .elementByTagName('form')
     .submit()
-    .waitForElementByCssSelector('.tile.waiting');
+    .waitForElementByCss('.tile:nth-child(13)', asserters.isDisplayed, 5000);
 }
 
 module.exports.loadApp = loadApp;
