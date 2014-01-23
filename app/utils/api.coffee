@@ -181,7 +181,6 @@ _setGlobalUserInformation = (user) ->
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
   subscribeToUserChannel user.user_id
-  subscribeToUserNotifications user.user_id
   uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
