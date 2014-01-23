@@ -26,8 +26,8 @@ var NotificationPane = BaseView.extend({
 
     this.subscribeToNotifications();
 
-    uiGlobals.on(uiGlobals.Event.SignIn, function(user) {
-      this.subscribeToUserNotifications(user.user_id);
+    uiGlobals.on(uiGlobals.Event.SignIn, function() {
+      this.subscribeToUserNotifications(uiGlobals.user_id);
     }.bind(this));
   },
 

@@ -95,6 +95,9 @@ i18n = undefined
 initialize = (cb) ->
   getLocale (err, locale) ->
     return cb?(err)  if err
+
+    uiGlobals.locale = locale
+
     localeData = undefined
     try
       localeData = po2json.parseSync(poFileForLocale(locale))
@@ -111,7 +114,7 @@ initialize = (cb) ->
 
 translate = (str) ->
   if i18n
-    translation = i18n.translate($.trim(str.toLowerCase()))
+    translation = i18n.translate $.trim str.toLowerCase()
     translation.toString = translation.fetch
     translation
   else

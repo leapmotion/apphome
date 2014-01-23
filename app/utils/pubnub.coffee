@@ -58,25 +58,20 @@ subscribe = (channel, callback) ->
     return false
 
 history = (count, channel, callback) ->
-  unless pubnubSubscriptions[channel] # only allow one subscription per channel
-    pubnubSubscriptions[channel] = callback
-    pubnubDomain.run ->
-      pubnub.history
-        count: count
-        channel: channel
-        callback: (data) ->
+  pubnubDomain.run ->
+    pubnub.history
+      count: count
+      channel: channel
+      callback: (data) ->
+        unless data.length is 3
+          console.warn 'Improper message from PubNub history:', data
+        else
+          console.log 'History got:', JSON.stringify data
+
           try
-            callback data
+            callback.apply this, data
           catch err
             console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + data
-
-
-    return true
-  else
-    console.warn "Ignoring duplicate subscription on channel \"" + channel + "\"."
-    return false
-
-
 
 module.exports.domain = pubnubDomain
 module.exports.subscribe = subscribe

@@ -106,16 +106,6 @@ syncToCollection = (appJsonList, collection, appTest) ->
 
   do collection.save
 
-handleNotification = (notificationJson) ->
-  console.log "got notification", notificationJson
-
-subscribeToUserNotifications = (userId) ->
-  pubnub.history 10, "notification", ->
-    handleNotification.apply this, arguments
-
-  pubnub.history 10, "notification", ->
-    handleNotification.apply this, arguments
-
 subscribeToUserChannel = (userId) ->
   pubnub.subscribe userId + ".user.purchased", (appJson) ->
     # steal focus

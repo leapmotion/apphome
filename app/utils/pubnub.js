@@ -83,28 +83,26 @@
   };
 
   history = function(count, channel, callback) {
-    if (!pubnubSubscriptions[channel]) {
-      pubnubSubscriptions[channel] = callback;
-      pubnubDomain.run(function() {
-        return pubnub.history({
-          count: count,
-          channel: channel,
-          callback: function(data) {
-            var err;
+    return pubnubDomain.run(function() {
+      return pubnub.history({
+        count: count,
+        channel: channel,
+        callback: function(data) {
+          var err;
+          if (data.length !== 3) {
+            return console.warn('Improper message from PubNub history:', data);
+          } else {
+            console.log('History got:', JSON.stringify(data));
             try {
-              return callback(data);
+              return callback.apply(this, data);
             } catch (_error) {
               err = _error;
               return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + data);
             }
           }
-        });
+        }
       });
-      return true;
-    } else {
-      console.warn("Ignoring duplicate subscription on channel \"" + channel + "\".");
-      return false;
-    }
+    });
   };
 
   module.exports.domain = pubnubDomain;

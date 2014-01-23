@@ -133,6 +133,7 @@
       if (err) {
         return typeof cb === "function" ? cb(err) : void 0;
       }
+      uiGlobals.locale = locale;
       localeData = void 0;
       try {
         localeData = po2json.parseSync(poFileForLocale(locale));
