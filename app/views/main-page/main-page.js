@@ -30,6 +30,7 @@ module.exports = BaseView.extend({
       update_label: i18n.translate('Update All'),
       cancel_label: i18n.translate('Cancel All'),
     }));
+    this._initUiClearEvents();
     this._initCarousel();
     this._initDownloadControls();
     this._initGetSupport();
@@ -39,6 +40,31 @@ module.exports = BaseView.extend({
     this._setupResizeBehavior();
     $(window).resize();
     this.animateIn();
+  },
+
+  _initUiClearEvents: function() {
+    // Body click sets blur on search
+    // Need to route through tile in some cases
+    // and blur event fires before click :-(
+    $('body').keyup((function(evt) {
+      if (evt.which === 27) {
+        uiGlobals.trigger('clear-ui');
+      }
+    }).bind(this));
+
+    $('body').click(function(evt) {
+      if ($(evt.target).is('.tile')) {
+        setTimeout(function() {
+          uiGlobals.trigger('clear-ui');
+        }, 200);
+      } else {
+        uiGlobals.trigger('clear-ui');
+      }
+    });
+
+    uiGlobals.on('clear-ui', function() {
+      console.log('Clearing open ui widgets');
+    });
   },
 
   _initCarousel: function() {
@@ -157,29 +183,50 @@ module.exports = BaseView.extend({
 
   _initSearchField: function() {
     var $body = $('body');
+    var $search = this.$('#search');
 
     function clearSearch() {
       uiGlobals.trigger('search', '');
       $('#search-form').removeClass('active');
-      $('#search').val('');
-      $('#search').blur();
+      $search.val('');
+      $search.blur();
+    }
+
+    function showSearch() {
+      $('#search-form').addClass('active');
+      $search.focus();
+      console.log('Showing search form');
+    }
+
+    function toggleSearch() {
+      if ($('#search-form').hasClass('active')) {
+        clearSearch();
+      } else {
+        showSearch();
+      }
     }
 
     // Search filtering is initialized inside the carousel
     $body.keypress(function(evt) {
       if (!this.myAppsCarousel.isAnimating()) {
-        $('#search-form').addClass('active');
-        $('#search').focus();
+        showSearch();
       }
     }.bind(this));
 
-    // Body click sets blur on search
-    // Need to route through tile in some cases
-    // and blur event fires before click :-(
-    $body.keyup((function(evt) {
-      if (evt.which === 27) {
+    this.$('.icon-search').click(function(evt) {
+      console.log('Clicked on search icon');
+      toggleSearch();
+      evt.stopPropagation();
+    });
+
+    uiGlobals.on('clear-ui', function() {
+      if (($search.val() !== '') || ($search.parent().is('.active'))) {
         clearSearch();
-      } else if (evt.which === 13) {
+      }
+    });
+
+    $body.keyup((function(evt) {
+      if (evt.which === 13) {
         var visibleApps = this.myAppsCarousel.visibleApps();
         if (visibleApps.length === 1) {
           visibleApps[0].launch();
@@ -195,29 +242,17 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     $body.on('keyup', '#search', (function(evt) {
-      uiGlobals.trigger('search', $('#search').val());
+      uiGlobals.trigger('search', $search.val());
     }).bind(this));
-
-    $body.click(function(evt) {
-      var $target = $(evt.target);
-      var $search = $('#search');
-
-      if (!$target.is('.main-page') && !$target.is('.icon-search')) {
-        return;
-      }
-
-      if (($search.val() !== '') || ($search.parent().is('.active'))) {
-        clearSearch();
-      } else if ($target.is('.icon-search')) {
-        $('#search-form').addClass('active');
-        $search.focus();
-      }
-    });
   },
 
   _initNotifications: function() {
     var notificationPane = new NotificationPane();
     this.$('#notification-pane').append(notificationPane.$el);
+
+    uiGlobals.on('clear-ui', function() {
+      notificationPane.hide();
+    });
   },
 
   _setupResizeBehavior: function() {
@@ -230,7 +265,7 @@ module.exports = BaseView.extend({
     }.bind(this));
   },
 
-  animateIn: function(){
+  animateIn: function() {
     this.$('#header').delay(800).switchClass('initial', 'loaded', 250, 'easeInOutQuad');
 
     // hide().show() is fixing a ui bug where the top border would display across 2 pixels because of bad animation

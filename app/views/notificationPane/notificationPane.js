@@ -22,7 +22,10 @@ var NotificationPane = BaseView.extend({
       no_notifications: i18n.translate('No notifications to display')
     }));
 
-    this.$('.notification-trigger').click(this.toggle.bind(this));
+    this.$('.notification-trigger').click(function(evt) {
+      this.toggle();
+      evt.stopPropagation();
+    }.bind(this));
 
     this.subscribeToNotifications();
 
@@ -33,10 +36,14 @@ var NotificationPane = BaseView.extend({
 
   toggle: function() {
     if (this.$('.notifications').is(':visible')) {
-      this.$('.notifications').hide();
+      this.hide();
     } else {
       this.show();
     }
+  },
+
+  hide: function() {
+    this.$('.notifications').hide();
   },
 
   show: function() {
