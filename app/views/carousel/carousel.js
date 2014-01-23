@@ -3,6 +3,7 @@ var i18n = require('../../utils/i18n.js');
 
 var BaseView = require('../base-view.js');
 var Slide = require('../slide/slide.js');
+var Tile = require('../tile/tile.js');
 var THREE = window.THREE;
 var LeapApp = require('../../models/leap-app.js');
 
@@ -11,23 +12,21 @@ var CarouselView = BaseView.extend({
 
   className: 'carousel',
 
-  options: config.Layout,
-
-  initialize: function() {
-    var opts = this.options;
-    this.collection = opts.collection;
+  initialize: function(options) {
+    this.position = options.position;
 
     this.injectCss();
     this.$el.append(this.templateHtml());
 
-    this._tilesPerSlide = opts.columnsPerSlide * opts.rowsPerSlide;
+    this._tilesPerSlide = config.Layout.columnsPerSlide * config.Layout.rowsPerSlide;
     this._currentSlideIndex = 0;
     this._currentPosition = 0;
     this._animating = false;
     this._slides = [];
+    this._allTiles = {};
 
     var $emptyMessage = this.$('.empty-message');
-    $emptyMessage.text(opts.emptyMessage || i18n.translate('No apps to display.'));
+    $emptyMessage.text(options.emptyMessage || i18n.translate('No apps to display.'));
     $emptyMessage.height(config.Layout.emptyMessageHeight);
 
     this._updateSlides();
@@ -42,14 +41,14 @@ var CarouselView = BaseView.extend({
       this.prev();
     }.bind(this)));
 
-    uiGlobals.on('search', _.debounce((function(searchString) {
+    uiGlobals.on('search', function(searchString) {
       if (!this._animating) {
         this._searchString = $.trim(searchString).toLowerCase();
         this._updateSlides(true);
         this._updateEmptyState();
         this._updateSlideIndicator();
       }
-    }).bind(this)));
+    }.bind(this));
 
     this._initAddRemoveRepainting();
 
@@ -102,21 +101,21 @@ var CarouselView = BaseView.extend({
 
   _initAddRemoveRepainting: function() {
     var collection = this.collection;
-    this.listenTo(collection, 'add', function() {
+    this.listenTo(collection, 'add', function(app) {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-    }, this);
+    }.bind(this));
 
-    this.listenTo(collection, 'remove', function() {
+    this.listenTo(collection, 'remove', function(app) {
       this._updateSlides();
       this._updateEmptyState();
       this._updateSlideIndicator();
-    }, this);
+    }.bind(this));
 
     this.listenTo(collection, 'sort', function() {
       this._updateSlides();
-    }, this);
+    }.bind(this));
 
     this.listenTo(collection, 'change:state', function(leapApp) {
       if (!uiGlobals.inTutorial && leapApp.get('state') === LeapApp.States.Connecting ||
@@ -184,8 +183,12 @@ var CarouselView = BaseView.extend({
 
       var leapApps = this._getSlideModels(i);
       leapApps.forEach(function(leapApp) {
-        slideView.addTile({ leapApp: leapApp });
-      });
+        if (!_.has(this._allTiles, leapApp.get('id'))) {
+          this._allTiles[leapApp.get('id')] = new Tile({model: leapApp});
+        }
+
+        slideView.addTile(this._allTiles[leapApp.get('id')]);
+      }.bind(this));
     }
 
     this._positionSlides();
@@ -307,7 +310,7 @@ var CarouselView = BaseView.extend({
   },
 
   position: function() {
-    return this.options.position;
+    return this.position;
   },
 
   setTop: function(top) {

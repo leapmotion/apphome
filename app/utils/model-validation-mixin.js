@@ -6,7 +6,7 @@ var fs = require('fs');
 
 module.exports = function(properties, config) {
   if (config){
-      properties.validate = _validate(config);
+    properties.validate = _validate(config);
   } else if (properties.hasOwnProperty('validationConfig')) {
     properties.validate = _validate(properties.validationConfig);
 

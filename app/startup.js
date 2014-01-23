@@ -3,6 +3,8 @@ var exec = require('child_process').exec;
 var os = require('os');
 var path = require('path');
 
+var Q = require('q');
+
 var api = require('./utils/api.js');
 var authorizationUtil = require('./utils/authorization-util.js');
 var config = require('../config/config.js');
@@ -24,16 +26,7 @@ var workingFile = require('./utils/working-file.js');
 var FirstRun = require('./views/popups/first-run/first-run.js');
 var LeapApp = require('./models/leap-app.js');
 var LocalLeapApp = require('./models/local-leap-app.js');
-
-function wrappedSetTimeout(task, ms) {
-  setTimeout(function() {
-    try {
-      task();
-    } catch (err) {
-      console.error('Asynchronous task failed: ' + (err.stack || err));
-    }
-  }, ms);
-}
+var WebLinkApp = require('./models/web-link-app.js');
 
 function run() {
   var steps = [
@@ -45,7 +38,6 @@ function run() {
     prerunAsyncKickoff,
     setupMainWindow,
     doFirstRun,
-    handleLocalTiles,
     authorize,
     startMainApp,
     cleanup
@@ -139,7 +131,6 @@ function ensureWorkingDirs(cb) {
 
 function migrateDatabase(cb) {
   migrations.migrate();
-
   cb && cb(null);
 }
 
@@ -152,7 +143,12 @@ function prerunAsyncKickoff(cb) {
   // Creates manifest promise for future use
   // manifest is fetched from config.NonStoreAppManifestUrl
   // Contains information on Store, Orientation, Google Earth, etc.
-  LocalLeapApp.localManifestPromise();
+  api.getNonStoreManifest().then(function(manifest) {
+    WebLinkApp.createWebAppsFromManifest(manifest.web);
+    LocalLeapApp.createLocalAppsFromManifest(manifest.local);
+  }, function(reason) {
+    console.warn('Failed to get non-store manifest', reason);
+  }).done();
 
   // Creates manifest promise for future use
   // Manifest is fetched by unzipping the prebundled apps
@@ -184,25 +180,6 @@ function doFirstRun(cb) {
   }
 }
 
-function handleLocalTiles(cb) {
-  LocalLeapApp.localManifestPromise().done(function(manifest) {
-    if (manifest) {
-      // Fire this fast, so the Orientation tile shows up at the top of the list.
-      LocalLeapApp.explicitPathAppScan(manifest);
-
-      // This is less urgent; give other bootstrap tasks a chance to complete.
-      wrappedSetTimeout(function() {
-        setInterval(function() {
-          LocalLeapApp.localAppScan(manifest);
-        }, config.FsScanIntervalMs);
-      }, config.FsScanIntervalMs);
-    } else {
-      console.warn('Local manifest missing, skipping local tiles.');
-    }
-  });
-  cb && cb(null);
-}
-
 function authorize(cb) {
   authorizationUtil.withAuthorization(function(err) {
     if (err) {
@@ -224,45 +201,36 @@ function startMainApp(cb) {
   }
 
   // Completely install our prebundled apps before connecting to the store server
+  var p;
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
-    async.series([
-      handlePrebundledApps,
-      api.sendDeviceData,
-    ], function(err) {
-      if (err) { cb && cb(err); }
-      api.connectToStoreServer();
-    });
+    p = handlePrebundledApps()
+      .then(api.sendDeviceData)
+      .then(api.connectToStoreServer);
   } else {
-    api.connectToStoreServer();
+    p = Q(api.connectToStoreServer())
+      .then(api.sendDeviceData);
   }
 
-  cb && cb(null);
+  p.nodeify(cb);
+
+  p.then(api.sendAppVersionData);
 }
 
-function handlePrebundledApps(cb) {
-  console.log('Installing pre-bundled apps');
-  if (uiGlobals.embeddedDevice) {
-    frozenApps.prebundledManifestPromise().done(function(manifest) {
-      if (manifest) {
-        api.parsePrebundledManifest(manifest, cb);
-      } else {
-        console.warn('Prebundled manifest missing, skipping prebundled apps.');
-      }
-    });
-
-    frozenApps.prebundledManifestPromise().fail(function(err) {
-      console.log('Skipping prebundled apps: ' + err);
-      cb && cb(null);
-    });
-  }
+function handlePrebundledApps() {
+  return frozenApps.prebundledManifestPromise().then(function(manifest) {
+    if (manifest) {
+      return Q.nfcall(api.parsePrebundledManifest, manifest);
+    } else {
+      console.warn('Prebundled manifest missing, skipping prebundled apps.');
+    }
+  }, function(reason) {
+    console.log('Skipping prebundled apps: ' + reason);
+  });
 }
 
 function cleanup(cb) {
   crashCounter.reset();
   db.setItem(config.DbKeys.AlreadyDidFirstRun, true);
-
-  api.sendAppVersionData();
-
   cb && cb(null);
 }
 

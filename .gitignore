@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 *.log
+*.map
 homebase-sublime.json
 build/
 /node_modules

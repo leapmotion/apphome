@@ -12,6 +12,7 @@ var SlideView = BaseView.extend({
     args = args || {};
     this.injectCss();
     this.$el.append(this.templateHtml());
+    this.tiles = [];
 
     this.$el.width(config.Layout.slideWidth);
     this.$el.height(config.Layout.slideHeight);
@@ -26,17 +27,9 @@ var SlideView = BaseView.extend({
     }
   },
 
-  addTile: function(args) {
-    var view = new Tile(args);
-    this.$el.append(view.$el);
-  },
-
-  removeTileById: function(tileId) {
-    this._existingTileById(tileId).remove();
-  },
-
-  _existingTileById: function(tileId) {
-    return this.$('.tile[tile_id=' + tileId + ']');
+  addTile: function(tile) {
+    this.tiles.push(tile);
+    this.$el.append(tile.$el);
   },
 
   position: function(left, top) {
@@ -44,6 +37,18 @@ var SlideView = BaseView.extend({
       left: left,
       top: top
     });
+  },
+
+  remove: function() {
+    this.stopListening();
+
+    // Detach to keep data and event listeners on the tile.
+    this.tiles.forEach(function(tile) {
+      tile.$el.detach();
+    });
+
+    // Now that the slide is empty, remove it.
+    this.$el.remove();
   },
 
   enable: function() {

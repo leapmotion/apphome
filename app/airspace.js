@@ -17,7 +17,7 @@ process.on('uncaughtException', function(err) {
     return;
   }
 
-  console.error('Uncaught exception: ' + (err.stack || err));
+  console.error('Uncaught exception: ' + (err.stack || JSON.stringify(err)));
   installManager.cancelAll();
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 

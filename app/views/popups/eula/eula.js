@@ -20,7 +20,9 @@ module.exports = BaseView.extend({
     y: 50
   },
 
-  initialize: function() {
+  initialize: function(options) {
+    _extend(this.options, options);
+
     // Kinda gross, but what the hell...
     var licenseDir = path.join(__dirname, '..', '..', '..', '..', 'static', 'licenses');
     var licenseFile = 'license-' + i18n.locale + '.html';

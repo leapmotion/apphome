@@ -30,7 +30,9 @@ module.exports = BaseView.extend({
 
   options: config.Layout,
 
-  initialize: function() {
+  initialize: function(options) {
+    _.extend(this.options, options);
+
     this.injectCss();
     this.$el.append(this.templateHtml({
       subheader_label:     i18n.translate('Welcome to a whole new world'),
@@ -50,13 +52,13 @@ module.exports = BaseView.extend({
       this.$activateImage.show();
       this._center();
 
-      eula.waitForLicense((function() {
+      eula.waitForLicense().then(function() {
         this._setupBindings();
 
         this.$activateImage.hide();
         this.$el.find('#actions').removeClass('disabled');
         this._center();
-      }).bind(this));
+      }.bind(this));
     } else {
       this._setupBindings();
     }
@@ -78,12 +80,13 @@ module.exports = BaseView.extend({
 
   _showAuth: function(newUser) {
     this.$el.remove();
+
+    var _this = this;
     this.authorizationView.authorize(function(err) {
       if (err) {
         console.warn('Error logging in: ' + err.stack || err);
       } else {
-        this.$el.remove();
-        this.options.onLoggedIn();
+        _this.options.onLoggedIn();
       }
     }.bind(this), newUser);
   },

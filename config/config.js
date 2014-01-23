@@ -4,30 +4,32 @@ var enumerable = require('../app/utils/enumerable.js');
 
 var AppsDir = 'AirspaceApps';
 var AppsUserDataDir = 'AirspaceApps';
+var CENTRAL = 'https://central.leapmotion.com/';
+var WAREHOUSE = 'https://warehouse.leapmotion.com/';
 
 var config = {
 
   oauth: {
-    endpoint: 'https://central.leapmotion.com/oauth/',
+    endpoint: CENTRAL + 'oauth/',
     client_id: '73fde9aa45ef818ecb137aeacd886253',
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
-    redirect_uri: 'https://central.leapmotion.com/',
-    log_out_url: 'https://central.leapmotion.com/users/sign_out',
+    redirect_uri: CENTRAL,
+    log_out_url: CENTRAL + 'users/sign_out',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
 
-  AppListingEndpoint: 'https://warehouse.leapmotion.com/api/apps/myapps',
-  AppDetailsEndpoint: 'https://warehouse.leapmotion.com/api/apps/:id/homebase/:platform',
+  AppListingEndpoint: WAREHOUSE + 'api/apps/myapps',
+  AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
 
-  AuthWithAccessTokenUrl: 'https://central.leapmotion.com/',
+  AuthWithAccessTokenUrl: CENTRAL,
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
   NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v2.json',
 
-  DeviceDataEndpoint: 'https://central.leapmotion.com/users/device',
+  DeviceDataEndpoint: CENTRAL + 'users/device',
 
-  AppVersionDataEndpoint: 'https://warehouse.leapmotion.com/api/v1/app_installations',
+  AppVersionDataEndpoint: WAREHOUSE + 'api/v1/app_installations',
 
   AppSubdir: {
     AppIcons: 'app_icons',
@@ -53,6 +55,8 @@ var config = {
   S3ConnectRetryMs: 10 * 1000, // 10 seconds
   FsScanIntervalMs: 5 * 1000, // 3 seconds
   AuthLoadTimeoutMs: 30 * 1000, // 30 seconds
+
+  DownloadChunkSize: 1024 * 1024 * 5, // 5 MB
 
   DbKeys: {
     AlreadyDidFirstRun: 'AlreadyDidFirstRun',

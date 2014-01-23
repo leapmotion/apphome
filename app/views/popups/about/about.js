@@ -14,7 +14,9 @@ module.exports = BaseView.extend({
     show: false
   },
 
-  initialize: function() {
+  initialize: function(options) {
+    _extend(this.options, options);
+
     this.injectCss();
     this.$el.append(this.templateHtml({
       appName: i18n.translate(uiGlobals.appName),

@@ -5,6 +5,9 @@ var mv = require('mv');
 var os = require('os');
 var path = require('path');
 
+var Q = require('q');
+var Qfs = require('q-io/fs');
+
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
@@ -19,6 +22,8 @@ var LeapApp = require('./leap-app.js');
 module.exports = LeapApp.extend({
 
   idAttribute: 'appId',
+
+  className: 'StoreLeapApp',
 
   initialize: function() {
     LeapApp.prototype.initialize.apply(this, arguments);
@@ -41,21 +46,17 @@ module.exports = LeapApp.extend({
       console.log('Upgrading: ' + this.get('name'));
 
       // update binary, tile, and icon urls from the new app version
-      this.set(this.get('availableUpdate').pick('binaryUrl', 'tileUrl', 'iconUrl'));
-
-      // refresh icon and tile
-      if (window.navigator.onLine) {
-        this.downloadIcon();
-        this.downloadTile();
-      }
+      // this automatically re-downloads the tile and icon
+      var updatedAppJson = this.get('availableUpdate');
+      this.set(_.pick(updatedAppJson, 'binaryUrl', 'tileUrl', 'iconUrl'));
 
       this._installFromServer(function(err) {
         if (!err) {
-          var newAppJson = this.get('availableUpdate').toJSON();
-          delete newAppJson.state;
-          console.log('Update to version ' + newAppJson.versionId + ' successful');
-          this.set(newAppJson);
+          delete updatedAppJson.state;
+          console.log('Update to version ' + updatedAppJson.versionId + ' successful');
+          this.set(updatedAppJson);
           this.set('availableUpdate', null);
+          this.save();
         }
         cb && cb(err);
       }.bind(this));
@@ -82,38 +83,33 @@ module.exports = LeapApp.extend({
     }.bind(this));
   },
 
-  _downloadBinary: function(cb) {
-    var binaryUrl = this.get('binaryUrl');
-    console.log('checking for a local binary', binaryUrl, url.parse(binaryUrl).protocol);
+  _extractPrebundledBinary: function() {
+    this.set('state', LeapApp.States.Installing);
+    var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
+    console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
 
-    var tempFilename;
-    function cleanupTempfileAndContinue(err) {
-      try {
-        if (tempFilename && fs.existsSync(tempFilename)) {
-          fs.removeSync(tempFilename);
-        }
-      } catch (e) {
-        console.error('Failed to cleanup StoreLeapApp temp binary' + (e.stack || e));
-        err = e;
-      }
-      cb && cb(err || null);
-    };
+    return extract.extractApp(tempFilename, this._appDir(), true).fail(function(reason) {
+      console.error(reason.stack || reason);
+    });
+  },
+
+  _cleanupTempFile: function(tempFilename) {
+    console.log("Cleaning up temp file", tempFilename);
+    return Qfs.removeTree(tempFilename).fail(function(reason) {
+      console.error('Failed to cleanup StoreLeapApp temp binary' + (reason.stack || reason));
+      throw reason;
+    });
+  },
+
+  _downloadBinary: function(cb) {
+    var _this = this;
+    var binaryUrl = this.get('binaryUrl');
 
     if (!url.parse(binaryUrl).protocol) {
       // Prebundled apps
-      this.set('state', LeapApp.States.Installing);
-      var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
-      console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
-
-      if (os.platform() === 'win32') {
-        extract.unzipApp(tempFilename, this._appDir(), true, cleanupTempfileAndContinue);
-      } else if (os.platform() === 'darwin') {
-        extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
-      } else {
-        return cb && cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-      }
+      return _extractPrebundledBinary().nodeify(cb);
     } else {
-      var downloadProgress;
+      var downloadStream;
 
       if (!window.navigator.onLine) {
         var error = new Error('No internet connection');
@@ -123,60 +119,40 @@ module.exports = LeapApp.extend({
 
       this.set('state', LeapApp.States.Connecting);
 
-      function cancelDownload() {
-        if (downloadProgress && downloadProgress.cancel()) {
-          this.off('cancel-download', cancelDownload);
-          downloadProgress.removeAllListeners();
-          downloadProgress = null;
-          this.set('noAutoInstall', true);
-          this._shouldCancelDownload = false;
-
-          var error = new Error('Download cancelled');
-          error.cancelled = true;
-          cb && cb(error);
-        } else {
-          this._shouldCancelDownload = true;
-        }
-      }
-
-      this.on('cancel-download', cancelDownload, this);
+      var canceller = Q.defer();
+      this.on('cancel-download', function() {
+        console.log('Cancelling download of', this.get('name'));
+        canceller.resolve();
+      });
 
       console.log('Downloading binary of ' + this.get('name') + ' from ' + binaryUrl);
-      oauth.getAccessToken(function(err, accessToken) {
-        if (err) {
-          return cb(err);
-        }
-        downloadProgress = httpHelper.getToDisk(binaryUrl, { accessToken: accessToken }, function(err, tempFilename) {
-          this.off('cancel-download');
+      return Q.nfcall(oauth.getAccessToken).then(function(accessToken) {
+        _this.set('state', LeapApp.States.Downloading);
+        var downloadPromise = httpHelper.getToDisk(binaryUrl, {
+          accessToken: accessToken,
+          canceller: canceller.promise
+        }).then(function(tempFilename) {
+          _this.set('state', LeapApp.States.Installing);
+          console.debug('Downloaded ' + _this.get('name') + ' to ' + tempFilename);
+          return extract.extractApp(tempFilename, _this._appDir(), false).then(function() {
+            return _this._cleanupTempFile(tempFilename);
+          });
+        },
+        undefined, // Pass through error handler
+        function(progress) {
+          _this.trigger('progress', progress);
+        });
 
-          if (err) {
-            return cb(err);
+        return downloadPromise.fail(function(reason) {
+          if (reason.cancelled) {
+            _this.set('noAutoInstall', true);
           }
-          this.set('state', LeapApp.States.Installing);
-          console.debug('Downloaded ' + this.get('name') + ' to ' + tempFilename);
 
-          if (os.platform() === 'win32') {
-            extract.unzipApp(tempFilename, this._appDir(), false, cleanupTempfileAndContinue);
-          } else if (os.platform() === 'darwin') {
-            extract.undmgApp(tempFilename, this._appDir(), cleanupTempfileAndContinue);
-          } else {
-            return cb(new Error("Don't know how to install apps on platform: " + os.platform()));
-          }
-        }.bind(this));
-
-        if (this._shouldCancelDownload) {
-          cancelDownload();
-        } else {
-          downloadProgress.on('progress', function(progress) {
-            if (this._shouldCancelDownload) {
-              cancelDownload();
-            } else {
-              this.set('state', LeapApp.States.Downloading);
-              this.trigger('progress', progress);
-            }
-          }.bind(this));
-        }
-      }.bind(this));
+          throw reason;
+        }).fin(function() {
+          _this.off('cancel-download');
+        });
+      }).nodeify(cb);
     }
   },
 
@@ -312,7 +288,6 @@ module.exports = LeapApp.extend({
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {
-      extract.chmodRecursiveSync(this._appDir());
       fs.removeSync(this._appDir());
     } catch(err) {
       // well, we're just gonna pretend we did
@@ -331,7 +306,6 @@ module.exports = LeapApp.extend({
   _finishUninstallation: function(deleteIconAndTile, deleteUserData, cb) {
     try {
       if (deleteUserData) {
-        extract.chmodRecursiveSync(this._userDataDir());
         fs.removeSync(this._userDataDir());
       }
 
@@ -358,11 +332,13 @@ module.exports = LeapApp.extend({
         // On reinstall, we will be downloading the new binary, etc
         // But since it won't register as an "update" we won't fetch new app details
         // So take the update we know about and push it into the app we're deleting.
-        var newAppJson = this.get('availableUpdate').toJSON();
+        var newAppJson = this.get('availableUpdate');
         delete newAppJson.state;
         this.set(newAppJson);
         this.set('availableUpdate', null);
       }
+
+      this.save();
 
       this.trigger('uninstall');
     }

@@ -5,6 +5,8 @@ var Mocha = require('mocha');
 var os = require('os');
 var path = require('path');
 
+var config = require('../config/config.js');
+
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'test';
 process.env.BOOTSTRAP_SCRIPT_PATH = path.join(__dirname, '..', 'test', 'support', 'pre-run.js');
 process.env.LEAPHOME_LOGIN_EMAIL = 'pbaumgart+test@leapmotion.com';
@@ -50,7 +52,7 @@ var PlatformChromeDriverPathSuffixes = {
 };
 
 function startSeleniumServer(cb) {
-  var chromeDriverPath = path.join(__dirname, '..', 'nw', 'node-webkit-v' + NodeWebkitVersion + '-' + PlatformChromeDriverPathSuffixes[os.platform()]);
+  var chromeDriverPath = path.join(config.PlatformLibrariesDir[os.platform()], 'node-webkit-v' + NodeWebkitVersion + '-' + PlatformChromeDriverPathSuffixes[os.platform()]);
   var seleniumJarPath = path.join(__dirname, '..', 'test', 'selenium-server.jar');
   var seleniumArgs = [ '-Dwebdriver.chrome.driver=' + chromeDriverPath ];
   var fullArgs = [ '-jar', seleniumJarPath ].concat(seleniumArgs);

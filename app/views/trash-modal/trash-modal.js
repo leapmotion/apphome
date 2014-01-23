@@ -13,7 +13,9 @@ module.exports = Modal.extend({
 
   className: 'trash-modal',
 
-  initialize: function() {
+  initialize: function(options) {
+    this.options = options;
+
     this.initializeModal();
 
     this.$el.append(this.templateHtml({
@@ -30,15 +32,18 @@ module.exports = Modal.extend({
 
     function reinstallApp(app) {
       // Need this to reset the binaryUrl
-      api.getAppDetails(app, function() {
+      api.getAppJson(app.get('appId')).then(function(appJson) {
+        app.set(appJson);
+        app.save();
+
         uiGlobals.myApps.add(app);
         installManager.enqueue(app);
-      });
+      }).done();
     }
 
     uninstalledApps.forEach((function(app) {
       var view = new TrashTileView({
-        leapApp: app,
+        model: app,
         onReinstall: (function() {
           this.remove();
           uiGlobals.uninstalledApps.remove(app);

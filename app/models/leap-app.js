@@ -6,6 +6,8 @@ var os = require('os');
 var path = require('path');
 var url = require('url');
 
+var urlify = require('django-urlify');
+
 var appData = require('../utils/app-data.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
@@ -30,6 +32,12 @@ var LeapAppStates = enumerable.make([
   'Uninstalling',
   'Uninstalled'
 ], 'LeapAppStates');
+
+var LeapAppTypes = enumerable.make([
+  'StoreApp',
+  'WebApp',
+  'LocalApp'
+], 'LeapAppTypes');
 
 var LeapApp = BaseModel.extend({
   initialize: function() {
@@ -56,10 +64,8 @@ var LeapApp = BaseModel.extend({
       var state = this.get('state');
       if (!this.get('installedAt') && state !== LeapApp.States.NotYetInstalled) {
         this.set('installedAt', (new Date()).getTime());
-        uiGlobals.myApps.sort();
       } else if (state === LeapApp.States.Uninstalled) {
         this.set('installedAt', null);
-        uiGlobals.myApps.sort();
       }
       this.save();
     }.bind(this));
@@ -76,17 +82,32 @@ var LeapApp = BaseModel.extend({
       }
     }.bind(this));
 
+    this.set('slug', urlify(this.get('name')));
+    this.on('change:name', function() {
+      this.set('slug', urlify(this.get('name')));
+    });
+
     this.on('add', function() {
       if (this._shouldDownloadTile()) {
-        this.downloadTile(function() {
-          if (this._shouldDownloadIcon()) {
-            this.downloadIcon();
-          }
-        }.bind(this));
-      } else if (this._shouldDownloadIcon()) {
+        this.downloadTile();
+      }
+
+      if (this._shouldDownloadIcon()) {
         this.downloadIcon();
       }
     }.bind(this));
+  },
+
+  validate: function(appJson) {
+    // Skip apps that haven't been cleaned yet
+    if (!appJson.cleaned) {
+      throw new Error("Skipping unclean appJson " + JSON.stringify(appJson));
+    }
+
+    // Skip apps that aren't valid for this platform
+    if (appJson.platform && appJson.platform !== os.platform()) {
+      throw new Error("Can only create apps for the current platform");
+    }
   },
 
   save: function() {
@@ -130,7 +151,9 @@ var LeapApp = BaseModel.extend({
   },
 
   isUninstallable: function() {
-    return this.get('state') === LeapApp.States.Ready && !this.isBuiltinTile();
+    return this.get('state') === LeapApp.States.Ready ||
+           this.get('state') === LeapApp.States.NotYetInstalled &&
+           !this.isBuiltinTile();
   },
 
   isInstallable: function() {
@@ -283,15 +306,14 @@ var LeapApp = BaseModel.extend({
         this._moveAssetToAppDataDir(sourcePath, destPath, pathAttrName, cb);
       } else {
         var tempPath = workingFile.newTempFilePath('png');
-        httpHelper.getToDisk(assetUrl, { destPath: tempPath }, function(err) {
-          if (!err) {
-            this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName, cb);
-          } else {
-            console.error(err.stack || err);
-            cb && cb(err);
-          }
-
-        }.bind(this));
+        httpHelper.getToDisk(assetUrl, { destPath: tempPath }).then(function(result) {
+          this._moveAssetToAppDataDir(tempPath, destPath, pathAttrName, cb);
+        }.bind(this), function(reason) {
+          console.error(err.stack || err);
+          cb && cb(err);
+        }).fail(function(reason) {
+          cb && cb(reason);
+        });
       }
     } else {
       cb && cb(new Error('Asset url is undefined.'));
@@ -319,10 +341,7 @@ var LeapApp = BaseModel.extend({
         console.err(err.stack || err);
         cb && cb(err);
       } else {
-        this.set(pathAttrName, destPath, {
-          silent: true
-        });
-        this.trigger('change:' + pathAttrName);
+        this.set(pathAttrName, destPath);
         this.save();
         cb && cb(null);
       }
@@ -350,6 +369,7 @@ var LeapApp = BaseModel.extend({
 });
 
 LeapApp.States = LeapAppStates;
+LeapApp.Types = LeapAppTypes;
 
 LeapApp.hydrateCachedModels = function() {
   console.log('Rehydrating leap apps from database');

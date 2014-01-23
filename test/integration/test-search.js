@@ -11,7 +11,6 @@ describe('search', function() {
       .then(function() {
         return support.login(browser);
       })
-      .elementById('cancel-all').click()
       .then(function() {
         done();
       });
@@ -31,8 +30,7 @@ describe('search', function() {
         .elementByCssSelector('#search').type('orientation')
         .elementsByCssSelector('.tile').then(function(elements) {
           elements.length.should.equal(1);
-          elements[0].text().should.eventually.equal('Orientation').and.notify(done);
-        });
+        }).then(done, done);
     });
 
     it('should accept a name with a leading upper-case character', function(done) {

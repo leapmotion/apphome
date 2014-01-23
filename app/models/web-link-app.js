@@ -9,6 +9,7 @@ var oauth = require('../utils/oauth.js');
 var LeapApp = require('./leap-app.js');
 
 var WebLinkApp = LeapApp.extend({
+  className: 'WebLinkApp',
 
   constructor: function(args) {
     args = args || {};
@@ -50,4 +51,11 @@ var WebLinkApp = LeapApp.extend({
 
 });
 
+function createWebAppsFromManifest(manifest) {
+  api.syncToCollection(manifest, uiGlobals.myApps, function(app) {
+    return app.isWebLinkApp() && app.isBuiltinTile();
+  });
+}
+
 module.exports = WebLinkApp;
+module.exports.createWebAppsFromManifest = createWebAppsFromManifest;
