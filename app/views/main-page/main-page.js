@@ -61,10 +61,6 @@ module.exports = BaseView.extend({
         uiGlobals.trigger('clear-ui');
       }
     });
-
-    uiGlobals.on('clear-ui', function() {
-      console.log('Clearing open ui widgets');
-    });
   },
 
   _initCarousel: function() {
@@ -195,7 +191,6 @@ module.exports = BaseView.extend({
     function showSearch() {
       $('#search-form').addClass('active');
       $search.focus();
-      console.log('Showing search form');
     }
 
     function toggleSearch() {
@@ -214,7 +209,6 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this.$('.icon-search').click(function(evt) {
-      console.log('Clicked on search icon');
       toggleSearch();
       evt.stopPropagation();
     });

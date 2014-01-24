@@ -66,7 +66,7 @@ history = (count, channel, callback) ->
         unless data.length is 3
           console.warn 'Improper message from PubNub history:', data
         else
-          console.log 'History got:', JSON.stringify data
+          console.log 'Found', data[0].length ' notifications in history.'
 
           try
             callback.apply this, data
