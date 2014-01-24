@@ -49,6 +49,9 @@ util.inherits(XHRDownloadStream, stream.Readable)
 
 XHRDownloadStream::_read = (size) ->
   chunkSize = @_chunkSize or size
+  if @_filesize > 0 and @_bytesSoFar is @_fileSize
+    return @push
+
   @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>
     if not data? and @_bytesSoFar isnt @_fileSize
       throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
@@ -78,8 +81,6 @@ XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
     if @status >= 200 and @status <= 299
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
       deferred.resolve new Buffer new window.Uint8Array @response
-    else if @status == 416
-      do deferred.resolve
     else
       deferred.reject new Error "Got status code: " + @status + " for chunk."
 

@@ -62,6 +62,9 @@
     var chunkSize,
       _this = this;
     chunkSize = this._chunkSize || size;
+    if (this._filesize > 0 && this._bytesSoFar === this._fileSize) {
+      return this.push;
+    }
     return this._downloadChunk(this._targetUrl, this._bytesSoFar, this._bytesSoFar + chunkSize).then(function(data) {
       if ((data == null) && _this._bytesSoFar !== _this._fileSize) {
         throw new Error("Expected file of size: " + filesize(_this._fileSize) + " but got: " + filesize(_this._bytesSoFar));
@@ -95,8 +98,6 @@
       nwGui.App.clearCache();
       if (this.status >= 200 && this.status <= 299) {
         return deferred.resolve(new Buffer(new window.Uint8Array(this.response)));
-      } else if (this.status === 416) {
-        return deferred.resolve();
       } else {
         return deferred.reject(new Error("Got status code: " + this.status + " for chunk."));
       }
