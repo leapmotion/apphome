@@ -28,7 +28,7 @@ module.exports = BaseView.extend({
 
     this.injectCss();
     this.$el.append(this.templateHtml({
-      instructions: i18n.translate("These are experimental features which may crash Airspace Home.  Enable at your own risk.  You will need to restart Airspace before your changes take effect."),
+      instructions: i18n.translate("These are experimental features which may crash Airspace Home. Enable at your own risk. You will need to restart Airspace before your changes take effect."),
       options: labOptions,
       save_label: i18n.translate('Save'),
     }));
