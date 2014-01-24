@@ -285,6 +285,10 @@
 
   sendDeviceData = function() {
     var authDataFile, dataDir;
+    if (uiGlobals.metricsDisabled) {
+      console.log("Would have sent device data if metrics were enabled.");
+      return Q();
+    }
     dataDir = config.PlatformLeapDataDirs[os.platform()];
     if (!dataDir) {
       console.error("Leap Motion data dir unknown for operating system: " + os.platform());
@@ -318,6 +322,10 @@
 
   sendAppVersionData = function() {
     var appVersionData, myAppsVersionData, uninstalledAppsVersionData;
+    if (uiGlobals.metricsDisabled) {
+      console.log("Would have sent app version data if metrics were enabled");
+      return Q();
+    }
     myAppsVersionData = uiGlobals.myApps.filter(function(app) {
       return app.isStoreApp();
     }).map(function(app) {

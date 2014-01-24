@@ -218,6 +218,10 @@ getAppJson = (appId) ->
       cleanAppJson appJson
 
 sendDeviceData = ->
+  if uiGlobals.metricsDisabled
+    console.log "Would have sent device data if metrics were enabled."
+    return Q()
+
   dataDir = config.PlatformLeapDataDirs[os.platform()]
   unless dataDir
     console.error "Leap Motion data dir unknown for operating system: " + os.platform()
@@ -248,6 +252,10 @@ sendDeviceData = ->
 
 
 sendAppVersionData = ->
+  if uiGlobals.metricsDisabled
+    console.log "Would have sent app version data if metrics were enabled"
+    return Q()
+
   myAppsVersionData = uiGlobals.myApps.filter((app) ->
     app.isStoreApp()
   ).map((app) ->
