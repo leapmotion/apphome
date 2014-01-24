@@ -543,3 +543,12 @@ msgstr "Para tener una cuenta de Leap Motion debe cumplir con ciertos requisitos
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "Recibirás un correo electrónico con instrucciones sobre como reestablecer tu contraseña en solo unos minutos."
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "Estas funciones son experimentales, por lo que pueden hacer colapsar a Airspace Home. Actívelas bajo su propia responsabilidad. Será necesario reiniciar Airspace para que las modificaciones tengan efecto."
+
+msgid "save"
+msgstr "Guardar"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"

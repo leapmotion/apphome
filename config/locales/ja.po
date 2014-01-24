@@ -543,3 +543,12 @@ msgstr "Leap Motionのアカウントを作成するには、一定の年齢制�
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "パスワードのリセット方法をご案内するメールが、数分以内に届きます。"
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "これらは実験的な機能であり、 Airspace Home がクラッシュする可能性があります。ご自分の責任において有効にしてください。変更を有効にするには Airspace を再起動する必要があります。"
+
+msgid "save"
+msgstr "保存"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"

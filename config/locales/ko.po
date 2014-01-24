@@ -543,3 +543,12 @@ msgstr "Leap Motion 계정을 생성하기 위해서는 특정 연령 조건을 
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "몇 분 이내에 당신의 암호를 초기화할 안내 이메일을 받을 것입니다."
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "본 사항은 시험 단계의 기능이므로 Airspace Home이 중단될 수 있습니다. 개인의 책임하에 실행하십시오. 변경 사항을 적용하려면 Airspace를 재시작해야 합니다."
+
+msgid "save"
+msgstr "저장하기"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"

@@ -543,3 +543,12 @@ msgstr "您必须达到一定的年龄要求才可持有 Leap Motion 账号。�
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "几分钟后您会收到一封电子邮件，可按邮件中的说明重设密码。"
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "这些是试验功能，可能会导致 Airspace Home 崩溃。您需要自行承担风险才能使用。您需要重新启动 Airspace 才能使更改生效。"
+
+msgid "save"
+msgstr "保存"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"

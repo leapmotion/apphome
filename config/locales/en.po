@@ -533,13 +533,22 @@ msgid "no notifications to display"
 msgstr "No notifications to display"
 
 msgid "username is too long (maximum is 16 characters)"
-msgid "Username is too long (maximum is 16 characters)"
+msgstr "Username is too long (maximum is 16 characters)"
 
 msgid "leap motion could not create your account."
-msgid "Leap Motion could not create your account."
+msgstr "Leap Motion could not create your account."
 
 msgid "in order to have a leap motion account, you must meet certain age requirements.  to learn more about online child safety, visit the federal trade commission's website."
-msgid "In order to have a Leap Motion account, you must meet certain age requirements.  To learn more about online child safety, visit the federal trade commission's website."
+msgstr "In order to have a Leap Motion account, you must meet certain age requirements.  To learn more about online child safety, visit the federal trade commission's website."
 
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
-msgid "You will receive an email with instructions about how to reset your password in a few minutes."
+msgstr "You will receive an email with instructions about how to reset your password in a few minutes."
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "These are experimental features which may crash Airspace Home. Enable at your own risk. You will need to restart Airspace before your changes take effect."
+
+msgid "save"
+msgstr "Save"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"
