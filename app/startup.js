@@ -102,10 +102,12 @@ function getConfiguration(cb) {
     }).done();
   }
 
-  uiGlobals.labOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
+  var currentOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
   config.LabOptions.forEach(function(option) {
     if (!_.has(uiGlobals.labOptions, option)) {
       uiGlobals.labOptions[option] = false;
+    } else {
+      uiGlobals.labOptions[option] = currentOptions[option];
     }
   });
 
