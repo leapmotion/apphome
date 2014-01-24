@@ -54,12 +54,16 @@
   getTrackFn = function(eventName, namespace) {
     return function(args) {
       if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
-        console.log("Tracking Mixpanel event: " + eventName);
-        namespace = namespace || uiGlobals.appName;
-        return window.mixpanel.track(namespace + " - " + eventName, _.extend({
-          version: uiGlobals.appVersion,
-          embeddedDevice: uiGlobals.embeddedDevice
-        }, args));
+        if (!uiGlobals.metricsDisabled) {
+          console.log("Tracking Mixpanel event: " + eventName);
+          namespace = namespace || uiGlobals.appName;
+          return window.mixpanel.track(namespace + " - " + eventName, _.extend({
+            version: uiGlobals.appVersion,
+            embeddedDevice: uiGlobals.embeddedDevice
+          }, args));
+        } else {
+          return console.log("Would have tracked Mixpanel event, but metrics are disabled.");
+        }
       } else {
         return console.log("Would have tracked Mixpanel event in a release build: " + eventName);
       }

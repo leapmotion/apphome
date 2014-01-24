@@ -37,12 +37,15 @@ initialize = (cb) ->
 getTrackFn = (eventName, namespace) ->
   (args) ->
     unless /^(development|test)$/.test(process.env.LEAPHOME_ENV)
-      console.log "Tracking Mixpanel event: " + eventName
-      namespace = namespace or uiGlobals.appName
-      window.mixpanel.track namespace + " - " + eventName, _.extend(
-        version: uiGlobals.appVersion
-        embeddedDevice: uiGlobals.embeddedDevice
-      , args)
+      unless uiGlobals.metricsDisabled
+        console.log "Tracking Mixpanel event: " + eventName
+        namespace = namespace or uiGlobals.appName
+        window.mixpanel.track namespace + " - " + eventName, _.extend(
+          version: uiGlobals.appVersion
+          embeddedDevice: uiGlobals.embeddedDevice
+        , args)
+      else
+        console.log "Would have tracked Mixpanel event, but metrics are disabled."
     else
       console.log "Would have tracked Mixpanel event in a release build: " + eventName
 

@@ -2,8 +2,10 @@ var async = require('async');
 var exec = require('child_process').exec;
 var os = require('os');
 var path = require('path');
+var fs = require('fs');
 
 var Q = require('q');
+var qfs = require('q-io/fs');
 
 var api = require('./utils/api.js');
 var authorizationUtil = require('./utils/authorization-util.js');
@@ -83,6 +85,22 @@ function getConfiguration(cb) {
   uiGlobals.embeddedDevice = embeddedLeap.getEmbeddedDevice();
 
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
+
+  var platformConfigFile = path.join(config.PlatformLeapDataDirs[os.platform()], 'config.json');
+  if (fs.existsSync(platformConfigFile)) {
+    qfs.read(platformConfigFile).then(function (contents) {
+      var config;
+      try {
+        config = JSON.parse(contents).configuration;
+      } catch (e) {
+        console.warn("Improperly configured platform config file.  Assuming metrics reporting enabled.");
+      }
+
+      if (config.metrics_enable === false) {
+        uiGlobals.metricsDisabled = true;
+      }
+    }).done();
+  }
 
   cb && cb(null);
 }
