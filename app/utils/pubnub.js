@@ -92,7 +92,7 @@
           if (data.length !== 3) {
             return console.warn('Improper message from PubNub history:', data);
           } else {
-            console.log('Found', data[0].length(' notifications in history.'));
+            console.log('Found', data[0].length, ' notifications in history.');
             try {
               return callback.apply(this, data);
             } catch (_error) {
