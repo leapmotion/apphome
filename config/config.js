@@ -75,8 +75,7 @@ var config = {
   },
 
   LabOptions: [
-    'Store Integration',
-    'App Moving'
+    // Put experimental features here
   ],
 
   PlatformDirs: {
