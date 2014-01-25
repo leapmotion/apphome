@@ -88,18 +88,17 @@ function getConfiguration(cb) {
 
   var platformConfigFile = path.join(config.PlatformLeapDataDirs[os.platform()], 'config.json');
   if (fs.existsSync(platformConfigFile)) {
-    qfs.read(platformConfigFile).then(function (contents) {
-      var config;
-      try {
-        config = JSON.parse(contents).configuration;
-      } catch (e) {
-        console.warn("Improperly configured platform config file.  Assuming metrics reporting enabled.");
-      }
+    var configuration;
+    try {
+      var contents = fs.readFileSync(platformConfigFile, {encoding: 'utf-8'});
+      configuration = JSON.parse(contents).configuration;
+    } catch (e) {
+      console.warn("Improperly configured platform config file.  Assuming metrics reporting enabled.");
+    }
 
-      if (config.metrics_enable === false) {
-        uiGlobals.metricsDisabled = true;
-      }
-    }).done();
+    if (configuration.metrics_enable === false) {
+      uiGlobals.metricsDisabled = true;
+    }
   }
 
   var currentOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
