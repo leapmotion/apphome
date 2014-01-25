@@ -78,9 +78,10 @@ var config = {
     LabOptionStates: 'LabOptionStates',
   },
 
-  LabOptions: [
+  LabOptions: {
+    'recent-launch-sort': 'Sort purchased apps by most-recently-launched first.'
     // Put experimental features here
-  ],
+  },
 
   PlatformDirs: {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',

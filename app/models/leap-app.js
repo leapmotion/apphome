@@ -123,13 +123,21 @@ var LeapApp = BaseModel.extend({
   },
 
   sortScore: function() {
-    return (this.isBuiltinTile() ?
-              'a_' + this.get('name') :
-              (this.get('lastLaunch') ?
-                'b_' + this.get('lastLaunch') :
-                (this.get('installedAt') ?
-                  'c_' + this.get('installedAt') :
-                  (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
+    if (uiGlobals.labOptions['recent-launch-sort']) {
+      return (this.isBuiltinTile() ?
+                'a_' + this.get('name') :
+                (this.get('lastLaunch') ?
+                  'b_' + this.get('lastLaunch') :
+                  (this.get('installedAt') ?
+                    'c_' + this.get('installedAt') :
+                    (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
+    } else {
+      return (this.isBuiltinTile() ?
+          'a_' + this.get('name') :
+          (this.get('installedAt') ?
+            'c_' + this.get('installedAt') :
+            (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt')));
+    }
   },
 
   isLocalApp: function() {

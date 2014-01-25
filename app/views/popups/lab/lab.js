@@ -23,7 +23,8 @@ module.exports = BaseView.extend({
     var labOptions = _.pairs(uiGlobals.labOptions);
 
     labOptions.map(function(option) {
-      option.push(urlify(option[0]));
+      // Get and translate description to display
+      option.push(i18n.translate(config.LabOptions[option[0]]));
     });
 
     this.injectCss();
@@ -32,23 +33,26 @@ module.exports = BaseView.extend({
        + "Enable at your own risk. You will need to restart Airspace before your changes take effect."),
       options: labOptions,
       save_label: i18n.translate('Save'),
+      saved_label: i18n.translate('Saved'),
     }));
 
     labOptions.forEach(function(option) {
       if (option[1]) {
-        this.$el.find("input." + option[2]).prop('checked', 'checked');
+        this.$el.find("input." + option[0]).prop('checked', 'checked');
       }
     }.bind(this));
 
-    this.$el.find('form').submit(function(evt) {
+    this.$('form').submit(function(evt) {
       var updatedOptions = {};
 
-      this.$el.find('input[type="checkbox"]').each(function() {
-        updatedOptions[$(this).data('option')] = $(this).prop('checked');
+      this.$('input[type="checkbox"]').each(function() {
+        updatedOptions[$(this).attr('class')] = $(this).prop('checked');
       });
 
       console.log("Saved:", updatedOptions);
       db.saveObj(config.DbKeys.LabOptionStates, updatedOptions);
+
+      this.$('.saved').show().fadeOut();
 
       evt.preventDefault();
     }.bind(this));

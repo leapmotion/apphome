@@ -103,13 +103,15 @@ function getConfiguration(cb) {
   }
 
   var currentOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
-  config.LabOptions.forEach(function(option) {
-    if (!_.has(uiGlobals.labOptions, option)) {
+  _.keys(config.LabOptions).forEach(function(option) {
+    if (!_.has(currentOptions, option)) {
       uiGlobals.labOptions[option] = false;
     } else {
       uiGlobals.labOptions[option] = currentOptions[option];
     }
   });
+
+  console.log("Running with options: ", uiGlobals.labOptions);
 
   cb && cb(null);
 }

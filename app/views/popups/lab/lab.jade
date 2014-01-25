@@ -4,9 +4,9 @@ form(role="form")
   each option in options
     div.checkbox
       label
-        input(class=option[2], data-option=option[0], type="checkbox")
-        span= option[0]
+        input(class=option[0], type="checkbox")
+        span= option[2]
 
-  input(type="submit", value=save_label)
-
-
+  #submit
+    input(type="submit", value=save_label)
+    .saved= saved_label
