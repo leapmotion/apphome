@@ -125,9 +125,11 @@ var LeapApp = BaseModel.extend({
   sortScore: function() {
     return (this.isBuiltinTile() ?
               'a_' + this.get('name') :
-              (this.get('installedAt') ?
-                'b_' + this.get('installedAt') :
-                (!this.isUninstalled() ? 'c_' : 'd_') + this.get('firstSeenAt')));
+              (this.get('lastLaunch') ?
+                'b_' + this.get('lastLaunch') :
+                (this.get('installedAt') ?
+                  'c_' + this.get('installedAt') :
+                  (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
   },
 
   isLocalApp: function() {
@@ -192,6 +194,9 @@ var LeapApp = BaseModel.extend({
     } else {
       console.log('Launching app: ' + executable);
     }
+
+    this.set('lastLaunch', Date.now());
+    this.save();
 
     nwGui.Shell.openItem(executable);
 
