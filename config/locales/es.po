@@ -546,3 +546,12 @@ msgstr "Recibirás un correo electrónico con instrucciones sobre como reestable
 
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "Conéctate con otros usuarios para discutir proyectos, ideas y tus apps favoritas"
+
+msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "Estas funciones son experimentales, por lo que pueden hacer colapsar a Airspace Home. Actívelas bajo su propia responsabilidad. Será necesario reiniciar Airspace para que las modificaciones tengan efecto."
+
+msgid "save"
+msgstr "Guardar"
+
+msgid "airspace labs"
+msgstr "Airspace Labs"

@@ -103,6 +103,14 @@
       },
       enabled: !disableSetInstallDir
     }));
+    if (_.keys(uiGlobals.labOptions).length) {
+      accountMenu.append(new nwGui.MenuItem({
+        label: i18n.translate('Airspace Labs'),
+        click: function() {
+          return popup.open('lab');
+        }
+      }));
+    }
     return new nwGui.MenuItem({
       label: i18n.translate("Account"),
       submenu: accountMenu

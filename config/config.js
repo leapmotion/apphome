@@ -74,8 +74,13 @@ var config = {
     AppInstallDir: 'AppInstallDir',
     EmbeddedLeapDevice: 'EmbeddedLeapDevice',
     ViewedNotifications: 'ViewedNotifications',
-    DismissedNotifications: 'DismissedNotifications'
+    DismissedNotifications: 'DismissedNotifications',
+    LabOptionStates: 'LabOptionStates',
   },
+
+  LabOptions: [
+    // Put experimental features here
+  ],
 
   PlatformDirs: {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',

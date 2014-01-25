@@ -76,6 +76,13 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
 
     enabled: not disableSetInstallDir
   )
+
+  if _.keys(uiGlobals.labOptions).length
+    accountMenu.append new nwGui.MenuItem
+      label: i18n.translate 'Airspace Labs'
+      click: ->
+        popup.open 'lab'
+
   new nwGui.MenuItem(
     label: i18n.translate("Account")
     submenu: accountMenu
