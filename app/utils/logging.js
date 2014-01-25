@@ -49,7 +49,7 @@
         }
       }).join(" ") + " (" + sourceFile + ")";
       log(str);
-      if (isProduction && (level === "warn" || level === "error")) {
+      if (isProduction && (level === "warn" || level === "error") && !uiGlobals.metricsDisabled) {
         return window.Raven.captureMessage(str, {
           tags: {
             appVersion: uiGlobals.appVersion,

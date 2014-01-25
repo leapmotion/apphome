@@ -32,7 +32,7 @@ getLogger = (level) ->
     ).join(" ") + " (" + sourceFile + ")"
 
     log str
-    if isProduction and (level is "warn" or level is "error")
+    if isProduction and (level is "warn" or level is "error") and not uiGlobals.metricsDisabled
       window.Raven.captureMessage str,
         tags:
           appVersion: uiGlobals.appVersion
