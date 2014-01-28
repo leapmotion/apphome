@@ -29,6 +29,8 @@ messageState(state, tileOpacity = .7)
   width $tileW
   box-shadow 0 0 24px 4px rgba(0, 0, 0, 0.6)
 
+  &.highlight
+    box-shadow 0 0 0 8px white !important
 
   messageState(notyetinstalled, .7)
   messageState(waiting, .5)
@@ -45,7 +47,7 @@ messageState(state, tileOpacity = .7)
   &.ready, &.notyetinstalled, &.installfailed, &.uninstalled
     cursor pointer
 
-    &:hover
+    &:hover, &.highlight
       background-clip padding-box
       box-shadow 0 0 24px 4px rgba(255,255,255,.6) // outer glow
 
@@ -110,7 +112,7 @@ messageState(state, tileOpacity = .7)
     vertical-align text-top
     z-index 1000
 
-  &.ready:hover
+  &.ready:hover, &.ready.highlight
 
     .hover-overlay
       -webkit-transform scale(1)
@@ -207,12 +209,12 @@ messageState(state, tileOpacity = .7)
     top 50%
     width 20px
 
-    &:hover
+    &:hover, &.highlight
       opacity 1
 
   &.notyetinstalled
 
-    &:hover
+    &:hover, &.highlight
       .install-overlay
         display block
 
