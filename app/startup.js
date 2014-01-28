@@ -6,6 +6,7 @@ var fs = require('fs');
 
 var Q = require('q');
 var qfs = require('q-io/fs');
+var leapjs = require('leapjs');
 
 var api = require('./utils/api.js');
 var authorizationUtil = require('./utils/authorization-util.js');
@@ -188,10 +189,35 @@ function prerunAsyncKickoff(cb) {
   cb && cb(null);
 }
 
+function enableLeapController() {
+   var ctl = new leapjs.Controller({enableGestures: true});
+
+  if (uiGlobals.labOptions['enable-leap-controls']) {
+     var swiper = ctl.gesture('swipe');
+
+     swiper.start(function(g) {
+       swiper.currentSwipe = g;
+     });
+
+     swiper.update(function(g) {
+       if (swiper.currentSwipe === true) return;
+       var pos = g.translation()[0];
+       if (Math.abs(pos) > 100) {
+         var isLeft = pos > 0;
+         uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+       }
+     });
+  }
+
+   ctl.connect();
+}
+
 function setupMainWindow(cb) {
   // Builds the menu bar
   windowChrome.rebuildMenuBar(false);
   windowChrome.maximizeWindow();
+
+  enableLeapController();
 
   cb && cb(null);
 }

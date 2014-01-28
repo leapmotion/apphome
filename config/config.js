@@ -79,7 +79,8 @@ var config = {
   },
 
   LabOptions: {
-    'recent-launch-sort': 'Sort purchased apps by most-recently-launched first.'
+    'recent-launch-sort': 'Sort purchased apps by most-recently-launched first.',
+    'enable-leap-controls': 'Use your Leap Motion Controller to swipe between pages.'
     // Put experimental features here
   },
 
