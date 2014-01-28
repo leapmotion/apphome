@@ -555,3 +555,9 @@ msgstr "保存"
 
 msgid "airspace labs"
 msgstr "Airspace Labs"
+
+msgid "sort purchased apps by most-recently-launched first."
+msgstr "購入したアプリを新着順に並べ替える。"
+
+msgid "saved"
+msgstr "保存されました"

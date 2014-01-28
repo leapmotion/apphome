@@ -555,3 +555,9 @@ msgstr "저장하기"
 
 msgid "airspace labs"
 msgstr "Airspace Labs"
+
+msgid "sort purchased apps by most-recently-launched first."
+msgstr "가장 최근 실행한 순서대로 구매한 앱을 정렬하세요."
+
+msgid "saved"
+msgstr "저장됨"

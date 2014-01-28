@@ -555,3 +555,9 @@ msgstr "Salva"
 
 msgid "airspace labs"
 msgstr "Airspace Labs"
+
+msgid "sort purchased apps by most-recently-launched first."
+msgstr "Classifica le app acquistate partendo da quelle lanciate più di recente."
+
+msgid "saved"
+msgstr "Salvato"

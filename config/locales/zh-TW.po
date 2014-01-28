@@ -555,3 +555,9 @@ msgstr "儲存"
 
 msgid "airspace labs"
 msgstr "Airspace Labs"
+
+msgid "sort purchased apps by most-recently-launched first."
+msgstr "依照最近啟動程度來分類已購買的應用程式。"
+
+msgid "saved"
+msgstr "儲存"

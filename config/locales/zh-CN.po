@@ -555,3 +555,9 @@ msgstr "保存"
 
 msgid "airspace labs"
 msgstr "Airspace Labs"
+
+msgid "sort purchased apps by most-recently-launched first."
+msgstr "先按照最新发布日期对已购买的应用程序进行排序。"
+
+msgid "saved"
+msgstr "已保存"
