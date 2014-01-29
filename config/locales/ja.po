@@ -561,3 +561,9 @@ msgstr "購入したアプリを新着順に並べ替える。"
 
 msgid "saved"
 msgstr "保存されました"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "Airspace HomeでLeap Motionコントローラーを使用しましょう。ページをスワイプすることができ、ポイントを指し示すことでアプリを選択して起動できます。"
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "Leap Motionコントローラーを使用することで、ページをスワイプできます。"

@@ -561,3 +561,9 @@ msgstr "가장 최근 실행한 순서대로 구매한 앱을 정렬하세요."
 
 msgid "saved"
 msgstr "저장됨"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "Airspace Home 속에서 당신의 Leap Motion 콘트롤러를 사용하세요. 페이지 사이를 스와이프하고 앱을 선택하고 가동시키기려면 포인팅하세요."
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "당신의 Leap Motion 콘트롤러를 사용해서 페이지 사이를 스와이프하세요."

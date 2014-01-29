@@ -561,3 +561,9 @@ msgstr "Organizar os apps comprados pela ordem de utilização."
 
 msgid "saved"
 msgstr "Salvo"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "Use seu Controlador Leap Motion no Airspace Home. Dê um swipe para mudar de página e aponte para selecionar e iniciar seus apps."
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "Use seu Controlador Leap Motion para mudar de página com um swipe."

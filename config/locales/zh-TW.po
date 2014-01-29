@@ -561,3 +561,9 @@ msgstr "依照最近啟動程度來分類已購買的應用程式。"
 
 msgid "saved"
 msgstr "儲存"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "在 Airspace Home 使用你的 Leap Motion 控制器進行掃動以切換頁面，再點選並啟動應用程式。"
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "使用你的 Leap Motion 控制器進行掃動，以切換頁面。"

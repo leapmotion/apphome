@@ -561,3 +561,9 @@ msgstr "Classifica le app acquistate partendo da quelle lanciate più di recente
 
 msgid "saved"
 msgstr "Salvato"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "Usa il tuo controller Leap Motion in Airspace Home. Striscia tra le pagine e punta per selezionare e lanciare le app."
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "Usa il tuo controller Leap Motion per strisciare tra le pagine."

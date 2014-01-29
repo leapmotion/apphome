@@ -561,3 +561,9 @@ msgstr "Ordenar colocando primero las aplicaciones lanzadas más recientemente."
 
 msgid "saved"
 msgstr "Guardado"
+
+msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
+msgstr "Usa el controlador Leap Motion en Airspace Home. Pase las páginas y apunte para seleccionar y lanzar aplicaciones."
+
+msgid "use your leap motion controller to swipe between pages."
+msgstr "Use el controlador Leap Motion para pasar las páginas."
