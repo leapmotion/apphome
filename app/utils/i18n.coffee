@@ -11,7 +11,7 @@ DefaultLocale = "en"
 
 module.exports.locale = process.env.LEAPHOME_LOCALE
 
-sanitizeLocale = (fullLocale, cb) ->
+sanitizeLocale = (fullLocale, supportedLanguages, cb) ->
   fullLocale = (fullLocale or DefaultLocale).toLowerCase()
   if supportedLanguages.indexOf(fullLocale) isnt -1
     locale = fullLocale
@@ -25,14 +25,14 @@ sanitizeLocale = (fullLocale, cb) ->
   module.exports.locale = locale
   cb?(null, locale)
 
-getWindowsLocale = (cb) ->
+getWindowsLocale = (supportedLanguages, cb) ->
   registry.readValue "HKCU\\Control Panel\\Desktop", "PreferredUILanguages", (err, fullLocale) ->
     if err
       console.warn err.stack or err
       cb?(null, DefaultLocale)
     else
       if fullLocale
-        sanitizeLocale fullLocale, cb
+        sanitizeLocale fullLocale, supportedLanguages, cb
       else
         registry.readValue "HKCU\\Control Panel\\Desktop\\MuiCached", "MachinePreferredUILanguages", (err, fullLocale) ->
           if err
@@ -72,7 +72,7 @@ getLocale = (cb) ->
     console.log "Supported languages: " + supportedLanguages
 
     if os.platform() is "win32"
-      getWindowsLocale cb
+      getWindowsLocale supportedLanguages, cb
     else if os.platform() is "darwin"
       getOSXLocale supportedLanguages, cb
     else
