@@ -50,6 +50,7 @@
     this._fileSize = 0;
     this._chunkSize = chunkSize;
     this._targetUrl = targetUrl;
+    this._done = false;
     getFileSize(targetUrl).then(function(fileSize) {
       return _this._fileSize = fileSize;
     });
@@ -62,14 +63,18 @@
     var chunkSize,
       _this = this;
     chunkSize = this._chunkSize || size;
-    if (this._filesize > 0 && this._bytesSoFar === this._fileSize) {
-      return this.push;
+    if (this._done) {
+      if (!(this._fileSize && this._bytesSoFar !== this._fileSize)) {
+        return this.push(null);
+      } else {
+        throw new Error("Expected file of size: " + filesize(this._fileSize) + " but got: " + filesize(this._bytesSoFar));
+      }
     }
     return this._downloadChunk(this._targetUrl, this._bytesSoFar, this._bytesSoFar + chunkSize).then(function(data) {
-      if ((data == null) && _this._bytesSoFar !== _this._fileSize) {
-        throw new Error("Expected file of size: " + filesize(_this._fileSize) + " but got: " + filesize(_this._bytesSoFar));
-      }
       _this._bytesSoFar += (data != null ? data.length : void 0) || 0;
+      if ((data != null ? data.length : void 0) < chunkSize || (_this._fileSize && _this._fileSize === _this._bytesSoFar)) {
+        _this._done = true;
+      }
       return _this.push(data);
     }, void 0, function(bytesLoadedByCurrentRequest) {
       var percentComplete;
@@ -99,7 +104,7 @@
       if (this.status >= 200 && this.status <= 299) {
         return deferred.resolve(new Buffer(new window.Uint8Array(this.response)));
       } else {
-        return deferred.reject(new Error("Got status code: " + this.status + " for chunk."));
+        return deferred.reject(new Error("Got status code: " + this.status + " for chunk " + start + '-' + end));
       }
     };
     xhr.onprogress = function(evt) {

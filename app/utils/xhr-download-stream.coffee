@@ -39,23 +39,30 @@ XHRDownloadStream = (targetUrl, canceller, chunkSize) ->
   @_fileSize = 0
   @_chunkSize = chunkSize
   @_targetUrl = targetUrl
+  @_done = false
 
   getFileSize(targetUrl).then (fileSize) =>
     @_fileSize = fileSize
 
   return null
 
-util.inherits(XHRDownloadStream, stream.Readable)
+util.inherits XHRDownloadStream, stream.Readable
 
 XHRDownloadStream::_read = (size) ->
   chunkSize = @_chunkSize or size
-  if @_filesize > 0 and @_bytesSoFar is @_fileSize
-    return @push
+
+  if @_done
+    unless (@_fileSize and @_bytesSoFar isnt @_fileSize)
+      return @push null
+    else
+      throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
 
   @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>
-    if not data? and @_bytesSoFar isnt @_fileSize
-      throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
     @_bytesSoFar += data?.length or 0
+
+    if data?.length < chunkSize or (@_fileSize and @_fileSize == @_bytesSoFar)
+      @_done = true
+
     @push data
   , undefined
   , (bytesLoadedByCurrentRequest) =>
@@ -82,7 +89,7 @@ XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
       deferred.resolve new Buffer new window.Uint8Array @response
     else
-      deferred.reject new Error "Got status code: " + @status + " for chunk."
+      deferred.reject new Error "Got status code: " + @status + " for chunk " + start + '-' + end
 
   xhr.onprogress = (evt) ->
     if evt.lengthComputable
