@@ -22,7 +22,7 @@
 
   module.exports.locale = process.env.LEAPHOME_LOCALE;
 
-  sanitizeLocale = function(fullLocale, cb) {
+  sanitizeLocale = function(fullLocale, supportedLanguages, cb) {
     var locale;
     fullLocale = (fullLocale || DefaultLocale).toLowerCase();
     if (supportedLanguages.indexOf(fullLocale) !== -1) {
@@ -41,14 +41,14 @@
     return typeof cb === "function" ? cb(null, locale) : void 0;
   };
 
-  getWindowsLocale = function(cb) {
+  getWindowsLocale = function(supportedLanguages, cb) {
     return registry.readValue("HKCU\\Control Panel\\Desktop", "PreferredUILanguages", function(err, fullLocale) {
       if (err) {
         console.warn(err.stack || err);
         return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
       } else {
         if (fullLocale) {
-          return sanitizeLocale(fullLocale, cb);
+          return sanitizeLocale(fullLocale, supportedLanguages, cb);
         } else {
           return registry.readValue("HKCU\\Control Panel\\Desktop\\MuiCached", "MachinePreferredUILanguages", function(err, fullLocale) {
             if (err) {
@@ -99,7 +99,7 @@
       }
       console.log("Supported languages: " + supportedLanguages);
       if (os.platform() === "win32") {
-        return getWindowsLocale(cb);
+        return getWindowsLocale(supportedLanguages, cb);
       } else if (os.platform() === "darwin") {
         return getOSXLocale(supportedLanguages, cb);
       } else {
