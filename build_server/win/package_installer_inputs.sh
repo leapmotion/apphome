@@ -27,7 +27,21 @@ if [ -d build_products ]; then
   rm -rf build_products_old
 fi
 
-mv windows build_products
+#for some terrible reason a  process is hanging on to unpacked
+#directory for some period of time. give it a couple tries before failing.
+#this particular section of the build script has been a source of build failures.
+#is antivirus or some shell extension grabbing the new folder?
+_retries=0
+while [ ${_retries} -lt 5 -a ! -d build_products ]; do
+  mv windows build_products && true
+  ((_retries++))
+  sleep 5
+done
+
+if [ ! -d build_products ]; then
+  echo "could not rename windows/ to build_products/"
+  exit 1
+fi
 
 echo "${AIRSPACE_VERSION_STRING}" > build_products/version.txt
 git rev-parse HEAD > build_products/head_sha.txt
