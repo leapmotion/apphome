@@ -55,7 +55,7 @@ _unzipViaShell = (src, dest, cb) ->
 
 unzipFile = (src, dest, shellUnzipOnly, cb) ->
   console.log "Unzipping " + src
-  unzipViaShell src, dest, (err) ->
+  _unzipViaShell src, dest, (err) ->
     if err and not shellUnzipOnly
       stats = fs.statSync(src)
 
@@ -63,9 +63,9 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
         (stats.size > 290000000 or  # 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
          stats.size is 11247281 or  # special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
          path.basename(dest).match(/JungleJumper/)) # special-case JungleJumper 1.0.xHP.zip avoid crash in adm-zip
-        unzipViaNodeUnzip src, dest, cb
+        _unzipViaNodeUnzip src, dest, cb
       else
-        unzipViaAdmZip src, dest, cb
+        _unzipViaAdmZip src, dest, cb
     else
       cb?(err)
 

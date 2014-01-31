@@ -85,14 +85,14 @@
 
   unzipFile = function(src, dest, shellUnzipOnly, cb) {
     console.log("Unzipping " + src);
-    return unzipViaShell(src, dest, function(err) {
+    return _unzipViaShell(src, dest, function(err) {
       var stats;
       if (err && !shellUnzipOnly) {
         stats = fs.statSync(src);
         if (os.platform() === "win32" && (stats.size > 290000000 || stats.size === 11247281 || path.basename(dest).match(/JungleJumper/))) {
-          return unzipViaNodeUnzip(src, dest, cb);
+          return _unzipViaNodeUnzip(src, dest, cb);
         } else {
-          return unzipViaAdmZip(src, dest, cb);
+          return _unzipViaAdmZip(src, dest, cb);
         }
       } else {
         return typeof cb === "function" ? cb(err) : void 0;

@@ -12,6 +12,12 @@ var workingDir = path.dirname(__dirname);
 process.env.LEAPHOME_ENV = process.env.LEAPHOME_ENV || 'development';
 
 var executable = config.PlatformLibrariesDir[os.platform()] + '/node-webkit-v' + NodeWebkitVersion + '-' + config.PlatformSuffixes[os.platform()];
+
+if (!fs.existsSync(executable)) {
+	console.error('Nodewebkit binary not detected: ', executable);
+	process.exit(1);
+}
+
 var nw = spawn(executable, [ '--enable-logging', '.' ].concat(process.argv.slice(2)), {
   cwd: workingDir,
   env: process.env
