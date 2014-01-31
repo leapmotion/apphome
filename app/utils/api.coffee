@@ -229,6 +229,10 @@ sendDeviceData = ->
 
   authDataFile = path.join(dataDir, "lastauth")
 
+  if not fs.existsSync authDataFile
+    console.warn "Auth data file doesn't exist"
+    throw new Error "Auth data file doesn't exist"
+
   Q.nfcall(fs.readFile, authDataFile, "utf-8").then (authData) ->
     unless authData
       console.warn "Auth data file is empty."

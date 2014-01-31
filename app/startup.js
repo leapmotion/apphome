@@ -262,7 +262,11 @@ function startMainApp(cb) {
       .then(api.connectToStoreServer);
   } else {
     p = Q(api.connectToStoreServer())
-      .then(api.sendDeviceData);
+      .then(function() {
+        api.sendDeviceData().fail(function(reason) {
+          return;
+        });
+      });
   }
 
   p.nodeify(cb);
