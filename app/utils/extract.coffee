@@ -1,4 +1,3 @@
-AdmZip = require("adm-zip")
 async = require("async")
 exec = require("child_process").exec
 fs = require("fs-extra")
@@ -6,41 +5,12 @@ os = require("os")
 mv = require("mv")
 path = require("path")
 plist = require("plist")
-unzip = require("unzip")
 shell = require("./shell.js")
 
 Q = require("q")
 
 IgnoredWindowsFileRegex = /^\.|^__macosx$/i
 MaxChildProcessBufferSize = 1024 * 1024 * 5 # 5 MB
-
-_unzipViaNodeUnzip = (src, dest, cb) ->
-  inputStream = fs.createReadStream(src)
-  outputStream = unzip.Extract(path: dest)
-
-  inputStream.on "error", (err) ->
-    cb?(err)
-    cb = null
-
-  outputStream.on "close", ->
-    cb?(null)
-    cb = null
-
-  outputStream.on "error", (err) ->
-    cb?(err)
-    cb = null
-
-  console.log "Unzipping " + src + " to " + dest + " with node-unzip."
-  inputStream.pipe outputStream
-
-_unzipViaAdmZip = (src, dest, cb) ->
-  try
-    zip = new AdmZip(src)
-    console.log "Unzipping " + src + " to " + dest + " with AdmZip."
-    zip.extractAllTo dest, true
-    cb?(null)
-  catch err
-    cb?(err)
 
 _unzipViaShell = (src, dest, cb) ->
   command = undefined
@@ -56,16 +26,11 @@ _unzipViaShell = (src, dest, cb) ->
 unzipFile = (src, dest, shellUnzipOnly, cb) ->
   console.log "Unzipping " + src
   _unzipViaShell src, dest, (err) ->
-    if err and not shellUnzipOnly
-      stats = fs.statSync(src)
-
-      if os.platform() is "win32" and
-        (stats.size > 290000000 or  # 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
-         stats.size is 11247281 or  # special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
-         path.basename(dest).match(/JungleJumper/)) # special-case JungleJumper 1.0.xHP.zip avoid crash in adm-zip
-        _unzipViaNodeUnzip src, dest, cb
-      else
-        _unzipViaAdmZip src, dest, cb
+    if err
+      console.warn "Unzipping", src, "failed, retrying in 50ms"
+      setTimeout ->
+        unzipFile src, dest, shellUnzipOnly, cb
+      , 50
     else
       cb?(err)
 
