@@ -295,6 +295,10 @@
       return Q.reject(new Error("Leap Motion data dir unknown for operating system: " + os.platform()));
     }
     authDataFile = path.join(dataDir, "lastauth");
+    if (!fs.existsSync(authDataFile)) {
+      console.warn("Auth data file doesn't exist");
+      throw new Error("Auth data file doesn't exist");
+    }
     return Q.nfcall(fs.readFile, authDataFile, "utf-8").then(function(authData) {
       if (!authData) {
         console.warn("Auth data file is empty.");
