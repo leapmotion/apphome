@@ -4,6 +4,7 @@ var exec = require('child_process').exec;
 var fs = require('fs-extra');
 var os = require('os');
 var path = require('path');
+var Walker = require('walker');
 
 var config = require('../config/config.js');
 var shell = require('../app/utils/shell.js');
@@ -47,11 +48,58 @@ if (os.platform() === 'win32') {
 }
 
 console.log('Using output dir: ' + buildDir());
-fs.deleteSync(buildDir());
+fs.removeSync(buildDir());
 
 var pngIconPath = path.join.apply(path, [ __dirname, '..' ].concat(packageJson.window.icon.split('/')));
 var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
+
+function nwGypHandling(cb) {
+  console.log('Using nw-gyp to compile shit');
+
+  var modulesToNwGyp = [], configureCommands = [], buildCommands = [];
+
+  var nodeGypPath = path.resolve('node_modules/nw-gyp/bin/nw-gyp.js')
+
+  Walker('node_modules')
+    .on('entry', function(entry, stat) {
+      if (entry.indexOf('binding.gyp') !== -1) {
+        modulesToNwGyp.push(path.dirname(entry));
+      }
+    })
+    .on('end', function() {
+      console.log('Need to build', modulesToNwGyp);
+      modulesToNwGyp.forEach(function(modulePath) {
+        configureCommands.push((function(modulePath) {
+          return function(cb) {
+            var cmd = 'node ' + nodeGypPath + ' configure --target=' + packageJson.nwVersion;
+            console.log('Executing', cmd);
+            exec(cmd, {
+              cwd: modulePath
+            }, cb);
+          };
+        })(modulePath));
+
+        buildCommands.push((function(modulePath) {
+          return function(cb) {
+            var cmd = 'node ' + nodeGypPath + ' build';
+            console.log('Executing', cmd);
+            exec(cmd, {
+              cwd: modulePath
+            }, cb);
+          };
+        })(modulePath));
+      });
+
+      async.series([
+        function (cb) {
+          async.series(configureCommands, cb);
+        }, function(cb) {
+          async.series(buildCommands, cb);
+        }
+      ], cb)
+    });
+}
 
 function setFullVersionNumber(cb) {
   if (!/-/.test(packageJson.version)) { // if there's no patch metadata already, add the git hash id
@@ -235,6 +283,7 @@ function buildForMac(cb) {
 }
 
 async.series([
+  nwGypHandling,
   setFullVersionNumber,
   function(cb) {
     async.series([
