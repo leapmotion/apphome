@@ -55,11 +55,11 @@ var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
 
 function nwGypHandling(cb) {
-  console.log('Using nw-gyp to compile shit');
-
   var modulesToNwGyp = [], configureCommands = [], buildCommands = [];
 
-  var nodeGypPath = path.resolve('node_modules/nw-gyp/bin/nw-gyp.js')
+  var nodeGypPath = path.resolve('node_modules/nw-gyp/bin/nw-gyp.js');
+
+  console.log('Working in', __dirname, ' / ', __fs.readdirSync('.'));
 
   Walker('node_modules')
     .on('entry', function(entry, stat) {
