@@ -59,8 +59,6 @@ function nwGypHandling(cb) {
 
   var nodeGypPath = path.resolve('../node_modules/nw-gyp/bin/nw-gyp.js');
 
-  console.log('Working in', __dirname, ' / ', fs.readdirSync('.'));
-
   Walker('../node_modules')
     .on('entry', function(entry, stat) {
       if (entry.indexOf('binding.gyp') !== -1) {
@@ -68,12 +66,11 @@ function nwGypHandling(cb) {
       }
     })
     .on('end', function() {
-      console.log('Need to build', modulesToNwGyp);
+      console.log('Using nw-gyp to build', modulesToNwGyp);
       modulesToNwGyp.forEach(function(modulePath) {
         configureCommands.push((function(modulePath) {
           return function(cb) {
             var cmd = 'node ' + nodeGypPath + ' configure --target=' + packageJson.nwVersion;
-            console.log('Executing', cmd);
             exec(cmd, {
               cwd: modulePath
             }, cb);
@@ -83,7 +80,6 @@ function nwGypHandling(cb) {
         buildCommands.push((function(modulePath) {
           return function(cb) {
             var cmd = 'node ' + nodeGypPath + ' build';
-            console.log('Executing', cmd);
             exec(cmd, {
               cwd: modulePath
             }, cb);
