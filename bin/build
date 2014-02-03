@@ -59,7 +59,7 @@ function nwGypHandling(cb) {
 
   var nodeGypPath = path.resolve('node_modules/nw-gyp/bin/nw-gyp.js');
 
-  console.log('Working in', __dirname, ' / ', __fs.readdirSync('.'));
+  console.log('Working in', __dirname, ' / ', fs.readdirSync('.'));
 
   Walker('node_modules')
     .on('entry', function(entry, stat) {
