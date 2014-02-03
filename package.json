@@ -44,7 +44,7 @@
     "chai": "1.8.x",
     "chai-as-promised": "4.1.x",
     "mocha": "1.9.x",
-    "wd": "~0.2.8",
+    "wd": "~0.2.8"
   },
   "scripts": {
     "test": "node bin/test"
