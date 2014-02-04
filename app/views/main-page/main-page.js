@@ -244,7 +244,7 @@ module.exports = BaseView.extend({
     var _this = this;
 
     function createNotificationPane() {
-      if (uiGlobals.email.indexOf('@leapmotion.com') !== -1 || uiGlobals.email.indexOf('@ocuserv.com') !== -1) {
+      if (uiGlobals.email.indexOf('@leapmotion.com') !== -1 || uiGlobals.email.indexOf('@ocuspec.com') !== -1) {
         var notificationPane = new NotificationPane();
         _this.$('#notification-pane').append(notificationPane.$el);
 
