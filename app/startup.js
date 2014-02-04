@@ -190,23 +190,23 @@ function prerunAsyncKickoff(cb) {
 }
 
 function enableLeapController() {
-   var ctl = new leapjs.Controller({enableGestures: true});
+  var ctl = new leapjs.Controller({enableGestures: true});
 
   if (uiGlobals.labOptions['enable-leap-controls']) {
-     var swiper = ctl.gesture('swipe');
+    var swiper = ctl.gesture('swipe');
 
-     swiper.start(function(g) {
-       swiper.currentSwipe = g;
-     });
+    swiper.start(function(g) {
+      swiper.currentSwipe = g;
+    });
 
-     swiper.update(function(g) {
-       if (swiper.currentSwipe === true) return;
-       var pos = g.translation()[0];
-       if (Math.abs(pos) > 100) {
-         var isLeft = pos > 0;
-         uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
-       }
-     });
+    swiper.update(function(g) {
+      if (swiper.currentSwipe === true) return;
+      var pos = g.translation()[0];
+      if (Math.abs(pos) > 100) {
+        var isLeft = pos > 0;
+        uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+      }
+    });
   }
 
    ctl.connect();
