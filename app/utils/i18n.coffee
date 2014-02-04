@@ -40,7 +40,7 @@ getWindowsLocale = (supportedLanguages, cb) ->
             cb?(null, DefaultLocale)
           else
             if fullLocale
-              sanitizeLocale fullLocale, cb
+              sanitizeLocale fullLocale, supportedLanguages, cb
             else
               cb?(null, DefaultLocale)
 
