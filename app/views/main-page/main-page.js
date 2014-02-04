@@ -242,7 +242,8 @@ module.exports = BaseView.extend({
 
   _initNotifications: function() {
     var _this = this;
-    uiGlobals.on(uiGlobals.Event.SignIn, function() {
+
+    function createNotificationPane() {
       if (uiGlobals.email.indexOf('@leapmotion.com') !== -1 || uiGlobals.email.indexOf('@ocuserv.com') !== -1) {
         var notificationPane = new NotificationPane();
         _this.$('#notification-pane').append(notificationPane.$el);
@@ -251,7 +252,13 @@ module.exports = BaseView.extend({
           notificationPane.hide();
         });
       }
-    });
+    }
+
+    if (uiGlobals.email) {
+      createNotificationPane();
+    } else {
+      uiGlobals.once(uiGlobals.Event.SignIn, createNotificationPane);
+    }
   },
 
   _setupResizeBehavior: function() {
