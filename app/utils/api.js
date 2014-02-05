@@ -269,7 +269,7 @@
     return Q.nfcall(oauth.getAccessToken).then(function(accessToken) {
       var platform;
       platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
-      url = config.AppListingEndpoint + "?" + qs.stringify({
+      url = config.AppJsonEndpoint + "?" + qs.stringify({
         access_token: accessToken,
         platform: platform
       });

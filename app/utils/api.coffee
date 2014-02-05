@@ -205,7 +205,7 @@ connectToStoreServer = ->
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
     platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
-    url = config.AppListingEndpoint + "?" + qs.stringify
+    url = config.AppJsonEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform
 
