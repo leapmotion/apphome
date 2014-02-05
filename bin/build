@@ -55,25 +55,22 @@ var icoIconPath = pngIconPath.replace(/\.png$/, '.ico');
 var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
 
 function nwGypHandling(cb) {
-  console.log('Using nw-gyp to compile shit');
-
   var modulesToNwGyp = [], configureCommands = [], buildCommands = [];
 
-  var nodeGypPath = path.resolve('node_modules/nw-gyp/bin/nw-gyp.js')
+  var nodeGypPath = path.resolve('../node_modules/nw-gyp/bin/nw-gyp.js');
 
-  Walker('node_modules')
+  Walker('../node_modules')
     .on('entry', function(entry, stat) {
       if (entry.indexOf('binding.gyp') !== -1) {
         modulesToNwGyp.push(path.dirname(entry));
       }
     })
     .on('end', function() {
-      console.log('Need to build', modulesToNwGyp);
+      console.log('Using nw-gyp to build', modulesToNwGyp);
       modulesToNwGyp.forEach(function(modulePath) {
         configureCommands.push((function(modulePath) {
           return function(cb) {
             var cmd = 'node ' + nodeGypPath + ' configure --target=' + packageJson.nwVersion;
-            console.log('Executing', cmd);
             exec(cmd, {
               cwd: modulePath
             }, cb);
@@ -83,7 +80,6 @@ function nwGypHandling(cb) {
         buildCommands.push((function(modulePath) {
           return function(cb) {
             var cmd = 'node ' + nodeGypPath + ' build';
-            console.log('Executing', cmd);
             exec(cmd, {
               cwd: modulePath
             }, cb);

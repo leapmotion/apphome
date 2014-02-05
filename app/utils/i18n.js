@@ -56,7 +56,7 @@
               return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
             } else {
               if (fullLocale) {
-                return sanitizeLocale(fullLocale, cb);
+                return sanitizeLocale(fullLocale, supportedLanguages, cb);
               } else {
                 return typeof cb === "function" ? cb(null, DefaultLocale) : void 0;
               }

@@ -241,12 +241,24 @@ module.exports = BaseView.extend({
   },
 
   _initNotifications: function() {
-    var notificationPane = new NotificationPane();
-    this.$('#notification-pane').append(notificationPane.$el);
+    var _this = this;
 
-    uiGlobals.on('clear-ui', function() {
-      notificationPane.hide();
-    });
+    function createNotificationPane() {
+      if (uiGlobals.email.indexOf('@leapmotion.com') !== -1 || uiGlobals.email.indexOf('@ocuspec.com') !== -1) {
+        var notificationPane = new NotificationPane();
+        _this.$('#notification-pane').append(notificationPane.$el);
+
+        uiGlobals.on('clear-ui', function() {
+          notificationPane.hide();
+        });
+      }
+    }
+
+    if (uiGlobals.email) {
+      createNotificationPane();
+    } else {
+      uiGlobals.once(uiGlobals.Event.SignIn, createNotificationPane);
+    }
   },
 
   _setupResizeBehavior: function() {

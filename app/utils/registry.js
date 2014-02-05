@@ -25,7 +25,9 @@
 
   readFullKey = function(keyName, cb) {
     if (os.platform() === "win32") {
-      return exec("reg query \"" + keyName + "\" /s", cb);
+      return exec("reg query \"" + keyName + "\" /s", {
+        maxBuffer: 1000 * 1024
+      }, cb);
     } else {
       return typeof cb === "function" ? cb(new Error("Registry access is only supported on Windows.")) : void 0;
     }

@@ -176,7 +176,10 @@ function _localAppScan(appJsonList) {
     api.syncToCollection(appJsonList, uiGlobals.myApps, function(app) {
       return app.isLocalApp() && app.get('findByScanning');
     });
-  }.bind(this)).done();
+  }.bind(this)).fail(function(reason) {
+    console.warn(reason);
+    return;
+  }).done();
 }
 
 module.exports = LocalLeapApp;
