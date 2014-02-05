@@ -145,12 +145,14 @@
         return nwGui.Shell.openExternal(config.GetSupportUrl);
       }
     }));
-    helpMenu.append(new nwGui.MenuItem({
-      label: i18n.translate("About Airspace Home"),
-      click: function() {
-        return popup.open("about");
-      }
-    }));
+    if (os.platform() === "win32") {
+      helpMenu.append(new nwGui.MenuItem({
+        label: i18n.translate("About Airspace Home"),
+        click: function() {
+          return popup.open("about");
+        }
+      }));
+    }
     return new nwGui.MenuItem({
       label: i18n.translate("Help"),
       submenu: helpMenu

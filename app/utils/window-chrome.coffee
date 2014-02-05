@@ -111,11 +111,14 @@ buildHelpMenu = (enableLogOut) ->
     click: ->
       nwGui.Shell.openExternal config.GetSupportUrl
   )
-  helpMenu.append new nwGui.MenuItem(
-    label: i18n.translate("About Airspace Home")
-    click: ->
-      popup.open "about"
-  )
+
+  if os.platform() is "win32"
+    helpMenu.append new nwGui.MenuItem(
+      label: i18n.translate("About Airspace Home")
+      click: ->
+        popup.open "about"
+    )
+
   new nwGui.MenuItem(
     label: i18n.translate("Help")
     submenu: helpMenu

@@ -15,7 +15,7 @@ module.exports = BaseView.extend({
   },
 
   initialize: function(options) {
-    _extend(this.options, options);
+    _.extend(this.options, options);
 
     this.injectCss();
     this.$el.append(this.templateHtml({
