@@ -105,15 +105,16 @@
     } else {
       console.log('Adding', appJson.name);
       try {
-        return app = myApps.add(appJson, {
+        app = myApps.add(appJson, {
           validate: true,
           silent: silent
         });
       } catch (_error) {
         err = _error;
-        return console.error("Corrupt app data from api: " + appJson + "\n" + (err.stack || err));
+        console.error("Corrupt app data from api: " + appJson + "\n" + (err.stack || err));
       }
     }
+    return installManager.showAppropriateDownloadControl();
   };
 
   syncToCollection = function(appJsonList, collection, appTest) {
@@ -152,8 +153,7 @@
   subscribeToAppChannel = function(appId) {
     return pubnub.subscribe(appId + ".app.updated", function(appJson) {
       return getAppJson(appJson.app_id).then(function(appJson) {
-        handleAppJson(appJson);
-        return installManager.showAppropriateDownloadControl();
+        return handleAppJson(appJson);
       }).done();
     });
   };
@@ -253,7 +253,7 @@
       console.log("Connected to store server.", messages.length - 1, "apps found.");
       $("body").removeClass("loading");
       _setGlobalUserInformation(messages.shift());
-      messages.forEach(function(message) {
+      return messages.forEach(function(message) {
         return _.defer(function() {
           if (message.auth_id && message.secret_token) {
             drm.writeXml(message.auth_id, message.secret_token);
@@ -262,7 +262,6 @@
           return handleAppJson(message);
         });
       });
-      return installManager.showAppropriateDownloadControl;
     });
   };
 

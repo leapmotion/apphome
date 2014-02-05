@@ -85,6 +85,8 @@ handleAppJson = (appJson, silent=false) ->
     catch err
       console.error "Corrupt app data from api: " + appJson + "\n" + (err.stack or err)
 
+  installManager.showAppropriateDownloadControl()
+
 # Installs any new apps, updates properties for existing apps, and removes old apps
 syncToCollection = (appJsonList, collection, appTest) ->
   existingAppsById = {}
@@ -119,7 +121,6 @@ subscribeToAppChannel = (appId) ->
   pubnub.subscribe appId + ".app.updated", (appJson) ->
     getAppJson(appJson.app_id).then (appJson) ->
       handleAppJson appJson
-      installManager.showAppropriateDownloadControl()
     .done()
 
 reconnectionPromise = undefined
@@ -200,8 +201,6 @@ connectToStoreServer = ->
         drm.writeXml message.auth_id, message.secret_token  if message.auth_id and message.secret_token
         subscribeToAppChannel message.appId
         handleAppJson message
-
-    installManager.showAppropriateDownloadControl
 
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
