@@ -288,6 +288,7 @@ module.exports = LeapApp.extend({
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {
+      extract.chmodRecursiveSync(this._appDir());
       fs.removeSync(this._appDir());
     } catch(err) {
       // well, we're just gonna pretend we did

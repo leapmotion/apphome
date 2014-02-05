@@ -36,7 +36,7 @@ unzipFile = (src, dest, shellUnzipOnly, cb) ->
 
 chmodRecursiveSync = (file) ->
   try
-    fs.chmodSync file, 777 # make sure file has write permissions
+    fs.chmodSync file, '777' # make sure file has write permissions
   catch error
     console.warn error
     return

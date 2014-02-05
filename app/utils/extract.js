@@ -55,7 +55,7 @@
   chmodRecursiveSync = function(file) {
     var error;
     try {
-      fs.chmodSync(file, 777);
+      fs.chmodSync(file, '777');
     } catch (_error) {
       error = _error;
       console.warn(error);
