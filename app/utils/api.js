@@ -167,7 +167,8 @@
     if (reconnectionPromise != null) {
       return reconnectionPromise;
     }
-    return reconnectionPromise = connectToStoreServer.delay(config.ServerConnectRetryMs).then(function() {
+    return reconnectionPromise = Q.delay(config.ServerConnectRetryMs).then(function() {
+      connectToStoreServer();
       return reconnectionPromise = void 0;
     });
   };

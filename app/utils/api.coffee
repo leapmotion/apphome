@@ -129,8 +129,9 @@ reconnectionPromise = undefined
 reconnectAfterError = (err) ->
   console.log "Failed to connect to store server (retrying in " + config.ServerConnectRetryMs + "ms):", (if err and err.stack then err.stack else err)
   return reconnectionPromise if reconnectionPromise?
-  reconnectionPromise = connectToStoreServer.delay(config.ServerConnectRetryMs)
+  reconnectionPromise = Q.delay(config.ServerConnectRetryMs)
     .then ->
+      connectToStoreServer()
       reconnectionPromise = undefined
 
 _getStoreManifest = ->
@@ -305,7 +306,7 @@ parsePrebundledManifest = (manifest, cb) ->
     unless app?
       console.warn 'Skipping invalid prebundled app json', appJson
       return
-      
+
     app.set "state", LeapApp.States.Waiting
     installationFunctions.push (callback) ->
       console.log "Installing prebundled app: " + app.get "name"
