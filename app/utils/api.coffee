@@ -57,6 +57,7 @@ cleanAppJson = (appJson) ->
   cleanedAppJson
 
 handleAppJson = (appJson, silent=false) ->
+  app = undefined
   unless appJson.cleaned
     appJson = cleanAppJson appJson
 
@@ -74,7 +75,7 @@ handleAppJson = (appJson, silent=false) ->
     else
       existingApp.set appJson
 
-    return existingApp
+    app = existingApp
   else
     console.log 'Adding', appJson.name
 
@@ -86,6 +87,7 @@ handleAppJson = (appJson, silent=false) ->
       console.error "Corrupt app data from api: " + appJson + "\n" + (err.stack or err)
 
   installManager.showAppropriateDownloadControl()
+  return app
 
 # Installs any new apps, updates properties for existing apps, and removes old apps
 syncToCollection = (appJsonList, collection, appTest) ->
@@ -290,29 +292,31 @@ sendAppVersionData = ->
       throw reason
 
 parsePrebundledManifest = (manifest, cb) ->
-  console.log "\n\n\nExamining prebundle manifest \n" + JSON.stringify(manifest or {}, null, 2)
+  console.log 'Installing', manifest.length, 'prebundled apps'
 
   installationFunctions = []
   manifest.forEach (appJson) ->
+    appJson = cleanAppJson appJson
     appJson.noAutoInstall = true
-    appJson.cleaned = true
+    appJson.platform = 'win32'
+    appJson.appType = LeapApp.Types.StoreApp
+
     app = handleAppJson appJson
+    unless app?
+      console.warn 'Skipping invalid prebundled app json', appJson
+      return
+      
     app.set "state", LeapApp.States.Waiting
     installationFunctions.push (callback) ->
       console.log "Installing prebundled app: " + app.get "name"
       app.install (err) ->
         if err
           console.error "Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err.stack or err)
-        else
-          getAppJson(app.get 'appId').then (appJson) ->
-            app.set appJson
-            do app.save
-          .done()
 
           subscribeToAppChannel app.get("appId")
         callback null
 
-  async.parallelLimit installationFunctions, 2, (err) ->
+  async.parallelLimit installationFunctions, 1, (err) ->
     installManager.showAppropriateDownloadControl()
     cb?(err)
 

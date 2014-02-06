@@ -61,7 +61,7 @@ module.exports = LeapApp.extend({
         cb && cb(err);
       }.bind(this));
     } else {
-      console.log('Installing: ' + this.get('name'));
+      console.log('Installing:', this.get('name'), this);
 
       if (fs.existsSync(this._findExecutable())) {
         console.log('Existing app binary found.  Skipping download.');
@@ -85,7 +85,7 @@ module.exports = LeapApp.extend({
 
   _extractPrebundledBinary: function() {
     this.set('state', LeapApp.States.Installing);
-    var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', binaryUrl);
+    var tempFilename = path.join(config.PlatformTempDirs[os.platform()], 'frozen', this.get('binaryUrl'));
     console.log('Local binary detected. Extracting ' + tempFilename + ' to ' + this._appDir());
 
     return extract.extractApp(tempFilename, this._appDir(), true).fail(function(reason) {
@@ -107,7 +107,7 @@ module.exports = LeapApp.extend({
 
     if (!url.parse(binaryUrl).protocol) {
       // Prebundled apps
-      return _extractPrebundledBinary().nodeify(cb);
+      return this._extractPrebundledBinary().nodeify(cb);
     } else {
       var downloadStream;
 

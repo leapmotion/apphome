@@ -13,7 +13,7 @@ promise = undefined
 # Returns embedded type if type matches config.EmbeddedLeapTypes (e.g. pongo, hops)
 # Returns undefined if no embedded device
 getEmbeddedDevice = ->
-  return uiGlobals.embeddedDevice  if config.EmbeddedLeapTypes.indexOf(uiGlobals.embeddedDevice) isnt -1
+  return uiGlobals.embeddedDevice  if _.values(config.EmbeddedLeapTypes).indexOf(uiGlobals.embeddedDevice) isnt -1
 
   existingValue = db.fetchObj config.DbKeys.EmbeddedLeapDevice
   return existingValue  if typeof existingValue isnt "undefined"
@@ -22,19 +22,22 @@ getEmbeddedDevice = ->
   if os.platform() is "win32"
     try
       # look for the file named 'installtype' in PlatformProgramDataDir
-      dirs = config.PlatformProgramDataDirs[os.platform()]
-      dirs.push "installtype"
-      baseDir = path.join.apply(path, dirs)
-      unless fs.existsSync baseDir
-        console.log "Device type data not found, assuming peripheral"
+      lastAuthPath = path.join config.PlatformLeapDataDirs[os.platform()], 'lastauth'
+      unless fs.existsSync lastAuthPath
+        console.log "Lastauth data not found, assuming peripheral"
       else
-        devicetype = fs.readFileSync(baseDir).toString()
-        unless devicetype
-          console.error "Unable to read Device type data"
+        lastAuthData = window.atob(fs.readFileSync lastAuthPath, 
+          encoding: 'utf8'
+        ).split ' '
+
+        unless lastAuthData?.length >= 2
+          console.log "Invalid lastauth data, assuming peripheral", lastAuthData
         else
-          console.log "Device type: " + devicetype
-          if config.EmbeddedLeapTypes.indexOf(devicetype) isnt -1
-            embeddedDevice = devicetype
+          deviceType = lastAuthData[1]
+
+          console.log "Device type: " + deviceType
+          if _.has config.EmbeddedLeapTypes, deviceType
+            embeddedDevice = config.EmbeddedLeapTypes[deviceType]
             mixpanel.trackEvent "Embedded Leap Motion Controller Detected",
               deviceType: embeddedDevice
 

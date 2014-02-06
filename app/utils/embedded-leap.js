@@ -21,8 +21,8 @@
   promise = void 0;
 
   getEmbeddedDevice = function() {
-    var baseDir, devicetype, dirs, embeddedDevice, err, existingValue;
-    if (config.EmbeddedLeapTypes.indexOf(uiGlobals.embeddedDevice) !== -1) {
+    var deviceType, embeddedDevice, err, existingValue, lastAuthData, lastAuthPath;
+    if (_.values(config.EmbeddedLeapTypes).indexOf(uiGlobals.embeddedDevice) !== -1) {
       return uiGlobals.embeddedDevice;
     }
     existingValue = db.fetchObj(config.DbKeys.EmbeddedLeapDevice);
@@ -32,19 +32,20 @@
     embeddedDevice = void 0;
     if (os.platform() === "win32") {
       try {
-        dirs = config.PlatformProgramDataDirs[os.platform()];
-        dirs.push("installtype");
-        baseDir = path.join.apply(path, dirs);
-        if (!fs.existsSync(baseDir)) {
-          console.log("Device type data not found, assuming peripheral");
+        lastAuthPath = path.join(config.PlatformLeapDataDirs[os.platform()], 'lastauth');
+        if (!fs.existsSync(lastAuthPath)) {
+          console.log("Lastauth data not found, assuming peripheral");
         } else {
-          devicetype = fs.readFileSync(baseDir).toString();
-          if (!devicetype) {
-            console.error("Unable to read Device type data");
+          lastAuthData = window.atob(fs.readFileSync(lastAuthPath, {
+            encoding: 'utf8'
+          })).split(' ');
+          if (!((lastAuthData != null ? lastAuthData.length : void 0) >= 2)) {
+            console.log("Invalid lastauth data, assuming peripheral", lastAuthData);
           } else {
-            console.log("Device type: " + devicetype);
-            if (config.EmbeddedLeapTypes.indexOf(devicetype) !== -1) {
-              embeddedDevice = devicetype;
+            deviceType = lastAuthData[1];
+            console.log("Device type: " + deviceType);
+            if (_.has(config.EmbeddedLeapTypes, deviceType)) {
+              embeddedDevice = config.EmbeddedLeapTypes[deviceType];
               mixpanel.trackEvent("Embedded Leap Motion Controller Detected", {
                 deviceType: embeddedDevice
               });

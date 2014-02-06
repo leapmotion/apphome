@@ -102,10 +102,6 @@ var config = {
     linux:  '/tmp/LM_Airspace'
   },
 
-  PlatformProgramDataDirs: {
-    win32:  [ process.env.PROGRAMDATA, 'Leap Motion' ]
-  },
-
   PlatformOrientationPaths: {
     win32: (process.env['PROGRAMFILES(X86)'] || process.env.PROGRAMFILES) + '\\Leap Motion\\Core Services\\Orientation\\Orientation.exe',
     darwin: '/Applications/Leap Motion Orientation.app'
@@ -152,10 +148,10 @@ var config = {
     './PreBundle.LeapMotion'
   ],
 
-  EmbeddedLeapTypes: [
-    'pongo',
-    'hops'
-  ],
+  EmbeddedLeapTypes: {
+    DEVICE_LAPTOP: 'pongo',
+    DEVICE_KEYBOARD: 'hops'
+  },
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
   GetSupportUrl: 'https://airspace.leapmotion.com/apps/support',

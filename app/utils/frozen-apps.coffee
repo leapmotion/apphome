@@ -6,6 +6,8 @@ config = require("../../config/config.js")
 db = require("./db.js")
 extract = require("./extract.js")
 
+Q = require('q');
+
 _manifestPromise = undefined
 prebundledManifestPromise = ->
   return _manifestPromise  if _manifestPromise
@@ -14,15 +16,14 @@ prebundledManifestPromise = ->
 
   originalManifest = db.getItem(config.DbKeys.OriginalPrebundlingManifest)
   if originalManifest
-    console.log originalManifest
-    defer.resolve JSON.parse originalManifest
+    deferred.resolve JSON.parse originalManifest
   else
     _getFrozenApps (err, manifest) ->
-      console.log "Unzipped frozen apps: " + err + manifest
+      console.log "Unzipped", manifest.length, 'frozen apps'
       if err
-        defer.reject err
+        deferred.reject err
       else
-        defer.resolve manifest
+        deferred.resolve manifest
 
   _manifestPromise
 
@@ -78,7 +79,7 @@ _expandFreezeDriedApps = (bundlePath, cb) ->
           encoding: "utf8"
         ))
         if manifest
-          console.log "Caching prebundled manifest " + JSON.stringify(manifest)
+          console.log "Caching prebundled manifest of", manifest.length, "apps"
           #May need this to fix a bug (server does not know of entitlement for prebundled app. Lets you upgrade but does not let you run it.)
           db.setItem config.DbKeys.OriginalPrebundlingManifest, JSON.stringify(manifest)
           cb?(null, manifest)

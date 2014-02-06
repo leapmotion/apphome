@@ -84,6 +84,7 @@
     if (silent == null) {
       silent = false;
     }
+    app = void 0;
     if (!appJson.cleaned) {
       appJson = cleanAppJson(appJson);
     }
@@ -101,7 +102,7 @@
       } else {
         existingApp.set(appJson);
       }
-      return existingApp;
+      app = existingApp;
     } else {
       console.log('Adding', appJson.name);
       try {
@@ -114,7 +115,8 @@
         console.error("Corrupt app data from api: " + appJson + "\n" + (err.stack || err));
       }
     }
-    return installManager.showAppropriateDownloadControl();
+    installManager.showAppropriateDownloadControl();
+    return app;
   };
 
   syncToCollection = function(appJsonList, collection, appTest) {
@@ -364,31 +366,32 @@
 
   parsePrebundledManifest = function(manifest, cb) {
     var installationFunctions;
-    console.log("\n\n\nExamining prebundle manifest \n" + JSON.stringify(manifest || {}, null, 2));
+    console.log('Installing', manifest.length, 'prebundled apps');
     installationFunctions = [];
     manifest.forEach(function(appJson) {
       var app;
+      appJson = cleanAppJson(appJson);
       appJson.noAutoInstall = true;
-      appJson.cleaned = true;
+      appJson.platform = 'win32';
+      appJson.appType = LeapApp.Types.StoreApp;
       app = handleAppJson(appJson);
+      if (app == null) {
+        console.warn('Skipping invalid prebundled app json', appJson);
+        return;
+      }
       app.set("state", LeapApp.States.Waiting);
       return installationFunctions.push(function(callback) {
         console.log("Installing prebundled app: " + app.get("name"));
         return app.install(function(err) {
           if (err) {
             console.error("Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err.stack || err));
-          } else {
-            getAppJson(app.get('appId')).then(function(appJson) {
-              app.set(appJson);
-              return app.save();
-            }).done();
             subscribeToAppChannel(app.get("appId"));
           }
           return callback(null);
         });
       });
     });
-    return async.parallelLimit(installationFunctions, 2, function(err) {
+    return async.parallelLimit(installationFunctions, 1, function(err) {
       installManager.showAppropriateDownloadControl();
       return typeof cb === "function" ? cb(err) : void 0;
     });
