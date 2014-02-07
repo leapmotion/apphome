@@ -299,7 +299,11 @@
     authDataFile = path.join(dataDir, "lastauth");
     if (!fs.existsSync(authDataFile)) {
       console.warn("Auth data file doesn't exist");
-      throw new Error("Auth data file doesn't exist");
+      if (uiGlobals.embeddedDevice) {
+        throw new Error("Auth data file doesn't exist");
+      } else {
+        return Q();
+      }
     }
     return Q.nfcall(fs.readFile, authDataFile, "utf-8").then(function(authData) {
       if (!authData) {
