@@ -58,6 +58,14 @@ module.exports = window.Backbone.Collection.extend({
   },
 
   move: function(newAppDirectory, done) {
+    var appsToMove = this.filter(function(app) {
+      return app.isStoreApp() && app.get('state') === LeapApp.States.Ready;
+    });
+
+    if (!appsToMove.length) {
+      return done();
+    }
+
     var appMoveQueue = async.queue(function(app, cb) {
       app.move(newAppDirectory, cb);
     }, 5);
@@ -67,9 +75,7 @@ module.exports = window.Backbone.Collection.extend({
       done();
     };
 
-    this.filter(function(app) {
-      return app.isStoreApp() && app.get('state') === LeapApp.States.Ready;
-    }).forEach(function(app) {
+    appsToMove.forEach(function(app) {
       appMoveQueue.push(app);
     });
   },

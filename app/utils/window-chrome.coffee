@@ -166,14 +166,14 @@ rebuildMenuBar = (enableLogOut, disableSetInstallDir) ->
     installLocationInput = $("input#installLocation")
     installLocationInput.remove()
 
-    rebuildMenuBar true, true
+    rebuildMenuBar enableLogOut, true
 
     console.log "Changing app install location to " + newAppDir
     db.saveObj config.DbKeys.AppInstallDir, newAppDir
 
     uiGlobals.myApps.move newAppDir, ->
       console.log "~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~"
-      rebuildMenuBar true
+      rebuildMenuBar enableLogOut, false
 
   helpMenuItem = buildHelpMenu(enableLogOut)
 

@@ -200,12 +200,12 @@
       }
       installLocationInput = $("input#installLocation");
       installLocationInput.remove();
-      rebuildMenuBar(true, true);
+      rebuildMenuBar(enableLogOut, true);
       console.log("Changing app install location to " + newAppDir);
       db.saveObj(config.DbKeys.AppInstallDir, newAppDir);
       return uiGlobals.myApps.move(newAppDir, function() {
         console.log("~~~~~~~~~~~~~ MOVE COMPLETE ~~~~~~~~~~~~~~");
-        return rebuildMenuBar(true);
+        return rebuildMenuBar(enableLogOut, false);
       });
     });
     helpMenuItem = buildHelpMenu(enableLogOut);
