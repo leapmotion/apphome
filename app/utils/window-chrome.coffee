@@ -30,8 +30,6 @@ appWindowBindings = ->
 
   process.on "exit", mixpanel.trackClose
 
-PlatformControlPanelPaths = win32: (process.env["PROGRAMFILES(X86)"] or process.env.PROGRAMFILES) + "\\Leap Motion\\Core Services\\LeapControlPanel.exe"
-
 maximizeWindow = ->
   win = nwGui.Window.get()
   win.maximize()
@@ -50,7 +48,7 @@ buildFileMenu = ->
   fileMenu.append new nwGui.MenuItem(
     label: i18n.translate("Controller Settings")
     click: ->
-      nwGui.Shell.openItem PlatformControlPanelPaths.win32
+      nwGui.Shell.openItem config.PlatformControlPanelPaths[os.platform()]
   )
   fileMenu.append new nwGui.MenuItem(
     label: i18n.translate("Exit")
@@ -117,6 +115,14 @@ buildHelpMenu = (enableLogOut) ->
       label: i18n.translate("About Airspace Home")
       click: ->
         popup.open "about"
+    )
+  else
+    helpMenu.append new nwGui.MenuItem(
+      label: i18n.translate("Controller Settings")
+      click: ->
+        cpPath = config.PlatformControlPanelPaths[os.platform()]
+        console.log cpPath
+        nwGui.Shell.openItem cpPath
     )
 
   new nwGui.MenuItem(

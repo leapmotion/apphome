@@ -107,6 +107,11 @@ var config = {
     darwin: '/Applications/Leap Motion Orientation.app'
   },
 
+  PlatformControlPanelPaths: {
+    win32: (process.env["PROGRAMFILES(X86)"] || process.env.PROGRAMFILES) + "\\Leap Motion\\Core Services\\LeapControlPanel.exe",
+    darwin: '/Applications/Leap Motion.app'
+  },
+
   CrashReportingDirs: {
     win32:  'C:\\Users\\All Users\\Leap Motion',
     darwin: process.env.HOME + '/Library/Application Support/Leap Motion',
