@@ -57,9 +57,9 @@ var icnsIconPath = pngIconPath.replace(/\.png$/, '.icns');
 function nwGypHandling(cb) {
   var modulesToNwGyp = [], configureCommands = [], buildCommands = [];
 
-  var nodeGypPath = path.resolve('../node_modules/nw-gyp/bin/nw-gyp.js');
+  var nodeGypPath = path.join(__dirname, '../node_modules/nw-gyp/bin/nw-gyp.js');
 
-  Walker('../node_modules')
+  Walker(path.join(__dirname, '../node_modules'))
     .on('entry', function(entry, stat) {
       if (entry.indexOf('binding.gyp') !== -1) {
         modulesToNwGyp.push(path.dirname(entry));
