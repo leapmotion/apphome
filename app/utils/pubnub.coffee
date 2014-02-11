@@ -51,7 +51,7 @@ subscribe = (channel, callback) ->
           try
             callback data
           catch err
-            console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + data
+            console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack or err)
     return true
   else
     console.warn "Ignoring duplicate subscription on channel \"" + channel + "\"."
@@ -71,7 +71,7 @@ history = (count, channel, callback) ->
           try
             callback.apply this, data
           catch err
-            console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + data
+            console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack or err)
 
 module.exports.domain = pubnubDomain
 module.exports.subscribe = subscribe
