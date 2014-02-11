@@ -66,30 +66,59 @@ var NotificationPane = BaseView.extend({
         if (_.isObject(notificationJson) && ('uuid' in notificationJson)) {
           _this.displayNotification(notificationJson);
         } else {
-          console.log("uuid not present in notification: " + notification);
+          console.log("uuid not present in notification: " + JSON.stringify(notificationJson));
         }
       });
     });
 
-    pubnub.subscribe('notification.' + uiGlobals.locale.toLowerCase(), function(notification) {
-      _this.displayNotification(notification);
+    pubnub.subscribe('notification.' + uiGlobals.locale.toLowerCase(), function(notificationJson) {
+      if (_.isObject(notificationJson) && ('uuid' in notificationJson)) {
+        _this.displayNotification(notificationJson);
+      } else {
+        console.log("uuid not present in notification: " + JSON.stringify(notificationJson));
+      }
     });
   },
 
   subscribeToUserNotifications: function(userId) {
     var _this = this;
     pubnub.history(10, userId + '.user.notification.' + uiGlobals.locale.toLowerCase(), function(notifications, start, end) {
-      notifications.forEach(_this.displayNotification);
+      notifications.forEach(function(notificationJson, i, arr) {
+        if (_.isObject(notificationJson) && ('uuid' in notificationJson)) {
+          _this.displayNotification(notificationJson);
+        } else {
+          console.log("uuid not present in notification: " + JSON.stringify(notificationJson));
+        }
+      });
     });
 
     pubnub.subscribe(userId + '.user.notification.' + uiGlobals.locale.toLowerCase(), function(notificationJson) {
-      _this.displayNotification(notificationJson);
+      if (_.isObject(notificationJson) && ('uuid' in notificationJson)) {
+        _this.displayNotification(notificationJson);
+      } else {
+        console.log("uuid not present in notification: " + JSON.stringify(notificationJson));
+      }
     });
   },
 
   displayNotification: function(notificationJson) {
-    // Just don't even process dismissed notifications
     var dismissedNotifications = db.fetchObj(config.DbKeys.DismissedNotifications) || [];
+
+    if (_.has(notificationJson, 'delete') || _.has(notificationJson, 'deleted')) {
+      // Mark id as dismissed
+      var deletedNotifications = _.where(this.notifications, {uuid: notificationJson.uuid});
+
+      if (deletedNotifications.length) {
+        deletedNotifications.forEach(function(notification) {
+          notification.dismiss();
+        });
+      } else {
+        dismissedNotifications.push(notificationJson.uuid);
+        db.saveObj(config.DbKeys.DismissedNotifications, dismissedNotifications);
+      }
+    }
+
+    // Just don't even process dismissed notifications
     if (dismissedNotifications.indexOf(notificationJson.uuid) !== -1) {
       console.log('Skipping dismissed notification: ' + JSON.stringify(notificationJson));
       return;

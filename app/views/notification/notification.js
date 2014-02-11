@@ -16,6 +16,7 @@ var NotificationView = BaseView.extend({
     this.notification = notification;
 
     this.setElement(this.templateHtml({
+      uuid: notification.get('uuid'),
       message: notification.get('body'),
       iconUrl: notification.get('icon_url'),
       link: !!notification.get('url')

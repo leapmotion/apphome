@@ -70,7 +70,7 @@
               return callback(data);
             } catch (_error) {
               err = _error;
-              return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + data);
+              return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack || err));
             }
           }
         });
@@ -97,7 +97,7 @@
               return callback.apply(this, data);
             } catch (_error) {
               err = _error;
-              return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + data);
+              return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack || err));
             }
           }
         }
