@@ -208,6 +208,8 @@ var LeapApp = BaseModel.extend({
 
     nwGui.Shell.openItem(executable);
 
+    mixpanel.trackEvent('Launched app', this.get('name'));
+
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
       mixpanel.trackEvent(eventToTrack);

@@ -43,6 +43,8 @@ var WebLinkApp = LeapApp.extend({
       nwGui.Shell.openExternal(urlToLaunch);
     }
 
+    mixpanel.trackEvent('Launched app', this.get('name'));
+
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
       mixpanel.trackEvent(eventToTrack);
