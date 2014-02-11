@@ -104,7 +104,7 @@ var NotificationPane = BaseView.extend({
   displayNotification: function(notificationJson) {
     var dismissedNotifications = db.fetchObj(config.DbKeys.DismissedNotifications) || [];
 
-    if (_.has(notificationJson, 'delete') || _.has(notificationJson, 'deleted')) {
+    if (notificationJson.deleted) {
       // Mark id as dismissed
       var deletedNotifications = _.where(this.notifications, {uuid: notificationJson.uuid});
 
