@@ -39,7 +39,8 @@ _branch_basename=$(basename "${BUILD_BRANCH}")
 case "${_branch_basename}" in
 release-*) _branch_basename=release; _access=public; _Access=Public ;;
 hotfix-*) _branch_basename=hotfix; _access=public; _Access=Public ;;
-*) _access=internal; _Access=Internal;;
+#if there are any special internal-only branches they can go here. otherwise build products go in public products cache
+*) _access=public; _Access=Public;;
 esac
 
 if [ -z "$AIRSPACE_OUT_DIR" ]; then
