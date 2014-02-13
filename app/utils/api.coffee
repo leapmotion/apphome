@@ -181,6 +181,8 @@ getNonStoreManifest = ->
       do _getNonStoreManifest
 
 _setGlobalUserInformation = (user) ->
+  drm.writeXml user.auth_id, user.secret_token
+
   uiGlobals.username = user.username
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
@@ -201,7 +203,7 @@ connectToStoreServer = ->
 
     messages.forEach (message) ->
       _.defer ->
-        drm.writeXml message.auth_id, message.secret_token  if message.auth_id and message.secret_token
+
         subscribeToAppChannel message.appId
         handleAppJson message
 
