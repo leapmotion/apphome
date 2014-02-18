@@ -94,18 +94,13 @@
       win.showDevTools();
     });
 
-    function makeVisible() {
-      if (win.x < 0) {
-        win.moveTo(screen.availLeft, win.y);
-      }
+    win.on('focus', function() {
+      global.uiGlobals.hasFocus = true;
+    });
 
-      if (win.y < 0) {
-        win.moveTo(win.x, screen.availTop);
-      }
-    }
-
-    win.on('resize', makeVisible);
-    win.on('unmaximize', makeVisible);
+    win.on('blur', function() {
+      global.uiGlobals.hasFocus = false;
+    });
   </script>
 </body>
 </html>
