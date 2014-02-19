@@ -32,7 +32,7 @@
       deferred.resolve(JSON.parse(originalManifest));
     } else {
       _getFrozenApps(function(err, manifest) {
-        console.log("Unzipped", manifest.length, 'frozen apps');
+        console.log("Unzipped", (manifest ? manifest.length : 0), 'frozen apps');
         if (err) {
           return deferred.reject(err);
         } else {

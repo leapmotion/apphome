@@ -280,7 +280,7 @@ function startMainApp(cb) {
 
 function handlePrebundledApps() {
   return frozenApps.prebundledManifestPromise().then(function(manifest) {
-    if (manifest) {
+    if (manifest && manifest.length) {
       return Q.nfcall(api.parsePrebundledManifest, manifest);
     } else {
       console.warn('Prebundled manifest missing, skipping prebundled apps.');

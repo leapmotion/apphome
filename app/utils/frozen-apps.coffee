@@ -19,7 +19,7 @@ prebundledManifestPromise = ->
     deferred.resolve JSON.parse originalManifest
   else
     _getFrozenApps (err, manifest) ->
-      console.log "Unzipped", manifest.length, 'frozen apps'
+      console.log "Unzipped", (if manifest then manifest.length else 0), 'frozen apps'
       if err
         deferred.reject err
       else
