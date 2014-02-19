@@ -204,7 +204,11 @@ function enableLeapController() {
       var pos = g.translation()[0];
       if (Math.abs(pos) > 100) {
         var isLeft = pos > 0;
-        uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+
+        // Only swipe if window has focus
+        if (uiGlobals.hasFocus) {
+          uiGlobals.trigger('swipe' + (isLeft ? 'left' : 'right'));
+        }
       }
     });
   }

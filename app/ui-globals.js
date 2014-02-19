@@ -22,6 +22,8 @@ uiGlobals.bootstrapPromises = {};
 
 uiGlobals.scaling = 1;
 
+uiGlobals.hasFocus = true;
+
 uiGlobals.currentNotifications = [];
 
 var packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')));
