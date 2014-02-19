@@ -415,23 +415,6 @@ window.guiders = (function($) {
     return guiders._guiders[guiders._currentGuiderID] || null;
   };
 
-  guiders._updatePositionOnResize = function() {
-    // Change the bubble position after browser gets resized
-    var _resizing;
-    $(window).resize(function() {
-      if (typeof(_resizing) !== "undefined") {
-        clearTimeout(_resizing); // Prevents seizures
-      }
-      _resizing = setTimeout(function() {
-        _resizing = undefined;
-        if (typeof (guiders) !== "undefined") {
-          guiders.reposition();
-        }
-      }, 20);
-    });
-  };
-  guiders._updatePositionOnResize();
-
   guiders._unwireEscape = function (myGuider) {
     $(document).unbind("keydown");
   };

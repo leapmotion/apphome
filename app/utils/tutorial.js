@@ -15,6 +15,7 @@
   guidesMade = false;
 
   makeGuides = function() {
+    var _resizing;
     guiders.createGuider({
       buttons: [
         {
@@ -101,6 +102,18 @@
         mixpanel.trackEvent('Tutorial Finished', null, 'OOBE');
         return uiGlobals.inTutorial = false;
       }
+    });
+    _resizing = void 0;
+    $(window).resize(function() {
+      if (_resizing != null) {
+        clearTimeout(_resizing);
+      }
+      return _resizing = setTimeout(function() {
+        _resizing = void 0;
+        if (typeof guiders !== "undefined" && guiders !== null) {
+          return guiders.reposition();
+        }
+      }, 20);
     });
     return guidesMade = true;
   };

@@ -83,6 +83,17 @@ makeGuides = ->
       mixpanel.trackEvent 'Tutorial Finished', null, 'OOBE'
       uiGlobals.inTutorial = false
 
+  # Change the bubble position after browser gets resized
+  _resizing = undefined
+  $(window).resize ->
+    clearTimeout(_resizing)  if _resizing?
+
+    _resizing = setTimeout ->
+      _resizing = undefined
+      if guiders?
+        do guiders.reposition
+    , 20
+
   guidesMade = true
 
 onClose = ->
