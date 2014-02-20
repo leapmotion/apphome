@@ -112,10 +112,10 @@ var NotificationPane = BaseView.extend({
         deletedNotifications.forEach(function(notification) {
           notification.dismiss();
         });
-      } else {
-        dismissedNotifications.push(notificationJson.uuid);
-        db.saveObj(config.DbKeys.DismissedNotifications, dismissedNotifications);
       }
+
+      dismissedNotifications.push(notificationJson.uuid);
+      db.saveObj(config.DbKeys.DismissedNotifications, dismissedNotifications);
     }
 
     // Just don't even process dismissed notifications
