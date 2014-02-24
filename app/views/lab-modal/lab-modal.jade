@@ -1,0 +1,26 @@
+extends ../modal/modal
+
+
+block header
+  img.labs-logo(src="static/images/flask.png")
+
+  h1.title= title
+
+  .description
+    .intro= intro
+    .instructions= instructions
+
+block content
+
+  form(role="form")
+    each option in options
+      div.checkbox
+        label
+          input(class=option[0], type="checkbox")
+          span= option[2]
+
+block footer
+  .button.cancel= cancel_label
+
+  .save.button= save_label
+  .saved= saved_label

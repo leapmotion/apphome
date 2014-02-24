@@ -1,24 +1,21 @@
-var i18n = require('../../../utils/i18n.js');
-var db = require('../../../utils/db.js');
+var i18n = require('../../utils/i18n.js');
+var db = require('../../utils/db.js');
 var urlify = require('django-urlify');
 
-var config = require('../../../../config/config.js');
-var BaseView = require('../../base-view.js');
+var config = require('../../../config/config.js');
 
-module.exports = BaseView.extend({
+var Modal = require('../modal/modal.js');
+
+module.exports = Modal.extend({
 
   viewDir: __dirname,
 
-  options: {
-    title: i18n.translate('Airspace Labs'),
-    width: 640,
-    height: 480,
-    'always-on-top': false,
-    show: false
-  },
+  className: 'lab-modal',
 
   initialize: function(options) {
-    _.extend(this.options, options);
+    this.options = _.extend({}, options);
+
+    this.initializeModal();
 
     var labOptions = _.pairs(uiGlobals.labOptions);
 
@@ -27,13 +24,15 @@ module.exports = BaseView.extend({
       option.push(i18n.translate(config.LabOptions[option[0]]));
     });
 
-    this.injectCss();
     this.$el.append(this.templateHtml({
+      title: i18n.translate('Welcome to Airspace Labs'),
+      intro: i18n.translate('Customize your Airspace experience by trying out these features!'),
       instructions: i18n.translate("These are experimental features which may crash Airspace Home. "
        + "Enable at your own risk. You will need to restart Airspace before your changes take effect."),
       options: labOptions,
       save_label: i18n.translate('Save'),
       saved_label: i18n.translate('Saved'),
+      cancel_label: i18n.translate('Cancel')
     }));
 
     labOptions.forEach(function(option) {
@@ -43,6 +42,10 @@ module.exports = BaseView.extend({
     }.bind(this));
 
     this.$('form').submit(function(evt) {
+      evt.preventDefault();
+    });
+
+    this.$('.save').click(function(evt) {
       var updatedOptions = {};
 
       this.$('input[type="checkbox"]').each(function() {
@@ -53,11 +56,7 @@ module.exports = BaseView.extend({
       db.saveObj(config.DbKeys.LabOptionStates, updatedOptions);
 
       this.$('.saved').show().fadeOut();
-
-      evt.preventDefault();
     }.bind(this));
-
-    this.options.nwWindow.show();
   }
 
 });

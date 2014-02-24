@@ -11,6 +11,8 @@ popup = require("../views/popups/popup.js")
 tutorial = require("./tutorial.js")
 MainPage = require("../views/main-page/main-page.js")
 
+LabModalView = require('../views/lab-modal/lab-modal.js')
+
 appWindowBindings = ->
   uiGlobals.on uiGlobals.Event.SignIn, ->
     rebuildMenuBar true
@@ -79,7 +81,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
     accountMenu.append new nwGui.MenuItem
       label: i18n.translate 'Airspace Labs'
       click: ->
-        popup.open 'lab'
+        (new LabModalView()).show()
 
   new nwGui.MenuItem(
     label: i18n.translate("Account")
