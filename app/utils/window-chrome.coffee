@@ -1,6 +1,8 @@
 fs = require("fs")
 os = require("os")
 path = require("path")
+execFile = require('child_process').execFile
+
 api = require("./api.js")
 authorizationUtil = require("./authorization-util.js")
 config = require("../../config/config.js")
@@ -50,7 +52,7 @@ buildFileMenu = ->
   fileMenu.append new nwGui.MenuItem(
     label: i18n.translate("Controller Settings")
     click: ->
-      nwGui.Shell.openItem config.PlatformControlPanelPaths[os.platform()]
+      execFile(config.PlatformControlPanelPaths[os.platform()], ['--showsettings'])
   )
   fileMenu.append new nwGui.MenuItem(
     label: i18n.translate("Exit")
@@ -122,9 +124,8 @@ buildHelpMenu = (enableLogOut) ->
     helpMenu.append new nwGui.MenuItem(
       label: i18n.translate("Controller Settings")
       click: ->
-        cpPath = config.PlatformControlPanelPaths[os.platform()]
-        console.log cpPath
-        nwGui.Shell.openItem cpPath
+        execFile(config.PlatformControlPanelPaths[os.platform()], ['--showsettings'])
+
     )
 
   new nwGui.MenuItem(
