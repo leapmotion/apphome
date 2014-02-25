@@ -154,8 +154,8 @@ var config = {
   ],
 
   EmbeddedLeapTypes: {
-    DEVICE_LAPTOP: 'pongo',
-    DEVICE_KEYBOARD: 'hops'
+    TYPE_LAPTOP: 'pongo',
+    TYPE_KEYBOARD: 'hops'
   },
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
