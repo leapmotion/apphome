@@ -142,6 +142,7 @@ _getStoreManifest = ->
     apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform
+      language: uiGlobals.locale
     console.log "Getting store manifest from", apiEndpoint
     httpHelper.getJson(apiEndpoint).then (messages) ->
       if messages.errors
@@ -213,6 +214,7 @@ getAppJson = (appId) ->
     url = config.AppJsonEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform
+      langauge: uiGlobals.locale
 
     url = url.replace(":id", appId)
 

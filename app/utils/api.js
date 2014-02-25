@@ -180,7 +180,8 @@
       platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify({
         access_token: accessToken,
-        platform: platform
+        platform: platform,
+        language: uiGlobals.locale
       });
       console.log("Getting store manifest from", apiEndpoint);
       return httpHelper.getJson(apiEndpoint).then(function(messages) {
@@ -272,7 +273,8 @@
       platform = NodePlatformToServerPlatform[os.platform()] || os.platform();
       url = config.AppJsonEndpoint + "?" + qs.stringify({
         access_token: accessToken,
-        platform: platform
+        platform: platform,
+        langauge: uiGlobals.locale
       });
       url = url.replace(":id", appId);
       console.log("Getting app details via url: " + url);
