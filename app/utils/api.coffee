@@ -127,7 +127,7 @@ subscribeToAppChannel = (appId) ->
 
 reconnectionPromise = undefined
 reconnectAfterError = (err) ->
-  console.log "Failed to connect to store server (retrying in " + config.ServerConnectRetryMs + "ms):", (if err and err.stack then err.stack else err)
+  console.log "Failed to connect to store server (retrying in " + config.ServerConnectRetryMs + "ms):", (err?.stack or err)
   return reconnectionPromise if reconnectionPromise?
   reconnectionPromise = Q.delay(config.ServerConnectRetryMs)
     .then ->
@@ -175,7 +175,7 @@ getNonStoreManifest = ->
 
     manifest
   , (reason) ->
-    console.warn "Failed to get app manifest (retrying): " + err and err.stack
+    console.warn "Failed to get app manifest (retrying): " + reason?.stack or reason
     Q.delay config.S3ConnectRetryMs
     .then ->
       do _getNonStoreManifest
@@ -252,10 +252,10 @@ sendDeviceData = ->
       .then ->
         console.log "Sent device data."
       , (reason) ->
-        console.error "Failed to send device data: " + (reason.stack or reason)
+        console.error "Failed to send device data: " + (reason?.stack or reason)
         throw reason
     , (reason) ->
-      console.warn "Failed to get an access token: " + (err.stack or err)
+      console.warn "Failed to get an access token: " + (reason?.stack or reason)
       throw reason
   , (reason) ->
     console.warn "Error reading auth data file."
@@ -316,8 +316,8 @@ parsePrebundledManifest = (manifest, cb) ->
     installationFunctions.push (callback) ->
       console.log "Installing prebundled app: " + app.get "name"
       app.install (err) ->
-        if err
-          console.error "Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err.stack or err)
+        if err?
+          console.error "Unable to initialize prebundled app " + JSON.stringify(appJson) + ": " + (err?.stack or err)
 
           subscribeToAppChannel app.get("appId")
         callback null
