@@ -190,10 +190,8 @@ function prerunAsyncKickoff(cb) {
 }
 
 function enableLeapController() {
-  var ctl = new leapjs.Controller({enableGestures: true});
-
   if (uiGlobals.labOptions['enable-leap-controls']) {
-    var swiper = ctl.gesture('swipe');
+    var swiper = leapController.gesture('swipe');
 
     swiper.start(function(g) {
       swiper.currentSwipe = g;
@@ -212,8 +210,6 @@ function enableLeapController() {
       }
     });
   }
-
-   ctl.connect();
 }
 
 function setupMainWindow(cb) {
