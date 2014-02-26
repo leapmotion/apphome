@@ -567,3 +567,27 @@ msgstr "在 Airspace Home 中使用您的 Leap Motion 控制器。在页面间�
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "使用您的 Leap Motion 控制器在页面间切换。"
+
+msgid "welcome to airspace labs"
+msgstr "欢迎来到 Airspace Labs"
+
+msgid "customize your airspace experience by trying out these features!"
+msgstr "试用这些功能自定义你的 Airspace！"
+
+msgid "restart"
+msgstr "重启"
+
+msgid "restart airspace"
+msgstr "重启 Airspace"
+
+msgid "restart airspace home"
+msgstr "重启 Airspace Home"
+
+msgid "close"
+msgstr "关闭"
+
+msgid "close airspace"
+msgstr "关闭 Airspace"
+
+msgid "close airspace home"
+msgstr "关闭 Airspace Home"

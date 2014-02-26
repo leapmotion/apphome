@@ -544,6 +544,9 @@ msgstr "Um über ein Leap Motion-Konto verfügen zu können, müssen Sie bestimm
 msgid "you will receive an email with instructions about how to reset your password in a few minutes."
 msgstr "Sie erhalten in Kürze eine e-mail mit Anweisungen zur Einrichtung Ihres neuen Passwortes."
 
+msgid "connect with other users to discuss projects, ideas, and your favorite apps"
+msgstr "Finde dich mit anderen Nutzern zusammen, um über Projekte, Ideen und deine Lieblingsapps zu diskutieren"
+
 msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
 msgstr "Dies sind experimentelle Funktionen, die Airspace Home zum Absturz bringen können. Die Aktivierung geschieht auf Ihr eigenes Risiko. Sie müssen Airspace."
 
@@ -564,3 +567,27 @@ msgstr "Verwenden Sie Ihren Leap Motion Controller in Airspace Home. Blättern S
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Verwenden Sie Ihren Leap Motion Controller, um zwischen Seiten zu blättern."
+
+msgid "welcome to airspace labs"
+msgstr "Willkommen bei Airspace Labs"
+
+msgid "customize your airspace experience by trying out these features!"
+msgstr "Personalisieren Sie Ihr Airspace-Erlebnis, indem Sie diese Funktionen ausprobieren!"
+
+msgid "restart"
+msgstr "Neu starten"
+
+msgid "restart airspace"
+msgstr "Airspace neu starten"
+
+msgid "restart airspace home"
+msgstr "Airspace Home neu starten"
+
+msgid "close"
+msgstr "Schließen"
+
+msgid "close airspace"
+msgstr "Airspace schließen"
+
+msgid "close airspace home"
+msgstr "Airspace Home schließen"

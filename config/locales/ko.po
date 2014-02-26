@@ -567,3 +567,27 @@ msgstr "Airspace Home 속에서 당신의 Leap Motion 콘트롤러를 사용하�
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "당신의 Leap Motion 콘트롤러를 사용해서 페이지 사이를 스와이프하세요."
+
+msgid "welcome to airspace labs"
+msgstr "Airspace Labs에 오신 것을 환영합니다."
+
+msgid "customize your airspace experience by trying out these features!"
+msgstr "이 기능들을 이용하여 Airspace 경험을 커스터마이징 하세요!"
+
+msgid "restart"
+msgstr "재시작"
+
+msgid "restart airspace"
+msgstr "Airspace 재시작"
+
+msgid "restart airspace home"
+msgstr "Airspace Home 재시작"
+
+msgid "close"
+msgstr "닫기"
+
+msgid "close airspace"
+msgstr "Airspace 닫기"
+
+msgid "close airspace home"
+msgstr "Airspace Home 닫기"
