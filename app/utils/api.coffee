@@ -129,10 +129,9 @@ reconnectionPromise = undefined
 reconnectAfterError = (err) ->
   console.log "Failed to connect to store server (retrying in " + config.ServerConnectRetryMs + "ms):", (err?.stack or err)
   return reconnectionPromise if reconnectionPromise?
-  reconnectionPromise = Q.delay(config.ServerConnectRetryMs)
-    .then ->
-      connectToStoreServer()
-      reconnectionPromise = undefined
+  reconnectionPromise = Q.delay(config.ServerConnectRetryMs).then ->
+    connectToStoreServer()
+    reconnectionPromise = undefined
 
 _getStoreManifest = ->
   reconnectionPromise = undefined
@@ -177,8 +176,7 @@ getNonStoreManifest = ->
     manifest
   , (reason) ->
     console.warn "Failed to get app manifest (retrying): " + reason?.stack or reason
-    Q.delay config.S3ConnectRetryMs
-    .then ->
+    Q.delay(config.S3ConnectRetryMs).then ->
       do _getNonStoreManifest
 
 _setGlobalUserInformation = (user) ->
