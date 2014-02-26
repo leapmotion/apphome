@@ -177,7 +177,7 @@ getNonStoreManifest = ->
   , (reason) ->
     console.warn "Failed to get app manifest (retrying): " + reason?.stack or reason
     Q.delay(config.S3ConnectRetryMs).then ->
-      do _getNonStoreManifest
+      do getNonStoreManifest
 
 _setGlobalUserInformation = (user) ->
   drm.writeXml user.auth_id, user.secret_token

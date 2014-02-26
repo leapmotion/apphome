@@ -232,7 +232,7 @@
     }, function(reason) {
       console.warn("Failed to get app manifest (retrying): " + (reason != null ? reason.stack : void 0) || reason);
       return Q.delay(config.S3ConnectRetryMs).then(function() {
-        return _getNonStoreManifest();
+        return getNonStoreManifest();
       });
     });
   };
