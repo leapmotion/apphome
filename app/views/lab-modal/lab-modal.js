@@ -17,7 +17,12 @@ module.exports = Modal.extend({
 
     this.initializeModal();
 
-    var labOptions = _.pairs(uiGlobals.labOptions);
+    var labOptions;
+    if (uiGlobals.newLabOptions) {
+      labOptions = _.pairs(uiGlobals.newLabOptions);
+    } else {
+      labOptions = _.pairs(uiGlobals.labOptions);
+    }
 
     labOptions.map(function(option) {
       // Get and translate description to display
@@ -53,9 +58,10 @@ module.exports = Modal.extend({
       });
 
       console.log("Saved:", updatedOptions);
+      uiGlobals.newLabOptions = updatedOptions;
       db.saveObj(config.DbKeys.LabOptionStates, updatedOptions);
 
-      this.$('.saved').show().fadeOut();
+      this.$('.saved').show().delay(150).fadeOut('slow');
     }.bind(this));
   }
 
