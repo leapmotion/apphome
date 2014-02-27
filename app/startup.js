@@ -167,7 +167,7 @@ function prerunAsyncKickoff(cb) {
   // Read the db and populate uiGlobals.myApps and uiGlobals.uninstalledApps
   // based on the json and information in the database.
   // myApps tries to install everything that gets added (that has state NotYetInstalled)
-  LeapApp.hydrateCachedModels();
+  api.hydrateCachedModels();
 
   // Creates manifest promise for future use
   // manifest is fetched from config.NonStoreAppManifestUrl

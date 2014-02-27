@@ -386,36 +386,6 @@ var LeapApp = BaseModel.extend({
 LeapApp.States = LeapAppStates;
 LeapApp.Types = LeapAppTypes;
 
-LeapApp.hydrateCachedModels = function() {
-  console.log('Rehydrating leap apps from database');
-
-  var userHomeDir = config.UserHomeDirs[os.platform()];
-
-  function populateCollectionFromDb(dbKey, targetCollection) {
-    var appJsonList = db.fetchObj(dbKey) || [];
-    appJsonList.forEach(function(appJson) {
-      try {
-        if (appJson.executable) {
-          appJson.executable = appJson.executable.replace(/^%USER_DIR%/, userHomeDir);
-        }
-        if (appJson.state === LeapApp.States.Uninstalled) {
-          uiGlobals.uninstalledApps.add(appJson);
-        } else {
-          targetCollection.add(appJson);
-        }
-      } catch (err) {
-        console.error('corrupt app data in database: ' + appJson);
-        console.error('Error: ' + (err.stack || err));
-      }
-    });
-  }
-
-  populateCollectionFromDb(config.DbKeys.InstalledApps, uiGlobals.myApps);
-  populateCollectionFromDb(config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps);
-
-  console.log('Done hydrating!');
-};
-
 LeapApp.abstractUserHomeDir = function(appJson) {
   var userHomeDir = config.UserHomeDirs[os.platform()];
 

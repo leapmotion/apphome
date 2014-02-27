@@ -28,8 +28,6 @@ ServerPlatformToNodePlatform = {}
 Object.keys(NodePlatformToServerPlatform).forEach (key) ->
   ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key
 
-appsAdded = 0
-
 cleanAppJson = (appJson) ->
   appJson = appJson or {}
   releaseDate = appJson.certified_at or appJson.created_at
@@ -67,7 +65,7 @@ handleAppJson = (appJson, silent=false) ->
 
   myApps = uiGlobals.myApps
   uninstalledApps = uiGlobals.uninstalledApps
-  existingApp = myApps.get(appJson.appId) or uninstalledApps.get(appJson.appId)
+  existingApp = myApps.get(appJson.id) or uninstalledApps.get(appJson.id)
   if existingApp
     if appJson.versionId > existingApp.get("versionId")
       console.log "Upgrade available for " + existingApp.get("name") + ". New version: " + appJson.version
@@ -132,6 +130,32 @@ reconnectAfterError = (err) ->
   reconnectionPromise = Q.delay(config.ServerConnectRetryMs).then ->
     connectToStoreServer()
     reconnectionPromise = undefined
+
+hydrateCachedModels = ->
+  console.log 'Rehydrating leap apps from database'
+
+  userHomeDir = config.UserHomeDirs[os.platform()]
+
+  populateCollectionFromDb = (dbKey, targetCollection) ->
+    appJsonList = db.fetchObj(dbKey) or []
+    for appJson in appJsonList
+      try
+        if appJson.executable
+          appJson.executable = appJson.executable.replace /^%USER_DIR%/, userHomeDir
+
+        if appJson.state is LeapApp.States.Uninstalled
+          uiGlobals.uninstalledApps.add appJson
+        else
+          handleAppJson appJson
+
+      catch err
+        console.error 'corrupt app data in database: ' + appJson
+        console.error 'Error: ' + (err.stack or err)
+
+  populateCollectionFromDb config.DbKeys.InstalledApps, uiGlobals.myApps
+  populateCollectionFromDb config.DbKeys.UninstalledApps, uiGlobals.uninstalledApps
+
+  console.log 'Done hydrating.'
 
 _getStoreManifest = ->
   reconnectionPromise = undefined
@@ -327,6 +351,7 @@ parsePrebundledManifest = (manifest, cb) ->
     cb?(err)
 
 
+module.exports.hydrateCachedModels = hydrateCachedModels
 module.exports.connectToStoreServer = connectToStoreServer
 module.exports.getNonStoreManifest = getNonStoreManifest
 module.exports.getUserInformation = getUserInformation
