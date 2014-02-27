@@ -219,6 +219,9 @@ getUserInformation = (cb) ->
 
 connectToStoreServer = ->
   _getStoreManifest().then (messages) ->
+    unless messages?
+      return
+
     console.log "Connected to store server.", messages.length - 1, "apps found."
     $("body").removeClass "loading"
 

@@ -285,6 +285,9 @@
 
   connectToStoreServer = function() {
     return _getStoreManifest().then(function(messages) {
+      if (messages == null) {
+        return;
+      }
       console.log("Connected to store server.", messages.length - 1, "apps found.");
       $("body").removeClass("loading");
       _setGlobalUserInformation(messages.shift());
