@@ -113,6 +113,9 @@ subscribeToUserChannel = (userId) ->
     # steal focus
     nwGui.Window.get().focus()
 
+    unless appJson?
+      return Q()
+
     getAppJson(appJson.app_id).then (appJson) ->
       handleAppJson appJson
     .done()

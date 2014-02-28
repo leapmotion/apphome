@@ -144,6 +144,9 @@
   subscribeToUserChannel = function(userId) {
     return pubnub.subscribe(userId + ".user.purchased", function(appJson) {
       nwGui.Window.get().focus();
+      if (appJson == null) {
+        return Q();
+      }
       return getAppJson(appJson.app_id).then(function(appJson) {
         return handleAppJson(appJson);
       }).done();
