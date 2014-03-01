@@ -100,12 +100,12 @@
       });
     }
     xhr.onload = function() {
-      nwGui.App.clearCache();
       if (this.status >= 200 && this.status <= 299) {
-        return deferred.resolve(new Buffer(new window.Uint8Array(this.response)));
+        deferred.resolve(new Buffer(new window.Uint8Array(this.response)));
       } else {
-        return deferred.reject(new Error("Got status code: " + this.status + " for chunk " + start + '-' + end));
+        deferred.reject(new Error("Got status code: " + this.status + " for chunk " + start + '-' + end));
       }
+      return nwGui.App.clearCache();
     };
     xhr.onprogress = function(evt) {
       if (evt.lengthComputable) {
@@ -116,6 +116,7 @@
       return deferred.reject(new Error("Error downloading chunk " + start + '-' + end));
     };
     xhr.send();
+    xhr = null;
     return deferred.promise;
   };
 

@@ -84,12 +84,13 @@ XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
     do xhr.abort
 
   xhr.onload = ->
-    nwGui.App.clearCache()
     if @status >= 200 and @status <= 299
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
       deferred.resolve new Buffer new window.Uint8Array @response
     else
       deferred.reject new Error "Got status code: " + @status + " for chunk " + start + '-' + end
+
+    nwGui.App.clearCache()
 
   xhr.onprogress = (evt) ->
     if evt.lengthComputable
@@ -99,6 +100,9 @@ XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
     deferred.reject new Error "Error downloading chunk " + start + '-' + end
 
   do xhr.send
+
+  # Dodge memory leak?
+  xhr = null
 
   deferred.promise
 
