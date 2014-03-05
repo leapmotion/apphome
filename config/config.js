@@ -76,6 +76,7 @@ var config = {
     ViewedNotifications: 'ViewedNotifications',
     DismissedNotifications: 'DismissedNotifications',
     LabOptionStates: 'LabOptionStates',
+    PreviousLabOptionStates: 'PreviousLabOptionStates',
   },
 
   LabOptions: {

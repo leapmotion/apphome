@@ -1,6 +1,9 @@
+
+var urlify = require('django-urlify');
+
 var i18n = require('../../utils/i18n.js');
 var db = require('../../utils/db.js');
-var urlify = require('django-urlify');
+var mixpanel = require('../../utils/mixpanel.js');
 
 var config = require('../../../config/config.js');
 
@@ -17,12 +20,7 @@ module.exports = Modal.extend({
 
     this.initializeModal();
 
-    var labOptions;
-    if (uiGlobals.newLabOptions) {
-      labOptions = _.pairs(uiGlobals.newLabOptions);
-    } else {
-      labOptions = _.pairs(uiGlobals.labOptions);
-    }
+    var labOptions = _.pairs(_.extend(uiGlobals.labOptions, uiGlobals.newLabOptions));
 
     labOptions.map(function(option) {
       // Get and translate description to display
@@ -35,10 +33,15 @@ module.exports = Modal.extend({
       instructions: i18n.translate("These are experimental features which may crash Airspace Home. "
        + "Enable at your own risk. You will need to restart Airspace before your changes take effect."),
       options: labOptions,
+      restart_label: i18n.translate('Please restart Airspace Home to see your changes'),
       save_label: i18n.translate('Save'),
       saved_label: i18n.translate('Saved'),
       cancel_label: i18n.translate('Cancel')
     }));
+
+    if (_.keys(uiGlobals.newLabOptions).length) {
+      this.$('.restart-notification').show();
+    }
 
     labOptions.forEach(function(option) {
       if (option[1]) {
@@ -54,15 +57,32 @@ module.exports = Modal.extend({
       var updatedOptions = {};
 
       this.$('input[type="checkbox"]').each(function() {
-        updatedOptions[$(this).attr('class')] = $(this).prop('checked');
+        var option = $(this).attr('class'), value = !!$(this).prop('checked');
+        updatedOptions[option] = value;
       });
 
       console.log("Saved:", updatedOptions);
+
       uiGlobals.newLabOptions = updatedOptions;
+      db.saveObj(config.DbKeys.PreviousLabOptionStates, uiGlobals.labOptions);
       db.saveObj(config.DbKeys.LabOptionStates, updatedOptions);
 
-      this.$('.saved').show().delay(150).fadeOut('slow');
+      // this.$('.saved').show().delay(150).fadeOut('slow');
+      this.$('.restart-notification').show();
     }.bind(this));
+  },
+
+  showRestartMessage: function() {
+    var rn = this.$('.restart-notification');
+    rn.show();
+    if (rn.height() < 50) {
+      var lastWidth;
+      while (rn.height() < 50) {
+
+      }
+    } else {
+
+    }
   }
 
 });

@@ -103,11 +103,22 @@ function getConfiguration(cb) {
   }
 
   var currentOptions = db.fetchObj(config.DbKeys.LabOptionStates) || {};
+  var previousOptions = db.fetchObj(config.DbKeys.PreviousLabOptionStates) || {};
+
   _.keys(config.LabOptions).forEach(function(option) {
     if (!_.has(currentOptions, option)) {
       uiGlobals.labOptions[option] = false;
     } else {
       uiGlobals.labOptions[option] = currentOptions[option];
+    }
+
+    if (!!currentOptions[option] !== !!previousOptions[option]) {
+      var value = currentOptions[option];
+      if (value) {
+        mixpanel.trackEvent('Activated lab option', {option: option, value: value});
+      } else {
+        mixpanel.trackEvent('Deactivated lab option', {option: option, value: value});
+      }
     }
   });
 

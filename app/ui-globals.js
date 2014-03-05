@@ -17,6 +17,7 @@ uiGlobals.myApps = new LeapAppCollection();
 uiGlobals.uninstalledApps = new LeapAppCollection();
 
 uiGlobals.labOptions = {};
+uiGlobals.newLabOptions = {};
 
 uiGlobals.bootstrapPromises = {};
 
