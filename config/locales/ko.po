@@ -591,3 +591,9 @@ msgstr "Airspace 닫기"
 
 msgid "close airspace home"
 msgstr "Airspace Home 닫기"
+
+msgid "please restart airspace home"
+msgstr "Airspace Home을 재시작하십시요"
+
+msgid "please restart airspace home to see your changes"
+msgstr "변경사항을 보기 위해 Airspace Home을 재시작하십시요"

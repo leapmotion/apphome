@@ -591,3 +591,9 @@ msgstr "Airspaceを閉じる"
 
 msgid "close airspace home"
 msgstr "Airspace Homeを閉じる"
+
+msgid "please restart airspace home"
+msgstr "Airspace Homeを再起動してください"
+
+msgid "please restart airspace home to see your changes"
+msgstr "変更を見るためにはAirspace Homeを再起動してください"

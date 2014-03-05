@@ -591,3 +591,9 @@ msgstr "关闭 Airspace"
 
 msgid "close airspace home"
 msgstr "关闭 Airspace Home"
+
+msgid "please restart airspace home"
+msgstr "请重启 Airspace Home"
+
+msgid "please restart airspace home to see your changes"
+msgstr "请重启 Airspace Home 以查看你的变更"
