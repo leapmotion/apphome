@@ -6,7 +6,6 @@ var fs = require('fs');
 
 var Q = require('q');
 var qfs = require('q-io/fs');
-var leapjs = require('leapjs');
 
 var api = require('./utils/api.js');
 var authorizationUtil = require('./utils/authorization-util.js');
@@ -84,6 +83,7 @@ function getConfiguration(cb) {
   // Check if device has an embedded leap or not.
   // Checks db first to see if there's a stored value
   uiGlobals.embeddedDevice = embeddedLeap.getEmbeddedDevice();
+  console.log('Device type:', uiGlobals.embeddedDevice || 'peripheral');
 
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 
@@ -201,10 +201,8 @@ function prerunAsyncKickoff(cb) {
 }
 
 function enableLeapController() {
-  var ctl = new leapjs.Controller({enableGestures: true});
-
   if (uiGlobals.labOptions['enable-leap-controls']) {
-    var swiper = ctl.gesture('swipe');
+    var swiper = leapController.gesture('swipe');
 
     swiper.start(function(g) {
       swiper.currentSwipe = g;
@@ -223,8 +221,6 @@ function enableLeapController() {
       }
     });
   }
-
-   ctl.connect();
 }
 
 function setupMainWindow(cb) {

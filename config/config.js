@@ -154,10 +154,10 @@ var config = {
     './PreBundle.LeapMotion'
   ],
 
-  EmbeddedLeapTypes: {
-    TYPE_LAPTOP: 'pongo',
-    TYPE_KEYBOARD: 'hops'
-  },
+  EmbeddedLeapTypes: [
+    'laptop',
+    'keyboard',
+  ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
   GetSupportUrl: 'https://airspace.leapmotion.com/apps/support',

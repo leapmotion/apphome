@@ -36,6 +36,7 @@
   <script src="./static/js/jquery.parallax.js"></script>
   <script src="./static/js/konami.js"></script>
   <script src="./static/guiders-js/guiders.js"></script>
+  <script src="./static/js/leap.min.js"></script>
 </head>
 <body class="startup">
 
@@ -60,6 +61,9 @@
         .attr('src', 'http://get.webgl.org')
         .appendTo($('body'));
       };
+
+      global.leapController = new Leap.Controller({'enableGestures': true});
+      global.leapController.connect();
 
       window.document.title = global.uiGlobals.appName;
       require('./app/utils/logging.js');
