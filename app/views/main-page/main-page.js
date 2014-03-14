@@ -244,14 +244,12 @@ module.exports = BaseView.extend({
     var _this = this;
 
     function createNotificationPane() {
-      if (uiGlobals.email.indexOf('@leapmotion.com') !== -1 || uiGlobals.email.indexOf('@ocuspec.com') !== -1) {
-        var notificationPane = new NotificationPane();
-        _this.$('#notification-pane').append(notificationPane.$el);
+      var notificationPane = new NotificationPane();
+      _this.$('#notification-pane').append(notificationPane.$el);
 
-        uiGlobals.on('clear-ui', function() {
-          notificationPane.hide();
-        });
-      }
+      uiGlobals.on('clear-ui', function() {
+        notificationPane.hide();
+      });
     }
 
     if (uiGlobals.email) {
