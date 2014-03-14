@@ -23,6 +23,23 @@ var Modal = BaseView.extend({
   },
 
   show: function() {
+    console.log(uiGlobals.scaling);
+
+    var _resizing;
+    $(window).resize(function() {
+      if (_resizing) {
+        clearTimeout(_resizing);
+      }
+
+      _resizing = setTimeout(function() {
+        _resizing = undefined;
+        this.$('.modal').css({
+          '-webkit-transform': 'scale(' + Math.min(1, uiGlobals.scaling + 0.2) + ')',
+          'transform-origin': 'center top'
+        });
+      }.bind(this), 20);
+    });
+
     this.$el.appendTo('body');
   },
 
