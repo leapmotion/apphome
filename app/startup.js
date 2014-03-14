@@ -280,6 +280,10 @@ function startMainApp(cb) {
       });
   }
 
+  leapController.on('deviceAttached', function(device) {
+    api.sendDeviceData();
+  });
+
   p.nodeify(cb);
 
   p.then(api.sendAppVersionData);
