@@ -287,6 +287,8 @@ function startMainApp(cb) {
   p.nodeify(cb);
 
   p.then(api.sendAppVersionData);
+
+  mixpanel.trackEvent('User Language', { locale: uiGlobals.locale });
 }
 
 function handlePrebundledApps() {
