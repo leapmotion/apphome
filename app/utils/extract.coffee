@@ -72,7 +72,9 @@ _extractAppZip = (src, dest, shellUnzipOnly, cb) ->
           # application has a single top-level directory, so pull the contents out of that
           topLevelDir = path.join(dest, possibleAppDirs[0])
           console.log "Moving " + topLevelDir + " to " + dest
+
           chmodRecursiveSync topLevelDir
+
           moves = []
           fs.readdirSync(topLevelDir).forEach (appFile) ->
             moves.push (cb) ->
@@ -80,7 +82,23 @@ _extractAppZip = (src, dest, shellUnzipOnly, cb) ->
                 mkdirp: true
               , cb
 
-          async.series moves, cb
+          failures = 0
+          async.eachSeries moves, (move, cb) ->
+            move (err) ->
+              unless err
+                return cb null
+
+              if failures < 3
+                moves.push (cb) ->
+                  setTimeout ->
+                    move cb
+                  , 1000
+
+                failures++
+                cb null
+              else
+                cb err
+          , cb
         else
           cb?(null)
       catch err

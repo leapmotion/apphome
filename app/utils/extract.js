@@ -84,7 +84,7 @@
       return typeof cb === "function" ? cb(err) : void 0;
     }
     return unzipFile(src, dest, shellUnzipOnly, function(err) {
-      var extractedFiles, moves, possibleAppDirs, topLevelDir;
+      var extractedFiles, failures, moves, possibleAppDirs, topLevelDir;
       console.log("unzipping " + src);
       if (err) {
         return typeof cb === "function" ? cb(err) : void 0;
@@ -111,7 +111,25 @@
                 }, cb);
               });
             });
-            return async.series(moves, cb);
+            failures = 0;
+            return async.eachSeries(moves, function(move, cb) {
+              return move(function(err) {
+                if (!err) {
+                  return cb(null);
+                }
+                if (failures < 3) {
+                  moves.push(function(cb) {
+                    return setTimeout(function() {
+                      return move(cb);
+                    }, 1000);
+                  });
+                  failures++;
+                  return cb(null);
+                } else {
+                  return cb(err);
+                }
+              });
+            }, cb);
           } else {
             return typeof cb === "function" ? cb(null) : void 0;
           }
