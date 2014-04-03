@@ -90,6 +90,7 @@ module.exports = LeapApp.extend({
 
     return extract.extractApp(tempFilename, this._appDir(), true).fail(function(reason) {
       console.error(reason.stack || reason);
+      throw reason;
     });
   },
 
