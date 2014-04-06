@@ -69,6 +69,10 @@ module.exports = BaseView.extend({
       position: 1
     });
 
+    uiGlobals.on('goto', function(slideNumber) {
+      this.myAppsCarousel.switchToSlide(slideNumber);
+    }.bind(this));
+
     this.$('#my-apps').append(this.myAppsCarousel.$el);
   },
 

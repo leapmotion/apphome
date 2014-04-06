@@ -112,6 +112,7 @@ start = ->
 
   unless uiGlobals.inTutorial
     uiGlobals.inTutorial = true
+    uiGlobals.trigger 'goto', 0
     guiders.show 'g_start'
 
 

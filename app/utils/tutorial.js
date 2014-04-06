@@ -138,6 +138,7 @@
     }
     if (!uiGlobals.inTutorial) {
       uiGlobals.inTutorial = true;
+      uiGlobals.trigger('goto', 0);
       return guiders.show('g_start');
     }
   };
