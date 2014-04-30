@@ -30,7 +30,6 @@ var NotificationView = BaseView.extend({
     }.bind(this));
 
     this.$el.click(function() {
-      message_id =
       ga.trackEvent('notifications/'+ notification.get('uuid') +'/click');
       nwGui.Shell.openExternal(notification.get('url'));
     }.bind(this));

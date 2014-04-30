@@ -203,7 +203,7 @@ module.exports = LeapApp.extend({
         console.info('Installation of ' + this.get('name') + ' was cancelled.');
       } else {
         console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-        ga.trackEvent('Install Failed', { appName: this.get('name'), appVersion: this.get('version'), error: err && err.stack });
+        ga.trackEvent( 'apps/ '+ this.get('name') + '/' + this.get('version') + '/install_failed' );
       }
     } else {
       console.info('Installation of ' + this.get('name') + ' complete');
