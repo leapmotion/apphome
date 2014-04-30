@@ -3,6 +3,7 @@ var os = require('os');
 var config = require('../../../config/config.js');
 var db = require('../../utils/db.js');
 var i18n = require('../../utils/i18n.js');
+var ga = require('../../utils/ga.js');
 
 var BaseView = require('../base-view.js');
 
@@ -29,6 +30,7 @@ var NotificationView = BaseView.extend({
     }.bind(this));
 
     this.$el.click(function() {
+      ga.trackEvent('notifications/'+ notification.get('uuid') +'/click');
       nwGui.Shell.openExternal(notification.get('url'));
     }.bind(this));
   },

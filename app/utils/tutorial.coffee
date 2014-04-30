@@ -3,7 +3,7 @@ os = require 'os'
 
 i18n = require './i18n.js'
 config = require '../../config/config.js'
-mixpanel = require('./mixpanel.js');
+ga = require('./ga.js');
 
 guidesMade = false
 
@@ -80,7 +80,7 @@ makeGuides = ->
     highlight: '#airspace-store'
     onClose: onClose
     onHide: ->
-      mixpanel.trackEvent 'Tutorial Finished', null, 'OOBE'
+      ga.trackEvent 'tutorial/oobe/finished'
       uiGlobals.inTutorial = false
 
   # Change the bubble position after browser gets resized
@@ -97,14 +97,14 @@ makeGuides = ->
   guidesMade = true
 
 onClose = ->
-  mixpanel.trackEvent 'Tutorial Closed', null, 'OOBE'
+  ga.trackEvent 'tutorial/oobe/closed'
   uiGlobals.inTutorial = false
 
 _launchOrientation =  ->
   orientationPath = config.PlatformOrientationPaths[os.platform()]
   if orientationPath and fs.existsSync orientationPath
     nwGui.Shell.openItem orientationPath
-    mixpanel.trackEvent 'Started Orientation', null, 'OOBE'
+    ga.trackEvent 'tutorial/oobe/started_orientation'
 
 start = ->
   unless guidesMade

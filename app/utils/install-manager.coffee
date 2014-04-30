@@ -1,11 +1,12 @@
-mixpanel = require("../utils/mixpanel.js")
+ga = require("../utils/ga.js")
 LeapApp = require("../models/leap-app.js")
 
 MaxConsecutiveFailures = 3
 installQueue = []
 
 enqueue = (app, cb, skipToFront) ->
-  mixpanel.trackAppReinstall()  if app.get("state") is LeapApp.States.Uninstalled
+  app_name = app.get('name')
+  ga.trackEvent('apps/' + app_name + '/reinstall') if app.get("state") is LeapApp.States.Uninstalled
   app.set "state", LeapApp.States.Waiting
   queueData =
     app: app

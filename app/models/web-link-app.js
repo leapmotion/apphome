@@ -3,7 +3,7 @@ var qs = require('querystring');
 
 var api = require('../utils/api.js');
 var config = require('../../config/config.js');
-var mixpanel = require('../utils/mixpanel.js');
+var ga = require('../utils/ga.js');
 var oauth = require('../utils/oauth.js');
 
 var LeapApp = require('./leap-app.js');
@@ -43,11 +43,11 @@ var WebLinkApp = LeapApp.extend({
       nwGui.Shell.openExternal(urlToLaunch);
     }
 
-    mixpanel.trackEvent('Launched app', this.get('name'));
+    ga.trackEvent('apps/'+ this.get('name') +'/launch');
 
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
-      mixpanel.trackEvent(eventToTrack);
+      ga.trackEvent('tiles/'+ eventToTrack);
     }
   }
 

@@ -1,7 +1,7 @@
 {
   "name": "Airspace",
   "fullName": "Airspace Home",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Airspace Home by Leap Motion, Inc.",
   "company": "Leap Motion, Inc.",
   "main": "index.html",
@@ -37,7 +37,8 @@
     "coffee-script": "~1.6.3",
     "filesize": "~2.0.0",
     "walker": "~1.0.5",
-    "nw-gyp": "~0.10.9"
+    "nw-gyp": "~0.10.9",
+    "universal-analytics": "~0.3.4"
   },
   "devDependencies": {
     "chai": "1.8.x",
