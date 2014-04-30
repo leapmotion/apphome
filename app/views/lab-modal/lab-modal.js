@@ -3,7 +3,7 @@ var urlify = require('django-urlify');
 
 var i18n = require('../../utils/i18n.js');
 var db = require('../../utils/db.js');
-var mixpanel = require('../../utils/mixpanel.js');
+var ga = require('../../utils/ga.js');
 
 var config = require('../../../config/config.js');
 

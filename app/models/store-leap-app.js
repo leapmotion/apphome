@@ -7,13 +7,12 @@ var path = require('path');
 
 var Q = require('q');
 var Qfs = require('q-io/fs');
-
+var ga = require('../utils/ga.js');
 var config = require('../../config/config.js');
 var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
 var extract = require('../utils/extract.js');
 var oauth = require('../utils/oauth.js');
-var mixpanel = require('../utils/mixpanel.js');
 var shell = require('../utils/shell.js');
 var url = require('url');
 
@@ -42,7 +41,7 @@ module.exports = LeapApp.extend({
   install: function(cb) {
     this.trigger('installstart');
     if (this.hasUpdate()) {
-      mixpanel.trackAppUpgrade();
+      ga.trackEvent('apps/'+ this.get('name') +'/upgrade');
       console.log('Upgrading: ' + this.get('name'));
 
       // update binary, tile, and icon urls from the new app version
@@ -204,7 +203,7 @@ module.exports = LeapApp.extend({
         console.info('Installation of ' + this.get('name') + ' was cancelled.');
       } else {
         console.warn('Installation of ' + this.get('name') + ' failed: ' + (err.stack || err));
-        mixpanel.trackEvent('Install Failed', { appName: this.get('name'), appVersion: this.get('version'), error: err && err.stack });
+        ga.trackEvent('Install Failed', { appName: this.get('name'), appVersion: this.get('version'), error: err && err.stack });
       }
     } else {
       console.info('Installation of ' + this.get('name') + ' complete');
@@ -316,7 +315,7 @@ module.exports = LeapApp.extend({
         fs.removeSync(this.standardTilePath());
       }
 
-      mixpanel.trackAppUninstall({ appName: this.get('name'), appVersion: this.get('version') });
+      ga.trackEvent('apps/'+ this.get('name') +'/uninstall/'+this.get('version'));
       return cb && cb(null);
     } catch (err) {
       return this._failUninstallation(err, cb);

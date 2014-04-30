@@ -4,7 +4,7 @@ var fs = require('fs');
 
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
-var mixpanel = require('../../utils/mixpanel.js');
+var ga = require('../../utils/ga.js');
 var oauth = require('../../utils/oauth.js');
 var popup = require('../popups/popup.js');
 
@@ -223,9 +223,9 @@ module.exports = BaseView.extend({
     var isShowingSignUpForm = /^\/users\/sign_up/.test(iframeWindow.location.pathname);
 
     if (isShowingSignUpForm) {
-      $('form', iframeWindow.document).submit(mixpanel.trackSignUp);
+      $('form', iframeWindow.document).submit(ga.trackSignUp);
     } else if (isShowingSignInForm) {
-      $('form', iframeWindow.document).submit(mixpanel.trackSignIn);
+      $('form', iframeWindow.document).submit(ga.trackSignIn);
     }
 
     if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm && this._newUser) {

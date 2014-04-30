@@ -18,7 +18,7 @@ var eula = require('./utils/eula.js');
 var frozenApps = require('./utils/frozen-apps.js');
 var i18n = require('./utils/i18n.js');
 var migrations = require('./utils/migrations.js');
-var mixpanel = require('./utils/mixpanel.js');
+var ga = require('./utils/ga.js'); // Google Analytics
 var shell = require('./utils/shell.js');
 var oauth = require('./utils/oauth.js');
 var tutorial = require('./utils/tutorial.js');
@@ -32,8 +32,8 @@ var WebLinkApp = require('./models/web-link-app.js');
 
 function run() {
   var steps = [
+    initializeGoogleAnalytics,
     getConfiguration,
-    initializeMixpanel,
     initializeInternationalization,
     ensureWorkingDirs,
     migrateDatabase,
@@ -67,7 +67,7 @@ function run() {
       console.error('Error bootstrapping airspace: ' + (err.stack || err));
       process.exit();
     } else {
-      mixpanel.trackOpen({
+      ga.trackOpen({
         bootstrapDurationMs: (new Date()).getTime() - window.appStartTime,
         windowWidth: $(window).width(),
         windowHeight: $(window).height()
@@ -115,9 +115,9 @@ function getConfiguration(cb) {
     if (!!currentOptions[option] !== !!previousOptions[option]) {
       var value = currentOptions[option];
       if (value) {
-        mixpanel.trackEvent('Activated lab option', {option: option, value: value});
+        ga.trackEvent('init/lab_option/'+option+'/'+value);
       } else {
-        mixpanel.trackEvent('Deactivated lab option', {option: option, value: value});
+        ga.trackEvent('init/lab_option/'+option+'/'+value);
       }
     }
   });
@@ -127,11 +127,15 @@ function getConfiguration(cb) {
   cb && cb(null);
 }
 
-/*
- * Get the mixpanel id written during install time and use it
+/**
+ * Initializes the Google Analytics node module to
+ * track stats against.
+ *
+ * @param cb    Callback to invoke when initialization is complete.
  */
-function initializeMixpanel(cb) {
-  mixpanel.initialize(cb);
+function initializeGoogleAnalytics(cb) {
+  ga.initialize(cb);
+  ga.trackOpen();
 }
 
 /*
@@ -288,7 +292,7 @@ function startMainApp(cb) {
 
   p.then(api.sendAppVersionData);
 
-  mixpanel.trackEvent('User Language', { locale: uiGlobals.locale });
+  ga.trackEvent('init/language/' + uiGlobals.locale);
 }
 
 function handlePrebundledApps() {

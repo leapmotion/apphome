@@ -8,7 +8,7 @@ authorizationUtil = require("./authorization-util.js")
 config = require("../../config/config.js")
 db = require("./db.js")
 i18n = require("./i18n.js")
-mixpanel = require("./mixpanel.js")
+ga = require("./ga.js")
 popup = require("../views/popups/popup.js")
 tutorial = require("./tutorial.js")
 MainPage = require("../views/main-page/main-page.js")
@@ -32,7 +32,7 @@ appWindowBindings = ->
     @close true
     process.exit()
 
-  process.on "exit", mixpanel.trackClose
+  process.on "exit", ga.trackClose
 
 maximizeWindow = ->
   win = nwGui.Window.get()

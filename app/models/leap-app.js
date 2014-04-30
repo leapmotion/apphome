@@ -14,7 +14,7 @@ var db = require('../utils/db.js');
 var httpHelper = require('../utils/http-helper.js');
 var i18n = require('../utils/i18n.js');
 var enumerable = require('../utils/enumerable.js');
-var mixpanel = require('../utils/mixpanel.js');
+var ga = require('../utils/ga.js');
 var semver = require('../utils/semver.js');
 var shell = require('../utils/shell.js');
 var workingFile = require('../utils/working-file.js');
@@ -208,11 +208,11 @@ var LeapApp = BaseModel.extend({
 
     nwGui.Shell.openItem(executable);
 
-    mixpanel.trackEvent('Launched app', this.get('name'));
+    ga.trackEvent('apps/'+ this.get('name') +'/launch');
 
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
-      mixpanel.trackEvent(eventToTrack);
+      ga.trackEvent('tiles/'+ eventToTrack);
     }
   },
 
