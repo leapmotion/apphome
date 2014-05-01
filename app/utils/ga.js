@@ -60,7 +60,7 @@
   getTrackFn = function(eventName, namespace) {
     return function(args) {
       var embedded_text, page_title, page_url;
-      if (true || /^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
+      if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
         if (!(uiGlobals.metricsDisabled && visitor !== null)) {
           console.log("Tracking Google Analytics event: " + eventName);
           namespace = namespace || uiGlobals.appName;
