@@ -156,7 +156,7 @@
       helpMenu.append(new nwGui.MenuItem({
         label: i18n.translate("Controller Settings"),
         click: function() {
-          return execFile(config.PlatformControlPanelPaths[os.platform()], ['--showsettings']);
+          return nwGui.Shell.openItem(config.PlatformControlPanelPaths[os.platform()]);
         }
       }));
     }

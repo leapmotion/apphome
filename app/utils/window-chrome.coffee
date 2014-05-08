@@ -124,8 +124,7 @@ buildHelpMenu = (enableLogOut) ->
     helpMenu.append new nwGui.MenuItem(
       label: i18n.translate("Controller Settings")
       click: ->
-        execFile(config.PlatformControlPanelPaths[os.platform()], ['--showsettings'])
-
+        nwGui.Shell.openItem config.PlatformControlPanelPaths[os.platform()]
     )
 
   new nwGui.MenuItem(

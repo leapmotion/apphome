@@ -110,7 +110,7 @@ var config = {
 
   PlatformControlPanelPaths: {
     win32: (process.env["PROGRAMFILES(X86)"] || process.env.PROGRAMFILES) + "\\Leap Motion\\Core Services\\LeapControlPanel.exe",
-    darwin: '/Applications/Leap Motion.app/Contents/MacOS/Leap Motion'
+    darwin: '/Applications/Leap Motion.app'
   },
 
   CrashReportingDirs: {
