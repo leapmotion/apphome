@@ -130,12 +130,6 @@ var LocalLeapApp = LeapApp.extend({
     this.set('iconPath', noIcon ? '' : this.standardIconPath());
     this.set('state', LeapApp.States.Ready);
     cb && cb(null);
-  },
-
-  uninstall: function(deleteData, cb) {
-    this.set('installedAt', null);
-    this.set('state', LeapApp.States.Uninstalled);
-    cb && cb(null);
   }
 });
 
