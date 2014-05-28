@@ -89,7 +89,7 @@ function getConfiguration(cb) {
 
   var platformConfigFile = path.join(config.PlatformLeapDataDirs[os.platform()], 'config.json');
   if (fs.existsSync(platformConfigFile)) {
-    var configuration;
+    var configuration = {};
     try {
       var contents = fs.readFileSync(platformConfigFile, {encoding: 'utf-8'});
       configuration = JSON.parse(contents).configuration;
