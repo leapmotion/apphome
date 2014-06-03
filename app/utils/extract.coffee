@@ -1,3 +1,4 @@
+AdmZip = require('adm-zip')
 async = require("async")
 exec = require("child_process").exec
 fs = require("fs-extra")
@@ -6,11 +7,39 @@ mv = require("mv")
 path = require("path")
 plist = require("plist")
 shell = require("./shell.js")
+unzip = require('unzip')
 
 Q = require("q")
 
 IgnoredWindowsFileRegex = /^\.|^__macosx$/i
 MaxChildProcessBufferSize = 1024 * 1024 * 5 # 5 MB
+
+_unzipViaNodeUnzip = (src, dest, cb) ->
+  inputStream = fs.createReadStream(src)
+  outputStream = unzip.Extract(path: dest)
+  inputStream.on "error", (err) ->
+    cb and cb(err)
+    cb = null
+
+  outputStream.on "close", ->
+    cb and cb(null)
+    cb = null
+
+  outputStream.on "error", (err) ->
+    cb and cb(err)
+    cb = null
+
+  console.log "Unzipping " + src + " to " + dest + " with node-unzip."
+  inputStream.pipe outputStream
+
+_unzipViaAdmZip = (src, dest, cb) ->
+  try
+    zip = new AdmZip(src)
+    console.log "Unzipping " + src + " to " + dest + " with AdmZip."
+    zip.extractAllTo dest, true
+    cb and cb(null)
+  catch err
+    cb and cb(err)
 
 _unzipViaShell = (src, dest, cb) ->
   command = undefined
@@ -26,13 +55,16 @@ _unzipViaShell = (src, dest, cb) ->
 unzipFile = (src, dest, shellUnzipOnly, cb) ->
   console.log "Unzipping " + src
   _unzipViaShell src, dest, (err) ->
-    if err
-      console.warn "Unzipping", src, "failed, retrying in 50ms"
-      setTimeout ->
-        unzipFile src, dest, shellUnzipOnly, cb
-      , 50
+    if err and not shellUnzipOnly
+      stats = fs.statSync(src)
+      # 600 MB and larger apps require chunking, but Debris at 276.5 MB to use adm-zip
+      # special-case GecoMIDI 1.0.9 where otherwise adm-zip corrupts Leapd.dll
+      if os.platform() is "win32" and (stats.size > 290000000 or stats.size is 11247281 or path.basename(dest).match(/JungleJumper/)) # special-case JungleJumper 1.0.xHP.zip avoid crash in adm-zip
+        _unzipViaNodeUnzip src, dest, cb
+      else
+        _unzipViaAdmZip src, dest, cb
     else
-      cb?(err)
+      cb and cb(err)
 
 chmodRecursiveSync = (file) ->
   try
