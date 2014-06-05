@@ -19,15 +19,6 @@ pubnub = require("./pubnub.js")
 
 LeapApp = require("../models/leap-app.js")
 
-
-NodePlatformToServerPlatform =
-  darwin: "osx"
-  win32: "windows"
-
-ServerPlatformToNodePlatform = {}
-Object.keys(NodePlatformToServerPlatform).forEach (key) ->
-  ServerPlatformToNodePlatform[NodePlatformToServerPlatform[key]] = key
-
 cleanAppJson = (appJson) ->
   appJson = appJson or {}
   releaseDate = appJson.certified_at or appJson.created_at
@@ -37,7 +28,7 @@ cleanAppJson = (appJson) ->
     versionId: appJson.id
     appType: appJson.appType
     name: appJson.name
-    platform: ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
+    platform: config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
     iconUrl: appJson.icon_url
     tileUrl: appJson.tile_url
     binaryUrl: appJson.binary_url
@@ -113,7 +104,7 @@ subscribeToUserChannel = (userId) ->
     # steal focus
     nwGui.Window.get().focus()
 
-    unless appJson?
+    unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
       return Q()
 
     getAppJson(appJson.app_id).then (appJson) ->
@@ -164,7 +155,7 @@ _getStoreManifest = ->
   reconnectionPromise = undefined
 
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
-    platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
+    platform = config.NodePlatformToServerPlatform[os.platform()] or os.platform()
     apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform
@@ -189,7 +180,7 @@ _getStoreManifest = ->
 
 getNonStoreManifest = ->
   httpHelper.getJson(config.NonStoreAppManifestUrl).then (manifest) ->
-    manifest.local = manifest[NodePlatformToServerPlatform[os.platform()]] or []
+    manifest.local = manifest[config.NodePlatformToServerPlatform[os.platform()]] or []
 
     for appJson in manifest.web
       appJson.cleaned = true
@@ -238,7 +229,7 @@ connectToStoreServer = ->
 
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
-    platform = NodePlatformToServerPlatform[os.platform()] or os.platform()
+    platform = config.NodePlatformToServerPlatform[os.platform()] or os.platform()
     url = config.AppJsonEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform

@@ -85,6 +85,16 @@ var config = {
     // Put experimental features here
   },
 
+  NodePlatformToServerPlatform: {
+    darwin: "osx",
+    win32: "windows",
+  },
+
+  ServerPlatformToNodePlatform: {
+    osx: "darwin",
+    windows: "win32"
+  },
+
   PlatformDirs: {
     win32: process.env.LOCALAPPDATA || process.env.APPDATA || '',
     darwin: process.env.HOME + '/Library/Application Support',
