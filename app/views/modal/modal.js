@@ -40,6 +40,8 @@ var Modal = BaseView.extend({
       }.bind(this), 20);
     });
 
+    $(window).resize();
+
     this.$el.appendTo('body');
   },
 
