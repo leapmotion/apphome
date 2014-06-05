@@ -39,7 +39,8 @@
     "walker": "~1.0.5",
     "nw-gyp": "~0.10.9",
     "universal-analytics": "~0.3.4",
-    "unzip": "git://github.com/leapmotion/node-unzip.git"
+    "unzip": "git://github.com/leapmotion/node-unzip.git",
+    "adm-zip": "^0.4.4"
   },
   "devDependencies": {
     "chai": "1.8.x",
