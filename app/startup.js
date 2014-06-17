@@ -271,7 +271,7 @@ function startMainApp(cb) {
 
   // Completely install our prebundled apps before connecting to the store server
   var p;
-  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice) {
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice && canDeviceInstallPrebundledApps()) {
     p = handlePrebundledApps()
       .then(api.sendDeviceData)
       .then(api.connectToStoreServer);
@@ -293,6 +293,24 @@ function startMainApp(cb) {
   p.then(api.sendAppVersionData);
 
   ga.trackEvent('init/language/' + uiGlobals.locale);
+}
+
+//
+// Blocks certain embedded devices from installing
+// prebundled apps.
+//
+function canDeviceInstallPrebundledApps() {
+  var result = false;
+  var len = config.CanInstallPrebundledApps.length;
+
+  for (var i = 0; i < len; i++) {
+    if (uiGlobals.embeddedDevice == config.CanInstallPrebundledApps[i]) {
+      result = true;
+      break;
+    }
+  }
+
+  return result;
 }
 
 function handlePrebundledApps() {
