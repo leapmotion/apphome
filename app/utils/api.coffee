@@ -266,10 +266,24 @@ sendDeviceData = ->
       console.warn "Auth data file is empty."
       throw new Error "Auth data file is empty."
 
+    device_type_override = ''
+
+    #
+    # Needed by https://radmine.leapmotion.com/issues/9289
+    # Since there's not any way to distinguish between a bundled
+    # HP machine with keyboard, vs. a standalone keyboard, Airspace Home
+    # will need to override the device_type (hashed inside device_auth)
+    # with TYPE_KEYBOARD_STANDALONE. This is a super hack, but needed to
+    # ensure entitlements don't get granted to Standalone keyboards.
+    #
+    if (uiGlobals.embeddedDevice == 'keyboard' && !uiGlobals.canInstallPrebundledApps)
+      device_type_override = 'TYPE_KEYBOARD_STANDALONE'
+
     Q.nfcall(oauth.getAccessToken).then (accessToken) ->
       httpHelper.post config.DeviceDataEndpoint,
         access_token: accessToken
         data: authData
+        device_type_override: device_type_override
       .then ->
         console.log "Sent device data."
       , (reason) ->

@@ -83,7 +83,9 @@ function getConfiguration(cb) {
   // Check if device has an embedded leap or not.
   // Checks db first to see if there's a stored value
   uiGlobals.embeddedDevice = embeddedLeap.getEmbeddedDevice();
+  uiGlobals.canInstallPrebundledApps = canInstallPrebundledApps();
   console.log('Device type:', uiGlobals.embeddedDevice || 'peripheral');
+  console.log('Can install prebundled apps', uiGlobals.canInstallPrebundledApps);
 
   uiGlobals.isFirstRun = !db.getItem(config.DbKeys.AlreadyDidFirstRun);
 
@@ -271,7 +273,7 @@ function startMainApp(cb) {
 
   // Completely install our prebundled apps before connecting to the store server
   var p;
-  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice && canDeviceInstallPrebundledApps()) {
+  if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice && uiGlobals.canInstallPrebundledApps) {
     p = handlePrebundledApps()
       .then(api.sendDeviceData)
       .then(api.connectToStoreServer);
@@ -299,18 +301,20 @@ function startMainApp(cb) {
 // Blocks certain embedded devices from installing
 // prebundled apps.
 //
-function canDeviceInstallPrebundledApps() {
-  var result = true;
-  var len = config.NoInstallPrebundledApps.length;
-
-  for (var i = 0; i < len; i++) {
-    if (uiGlobals.embeddedDevice == config.NoInstallPrebundledApps[i]) {
-      result = false;
-      break;
+function canInstallPrebundledApps() {
+  freezeDriedBundlePath = _(config.FrozenAppPaths).find(function(bundlePath) {
+    var err;
+    try {
+      console.log("Looking for prebundled path in: " + bundlePath);
+      return fs.existsSync(bundlePath);
+    } catch (_error) {
+      err = _error;
+      console.log("Prebundle path does not exist: " + bundlePath);
+      return false;
     }
-  }
+  });
 
-  return result;
+  return (freezeDriedBundlePath ? true : false);
 }
 
 function handlePrebundledApps() {

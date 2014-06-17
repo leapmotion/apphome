@@ -169,10 +169,6 @@ var config = {
     'keyboard',
   ],
 
-  NoInstallPrebundledApps: [
-    'keyboard'
-  ],
-
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
   GetSupportUrl: 'https://airspace.leapmotion.com/apps/support',
   CommunityForumsUrl: 'https://community.leapmotion.com',

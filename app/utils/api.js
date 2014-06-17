@@ -331,14 +331,20 @@
       }
     }
     return Q.nfcall(fs.readFile, authDataFile, "utf-8").then(function(authData) {
+      var device_type_override;
       if (!authData) {
         console.warn("Auth data file is empty.");
         throw new Error("Auth data file is empty.");
       }
+      device_type_override = '';
+      if (uiGlobals.embeddedDevice === 'keyboard' && !uiGlobals.canInstallPrebundledApps) {
+        device_type_override = 'TYPE_KEYBOARD_STANDALONE';
+      }
       return Q.nfcall(oauth.getAccessToken).then(function(accessToken) {
         return httpHelper.post(config.DeviceDataEndpoint, {
           access_token: accessToken,
-          data: authData
+          data: authData,
+          device_type_override: device_type_override
         }).then(function() {
           return console.log("Sent device data.");
         }, function(reason) {
