@@ -169,8 +169,8 @@ var config = {
     'keyboard',
   ],
 
-  CanInstallPrebundledApps: [
-    'laptop'
+  NoInstallPrebundledApps: [
+    'keyboard'
   ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',

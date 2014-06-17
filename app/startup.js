@@ -300,12 +300,12 @@ function startMainApp(cb) {
 // prebundled apps.
 //
 function canDeviceInstallPrebundledApps() {
-  var result = false;
-  var len = config.CanInstallPrebundledApps.length;
+  var result = true;
+  var len = config.NoInstallPrebundledApps.length;
 
   for (var i = 0; i < len; i++) {
-    if (uiGlobals.embeddedDevice == config.CanInstallPrebundledApps[i]) {
-      result = true;
+    if (uiGlobals.embeddedDevice == config.NoInstallPrebundledApps[i]) {
+      result = false;
       break;
     }
   }
