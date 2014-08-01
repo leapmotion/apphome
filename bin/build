@@ -183,7 +183,6 @@ function buildForWindows(cb) {
     }
     fs.unlinkSync(path.join(buildDir(platform), 'nwsnapshot.exe'));
     var exePath = path.join(buildDir(platform), 'nw.exe');
-    var clearIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /C ' + shell.escape(exePath);
     var setIconCommand = shell.escape(path.join(__dirname, 'RCEDIT.exe')) + ' /I ' + shell.escape(exePath) + ' ' + shell.escape(icoIconPath);
     var setExeDetailsCommand = shell.escape(path.join(__dirname, 'verpatch.exe')) + ' ' + shell.escape(exePath) +
                                ' /high /va ' + shell.escape(packageJson.version) +
@@ -193,7 +192,6 @@ function buildForWindows(cb) {
                                ' /s description ' + shell.escape(packageJson.description);
 
     async.series([
-      getExecFn(clearIconCommand),
       getExecFn(setIconCommand),
       getExecFn(setExeDetailsCommand),
       function (cb) {
