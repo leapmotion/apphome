@@ -1,6 +1,7 @@
 config = require("../../config/config.js")
 domain = require("domain")
 events = require("events")
+window.PUBNUB = require("../../static/js/pubnub-3.5.47.min.js")
 pubnubInit = window.PUBNUB and window.PUBNUB.init
 
 
