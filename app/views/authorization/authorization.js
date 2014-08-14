@@ -132,7 +132,7 @@ module.exports = BaseView.extend({
 
     $contents.find('.alerts').prependTo($contents.find('.auth-form'));
 
-    $contents.find('.auth-screen .auth-links.back').html('<a href="https://central.leapmotion.com/users/sign_in" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
+    $contents.find('.auth-screen .auth-links.back').html('<a href="' + config.oauth.log_in_url + '" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
 
     $contents.find('.auth-form').css({'position': 'relative'});
 

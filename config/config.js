@@ -15,6 +15,7 @@ var config = {
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
     redirect_uri: CENTRAL,
     log_out_url: CENTRAL + 'users/sign_out',
+    log_in_url: CENTRAL + 'users/sign_in',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
 
