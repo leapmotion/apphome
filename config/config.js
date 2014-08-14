@@ -4,8 +4,8 @@ var enumerable = require('../app/utils/enumerable.js');
 
 var AppsDir = 'AirspaceApps';
 var AppsUserDataDir = 'AirspaceApps';
-var CENTRAL = 'https://central.leapmotion.com/';
-var WAREHOUSE = 'https://warehouse.leapmotion.com/';
+var CENTRAL = process.env.CENTRAL_URL || 'https://central.leapmotion.com/';
+var WAREHOUSE = process.env.WAREHOUSE_URL || 'https://warehouse.leapmotion.com/';
 
 var config = {
 
