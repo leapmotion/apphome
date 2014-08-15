@@ -56,18 +56,18 @@ module.exports = BaseView.extend({
           this._center();
 
           eula.waitForLicense().then(function() {
-            this._setupBindings();
+            this._setupGhostSession();
 
             this.$activateImage.hide();
             this.$el.find('#actions').removeClass('disabled');
             this._center();
           }.bind(this));
         } else {
-          this._setupBindings();
+          this._setupGhostSession();
         }
       }.bind(this));
     } else {
-      this._setupBindings();
+      this._setupGhostSession();
     }
   },
 
@@ -75,14 +75,8 @@ module.exports = BaseView.extend({
     this.$el.css('margin-top', -1*this.$el.height()/2);
   },
 
-  _setupBindings: function() {
-    this.$('#signup').click(function() {
-      this._showAuth(true);
-    }.bind(this));
-
-    this.$('#signin').click(function() {
-      this._showAuth(false);
-    }.bind(this));
+  _setupGhostSession: function() {
+    this._showAuth(true);
   },
 
   _showAuth: function(newUser) {

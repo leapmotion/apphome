@@ -18,6 +18,7 @@ var config = {
     log_in_url: CENTRAL + 'users/sign_in',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
+  ghost_signup: CENTRAL + 'users/ghost_signup',
 
   AppListingEndpoint: WAREHOUSE + 'api/apps/myapps',
   AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
