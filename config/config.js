@@ -27,7 +27,7 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  NonStoreAppManifestUrl: process.env.NON_STORE_APP_MANIFEST || 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v3.json',
+  NonStoreAppManifestUrl: WAREHOUSE + 'api/app_home_manifests/v4.json',
 
   DeviceDataEndpoint: CENTRAL + 'users/device',
 
