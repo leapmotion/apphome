@@ -81,7 +81,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
 
   if _.keys(uiGlobals.labOptions).length
     accountMenu.append new nwGui.MenuItem
-      label: i18n.translate 'Airspace Labs'
+      label: i18n.translate 'Leap Motion App Home Labs'
       click: ->
         (new LabModalView()).show()
 
@@ -116,7 +116,7 @@ buildHelpMenu = (enableLogOut) ->
 
   if os.platform() is "win32"
     helpMenu.append new nwGui.MenuItem(
-      label: i18n.translate("About Airspace Home")
+      label: i18n.translate("About Leap Motion App Home")
       click: ->
         popup.open "about"
     )

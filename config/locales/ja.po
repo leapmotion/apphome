@@ -124,8 +124,8 @@ msgstr "%1$sからサインアウト"
 msgid "account"
 msgstr "アカウント"
 
-msgid "about airspace home"
-msgstr "Airspace Homeについて"
+msgid "about leap motion app home"
+msgstr "Leap Motion App Homeについて"
 
 msgid "community forums..."
 msgstr "コミュニティフォーラム..."
@@ -136,8 +136,8 @@ msgstr "サポートを要請"
 msgid "get support..."
 msgstr "サポートを要請..."
 
-msgid "airspace home"
-msgstr "Airspace Home"
+msgid "leap motion app home"
+msgstr "Leap Motion App Home"
 
 msgid "help"
 msgstr "ヘルプ"
@@ -358,8 +358,8 @@ msgstr "エラー レポートを送信する"
 msgid "don't send"
 msgstr "送信しない"
 
-msgid "airspace store"
-msgstr "Airspace Store"
+msgid "leap motion app store"
+msgstr "Leap Motion App Store"
 
 msgid "app store"
 msgstr "アプリ ストア"
@@ -460,8 +460,8 @@ msgstr "生年月日の情報により、確実にあなたの年齢に合った
 msgid "don't worry. we will not share this information."
 msgstr "この情報を公表することはありませんので、ご安心ください。"
 
-msgid "welcome to airspace home!"
-msgstr "Airspace Homeにようこそ!"
+msgid "welcome to leap motion app home!"
+msgstr "Leap Motion App Homeにようこそ!"
 
 msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
 msgstr "あらゆるLeap Motion対応のアプリを起動し、ストアにアクセスして新しいアプリを見つけましょう。"
@@ -499,8 +499,8 @@ msgstr "これから始める方々のために、いくつかの素晴らしい
 msgid "discover new apps"
 msgstr "新しいアプリを見つける"
 
-msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
-msgstr "Airspace Storeは、最新ゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
+msgid "leap motion app store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Leap Motion App Storeは、最新ゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
 
 msgid "back"
 msgstr "戻る"
@@ -514,8 +514,8 @@ msgstr "完了"
 msgid "reach out and experience what your controller can do."
 msgstr "コントローラーの操作方法を拡張し、新しい体験を。"
 
-msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
-msgstr "Airspace Storeは、新しいゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
+msgid "leap motion app store is the place for you to browse and download new games, creative tools, and more."
+msgstr "Leap Motion App Storeは、新しいゲームやクリエイティブツールなどを閲覧・ダウンロードするための場所です。"
 
 msgid "interact with the world in a whole new way."
 msgstr "全く新しい方法で世界と触れ合います。"
@@ -547,14 +547,14 @@ msgstr "パスワードのリセット方法をご案内するメールが、数
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "他のユーザーとつながり、プロジェクトやアイデア、お気に入りのアプリについて話し合おう"
 
-msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "これらは実験的な機能であり、 Airspace Home がクラッシュする可能性があります。ご自分の責任において有効にしてください。変更を有効にするには Airspace を再起動する必要があります。"
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "これらは実験的な機能であり、 Leap Motion App Home がクラッシュする可能性があります。ご自分の責任において有効にしてください。変更を有効にするには Airspace を再起動する必要があります。"
 
 msgid "save"
 msgstr "保存"
 
-msgid "airspace labs"
-msgstr "Airspace Labs"
+msgid "leap motion app home labs"
+msgstr "Leap Motion App Home Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "購入したアプリを新着順に並べ替える。"
@@ -562,14 +562,14 @@ msgstr "購入したアプリを新着順に並べ替える。"
 msgid "saved"
 msgstr "保存されました"
 
-msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
-msgstr "Airspace HomeでLeap Motionコントローラーを使用しましょう。ページをスワイプすることができ、ポイントを指し示すことでアプリを選択して起動できます。"
+msgid "use your leap motion controller in leap motion app home. swipe between pages and point to select and launch apps."
+msgstr "Leap Motion App HomeでLeap Motionコントローラーを使用しましょう。ページをスワイプすることができ、ポイントを指し示すことでアプリを選択して起動できます。"
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Leap Motionコントローラーを使用することで、ページをスワイプできます。"
 
-msgid "welcome to airspace labs"
-msgstr "Airspace Labsへようこそ"
+msgid "welcome to leap motion app home labs"
+msgstr "Leap Motion App Home Labsへようこそ"
 
 msgid "customize your airspace experience by trying out these features!"
 msgstr "これらの機能を試して、自分のAirspace体験をカスタマイズしましょう!"
@@ -580,8 +580,8 @@ msgstr "再開する"
 msgid "restart airspace"
 msgstr "Airspaceを再開する"
 
-msgid "restart airspace home"
-msgstr "Airspace Homeを再開する"
+msgid "restart leap motion app home"
+msgstr "Leap Motion App Homeを再開する"
 
 msgid "close"
 msgstr "閉じる"
@@ -589,11 +589,11 @@ msgstr "閉じる"
 msgid "close airspace"
 msgstr "Airspaceを閉じる"
 
-msgid "close airspace home"
-msgstr "Airspace Homeを閉じる"
+msgid "close leap motion app home"
+msgstr "Leap Motion App Homeを閉じる"
 
-msgid "please restart airspace home"
-msgstr "Airspace Homeを再起動してください"
+msgid "please restart leap motion app home"
+msgstr "Leap Motion App Homeを再起動してください"
 
-msgid "please restart airspace home to see your changes"
-msgstr "変更を見るためにはAirspace Homeを再起動してください"
+msgid "please restart leap motion app home to see your changes"
+msgstr "変更を見るためにはLeap Motion App Homeを再起動してください"

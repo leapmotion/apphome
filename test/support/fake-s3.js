@@ -5,7 +5,7 @@ var app = express();
 var fakeNonStoreAppManifest = {
   "web": [
     {
-      "name": "Airspace Store",
+      "name": "Leap Motion App Store",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-tile.png?v=2",
       "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-icon.png?v=2",
       "urlToLaunch": "https://airspace.leapmotion.com/",

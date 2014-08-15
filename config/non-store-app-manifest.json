@@ -1,13 +1,13 @@
 {
   "web": [
     {
-      "name": "Airspace Store",
+      "name": "Leap Motion App Store",
       "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-tile.png?v=2",
       "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/store-icon.png?v=2",
       "urlToLaunch": "https://airspace.leapmotion.com/",
       "passAccessToken": true,
       "deletable": false,
-      "eventToTrack": "Clicked Airspace Store Tile"
+      "eventToTrack": "Clicked Leap Motion App Store Tile"
     }
   ],
 

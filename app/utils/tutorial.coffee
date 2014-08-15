@@ -18,7 +18,7 @@ makeGuides = ->
     description: String i18n.translate 'Launch all of your Leap Motion-powered apps and access the store to discover new ones.'
     id: 'g_start'
     next: 'g_orientation'
-    title: String i18n.translate 'Welcome to Airspace Home!'
+    title: String i18n.translate 'Welcome to Leap Motion App Home!'
     xButton: true
     onClose: onClose
 
@@ -72,7 +72,7 @@ makeGuides = ->
       classString: 'primary'
       onclick: guiders.hideAll
     ]
-    description: String i18n.translate "Airspace Store is the place for you to browse and download the latest games, creative tools, and more."
+    description: String i18n.translate "Leap Motion App Store is the place for you to browse and download the latest games, creative tools, and more."
     id: 'g_store'
     title: String i18n.translate 'Discover new apps'
     attachTo: '#airspace-store'

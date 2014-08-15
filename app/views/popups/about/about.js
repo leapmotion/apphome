@@ -7,7 +7,7 @@ module.exports = BaseView.extend({
   viewDir: __dirname,
 
   options: {
-    title: i18n.translate('About Airspace Home'),
+    title: i18n.translate('About Leap Motion App Home'),
     width: 300,
     height: 160,
     'always-on-top': false,

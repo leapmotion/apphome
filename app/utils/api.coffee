@@ -271,7 +271,7 @@ sendDeviceData = ->
     #
     # Needed by https://radmine.leapmotion.com/issues/9289
     # Since there's not any way to distinguish between a bundled
-    # HP machine with keyboard, vs. a standalone keyboard, Airspace Home
+    # HP machine with keyboard, vs. a standalone keyboard, Leap Motion App Home
     # will need to override the device_type (hashed inside device_auth)
     # with TYPE_KEYBOARD_STANDALONE. This is a super hack, but needed to
     # ensure entitlements don't get granted to Standalone keyboards.

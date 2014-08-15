@@ -124,8 +124,8 @@ msgstr "disconnetti da %1$s"
 msgid "account"
 msgstr "account"
 
-msgid "about airspace home"
-msgstr "informazioni su airspace home"
+msgid "about leap motion app home"
+msgstr "informazioni su leap motion app home"
 
 msgid "community forums..."
 msgstr "Forum della Community..."
@@ -136,8 +136,8 @@ msgstr "assistenza"
 msgid "get support..."
 msgstr "assistenza..."
 
-msgid "airspace home"
-msgstr "airspace home"
+msgid "leap motion app home"
+msgstr "leap motion app home"
 
 msgid "help"
 msgstr "guida"
@@ -358,8 +358,8 @@ msgstr "invia report errori"
 msgid "don't send"
 msgstr "non inviare"
 
-msgid "airspace store"
-msgstr "airspace store"
+msgid "leap motion app store"
+msgstr "leap motion app store"
 
 msgid "app store"
 msgstr "app store"
@@ -460,8 +460,8 @@ msgstr "la comunicazione del giorno di nascita ci consente di fornire la corrett
 msgid "don't worry. we will not share this information."
 msgstr "non preoccuparti, non condivideremo queste informazioni."
 
-msgid "welcome to airspace home!"
-msgstr "benvenuto ad airspace home!"
+msgid "welcome to leap motion app home!"
+msgstr "benvenuto ad leap motion app home!"
 
 msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
 msgstr "avvia tutte le app leap motion-compatibili e accedi allo store per scoprirne di nuove."
@@ -499,8 +499,8 @@ msgstr "abbiamo configurato alcune grandi app gratuite per iniziare. è il momen
 msgid "discover new apps"
 msgstr "scopri nuove app"
 
-msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
-msgstr "airspace store è lo store in cui selezionare e scaricare i giochi, gli strumenti creativi più recenti e molto altro."
+msgid "leap motion app store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "leap motion app store è lo store in cui selezionare e scaricare i giochi, gli strumenti creativi più recenti e molto altro."
 
 msgid "back"
 msgstr "indietro"
@@ -514,8 +514,8 @@ msgstr "fine"
 msgid "reach out and experience what your controller can do."
 msgstr "scopri e prova ciò che può fare il controller."
 
-msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
-msgstr "airspace store è lo store in cui selezionare e scaricare nuovi giochi, strumenti creativi e molto altro."
+msgid "leap motion app store is the place for you to browse and download new games, creative tools, and more."
+msgstr "leap motion app store è lo store in cui selezionare e scaricare nuovi giochi, strumenti creativi e molto altro."
 
 msgid "interact with the world in a whole new way."
 msgstr "interagisci con il mondo in un modo completamente nuovo."
@@ -547,14 +547,14 @@ msgstr "riceverai una e-mail con le istruzioni su come ripristinare la password 
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "Collegati con altri utenti per discutere progetti, idee e delle tue app preferite"
 
-msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "Queste sono funzionalità in fase sperimentale che possono bloccare Airspace Home. Se le attivi lo fai a tuo rischio. Sarà necessario riavviare Airspace prima che le tue variazioni abbiano effetto."
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "Queste sono funzionalità in fase sperimentale che possono bloccare Leap Motion App Home. Se le attivi lo fai a tuo rischio. Sarà necessario riavviare Airspace prima che le tue variazioni abbiano effetto."
 
 msgid "save"
 msgstr "Salva"
 
-msgid "airspace labs"
-msgstr "Airspace Labs"
+msgid "leap motion app home labs"
+msgstr "Leap Motion App Home Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "Classifica le app acquistate partendo da quelle lanciate più di recente."
@@ -562,14 +562,14 @@ msgstr "Classifica le app acquistate partendo da quelle lanciate più di recente
 msgid "saved"
 msgstr "Salvato"
 
-msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
-msgstr "Usa il tuo controller Leap Motion in Airspace Home. Striscia tra le pagine e punta per selezionare e lanciare le app."
+msgid "use your leap motion controller in leap motion app home. swipe between pages and point to select and launch apps."
+msgstr "Usa il tuo controller Leap Motion in Leap Motion App Home. Striscia tra le pagine e punta per selezionare e lanciare le app."
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Usa il tuo controller Leap Motion per strisciare tra le pagine."
 
-msgid "welcome to airspace labs"
-msgstr "Benvenuto a Airspace Labs"
+msgid "welcome to leap motion app home labs"
+msgstr "Benvenuto a Leap Motion App Home Labs"
 
 msgid "customize your airspace experience by trying out these features!"
 msgstr "Personalizza la tua esperienza su Airspace provando queste funzionalità!"
@@ -580,8 +580,8 @@ msgstr "Riavvia"
 msgid "restart airspace"
 msgstr "Riavvia Airspace"
 
-msgid "restart airspace home"
-msgstr "Riavvia Airspace Home"
+msgid "restart leap motion app home"
+msgstr "Riavvia Leap Motion App Home"
 
 msgid "close"
 msgstr "Chiudi"
@@ -589,11 +589,11 @@ msgstr "Chiudi"
 msgid "close airspace"
 msgstr "Chiudi Airspace"
 
-msgid "close airspace home"
-msgstr "Chiudi Airspace Home"
+msgid "close leap motion app home"
+msgstr "Chiudi Leap Motion App Home"
 
-msgid "please restart airspace home"
-msgstr "Riavvia Airspace Home"
+msgid "please restart leap motion app home"
+msgstr "Riavvia Leap Motion App Home"
 
-msgid "please restart airspace home to see your changes"
-msgstr "Riavvia Airspace Home per visualizzare le tue modifiche"
+msgid "please restart leap motion app home to see your changes"
+msgstr "Riavvia Leap Motion App Home per visualizzare le tue modifiche"

@@ -124,7 +124,7 @@ msgstr "注销 %1$s"
 msgid "account"
 msgstr "帐户"
 
-msgid "about airspace home"
+msgid "about leap motion app home"
 msgstr "关于 Airspace 主页"
 
 msgid "community forums..."
@@ -136,7 +136,7 @@ msgstr "获得支持"
 msgid "get support..."
 msgstr "获得支持..."
 
-msgid "airspace home"
+msgid "leap motion app home"
 msgstr "Airspace 主页"
 
 msgid "help"
@@ -358,7 +358,7 @@ msgstr "发送错误报告"
 msgid "don't send"
 msgstr "不要发送"
 
-msgid "airspace store"
+msgid "leap motion app store"
 msgstr "Airspace 商店"
 
 msgid "app store"
@@ -460,8 +460,8 @@ msgstr "提供您的出生日期以确保使您获得与您的年龄相适应的
 msgid "don't worry. we will not share this information."
 msgstr "请勿担心，我们不会泄露该信息。"
 
-msgid "welcome to airspace home!"
-msgstr "欢迎来到 Airspace Home！"
+msgid "welcome to leap motion app home!"
+msgstr "欢迎来到 Leap Motion App Home！"
 
 msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
 msgstr "启动您所有的 Leap Motion 应用，并访问商店发现全新精彩应用。"
@@ -499,8 +499,8 @@ msgstr "我们已为您准备好一些超酷的免费应用，让您快速上手
 msgid "discover new apps"
 msgstr "发现全新应用"
 
-msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
-msgstr "Airspace Store 是浏览和下载最新游戏、创意工具和更多精彩内容的绝佳地点。"
+msgid "leap motion app store is the place for you to browse and download the latest games, creative tools, and more."
+msgstr "Leap Motion App Store 是浏览和下载最新游戏、创意工具和更多精彩内容的绝佳地点。"
 
 msgid "back"
 msgstr "后退"
@@ -514,8 +514,8 @@ msgstr "完成"
 msgid "reach out and experience what your controller can do."
 msgstr "试用一下，看看你的控制器都可以干些什么。"
 
-msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
-msgstr "在 Airspace Store，你可以浏览下载新游戏、创意工具等内容。"
+msgid "leap motion app store is the place for you to browse and download new games, creative tools, and more."
+msgstr "在 Leap Motion App Store，你可以浏览下载新游戏、创意工具等内容。"
 
 msgid "interact with the world in a whole new way."
 msgstr "以一种全新的方式与这个世界展开互动。"
@@ -547,14 +547,14 @@ msgstr "几分钟后您会收到一封电子邮件，可按邮件中的说明重
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "与其他用户交流，一起探讨项目、创意和你最喜爱的应用程序"
 
-msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "这些是试验功能，可能会导致 Airspace Home 崩溃。您需要自行承担风险才能使用。您需要重新启动 Airspace 才能使更改生效。"
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "这些是试验功能，可能会导致 Leap Motion App Home 崩溃。您需要自行承担风险才能使用。您需要重新启动 Airspace 才能使更改生效。"
 
 msgid "save"
 msgstr "保存"
 
-msgid "airspace labs"
-msgstr "Airspace Labs"
+msgid "leap motion app home labs"
+msgstr "Leap Motion App Home Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "先按照最新发布日期对已购买的应用程序进行排序。"
@@ -562,14 +562,14 @@ msgstr "先按照最新发布日期对已购买的应用程序进行排序。"
 msgid "saved"
 msgstr "已保存"
 
-msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
-msgstr "在 Airspace Home 中使用您的 Leap Motion 控制器。在页面间滑动并指向即可选择并启动应用。"
+msgid "use your leap motion controller in leap motion app home. swipe between pages and point to select and launch apps."
+msgstr "在 Leap Motion App Home 中使用您的 Leap Motion 控制器。在页面间滑动并指向即可选择并启动应用。"
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "使用您的 Leap Motion 控制器在页面间切换。"
 
-msgid "welcome to airspace labs"
-msgstr "欢迎来到 Airspace Labs"
+msgid "welcome to leap motion app home labs"
+msgstr "欢迎来到 Leap Motion App Home Labs"
 
 msgid "customize your airspace experience by trying out these features!"
 msgstr "试用这些功能自定义你的 Airspace！"
@@ -580,8 +580,8 @@ msgstr "重启"
 msgid "restart airspace"
 msgstr "重启 Airspace"
 
-msgid "restart airspace home"
-msgstr "重启 Airspace Home"
+msgid "restart leap motion app home"
+msgstr "重启 Leap Motion App Home"
 
 msgid "close"
 msgstr "关闭"
@@ -589,11 +589,11 @@ msgstr "关闭"
 msgid "close airspace"
 msgstr "关闭 Airspace"
 
-msgid "close airspace home"
-msgstr "关闭 Airspace Home"
+msgid "close leap motion app home"
+msgstr "关闭 Leap Motion App Home"
 
-msgid "please restart airspace home"
-msgstr "请重启 Airspace Home"
+msgid "please restart leap motion app home"
+msgstr "请重启 Leap Motion App Home"
 
-msgid "please restart airspace home to see your changes"
-msgstr "请重启 Airspace Home 以查看你的变更"
+msgid "please restart leap motion app home to see your changes"
+msgstr "请重启 Leap Motion App Home 以查看你的变更"

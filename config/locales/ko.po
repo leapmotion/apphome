@@ -124,7 +124,7 @@ msgstr "%1$s 로그아웃"
 msgid "account"
 msgstr "계정"
 
-msgid "about airspace home"
+msgid "about leap motion app home"
 msgstr "Airspace 홈 소개"
 
 msgid "community forums..."
@@ -136,7 +136,7 @@ msgstr "지원 받기"
 msgid "get support..."
 msgstr "지원 받기..."
 
-msgid "airspace home"
+msgid "leap motion app home"
 msgstr "Airspace 홈"
 
 msgid "help"
@@ -358,7 +358,7 @@ msgstr "오류 리포트 보내기"
 msgid "don't send"
 msgstr "보내지 않음"
 
-msgid "airspace store"
+msgid "leap motion app store"
 msgstr "Airspace 스토어"
 
 msgid "app store"
@@ -460,7 +460,7 @@ msgstr "귀하 연령에 맞는 Leap Motion 경험을 위해 귀하의 생년월
 msgid "don't worry. we will not share this information."
 msgstr "당사는 이 정보를 공유하지 않습니다. 염려하지 않아도 됩니다."
 
-msgid "welcome to airspace home!"
+msgid "welcome to leap motion app home!"
 msgstr "Airspace 홈에 오신 것을 환영합니다!"
 
 msgid "launch all of your leap motion-powered apps and access the store to discover new ones."
@@ -499,7 +499,7 @@ msgstr "귀하는 대단히 재미있는 앱들을 무료로 셋업 하였습니
 msgid "discover new apps"
 msgstr "새로운 앱들을 찾아 보세요"
 
-msgid "airspace store is the place for you to browse and download the latest games, creative tools, and more."
+msgid "leap motion app store is the place for you to browse and download the latest games, creative tools, and more."
 msgstr "Airspace 스토어는 최신 게임과 창의적인 도구, 그 외에 많은 것을 브라우징하거나,  다운로드하는 곳입니다."
 
 msgid "back"
@@ -514,7 +514,7 @@ msgstr "완료"
 msgid "reach out and experience what your controller can do."
 msgstr "립모션 컨트롤러로 뭘 할 수 있는지 만나보고 경험하세요."
 
-msgid "airspace store is the place for you to browse and download new games, creative tools, and more."
+msgid "leap motion app store is the place for you to browse and download new games, creative tools, and more."
 msgstr "Airspace 스토어는 최신 게임과 창의적인 도구, 그 외에 많은 것을 브라우징하거나, 다운로드하는 곳입니다."
 
 msgid "interact with the world in a whole new way."
@@ -547,14 +547,14 @@ msgstr "비밀번호 재설정 안내 이메일을 몇 분 후에 받으실 것�
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "다른 사용자들과 프로젝트, 아이디어, 좋아하는 앱에 대해 이야기해 보세요"
 
-msgid "these are experimental features which may crash airspace home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "본 사항은 시험 단계의 기능이므로 Airspace Home이 중단될 수 있습니다. 개인의 책임하에 실행하십시오. 변경 사항을 적용하려면 Airspace를 재시작해야 합니다."
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
+msgstr "본 사항은 시험 단계의 기능이므로 Leap Motion App Home이 중단될 수 있습니다. 개인의 책임하에 실행하십시오. 변경 사항을 적용하려면 Airspace를 재시작해야 합니다."
 
 msgid "save"
 msgstr "저장하기"
 
-msgid "airspace labs"
-msgstr "Airspace Labs"
+msgid "leap motion app home labs"
+msgstr "Leap Motion App Home Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "가장 최근 실행한 순서대로 구매한 앱을 정렬하세요."
@@ -562,14 +562,14 @@ msgstr "가장 최근 실행한 순서대로 구매한 앱을 정렬하세요."
 msgid "saved"
 msgstr "저장됨"
 
-msgid "use your leap motion controller in airspace home. swipe between pages and point to select and launch apps."
-msgstr "Airspace Home 속에서 당신의 Leap Motion 콘트롤러를 사용하세요. 페이지 사이를 스와이프하고 앱을 선택하고 가동시키기려면 포인팅하세요."
+msgid "use your leap motion controller in leap motion app home. swipe between pages and point to select and launch apps."
+msgstr "Leap Motion App Home 속에서 당신의 Leap Motion 콘트롤러를 사용하세요. 페이지 사이를 스와이프하고 앱을 선택하고 가동시키기려면 포인팅하세요."
 
 msgid "use your leap motion controller to swipe between pages."
 msgstr "당신의 Leap Motion 콘트롤러를 사용해서 페이지 사이를 스와이프하세요."
 
-msgid "welcome to airspace labs"
-msgstr "Airspace Labs에 오신 것을 환영합니다."
+msgid "welcome to leap motion app home labs"
+msgstr "Leap Motion App Home Labs에 오신 것을 환영합니다."
 
 msgid "customize your airspace experience by trying out these features!"
 msgstr "이 기능들을 이용하여 Airspace 경험을 커스터마이징 하세요!"
@@ -580,8 +580,8 @@ msgstr "재시작"
 msgid "restart airspace"
 msgstr "Airspace 재시작"
 
-msgid "restart airspace home"
-msgstr "Airspace Home 재시작"
+msgid "restart leap motion app home"
+msgstr "Leap Motion App Home 재시작"
 
 msgid "close"
 msgstr "닫기"
@@ -589,11 +589,11 @@ msgstr "닫기"
 msgid "close airspace"
 msgstr "Airspace 닫기"
 
-msgid "close airspace home"
-msgstr "Airspace Home 닫기"
+msgid "close leap motion app home"
+msgstr "Leap Motion App Home 닫기"
 
-msgid "please restart airspace home"
-msgstr "Airspace Home을 재시작하십시요"
+msgid "please restart leap motion app home"
+msgstr "Leap Motion App Home을 재시작하십시요"
 
-msgid "please restart airspace home to see your changes"
-msgstr "변경사항을 보기 위해 Airspace Home을 재시작하십시요"
+msgid "please restart leap motion app home to see your changes"
+msgstr "변경사항을 보기 위해 Leap Motion App Home을 재시작하십시요"
