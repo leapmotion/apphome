@@ -18,7 +18,7 @@ var config = {
     log_in_url: CENTRAL + 'users/sign_in',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
-  ghost_signup: CENTRAL + 'users/ghost_signup',
+  ghost_signup: CENTRAL + 'users/sign_in_as_ghost',
 
   AppListingEndpoint: WAREHOUSE + 'api/apps/myapps',
   AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
@@ -27,7 +27,7 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v3.json',
+  NonStoreAppManifestUrl: process.env.NON_STORE_APP_MANIFEST || 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v3.json',
 
   DeviceDataEndpoint: CENTRAL + 'users/device',
 

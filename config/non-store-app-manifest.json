@@ -8,22 +8,6 @@
       "passAccessToken": true,
       "deletable": false,
       "eventToTrack": "Clicked Airspace Store Tile"
-    },
-    {
-      "name": "Feedback",
-      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-tile.png?v=2",
-      "iconUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/community-icon.png?v=2",
-      "urlToLaunch": "http://central.leapmotion.com/uservoice",
-      "passAccessToken": true,
-      "deletable": false,
-      "eventToTrack": "Clicked Community Tile"
-    },
-    {
-      "name": "Documentation",
-      "tileUrl": "https://lm-assets.s3.amazonaws.com/airspace-desktop/documentation-tile.png",
-      "urlToLaunch": "http://docs.leapmotion.com",
-      "deletable": false,
-      "eventToTrack": "Clicked Documentation Tile"
     }
   ],
 
