@@ -553,8 +553,8 @@ msgstr "Esses são recursos experimentais que podem travar o Leap Motion App Hom
 msgid "save"
 msgstr "Salvar"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "Organizar os apps comprados pela ordem de utilização."
@@ -568,11 +568,11 @@ msgstr "Use seu Controlador Leap Motion no Leap Motion App Home. Dê um swipe pa
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Use seu Controlador Leap Motion para mudar de página com um swipe."
 
-msgid "welcome to leap motion app home labs"
-msgstr "Bem-vindo ao Leap Motion App Home Labs"
+msgid "welcome to labs"
+msgstr "Bem-vindo ao Labs"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "Personalize sua experiência Airspace experimentando estes recursos!"
+msgid "customize your experience by trying out these features!"
+msgstr "Personalize sua experiência Leap Motion App Home experimentando estes recursos!"
 
 msgid "restart"
 msgstr "Reiniciar"

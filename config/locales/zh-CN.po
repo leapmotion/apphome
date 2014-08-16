@@ -553,8 +553,8 @@ msgstr "这些是试验功能，可能会导致 Leap Motion App Home 崩溃。�
 msgid "save"
 msgstr "保存"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "先按照最新发布日期对已购买的应用程序进行排序。"
@@ -568,11 +568,11 @@ msgstr "在 Leap Motion App Home 中使用您的 Leap Motion 控制器。在页�
 msgid "use your leap motion controller to swipe between pages."
 msgstr "使用您的 Leap Motion 控制器在页面间切换。"
 
-msgid "welcome to leap motion app home labs"
-msgstr "欢迎来到 Leap Motion App Home Labs"
+msgid "welcome to labs"
+msgstr "欢迎来到 Labs"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "试用这些功能自定义你的 Airspace！"
+msgid "customize your experience by trying out these features!"
+msgstr "试用这些功能自定义你的 Leap Motion App Home！"
 
 msgid "restart"
 msgstr "重启"

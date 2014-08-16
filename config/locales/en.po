@@ -553,8 +553,8 @@ msgstr "These are experimental features which may crash Leap Motion App Home. En
 msgid "save"
 msgstr "Save"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "Sort purchased apps by most-recently-launched first."
@@ -568,11 +568,11 @@ msgstr "Use your Leap Motion Controller in Leap Motion App Home. Swipe between p
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Use your Leap Motion Controller to swipe between pages."
 
-msgid "welcome to leap motion app home labs"
-msgstr "Welcome to Leap Motion App Home Labs"
+msgid "welcome to labs"
+msgstr "Welcome to Labs"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "Customize your Airspace experience by trying out these features!"
+msgid "customize your experience by trying out these features!"
+msgstr "Customize your experience by trying out these features!"
 
 msgid "restart"
 msgstr "Restart"

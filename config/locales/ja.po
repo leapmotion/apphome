@@ -553,8 +553,8 @@ msgstr "これらは実験的な機能であり、 Leap Motion App Home がク�
 msgid "save"
 msgstr "保存"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "購入したアプリを新着順に並べ替える。"
@@ -568,11 +568,11 @@ msgstr "Leap Motion App HomeでLeap Motionコントローラーを使用しま�
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Leap Motionコントローラーを使用することで、ページをスワイプできます。"
 
-msgid "welcome to leap motion app home labs"
-msgstr "Leap Motion App Home Labsへようこそ"
+msgid "welcome to labs"
+msgstr "Labsへようこそ"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "これらの機能を試して、自分のAirspace体験をカスタマイズしましょう!"
+msgid "customize your experience by trying out these features!"
+msgstr "これらの機能を試して、自分のLeap Motion App Home体験をカスタマイズしましょう!"
 
 msgid "restart"
 msgstr "再開する"

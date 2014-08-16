@@ -553,8 +553,8 @@ msgstr "본 사항은 시험 단계의 기능이므로 Leap Motion App Home이 �
 msgid "save"
 msgstr "저장하기"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "가장 최근 실행한 순서대로 구매한 앱을 정렬하세요."
@@ -568,11 +568,11 @@ msgstr "Leap Motion App Home 속에서 당신의 Leap Motion 콘트롤러를 사
 msgid "use your leap motion controller to swipe between pages."
 msgstr "당신의 Leap Motion 콘트롤러를 사용해서 페이지 사이를 스와이프하세요."
 
-msgid "welcome to leap motion app home labs"
-msgstr "Leap Motion App Home Labs에 오신 것을 환영합니다."
+msgid "welcome to labs"
+msgstr "Labs에 오신 것을 환영합니다."
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "이 기능들을 이용하여 Airspace 경험을 커스터마이징 하세요!"
+msgid "customize your experience by trying out these features!"
+msgstr "이 기능들을 이용하여 Leap Motion App Home 경험을 커스터마이징 하세요!"
 
 msgid "restart"
 msgstr "재시작"

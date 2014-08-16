@@ -553,8 +553,8 @@ msgstr "Ces fonctionnalités expérimentales peuvent faire planter Leap Motion A
 msgid "save"
 msgstr "Sauvegarder"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "Trier les applications achetées selon les plus récemment utilisées."
@@ -568,11 +568,11 @@ msgstr "Utilisez votre contrôleur Leap Motion dans Leap Motion App Home. Passez
 msgid "use your leap motion controller to swipe between pages."
 msgstr "Utilisez votre contrôleur Leap Motion pour passer d'une page à l'autre."
 
-msgid "welcome to leap motion app home labs"
-msgstr "Bienvenue dans Leap Motion App Home Labs"
+msgid "welcome to labs"
+msgstr "Bienvenue dans Labs"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "Personnalisez votre expérience Airspace en essayant ces fonctionnalités !"
+msgid "customize your experience by trying out these features!"
+msgstr "Personnalisez votre expérience Leap Motion App Home en essayant ces fonctionnalités !"
 
 msgid "restart"
 msgstr "Redémarrer"

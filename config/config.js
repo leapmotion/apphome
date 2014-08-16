@@ -172,7 +172,7 @@ var config = {
   ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
-  GetSupportUrl: 'https://airspace.leapmotion.com/apps/support',
+  GetSupportUrl: 'https://support.leapmotion.com/',
   CommunityForumsUrl: 'https://community.leapmotion.com',
 
   ModulePaths: {

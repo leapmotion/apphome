@@ -67,7 +67,7 @@ buildFileMenu = ->
 buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
   accountMenu = new nwGui.Menu()
   accountMenu.append new nwGui.MenuItem(
-    label: i18n.translate("Sign Out %1$s").fetch((if enableLogOut then (uiGlobals.username or uiGlobals.email) else ""))
+    label: i18n.translate("Sign Out %1$s").fetch((if enableLogOut then (uiGlobals.display_name) else ""))
     click: authorizationUtil.logOutUser
     enabled: !!enableLogOut
   )
@@ -81,7 +81,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
 
   if _.keys(uiGlobals.labOptions).length
     accountMenu.append new nwGui.MenuItem
-      label: i18n.translate 'Leap Motion App Home Labs'
+      label: i18n.translate 'Labs'
       click: ->
         (new LabModalView()).show()
 

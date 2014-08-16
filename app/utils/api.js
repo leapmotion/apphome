@@ -261,6 +261,7 @@
 
   _setGlobalUserInformation = function(user) {
     drm.writeXml(user.auth_id, user.secret_token);
+    uiGlobals.display_name = user.display_name;
     uiGlobals.username = user.username;
     uiGlobals.email = user.email;
     uiGlobals.user_id = user.user_id;

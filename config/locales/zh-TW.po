@@ -553,8 +553,8 @@ msgstr "這些功能仍在實驗階段，有可能會使Leap Motion App Home出�
 msgid "save"
 msgstr "儲存"
 
-msgid "leap motion app home labs"
-msgstr "Leap Motion App Home Labs"
+msgid "labs"
+msgstr "Labs"
 
 msgid "sort purchased apps by most-recently-launched first."
 msgstr "依照最近啟動程度來分類已購買的應用程式。"
@@ -568,11 +568,11 @@ msgstr "在 Leap Motion App Home 使用你的 Leap Motion 控制器進行掃動�
 msgid "use your leap motion controller to swipe between pages."
 msgstr "使用你的 Leap Motion 控制器進行掃動，以切換頁面。"
 
-msgid "welcome to leap motion app home labs"
-msgstr "歡迎來到Leap Motion App Home Labs"
+msgid "welcome to labs"
+msgstr "歡迎來到Labs"
 
-msgid "customize your airspace experience by trying out these features!"
-msgstr "嘗試這些功能，個人化你的Airspace體驗！"
+msgid "customize your experience by trying out these features!"
+msgstr "嘗試這些功能，個人化你的Leap Motion App Home體驗！"
 
 msgid "restart"
 msgstr "重新開啟"

@@ -92,7 +92,7 @@
     var accountMenu;
     accountMenu = new nwGui.Menu();
     accountMenu.append(new nwGui.MenuItem({
-      label: i18n.translate("Sign Out %1$s").fetch((enableLogOut ? uiGlobals.username || uiGlobals.email : "")),
+      label: i18n.translate("Sign Out %1$s").fetch((enableLogOut ? uiGlobals.display_name : "")),
       click: authorizationUtil.logOutUser,
       enabled: !!enableLogOut
     }));
@@ -105,7 +105,7 @@
     }));
     if (_.keys(uiGlobals.labOptions).length) {
       accountMenu.append(new nwGui.MenuItem({
-        label: i18n.translate('Leap Motion App Home Labs'),
+        label: i18n.translate('Labs'),
         click: function() {
           return (new LabModalView()).show();
         }

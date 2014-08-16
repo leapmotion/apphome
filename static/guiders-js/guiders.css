@@ -94,7 +94,7 @@
 }
 
 .guiders_button.primary {
-  background-color: rgb(135, 179, 54);
+  background-color: #5daa00;
 }
 
 .guiders_buttons_container {
@@ -122,8 +122,8 @@
 }
 
 .primary .guiders_content h1 {
-  color: rgb(135, 179, 54);
-  font-size: 32px;
+  color: #5daa00;
+  font-size: 28px;
 }
 
 .guiders_content p {
