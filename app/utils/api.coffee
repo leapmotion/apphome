@@ -99,6 +99,13 @@ syncToCollection = (appJsonList, collection, appTest) ->
 
   do collection.save
 
+subscribeToUserReloadChannel = (userId) ->
+  pubnub.subscribe userId + ".user.reload", () ->
+    # steal focus
+    nwGui.Window.get().focus()
+    connectToStoreServer()
+
+
 subscribeToUserChannel = (userId) ->
   pubnub.subscribe userId + ".user.purchased", (appJson) ->
     # steal focus
@@ -205,6 +212,7 @@ _setGlobalUserInformation = (user) ->
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
   subscribeToUserChannel user.user_id
+  subscribeToUserReloadChannel user.user_id
   uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
