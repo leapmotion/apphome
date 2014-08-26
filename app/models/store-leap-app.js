@@ -173,7 +173,7 @@ module.exports = LeapApp.extend({
     try {
       var dependenciesReadmePath = path.join(this._appDir(), 'Dependencies', 'README.html');
       if (fs.existsSync(dependenciesReadmePath)) {
-        nwGui.Shell.openExternal('file://' + dependenciesReadmePath);
+        nwGui.Shell.openItem('file://' + dependenciesReadmePath);
       }
 
       var userDataDir = this._userDataDir();
