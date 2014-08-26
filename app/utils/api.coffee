@@ -208,6 +208,7 @@ _setGlobalUserInformation = (user) ->
   drm.writeXml user.auth_id, user.secret_token
 
   uiGlobals.display_name = user.display_name
+  uiGlobals.is_ghost = user.is_ghost
   uiGlobals.username = user.username
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id

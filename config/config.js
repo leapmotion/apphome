@@ -16,6 +16,7 @@ var config = {
     redirect_uri: CENTRAL,
     log_out_url: CENTRAL + 'users/sign_out',
     log_in_url: CENTRAL + 'users/sign_in',
+    sign_up_url: CENTRAL + 'users/sign_up',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
   ghost_signup: CENTRAL + 'users/sign_in_as_ghost',
