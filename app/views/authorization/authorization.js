@@ -49,7 +49,6 @@ module.exports = BaseView.extend({
       this._startLoadTimeout(cb);
 
       this.$iframe.load(function() {
-
         try {
           var iframeWindow = this.$iframe.prop('contentWindow');
 
@@ -132,7 +131,7 @@ module.exports = BaseView.extend({
 
     $contents.find('.alerts').prependTo($contents.find('.auth-form'));
 
-    $contents.find('.auth-screen .auth-links.back').html('<a href="https://central.leapmotion.com/users/sign_in" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
+    $contents.find('.auth-screen .auth-links.back').html('<a href="' + config.oauth.log_in_url + '" class="auth-link"><i class="icon-caret-left"></i> ' + i18n.translate("Sign in") + '</a>');
 
     $contents.find('.auth-form').css({'position': 'relative'});
 
@@ -217,6 +216,7 @@ module.exports = BaseView.extend({
   },
 
   _waitForUserToSignIn: function() {
+    var authorizationView = this;
     var iframeWindow = this.$iframe.prop('contentWindow');
     var signUpUrl = $('.auth-link:first', iframeWindow.document).attr('href');
     var isShowingSignInForm = /^\/users\/sign_in/.test(iframeWindow.location.pathname);
@@ -229,15 +229,16 @@ module.exports = BaseView.extend({
     }
 
     if (uiGlobals.isFirstRun && !this._hasRedirectedToSignUp && signUpUrl && isShowingSignInForm && this._newUser) {
-      iframeWindow.location = signUpUrl;
-      this._hasRedirectedToSignUp = true;
+      $('form', iframeWindow.document).attr('action', config.ghost_signup);
+      $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
+      $('form', iframeWindow.document).submit();
     } else {
       this._showLoginForm();
       var $rememberMe = $('input#user_remember_me', iframeWindow.document).attr('checked', true);
       $rememberMe.parent().hide();
       $('input[type=text]:first', iframeWindow.document).focus();
       $('form', iframeWindow.document).submit(this._showLoggingInMessage.bind(this));
-     }
+    }
   },
 
   _allowOauthAuthorization: function() {

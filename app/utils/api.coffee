@@ -99,6 +99,13 @@ syncToCollection = (appJsonList, collection, appTest) ->
 
   do collection.save
 
+subscribeToUserReloadChannel = (userId) ->
+  pubnub.subscribe userId + ".user.reload", () ->
+    # steal focus
+    nwGui.Window.get().focus()
+    connectToStoreServer()
+
+
 subscribeToUserChannel = (userId) ->
   pubnub.subscribe userId + ".user.purchased", (appJson) ->
     # steal focus
@@ -200,10 +207,13 @@ getNonStoreManifest = ->
 _setGlobalUserInformation = (user) ->
   drm.writeXml user.auth_id, user.secret_token
 
+  uiGlobals.display_name = user.display_name
+  uiGlobals.is_ghost = user.is_ghost
   uiGlobals.username = user.username
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
   subscribeToUserChannel user.user_id
+  subscribeToUserReloadChannel user.user_id
   uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
@@ -271,7 +281,7 @@ sendDeviceData = ->
     #
     # Needed by https://radmine.leapmotion.com/issues/9289
     # Since there's not any way to distinguish between a bundled
-    # HP machine with keyboard, vs. a standalone keyboard, Airspace Home
+    # HP machine with keyboard, vs. a standalone keyboard, Leap Motion App Home
     # will need to override the device_type (hashed inside device_auth)
     # with TYPE_KEYBOARD_STANDALONE. This is a super hack, but needed to
     # ensure entitlements don't get granted to Standalone keyboards.

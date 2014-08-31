@@ -28,12 +28,12 @@ module.exports = Modal.extend({
     });
 
     this.$el.append(this.templateHtml({
-      title: i18n.translate('Welcome to Airspace Labs'),
-      intro: i18n.translate('Customize your Airspace experience by trying out these features!'),
-      instructions: i18n.translate("These are experimental features which may crash Airspace Home. "
+      title: i18n.translate('Welcome to Labs'),
+      intro: i18n.translate('Customize your experience by trying out these features!'),
+      instructions: i18n.translate("These are experimental features which may crash Leap Motion App Home. "
        + "Enable at your own risk. You will need to restart Airspace before your changes take effect."),
       options: labOptions,
-      restart_label: i18n.translate('Please restart Airspace Home to see your changes'),
+      restart_label: i18n.translate('Please restart Leap Motion App Home to see your changes'),
       save_label: i18n.translate('Save'),
       saved_label: i18n.translate('Saved'),
       cancel_label: i18n.translate('Cancel')

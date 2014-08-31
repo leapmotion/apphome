@@ -4,8 +4,8 @@ var enumerable = require('../app/utils/enumerable.js');
 
 var AppsDir = 'AirspaceApps';
 var AppsUserDataDir = 'AirspaceApps';
-var CENTRAL = 'https://central.leapmotion.com/';
-var WAREHOUSE = 'https://warehouse.leapmotion.com/';
+var CENTRAL = process.env.CENTRAL_URL || 'https://central.leapmotion.com/';
+var WAREHOUSE = process.env.WAREHOUSE_URL || 'https://warehouse.leapmotion.com/';
 
 var config = {
 
@@ -15,8 +15,11 @@ var config = {
     client_key: '8daf22818f30f4a9f86201d1b276b39c',
     redirect_uri: CENTRAL,
     log_out_url: CENTRAL + 'users/sign_out',
+    log_in_url: CENTRAL + 'users/sign_in',
+    sign_up_url: CENTRAL + 'users/sign_up',
     auth_token_expiration_time: 14 * 60000 // make sure this matches the central oauth config, currently 15 minutes - 14 to be safe
   },
+  ghost_signup: CENTRAL + 'users/sign_in_as_ghost',
 
   AppListingEndpoint: WAREHOUSE + 'api/apps/myapps',
   AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
@@ -25,7 +28,7 @@ var config = {
 
   PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
 
-  NonStoreAppManifestUrl: 'https://lm-assets.s3.amazonaws.com/airspace-desktop/non-store-app-manifest-v3.json',
+  NonStoreAppManifestUrl: WAREHOUSE + 'api/app_home_manifests/v4.json',
 
   DeviceDataEndpoint: CENTRAL + 'users/device',
 
@@ -170,7 +173,7 @@ var config = {
   ],
 
   GettingStartedUrl: 'https://www.leapmotion.com/getting-started',
-  GetSupportUrl: 'https://airspace.leapmotion.com/apps/support',
+  GetSupportUrl: 'https://support.leapmotion.com/',
   CommunityForumsUrl: 'https://community.leapmotion.com',
 
   ModulePaths: {

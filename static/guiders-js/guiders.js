@@ -297,45 +297,47 @@ window.guiders = (function($) {
       }).fadeIn("fast");
 
     } else {
-      var $highlight = $('.guiders_highlight'),
-        highlight_top = $highlight.offset().top,
-        highlight_left = $highlight.offset().left,
-        highlight_bottom = highlight_top + $highlight.height() * myGuider.s,
-        highlight_right = highlight_left + $highlight.width() * myGuider.s,
-        window_width = $(window).width(),
-        window_height = $(window).height();
+      var $highlight = $('.guiders_highlight');
+      if ($highlight.length > 0) {
+        var highlight_top = $highlight.offset().top,
+          highlight_left = $highlight.offset().left,
+          highlight_bottom = highlight_top + $highlight.height() * myGuider.s,
+          highlight_right = highlight_left + $highlight.width() * myGuider.s,
+          window_width = $(window).width(),
+          window_height = $(window).height();
 
-      $(".guiders_overlay").hide();
+        $(".guiders_overlay").hide();
 
-      $(".guiders_overlay.top").css({
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: highlight_top
-      });
+        $(".guiders_overlay.top").css({
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: highlight_top
+        });
 
-      $(".guiders_overlay.right").css({
-        top: highlight_top,
-        left: highlight_right,
-        width: window_width - highlight_right,
-        height: highlight_bottom - highlight_top
-      });
+        $(".guiders_overlay.right").css({
+          top: highlight_top,
+          left: highlight_right,
+          width: window_width - highlight_right,
+          height: highlight_bottom - highlight_top
+        });
 
-      $('.guiders_overlay.bottom').css({
-        top: highlight_bottom,
-        left: 0,
-        width: '100%',
-        height: window_height - highlight_bottom
-      });
+        $('.guiders_overlay.bottom').css({
+          top: highlight_bottom,
+          left: 0,
+          width: '100%',
+          height: window_height - highlight_bottom
+        });
 
-      $('.guiders_overlay.left').css({
-        top: highlight_top,
-        left: 0,
-        width: highlight_left,
-        height: highlight_bottom - highlight_top
-      });
+        $('.guiders_overlay.left').css({
+          top: highlight_top,
+          left: 0,
+          width: highlight_left,
+          height: highlight_bottom - highlight_top
+        });
 
-      $(".guiders_overlay").show();
+        $(".guiders_overlay").show();
+      }
     }
   };
 

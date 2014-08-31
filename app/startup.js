@@ -151,7 +151,7 @@ function initializeInternationalization(cb) {
 }
 
 /*
- * Check if the main directories used by Airspace Home do, in fact, exist
+ * Check if the main directories used by Leap Motion App Home do, in fact, exist
  */
 function ensureWorkingDirs(cb) {
   var dirFn = function(dirpath) {

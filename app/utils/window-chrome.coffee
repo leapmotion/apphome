@@ -9,6 +9,8 @@ config = require("../../config/config.js")
 db = require("./db.js")
 i18n = require("./i18n.js")
 ga = require("./ga.js")
+qs = require("querystring")
+oauth = require("./oauth.js")
 popup = require("../views/popups/popup.js")
 tutorial = require("./tutorial.js")
 MainPage = require("../views/main-page/main-page.js")
@@ -66,11 +68,24 @@ buildFileMenu = ->
 
 buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
   accountMenu = new nwGui.Menu()
-  accountMenu.append new nwGui.MenuItem(
-    label: i18n.translate("Sign Out %1$s").fetch((if enableLogOut then (uiGlobals.username or uiGlobals.email) else ""))
-    click: authorizationUtil.logOutUser
-    enabled: !!enableLogOut
-  )
+  if uiGlobals.is_ghost
+    accountMenu.append new nwGui.MenuItem(
+      label: i18n.translate("Sign Up")
+      click: ->
+        oauth.getAccessToken (err, accessToken) ->
+          unless err
+            urlToLaunch = config.oauth.sign_up_url + '?' + qs.stringify(
+              access_token: accessToken
+            )
+            nwGui.Shell.openExternal urlToLaunch
+      enabled: !!enableLogOut
+    )
+  else
+    accountMenu.append new nwGui.MenuItem(
+      label: i18n.translate("Sign Out %1$s").fetch((if enableLogOut then (uiGlobals.display_name) else ""))
+      click: authorizationUtil.logOutUser
+      enabled: !!enableLogOut
+    )
   accountMenu.append new nwGui.MenuItem(
     label: i18n.translate("Set Install Directory...")
     click: ->
@@ -81,7 +96,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
 
   if _.keys(uiGlobals.labOptions).length
     accountMenu.append new nwGui.MenuItem
-      label: i18n.translate 'Airspace Labs'
+      label: i18n.translate 'Labs'
       click: ->
         (new LabModalView()).show()
 
@@ -116,7 +131,7 @@ buildHelpMenu = (enableLogOut) ->
 
   if os.platform() is "win32"
     helpMenu.append new nwGui.MenuItem(
-      label: i18n.translate("About Airspace Home")
+      label: i18n.translate("About Leap Motion App Home")
       click: ->
         popup.open "about"
     )

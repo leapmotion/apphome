@@ -262,7 +262,7 @@ var LeapApp = BaseModel.extend({
 
   getShortDescription: function() {
     var NonStandardAppDescriptions = {
-      'Airspace Store': i18n.translate("Airspace Store is the place for you to browse and download new games, creative tools, and more."),
+      'Leap Motion App Store': i18n.translate("Leap Motion App Store is the place for you to browse and download new games, creative tools, and more."),
       "Orientation": i18n.translate("Reach out and experience what your controller can do."),
       "Google Earth": i18n.translate("Interact with the world in a whole new way."),
       'Community': i18n.translate("Connect with other users to discuss projects, ideas, and your favorite apps")
