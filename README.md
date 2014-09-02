@@ -15,8 +15,30 @@
     sudo cp -r ~/Downloads/chromedriver2_server /opt/local/Libraries/node-webkit-v*.*.*-osx-ia32/
 
 ### Running (dev mode)
+```
+    # add these in .bashrc
 
-    node bin/airspace
+    # localhost
+    alias airspace='cd $HOME/homebase;\
+    CENTRAL_URL=http://local.leapmotion:3010/ \
+    WAREHOUSE_URL=http://local.leapmotion:5001/ \
+    bin/airspace'
+    alias oobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/;  airspace'
+
+    # staging (disabled HTTP Basic Auth)
+    alias stairspace='cd $HOME/homebase;\
+    CENTRAL_URL=https://lm-s-central-oobeghost.leapmotion.com/ \
+    WAREHOUSE_URL=https://lm-s-warehouse-oobeghost.leapmotion.com/ \
+    bin/airspace'
+    alias stoobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; stairspace'
+
+    # production
+    alias prairspace='cd $HOME/homebase;bin/airspace'
+    alias proobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; prairspace'
+
+    # use the airspace alias for localhost (have central and warehouse running)
+    airspace
+```
 
 ### Testing
 
