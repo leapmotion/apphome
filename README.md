@@ -15,6 +15,20 @@
     sudo cp -r ~/Downloads/chromedriver2_server /opt/local/Libraries/node-webkit-v*.*.*-osx-ia32/
 
 ### Running (dev mode)
+
+Copy over oauth2 access token from production central:
+
+```ruby
+ActiveRecord::Base.connection.execute('select * from oauth2_clients limit 1').to_a
+```
+
+In to your local database:
+
+```ruby
+ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, updated_at, name, redirect_uri, website, identifier, secret) VALUES (NOW(), NOW(), 'launcher', 'http://local.leapmotion:3010/', 'http://local.leapmotion:3010/', '73fde9aa45ef818ecb137aeacd886253', '8daf22818f30f4a9f86201d1b276b39c')")
+```
+
+
 ```
     # add these in .bashrc
 
