@@ -167,6 +167,7 @@ _getStoreManifest = ->
       access_token: accessToken
       platform: platform
       language: uiGlobals.locale
+      client_version: uiGlobals.appVersion
     console.log "Getting store manifest from", apiEndpoint
     httpHelper.getJson(apiEndpoint).then (messages) ->
       if messages.errors
