@@ -210,7 +210,8 @@
       apiEndpoint = config.AppListingEndpoint + "?" + qs.stringify({
         access_token: accessToken,
         platform: platform,
-        language: uiGlobals.locale
+        language: uiGlobals.locale,
+        client_version: uiGlobals.appVersion
       });
       console.log("Getting store manifest from", apiEndpoint);
       return httpHelper.getJson(apiEndpoint).then(function(messages) {
