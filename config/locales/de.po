@@ -547,8 +547,8 @@ msgstr "Sie erhalten in Kürze eine e-mail mit Anweisungen zur Einrichtung Ihres
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "Finde dich mit anderen Nutzern zusammen, um über Projekte, Ideen und deine Lieblingsapps zu diskutieren"
 
-msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "Dies sind experimentelle Funktionen, die Leap Motion App Home zum Absturz bringen können. Die Aktivierung geschieht auf Ihr eigenes Risiko. Sie müssen Airspace."
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart app home before your changes take effect."
+msgstr "Dies sind experimentelle Funktionen, die Leap Motion App Home zum Absturz bringen können. Die Aktivierung geschieht auf Ihr eigenes Risiko. Sie müssen App Home."
 
 msgid "save"
 msgstr "Save"
