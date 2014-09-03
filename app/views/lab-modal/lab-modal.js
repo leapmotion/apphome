@@ -31,7 +31,7 @@ module.exports = Modal.extend({
       title: i18n.translate('Welcome to Labs'),
       intro: i18n.translate('Customize your experience by trying out these features!'),
       instructions: i18n.translate("These are experimental features which may crash Leap Motion App Home. "
-       + "Enable at your own risk. You will need to restart Airspace before your changes take effect."),
+       + "Enable at your own risk. You will need to restart App Home before your changes take effect."),
       options: labOptions,
       restart_label: i18n.translate('Please restart Leap Motion App Home to see your changes'),
       save_label: i18n.translate('Save'),
