@@ -41,6 +41,7 @@ var LeapAppTypes = enumerable.make([
 
 var LeapApp = BaseModel.extend({
   initialize: function() {
+    var leapApp = this;
     var state = this.get('state');
     if (state === LeapApp.States.Moving ||
         (this.hasUpdate() && (
@@ -72,13 +73,17 @@ var LeapApp = BaseModel.extend({
 
     this.on('change:iconUrl', function() {
       if (this.get('iconUrl')) {
-        this.downloadIcon();
+        this.downloadIcon(function() {
+            leapApp.trigger('change:iconPath');
+        });
       }
     }.bind(this));
 
     this.on('change:tileUrl', function() {
       if (this.get('tileUrl')) {
-        this.downloadTile();
+        this.downloadTile(function() {
+            leapApp.trigger('change:tilePath');
+        });
       }
     }.bind(this));
 
@@ -262,6 +267,7 @@ var LeapApp = BaseModel.extend({
 
   getShortDescription: function() {
     var NonStandardAppDescriptions = {
+      'Airspace Store': i18n.translate("Leap Motion App Store is the place for you to browse and download new games, creative tools, and more."),
       'Leap Motion App Store': i18n.translate("Leap Motion App Store is the place for you to browse and download new games, creative tools, and more."),
       "Orientation": i18n.translate("Reach out and experience what your controller can do."),
       "Google Earth": i18n.translate("Interact with the world in a whole new way."),

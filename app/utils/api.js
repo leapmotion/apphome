@@ -115,10 +115,15 @@
       }
     });
     appJsonList.forEach(function(appJson) {
-      var existingApp;
-      existingApp = existingAppsById[appJson.name];
+      var existingApp, key;
+      key = appJson.name;
+      existingApp = existingAppsById[key];
+      if (!existingApp && key === 'Leap Motion App Store') {
+        key = 'Airspace Store';
+        existingApp = existingAppsById[key];
+      }
       if (existingApp) {
-        delete existingAppsById[appJson.name];
+        delete existingAppsById[key];
         return existingApp.set(appJson);
       } else {
         return handleAppJson(appJson);

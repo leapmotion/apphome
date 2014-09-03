@@ -86,9 +86,13 @@ syncToCollection = (appJsonList, collection, appTest) ->
       existingAppsById[app.get('name')] = app
 
   appJsonList.forEach (appJson) ->
-    existingApp = existingAppsById[appJson.name]
+    key = appJson.name
+    existingApp = existingAppsById[key]
+    if !existingApp and key == 'Leap Motion App Store'
+      key = 'Airspace Store'
+      existingApp = existingAppsById[key]
     if existingApp
-      delete existingAppsById[appJson.name]
+      delete existingAppsById[key]
       existingApp.set appJson
     else
       handleAppJson appJson
