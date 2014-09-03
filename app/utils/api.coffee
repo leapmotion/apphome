@@ -14,6 +14,7 @@ drm = require("./drm.js")
 enumerable = require("./enumerable.js")
 httpHelper = require("./http-helper.js")
 installManager = require("./install-manager.js")
+embeddedLeap = require('./embedded-leap.js')
 oauth = require("./oauth.js")
 pubnub = require("./pubnub.js")
 
@@ -291,7 +292,7 @@ sendDeviceData = ->
     # with TYPE_KEYBOARD_STANDALONE. This is a super hack, but needed to
     # ensure entitlements don't get granted to Standalone keyboards.
     #
-    if (uiGlobals.embeddedDevice == 'keyboard' && !uiGlobals.canInstallPrebundledApps)
+    if (embeddedLeap.getEmbeddedDevice() == 'keyboard' && !uiGlobals.canInstallPrebundledApps)
       device_type_override = 'TYPE_KEYBOARD_STANDALONE'
 
     Q.nfcall(oauth.getAccessToken).then (accessToken) ->
