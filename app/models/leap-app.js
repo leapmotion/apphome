@@ -72,19 +72,15 @@ var LeapApp = BaseModel.extend({
     }.bind(this));
 
     this.on('change:iconUrl', function() {
-      if (this.get('iconUrl')) {
-        this.downloadIcon(function() {
-            leapApp.trigger('change:iconPath');
-        });
-      }
+      this.downloadIcon(function() {
+        leapApp.trigger('change:iconPath');
+      });
     }.bind(this));
 
     this.on('change:tileUrl', function() {
-      if (this.get('tileUrl')) {
-        this.downloadTile(function() {
-            leapApp.trigger('change:tilePath');
-        });
-      }
+      this.downloadTile(function() {
+        leapApp.trigger('change:tilePath');
+      });
     }.bind(this));
 
     this.set('slug', urlify(this.get('name')));
@@ -93,13 +89,12 @@ var LeapApp = BaseModel.extend({
     });
 
     this.on('add', function() {
-      if (this._shouldDownloadTile()) {
-        this.downloadTile();
-      }
-
-      if (this._shouldDownloadIcon()) {
-        this.downloadIcon();
-      }
+      this.downloadTile(function() {
+        leapApp.trigger('change:tilePath');
+      });
+      this.downloadIcon(function(err) {
+        leapApp.trigger('change:iconPath');
+      });
     }.bind(this));
   },
 
@@ -218,28 +213,6 @@ var LeapApp = BaseModel.extend({
     var eventToTrack = this.get('eventToTrack');
     if (eventToTrack) {
       ga.trackEvent('tiles/'+ eventToTrack);
-    }
-  },
-
-  _shouldDownloadTile: function() {
-    try {
-      var tilePath = this.get('tilePath');
-      return this.get('tileUrl') &&
-             (!tilePath ||
-              !fs.existsSync(tilePath));
-    } catch(err) {
-      return true;
-    }
-  },
-
-  _shouldDownloadIcon: function() {
-    try {
-      var iconPath = this.get('iconPath');
-      return this.get('iconUrl') &&
-             (!iconPath ||
-              !fs.existsSync(iconPath));
-    } catch(err) {
-      return true;
     }
   },
 
