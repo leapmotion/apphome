@@ -144,6 +144,7 @@
   subscribeToUserReloadChannel = function(userId) {
     return pubnub.subscribe(userId + ".user.reload", function() {
       nwGui.Window.get().focus();
+      oauth.resetAccessToken();
       return connectToStoreServer();
     });
   };

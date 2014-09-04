@@ -109,8 +109,8 @@ syncToCollection = (appJsonList, collection, appTest) ->
 
 subscribeToUserReloadChannel = (userId) ->
   pubnub.subscribe userId + ".user.reload", () ->
-    # steal focus
     nwGui.Window.get().focus()
+    oauth.resetAccessToken()
     connectToStoreServer()
 
 
