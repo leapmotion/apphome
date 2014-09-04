@@ -180,8 +180,6 @@ var LeapApp = BaseModel.extend({
 
       }
 
-      console.log(str, this.get('name'), this.get('is_v2'));
-
       return str;
     }
   },
