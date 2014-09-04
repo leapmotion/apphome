@@ -107,16 +107,35 @@ subscribeToUserReloadChannel = (userId) ->
 
 
 subscribeToUserChannel = (userId) ->
-  pubnub.subscribe userId + ".user.purchased", (appJson) ->
-    # steal focus
-    nwGui.Window.get().focus()
+  pubnub.subscribe(
+    userId + ".user.purchased",
+    (appJson) ->
+      # steal focus
+      nwGui.Window.get().focus()
 
-    unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
-      return Q()
+      # a notification is sent out for each platform, we select only ours
+      unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
+        return Q()
 
-    getAppJson(appJson.app_id).then (appJson) ->
-      handleAppJson appJson
-    .done()
+      getAppJson(appJson.app_id).then (appJson) ->
+        handleAppJson appJson
+      .done()
+  , {
+      connect: ->
+        # checks for apps purchased after /myapps delivers the manifest and before channel resubscription.
+        pubnub.history 20, "#{userId}.user.purchased", (data)->
+
+          for appJson in data
+            if appJson
+
+              # these lines must match the above.  :-/
+              if (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
+                getAppJson(appJson.app_id).then (appJson) ->
+                  handleAppJson appJson
+                .done()
+    }
+
+  )
 
 subscribeToAppChannel = (appId) ->
   pubnub.subscribe appId + ".app.updated", (appJson) ->
@@ -213,8 +232,8 @@ _setGlobalUserInformation = (user) ->
   uiGlobals.username = user.username
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
-  subscribeToUserChannel user.user_id
-  subscribeToUserReloadChannel user.user_id
+  subscribeToUserChannel user.user_id # purchases
+  subscribeToUserReloadChannel user.user_id # reload /myapps
   uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
@@ -224,19 +243,29 @@ getUserInformation = (cb) ->
 
 connectToStoreServer = ->
   _getStoreManifest().then (messages) ->
+
     unless messages?
       return
 
-    console.log "Connected to store server.", messages.length - 1, "apps found."
-    $("body").removeClass "loading"
+    console.log "purchased items:", messages
+    console.log 'begin sleep'
 
-    _setGlobalUserInformation messages.shift();
+    setTimeout( ->
 
-    messages.forEach (message) ->
-      _.defer ->
+      console.log "Connected to store server.", messages.length - 1, "apps found."
+      $("body").removeClass "loading"
 
-        subscribeToAppChannel message.appId
-        handleAppJson message
+      # subscribes to new user and userReload channels?
+      _setGlobalUserInformation messages.shift();
+
+      messages.forEach (message) ->
+        _.defer ->
+
+          subscribeToAppChannel message.appId
+          handleAppJson message
+
+      console.log 'finish sleep'
+    , 12000)
 
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->

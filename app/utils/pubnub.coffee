@@ -43,17 +43,18 @@ unsubscribeAll = (resubscribe) ->
   else
     pubnubSubscriptions = {}
 
-subscribe = (channel, callback) ->
+subscribe = (channel, callback, options = {}) ->
   unless pubnubSubscriptions[channel] # only allow one subscription per channel
     pubnubSubscriptions[channel] = callback
     pubnubDomain.run ->
-      pubnub.subscribe
-        channel: channel
-        callback: (data) ->
-          try
-            callback data
-          catch err
-            console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack or err)
+      options.channel = channel
+      options.callback = (data) ->
+        try
+          callback data
+        catch err
+          console.warn "Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack or err)
+
+      pubnub.subscribe options
     return true
   else
     console.warn "Ignoring duplicate subscription on channel \"" + channel + "\"."

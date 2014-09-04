@@ -61,22 +61,24 @@
     }
   };
 
-  subscribe = function(channel, callback) {
+  subscribe = function(channel, callback, options) {
+    if (options == null) {
+      options = {};
+    }
     if (!pubnubSubscriptions[channel]) {
       pubnubSubscriptions[channel] = callback;
       pubnubDomain.run(function() {
-        return pubnub.subscribe({
-          channel: channel,
-          callback: function(data) {
-            var err;
-            try {
-              return callback(data);
-            } catch (_error) {
-              err = _error;
-              return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack || err));
-            }
+        options.channel = channel;
+        options.callback = function(data) {
+          var err;
+          try {
+            return callback(data);
+          } catch (_error) {
+            err = _error;
+            return console.warn("Failed to handle PubNub message on channel \"" + channel + "\": " + JSON.stringify(data) + " " + (err.stack || err));
           }
-        });
+        };
+        return pubnub.subscribe(options);
       });
       return true;
     } else {
