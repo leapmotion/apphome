@@ -10,7 +10,7 @@
 
   config = require("../../config/config.js");
 
-  isProduction = false;
+  isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV);
 
   pathToLog = path.join(config.PlatformDirs[os.platform()], 'Airspace', 'log.txt');
 

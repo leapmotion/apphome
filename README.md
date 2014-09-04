@@ -36,14 +36,14 @@ ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, u
     alias airspace='cd $HOME/homebase;\
     CENTRAL_URL=http://local.leapmotion:3010/ \
     WAREHOUSE_URL=http://local.leapmotion:5001/ \
-    bin/airspace'
+    LEAPHOME_ENV=development bin/airspace'
     alias oobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/;  airspace'
 
     # staging (disabled HTTP Basic Auth)
     alias stairspace='cd $HOME/homebase;\
     CENTRAL_URL=https://lm-s-central-oobeghost.leapmotion.com/ \
     WAREHOUSE_URL=https://lm-s-warehouse-oobeghost.leapmotion.com/ \
-    bin/airspace'
+    LEAPHOME_ENV=staging bin/airspace'
     alias stoobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; stairspace'
 
     # production
