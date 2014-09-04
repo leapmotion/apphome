@@ -48,7 +48,7 @@ initialize = (cb) ->
 getTrackFn = (eventName, namespace) ->
   (args) ->
     unless /^(development|test)$/.test(process.env.LEAPHOME_ENV)
-      unless uiGlobals.metricsDisabled && visitor != null
+      if !uiGlobals.metricsDisabled && visitor != null
         console.log "Tracking Google Analytics event: " + eventName
         namespace = namespace or uiGlobals.appName
         namespace = namespace.toLowerCase().replace(' ', '_')

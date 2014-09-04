@@ -61,7 +61,7 @@
     return function(args) {
       var embedded_text, page_title, page_url;
       if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
-        if (!(uiGlobals.metricsDisabled && visitor !== null)) {
+        if (!uiGlobals.metricsDisabled && visitor !== null) {
           console.log("Tracking Google Analytics event: " + eventName);
           namespace = namespace || uiGlobals.appName;
           namespace = namespace.toLowerCase().replace(' ', '_');
