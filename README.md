@@ -54,6 +54,8 @@ ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, u
     airspace
 ```
 
+All staging and dev machines seem to be using sandbox 1 for pubnub.
+
 ### Testing
 
     node bin/test [test_file1 [test_file2] ...]

@@ -153,6 +153,28 @@
       return getAppJson(appJson.app_id).then(function(appJson) {
         return handleAppJson(appJson);
       }).done();
+    }, {
+      connect: function() {
+        return pubnub.history(20, "" + userId + ".user.purchased", function(data) {
+          var appJson, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = data.length; _i < _len; _i++) {
+            appJson = data[_i];
+            if (appJson) {
+              if ((config.ServerPlatformToNodePlatform[appJson.platform] || appJson.platform) === os.platform()) {
+                _results.push(getAppJson(appJson.app_id).then(function(appJson) {
+                  return handleAppJson(appJson);
+                }).done());
+              } else {
+                _results.push(void 0);
+              }
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        });
+      }
     });
   };
 
@@ -298,7 +320,6 @@
       if (messages == null) {
         return;
       }
-      console.log("Connected to store server.", messages.length - 1, "apps found.");
       $("body").removeClass("loading");
       _setGlobalUserInformation(messages.shift());
       return messages.forEach(function(message) {
