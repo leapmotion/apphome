@@ -10,6 +10,7 @@ var LeapApp = require('./leap-app.js');
 
 var WebLinkApp = LeapApp.extend({
   className: 'WebLinkApp',
+  isLeapMotion: false,
 
   constructor: function(args) {
     args = args || {};
@@ -18,6 +19,8 @@ var WebLinkApp = LeapApp.extend({
     var md5hash = crypto.createHash('md5');
     md5hash.update(args.urlToLaunch);
     args.id = md5hash.digest('hex');
+
+    this.isLeapMotion = args.isLeapMotion;
 
     LeapApp.prototype.constructor.call(this, args);
   },
