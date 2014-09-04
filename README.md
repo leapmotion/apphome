@@ -110,3 +110,7 @@ Builtin tiles can be uploaded with:
 * You may want to set <code>ulimit -n 1200</code> on OS X to get around the low default max number of open files.
   (In release builds, this gets done automatically.)
 
+### Get ahXXXX version
+```
+ git log --reverse --oneline | cat -n
+```
