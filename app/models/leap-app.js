@@ -143,9 +143,9 @@ var LeapApp = BaseModel.extend({
 
         str += 'a_'; // l1
 
-        if (this.get('isLeapMotion')){
+        if (this.get('isLeapMotion')) {
           str += 'a_'; // l2
-        }else{
+        } else {
           str += 'b_'; // l2
         }
 
@@ -153,26 +153,26 @@ var LeapApp = BaseModel.extend({
 
       } else {
 
-        if (this.get('is_v2')){
+        if (this.get('is_v2')) {
 
           str += 'b_'; // l1
 
-        }else{
+        } else {
 
           str += 'c_'; // l1
 
         }
 
-        if (this.get('installedAt')){
+        if (this.get('installedAt')) {
 
           str += 'a_' + this.get('installedAt'); // l2
 
-        }else{
+        } else {
 
-          if (this.isUninstalled()){
-             str += 'c_'; // l2
-          }else{
-             str += 'b_'; // l2
+          if (this.isUninstalled()) {
+            str += 'c_'; // l2
+          } else {
+            str += 'b_'; // l2
           }
 
           str += this.get('firstSeenAt');
