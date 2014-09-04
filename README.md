@@ -80,6 +80,10 @@ Outputs to: <code>build/</code>
 
 Building for Windows requires building on Windows, unfortunately.
 
+### Troubleshooting
+
+Use the [Konami code](http://en.wikipedia.org/wiki/Konami_Code) to open the debugger in production.
+
 ### App Manifest
 
 See <code>config/non-store-app-manifest.json</code>.
