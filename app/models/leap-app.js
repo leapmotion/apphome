@@ -122,6 +122,9 @@ var LeapApp = BaseModel.extend({
     db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
   },
 
+  // This retarded method decides to use letters, rather than numbers, for a sort ranking
+  // This prevents individual apps from having their own ranking factors.
+  // this prefixes letters to set ordering alphabetically
   sortScore: function() {
     if (uiGlobals.labOptions['recent-launch-sort']) {
       return (this.isBuiltinTile() ?
@@ -131,12 +134,16 @@ var LeapApp = BaseModel.extend({
                   (this.get('installedAt') ?
                     'c_' + this.get('installedAt') :
                     (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
+
     } else {
+      // by default:
       return (this.isBuiltinTile() ?
-          'a_' + this.get('name') :
+          'a_' + (this.get('isLeapMotion') ? 'a_' : 'b_' ) + this.get('name') :
           (this.get('installedAt') ?
             'c_' + this.get('installedAt') :
-            (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt')));
+            (!this.isUninstalled() ? 'd_' :
+              'e_') + this.get('firstSeenAt')));
+
     }
   },
 
