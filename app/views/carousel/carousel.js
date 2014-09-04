@@ -191,7 +191,7 @@ var CarouselView = BaseView.extend({
       }.bind(this));
     }
 
-    this._positionSlides();
+    this.rescale();
     this._updateNextSlideControls();
 
     if (this._currentSlideIndex >= this._slideCount()) {
