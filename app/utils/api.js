@@ -311,6 +311,7 @@
     uiGlobals.username = user.username;
     uiGlobals.email = user.email;
     uiGlobals.user_id = user.user_id;
+    console.log('User with ID ' + user.user_id + ' logged in successfully');
     subscribeToUserChannel(user.user_id);
     subscribeToUserReloadChannel(user.user_id);
     return uiGlobals.trigger(uiGlobals.Event.SignIn);
