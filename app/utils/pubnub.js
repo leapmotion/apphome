@@ -24,7 +24,6 @@
   });
 
   pubnubDomain.run(function() {
-    console.log("Using PubnubSubscribeKey: " + config.PubnubSubscribeKey + " in env: " + process.env.LEAPHOME_ENV);
     if (pubnubInit) {
       return pubnub = pubnubInit({
         subscribe_key: config.PubnubSubscribeKey,

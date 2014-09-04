@@ -14,7 +14,6 @@ pubnubDomain.on "error", (err) ->
   unsubscribeAll true
 
 pubnubDomain.run ->
-  console.log "Using PubnubSubscribeKey: #{config.PubnubSubscribeKey} in env: #{process.env.LEAPHOME_ENV}"
   if pubnubInit
     pubnub = pubnubInit(
       subscribe_key: config.PubnubSubscribeKey

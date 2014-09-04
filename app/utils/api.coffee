@@ -247,25 +247,17 @@ connectToStoreServer = ->
     unless messages?
       return
 
-    console.log "purchased items:", messages
-    console.log 'begin sleep'
+    $("body").removeClass "loading"
 
-    setTimeout( ->
+    # subscribes to new user and userReload channels?
+    _setGlobalUserInformation messages.shift();
 
-      console.log "Connected to store server.", messages.length - 1, "apps found."
-      $("body").removeClass "loading"
+    messages.forEach (message) ->
+      _.defer ->
 
-      # subscribes to new user and userReload channels?
-      _setGlobalUserInformation messages.shift();
+        subscribeToAppChannel message.appId
+        handleAppJson message
 
-      messages.forEach (message) ->
-        _.defer ->
-
-          subscribeToAppChannel message.appId
-          handleAppJson message
-
-      console.log 'finish sleep'
-    , 12000)
 
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->

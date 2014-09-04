@@ -313,20 +313,14 @@
       if (messages == null) {
         return;
       }
-      console.log("purchased items:", messages);
-      console.log('begin sleep');
-      return setTimeout(function() {
-        console.log("Connected to store server.", messages.length - 1, "apps found.");
-        $("body").removeClass("loading");
-        _setGlobalUserInformation(messages.shift());
-        messages.forEach(function(message) {
-          return _.defer(function() {
-            subscribeToAppChannel(message.appId);
-            return handleAppJson(message);
-          });
+      $("body").removeClass("loading");
+      _setGlobalUserInformation(messages.shift());
+      return messages.forEach(function(message) {
+        return _.defer(function() {
+          subscribeToAppChannel(message.appId);
+          return handleAppJson(message);
         });
-        return console.log('finish sleep');
-      }, 12000);
+      });
     });
   };
 
