@@ -307,6 +307,7 @@ var CarouselView = BaseView.extend({
     this._positionSlides();
     var $emptyMessage = this.$('.empty-message');
     $emptyMessage.css('top', ($(window).height() - config.Layout.emptyMessageHeight) / 2)
+    $('#title-bar').css('height', this.$('.next-slide').css('top'));
   },
 
   position: function() {
