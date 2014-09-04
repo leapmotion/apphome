@@ -19,6 +19,11 @@ log = (message) ->
 process.on "exit", ->
   do logStream.close
 
+getLogContents = (cb) ->
+  logStream.close
+  fs.readFile pathToLog, 'utf8', (err, data) ->
+    unless err
+      cb && cb(data)
 
 getLogger = (level) ->
   level = level or "log"
@@ -43,3 +48,4 @@ console.debug = window.console.debug = getLogger("debug")
 console.info = window.console.info = getLogger("info")
 console.warn = window.console.warn = getLogger("warn")
 console.error = window.console.error = getLogger("error")
+module.exports.getLogContents = getLogContents
