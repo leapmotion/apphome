@@ -20,9 +20,12 @@ process.on('uncaughtException', function(err) {
   }
 
   if (isProduction) {
-    logging.getLogContents(function(data) {
-      window.Raven.captureMessage((err.stack || JSON.stringify(err)) + "\n\nlog.txt:\n\n" + data);
-    });
+    try {
+      logging.getLogContents(function(data) {
+        var lines = data.substring(data.length-1800, data.length-1);
+        window.Raven.captureMessage((err.stack || JSON.stringify(err)) + "\n\nlog.txt:\n\n" + lines);
+      });
+    } catch(e){console.log(e);}
   }
 
   installManager.cancelAll();

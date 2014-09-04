@@ -35,11 +35,12 @@
   });
 
   getLogContents = function(cb) {
-    logStream.close;
-    return fs.readFile(pathToLog, 'utf8', function(err, data) {
-      if (!err) {
-        return cb && cb(data);
-      }
+    return logStream.close(function() {
+      var content;
+      content = fs.readFileSync(pathToLog, {
+        encoding: 'utf8'
+      });
+      return cb(content);
     });
   };
 

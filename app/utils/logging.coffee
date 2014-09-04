@@ -19,11 +19,10 @@ log = (message) ->
 process.on "exit", ->
   do logStream.close
 
-getLogContents = (cb) ->
-  logStream.close
-  fs.readFile pathToLog, 'utf8', (err, data) ->
-    unless err
-      cb && cb(data)
+getLogContents = (cb)->
+  logStream.close ->
+    content = fs.readFileSync pathToLog, {encoding: 'utf8'}
+    cb(content)
 
 getLogger = (level) ->
   level = level or "log"

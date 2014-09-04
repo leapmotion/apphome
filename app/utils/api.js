@@ -351,9 +351,12 @@
       });
       url = url.replace(":id", appId);
       console.log("Getting app details via url: " + url);
-      return httpHelper.getJson(url).then(function(appJson) {
+      return Q(httpHelper.getJson, url).then(function(appJson) {
+        console.log('raimoasdfasdfasdfsf');
         appJson.appType = LeapApp.Types.StoreApp;
         return cleanAppJson(appJson);
+      }).fail(function(e) {
+        return console.log(arguments);
       });
     });
   };

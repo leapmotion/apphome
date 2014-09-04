@@ -282,9 +282,12 @@ getAppJson = (appId) ->
     url = url.replace(":id", appId)
 
     console.log "Getting app details via url: " + url
-    httpHelper.getJson(url).then (appJson) ->
+    Q(httpHelper.getJson, url).then (appJson) ->
+      console.log('raimoasdfasdfasdfsf')
       appJson.appType = LeapApp.Types.StoreApp
       cleanAppJson appJson
+    .fail (e) ->
+      console.log(arguments)
 
 sendDeviceData = ->
   if uiGlobals.metricsDisabled
