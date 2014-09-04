@@ -92,6 +92,9 @@ syncToCollection = (appJsonList, collection, appTest) ->
     if !existingApp and key == 'Leap Motion App Store'
       key = 'Airspace Store'
       existingApp = existingAppsById[key]
+    if !existingApp and key == 'Playground'
+      key = 'Orientation'
+      existingApp = existingAppsById[key]
     if existingApp
       delete existingAppsById[key]
       existingApp.set appJson

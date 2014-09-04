@@ -124,6 +124,10 @@
         key = 'Airspace Store';
         existingApp = existingAppsById[key];
       }
+      if (!existingApp && key === 'Playground') {
+        key = 'Orientation';
+        existingApp = existingAppsById[key];
+      }
       if (existingApp) {
         delete existingAppsById[key];
         return existingApp.set(appJson);
