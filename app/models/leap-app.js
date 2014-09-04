@@ -138,7 +138,7 @@ var LeapApp = BaseModel.extend({
     } else {
       // by default:
       return (this.isBuiltinTile() ?
-          'a_' + (this.isLeapMotion ? 'a_' : 'b_' ) + this.get('name') :
+          'a_' + (this.get('isLeapMotion') ? 'a_' : 'b_' ) + this.get('name') :
           (this.get('installedAt') ?
             'c_' + this.get('installedAt') :
             (!this.isUninstalled() ? 'd_' :
