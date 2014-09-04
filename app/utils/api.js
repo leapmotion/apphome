@@ -143,8 +143,11 @@
 
   subscribeToUserReloadChannel = function(userId) {
     return pubnub.subscribe(userId + ".user.reload", function() {
+      console.log('Update user identity');
       nwGui.Window.get().focus();
+      console.log('Reset access token');
       oauth.resetAccessToken();
+      console.log('Reconnect to server');
       return connectToStoreServer();
     });
   };
