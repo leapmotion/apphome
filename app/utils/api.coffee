@@ -40,6 +40,7 @@ cleanAppJson = (appJson) ->
     tagline: appJson.tagline
     releaseDate: (if releaseDate then new Date(releaseDate).toLocaleDateString() else null)
     noAutoInstall: appJson.noAutoInstall
+    markedForRemoval: appJson.marked_for_removal
     cleaned: true
 
   Object.keys(cleanedAppJson).forEach (key) ->
