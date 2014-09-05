@@ -86,15 +86,21 @@
 }
 
 .guiders_button.back {
-  background-color: #bbb;
+  background-color: #bfbfbf;
 }
 
 .guiders_button.next {
-  background-color: #888;
+  background-color: #5daa00;
 }
 
 .guiders_button.primary {
   background-color: #5daa00;
+}
+
+.guiders_button.orientation {
+  background-color: #5daa00;
+  float: left;
+  margin-left: 0;
 }
 
 .guiders_buttons_container {
@@ -113,7 +119,7 @@
   position: relative;
 }
 
-.guiders_content h1 {
+.guiders_content h2, .guiders_content h1 {
   color: #444;
   float: left;
   font-size: 24px;
@@ -121,15 +127,17 @@
   margin: 0 0 10px;
 }
 
-.primary .guiders_content h1 {
-  color: #5daa00;
-  font-size: 28px;
+.guiders_content h1 {
+  margin: 0 0 15px;
+  color: #5daa00 !important;
+  font-size: 28px !important;
 }
 
 .guiders_content p {
   clear: both;
-  color: #333;
+  color: #7f7f7f;
   font-size: 18px;
+  margin-bottom: 30px;
 }
 
 .guiders_overlay {

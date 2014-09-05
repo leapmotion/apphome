@@ -19,43 +19,28 @@
     guiders.createGuider({
       buttons: [
         {
-          name: String(i18n.translate('Take a quick tour')),
-          classString: 'primary',
+          name: String(i18n.translate('Launch Playground')),
+          classString: 'orientation fa fa-rocket',
+          onclick: function() {
+            _launchOrientation();
+            return setTimeout(function() {
+              return guiders.next();
+            }, 1000);
+          }
+        }, {
+          name: String(i18n.translate('Next')),
+          classString: 'next',
           onclick: guiders.next
         }
       ],
-      classString: 'primary',
-      description: String(i18n.translate('Launch all of your Leap Motion-powered apps and access the store to discover new ones.')),
-      id: 'g_start',
-      next: 'g_orientation',
-      title: String(i18n.translate('Welcome to Leap Motion App Home!')),
-      xButton: true,
-      onClose: onClose
-    });
-    guiders.createGuider({
-      buttons: [
-        {
-          name: String(i18n.translate('Launch Orientation')),
-          classString: 'next',
-          onclick: function() {
-            var tilesReady;
-            _launchOrientation();
-            return tilesReady = setInterval(function() {
-              if ($('.tile.store').length) {
-                clearInterval(tilesReady);
-                return guiders.next();
-              }
-            }, 50);
-          }
-        }
-      ],
-      description: String(i18n.translate("Reach out and experience what your device can do with the Orientation app.")),
+      title: String(i18n.translate("Tip 1: Leap Motion Basics")),
+      description: String(i18n.translate("Learn the basics of how to use the Leap Motion Controller by going through Playground.")),
       id: 'g_orientation',
       next: 'g_apps',
-      title: String(i18n.translate('Learn About the Controller')),
-      attachTo: '#orientation',
+      heading: String(i18n.translate('Welcome to Leap Motion App Home')),
+      attachTo: '#playground',
       position: 6,
-      highlight: '#orientation',
+      highlight: '#playground',
       onClose: onClose
     });
     guiders.createGuider({
@@ -70,10 +55,10 @@
           onclick: guiders.next
         }
       ],
-      description: String(i18n.translate("We've set you up with some great apps for free to get you started. It's time to play, create, and explore.")),
+      title: String(i18n.translate("Tip 2: Starter Apps")),
+      description: String(i18n.translate("We thought you'd like to dive right in, so we handpicked these free apps for you.")),
       id: 'g_apps',
       next: 'g_store',
-      title: String(i18n.translate('Try your new apps')),
       attachTo: '.tile.store',
       position: 6,
       highlight: '.tile.store',
@@ -86,17 +71,21 @@
           classString: 'back',
           onclick: guiders.prev
         }, {
-          name: String(i18n.translate('Done')),
+          name: String(i18n.translate('Leap Motion App Home')),
           classString: 'primary',
-          onclick: guiders.hideAll
+          onclick: function() {
+            guiders.hideAll();
+            return $('#leap-motion-app-store').click();
+          }
         }
       ],
-      description: String(i18n.translate("Leap Motion App Store is the place for you to browse and download the latest games, creative tools, and more.")),
+      title: String(i18n.translate("Tip 3: Ready for More?")),
+      description: String(i18n.translate("Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more.")),
       id: 'g_store',
       title: String(i18n.translate('Discover new apps')),
-      attachTo: '#airspace-store',
+      attachTo: '#leap-motion-app-store',
       position: 3,
-      highlight: '#airspace-store',
+      highlight: '#leap-motion-app-store',
       onClose: onClose,
       onHide: function() {
         ga.trackEvent('tutorial/oobe/finished');
@@ -139,7 +128,7 @@
     if (!uiGlobals.inTutorial) {
       uiGlobals.inTutorial = true;
       uiGlobals.trigger('goto', 0);
-      return guiders.show('g_start');
+      return guiders.show('g_orientation');
     }
   };
 

@@ -49,7 +49,8 @@ window.guiders = (function($) {
   guiders._htmlSkeleton = [
     "<div class='guider'>",
     "  <div class='guiders_content'>",
-    "    <h1 class='guiders_title'></h1>",
+    "    <h1 class='guiders_heading'></h1>",
+    "    <h2 class='guiders_title'></h2>",
     "    <div class='guiders_close'></div>",
     "    <p class='guiders_description'></p>",
     "    <div class='guiders_buttons_container'>",
@@ -470,6 +471,8 @@ window.guiders = (function($) {
     var guiderTitleContainer = guiderElement.find(".guiders_title");
     guiderTitleContainer.html(myGuider.title);
 
+    guiderElement.find(".guiders_heading").html(myGuider.heading);
+
     guiderElement.find(".guiders_description").html(myGuider.description);
 
     guiders._addButtons(myGuider);
@@ -614,6 +617,7 @@ window.guiders = (function($) {
 
     var myGuider = guiders.get(id);
     // Ensure myGuider.attachTo is a jQuery element.
+    myGuider || console.warn(id);
     if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
       guiders._attach(myGuider);
     }
