@@ -1,6 +1,8 @@
 fs = require 'fs'
 os = require 'os'
 
+oauth = require './oauth.js'
+qs = require 'querystring'
 i18n = require './i18n.js'
 config = require '../../config/config.js'
 ga = require('./ga.js');
@@ -60,8 +62,10 @@ makeGuides = ->
       name: String i18n.translate 'Launch App Store'
       classString: 'primary'
       onclick: ->
+        oauth.getAccessToken (err, accessToken) ->
+          unless err
+            nwGui.Shell.openExternal(config.AuthWithAccessTokenUrl + '?' + qs.stringify({ access_token: accessToken, _r: config.AirspaceURL }))
         do guiders.hideAll
-        do $('#leap-motion-app-store').click
     ]
     title: String i18n.translate "Tip 3: Ready for More?"
     description: String i18n.translate "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
