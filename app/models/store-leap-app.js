@@ -329,7 +329,11 @@ module.exports = LeapApp.extend({
       return this._failUninstallation(err, cb);
     } finally {
       uiGlobals.myApps.remove(this);
-      uiGlobals.uninstalledApps.add(this);
+
+      if (this.get('markedForRemoval') !== true) {
+        uiGlobals.uninstalledApps.add(this);
+      }
+
       this.set('state', LeapApp.States.Uninstalled);
 
       // Erase information about where it used to be installed, so if the directory
