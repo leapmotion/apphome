@@ -76,6 +76,7 @@ buildAccountMenu = (enableLogOut, disableSetInstallDir) ->
           unless err
             urlToLaunch = config.oauth.sign_up_url + '?' + qs.stringify(
               access_token: accessToken
+              _r: config.AirspaceURL
             )
             nwGui.Shell.openExternal urlToLaunch
       enabled: !!enableLogOut

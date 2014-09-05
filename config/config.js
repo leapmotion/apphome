@@ -6,6 +6,7 @@ var AppsDir = 'AirspaceApps';
 var AppsUserDataDir = 'AirspaceApps';
 var CENTRAL   = process.env.CENTRAL_URL   || 'https://central.leapmotion.com/';
 var WAREHOUSE = process.env.WAREHOUSE_URL || 'https://warehouse.leapmotion.com/';
+var AIRSPACE =  process.env.AIRSPACE_URL  || 'https://airspace.leapmotion.com/';
 
 var config = {
 
@@ -25,6 +26,8 @@ var config = {
   AppJsonEndpoint: WAREHOUSE + 'api/apps/myapps/:id',
 
   AuthWithAccessTokenUrl: CENTRAL,
+
+  AirspaceURL: AIRSPACE,
 
   // todo - test production by default.
   PubnubSubscribeKey: process.env.LEAPHOME_ENV == 'production' ?
