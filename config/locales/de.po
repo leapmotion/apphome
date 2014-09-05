@@ -283,15 +283,6 @@ msgstr "Das Geburtsdatum muss vollständig sein"
 msgid "password is too short (minimum is 6 characters)"
 msgstr "Passwort ist zu kurz (mindstens 6 Zeichen)"
 
-msgid "about airspace"
-msgstr "Über Airspace"
-
-msgid "hide airspace"
-msgstr "Airspace ausblenden"
-
-msgid "hide others"
-msgstr "Andere ausblenden"
-
 msgid "show all"
 msgstr "Alles anzeigen"
 
