@@ -136,14 +136,51 @@ var LeapApp = BaseModel.extend({
                     (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
 
     } else {
-      // by default:
-      return (this.isBuiltinTile() ?
-          'a_' + (this.get('isLeapMotion') ? 'a_' : 'b_' ) + this.get('name') :
-          (this.get('installedAt') ?
-            'c_' + this.get('installedAt') :
-            (!this.isUninstalled() ? 'd_' :
-              'e_') + this.get('firstSeenAt')));
 
+      var str = '';
+
+      if (this.isBuiltinTile()) {
+
+        str += 'a_'; // l1
+
+        if (this.get('isLeapMotion')) {
+          str += 'a_'; // l2
+        } else {
+          str += 'b_'; // l2
+        }
+
+        str += this.get('name');
+
+      } else {
+
+        if (this.get('is_v2')) {
+
+          str += 'b_'; // l1
+
+        } else {
+
+          str += 'c_'; // l1
+
+        }
+
+        if (this.get('installedAt')) {
+
+          str += 'a_' + this.get('installedAt'); // l2
+
+        } else {
+
+          if (this.isUninstalled()) {
+            str += 'c_'; // l2
+          } else {
+            str += 'b_'; // l2
+          }
+
+          str += this.get('firstSeenAt');
+        }
+
+      }
+
+      return str;
     }
   },
 
