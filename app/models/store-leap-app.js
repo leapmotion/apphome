@@ -31,6 +31,10 @@ module.exports = LeapApp.extend({
       this.set('state', LeapApp.States.NotYetInstalled);
     }
 
+    if (this.get('markedForRemoval')){
+      this.uninstall();
+    }
+
     this.set('availableUpdate', null);
   },
 
@@ -285,6 +289,10 @@ module.exports = LeapApp.extend({
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
+    if (this.get('state') == LeapApp.States.Uninstalled){
+      return
+    }
+
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {

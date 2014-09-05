@@ -59,6 +59,7 @@
       tagline: appJson.tagline,
       releaseDate: (releaseDate ? new Date(releaseDate).toLocaleDateString() : null),
       noAutoInstall: appJson.noAutoInstall,
+      markedForRemoval: appJson.marked_for_removal,
       cleaned: true
     };
     Object.keys(cleanedAppJson).forEach(function(key) {
