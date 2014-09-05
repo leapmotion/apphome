@@ -81,6 +81,10 @@ var CarouselView = BaseView.extend({
       visibleApps = this.collection.models;
     }
 
+    visibleApps = visibleApps.filter(function(app) {
+      return !(app.get('markedForRemoval') === true)
+    });
+
     return visibleApps;
   },
 
