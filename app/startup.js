@@ -267,7 +267,8 @@ function startMainApp(cb) {
 
   windowChrome.paintMainPage();
 
-  if (uiGlobals.isFirstRun) {
+  if (!db.fetchObj(config.DbKeys.SeenTutorialV2)) {
+    db.saveObj(config.DbKeys.SeenTutorialV2, true);
     tutorial.start();
   }
 

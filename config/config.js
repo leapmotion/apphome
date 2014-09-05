@@ -86,6 +86,7 @@ var config = {
     DismissedNotifications: 'DismissedNotifications',
     LabOptionStates: 'LabOptionStates',
     PreviousLabOptionStates: 'PreviousLabOptionStates',
+    SeenTutorialV2: 'SeenTutorialV2'
   },
 
   LabOptions: {
