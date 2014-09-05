@@ -80,7 +80,7 @@
       appJson = cleanAppJson(appJson);
     }
     if (!((appJson.urlToLaunch != null) || (appJson.findByScanning != null) || ((appJson.platform != null) && appJson.platform === os.platform()))) {
-      console.log("Skipping invalid app for this platform:", appJson.name);
+      console.log("Skipping invalid app for this platform:", appJson);
       return;
     }
     myApps = uiGlobals.myApps;
@@ -354,7 +354,6 @@
       url = url.replace(":id", appId);
       console.log("Getting app details via url: " + url);
       return Q(httpHelper.getJson, url).then(function(appJson) {
-        console.log('raimoasdfasdfasdfsf');
         appJson.appType = LeapApp.Types.StoreApp;
         return cleanAppJson(appJson);
       }).fail(function(e) {
