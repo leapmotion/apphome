@@ -104,7 +104,7 @@
             if (!err) {
               urlToLaunch = config.oauth.sign_up_url + '?' + qs.stringify({
                 access_token: accessToken,
-                _r: config.AirspaceURL
+                _r: config.AirspaceURL + '?sign_up=true'
               });
               return nwGui.Shell.openExternal(urlToLaunch);
             }
