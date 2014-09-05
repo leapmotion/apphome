@@ -621,3 +621,6 @@ msgstr "Tip 3: Ready for More?"
 
 msgid "visit the app store to discover and download 200+ games, educational tools, and music apps, and more."
 msgstr "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
+
+msgid "launch app store"
+msgstr "Launch App Store"

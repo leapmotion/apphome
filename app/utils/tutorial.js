@@ -71,7 +71,7 @@
           classString: 'back',
           onclick: guiders.prev
         }, {
-          name: String(i18n.translate('Leap Motion App Home')),
+          name: String(i18n.translate('Launch App Store')),
           classString: 'primary',
           onclick: function() {
             guiders.hideAll();
