@@ -303,7 +303,7 @@ sendDeviceData = ->
   authDataFile = path.join(dataDir, "lastauth")
 
   if not fs.existsSync authDataFile
-    console.warn "Auth data file doesn't exist"
+    console.log "Auth data file doesn't exist"
     if uiGlobals.embeddedDevice
       throw new Error "Auth data file doesn't exist"
     else
