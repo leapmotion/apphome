@@ -19,16 +19,19 @@ process.on('uncaughtException', function(err) {
     return;
   }
 
+  installManager.cancelAll();
+
+  var errormsg = (err.stack || JSON.stringify(err));
+  console.log('closing the app');
+  console.log(errormsg);
   if (isProduction) {
     try {
       logging.getLogContents(function(data) {
-        var lines = data.substring(data.length-1800, data.length-1);
-        window.Raven.captureMessage((err.stack || JSON.stringify(err)) + "\n\nlog.txt:\n\n" + lines);
+        var lines = data.substring(data.length-1000, data.length-1);
+        window.Raven.captureMessage("Crash report\n\nLast lines of log.txt for user " + uiGlobals.user_id + ":\n\n" + lines + "\n..until..\n" + errormsg);
       });
     } catch(e){console.log(e);}
   }
-
-  installManager.cancelAll();
 
   setTimeout(function() {
     if (crashCounter.count() <= 2) {
@@ -40,7 +43,7 @@ process.on('uncaughtException', function(err) {
       }
       process.exit();
     }
-  }, 1000);
+  }, 1400);
 });
 
 

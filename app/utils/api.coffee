@@ -53,7 +53,7 @@ handleAppJson = (appJson, silent=false) ->
     appJson = cleanAppJson appJson
 
   unless appJson.urlToLaunch? or appJson.findByScanning? or (appJson.platform? and appJson.platform is os.platform())
-    console.log "Skipping invalid app for this platform:", appJson.name
+    console.log "Skipping invalid app for this platform:", appJson
     return
 
   myApps = uiGlobals.myApps
@@ -284,7 +284,6 @@ getAppJson = (appId) ->
 
     console.log "Getting app details via url: " + url
     Q(httpHelper.getJson, url).then (appJson) ->
-      console.log('raimoasdfasdfasdfsf')
       appJson.appType = LeapApp.Types.StoreApp
       cleanAppJson appJson
     .fail (e) ->
