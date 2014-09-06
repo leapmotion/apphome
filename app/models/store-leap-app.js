@@ -31,10 +31,6 @@ module.exports = LeapApp.extend({
       this.set('state', LeapApp.States.NotYetInstalled);
     }
 
-    if (this.get('markedForRemoval')){
-      this.uninstall();
-    }
-
     this.set('availableUpdate', null);
   },
 
@@ -64,7 +60,6 @@ module.exports = LeapApp.extend({
         cb && cb(err);
       }.bind(this));
     } else {
-      console.log('Installing:', this.get('name'), this);
 
       if (fs.existsSync(this._findExecutable())) {
         console.log('Existing app binary found.  Skipping download.');

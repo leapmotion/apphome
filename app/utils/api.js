@@ -93,9 +93,11 @@
       } else {
         existingApp.set(appJson);
       }
+      if (existingApp.get('markedForRemoval')) {
+        existingApp.uninstall();
+      }
       app = existingApp;
-    } else {
-      console.log('Adding', appJson.name);
+    } else if (appJson.markedForRemoval !== true) {
       try {
         app = myApps.add(appJson, {
           validate: true,
