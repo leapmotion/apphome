@@ -65,7 +65,8 @@ var Tile = BaseView.extend({
       moving_label:         i18n.translate('Moving...'),
       opening_label:        i18n.translate('Opening...'),
       launching_label:      i18n.translate('Launching...'),
-      clickToInstall_label: i18n.translate('Click to Install')
+      clickToInstall_label: i18n.translate('Click to Install'),
+      v2_required:          "<p class='v2-required-warning'>Requires V2 Tracking</p>"
     }));
 
     this.$el.addClass(this._stateToClass(this.model.get('state')));

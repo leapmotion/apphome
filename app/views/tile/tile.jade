@@ -1,11 +1,14 @@
-li.tile(draggable=true, id=app_slug, class=store_app ? 'store' : '')
+li.tile(draggable=true, id=app_slug, class=(store_app ? ' store ' : '') + (' v2-required ') )
   img.tile-bg(src=app.tilePath)
   img.icon(src=app.iconPath)
   i.update-notification.icon-circle-arrow-up
   .hover-overlay-wrapper
     .hover-overlay
+      .description
+        != v2_required
       h3.name= app.name
-      .description= short_description
+      .description
+        = short_description
   .install-overlay
     .notyetinstalled= clickToInstall_label
     .waiting= waiting_label
