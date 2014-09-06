@@ -224,7 +224,11 @@
             appJson.executable = appJson.executable.replace(/^%USER_DIR%/, userHomeDir);
           }
           if (appJson.state === LeapApp.States.Uninstalled) {
-            _results.push(uiGlobals.uninstalledApps.add(appJson));
+            if (appJson.markedForRemoval !== true) {
+              _results.push(uiGlobals.uninstalledApps.add(appJson));
+            } else {
+              _results.push(void 0);
+            }
           } else {
             _results.push(handleAppJson(appJson));
           }

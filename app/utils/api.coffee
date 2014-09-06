@@ -177,7 +177,8 @@ hydrateCachedModels = ->
           appJson.executable = appJson.executable.replace /^%USER_DIR%/, userHomeDir
 
         if appJson.state is LeapApp.States.Uninstalled
-          uiGlobals.uninstalledApps.add appJson
+          if appJson.markedForRemoval != true
+            uiGlobals.uninstalledApps.add appJson
         else
           handleAppJson appJson
 
