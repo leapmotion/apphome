@@ -1,6 +1,8 @@
 fs = require 'fs'
 os = require 'os'
 
+oauth = require './oauth.js'
+qs = require 'querystring'
 i18n = require './i18n.js'
 config = require '../../config/config.js'
 ga = require('./ga.js');
@@ -10,37 +12,26 @@ guidesMade = false
 makeGuides = ->
   guiders.createGuider
     buttons: [
-      name: String i18n.translate 'Take a quick tour'
-      classString: 'primary'
-      onclick: guiders.next
-    ]
-    classString: 'primary'
-    description: String i18n.translate 'Launch all of your Leap Motion-powered apps and access the store to discover new ones.'
-    id: 'g_start'
-    next: 'g_orientation'
-    title: String i18n.translate 'Welcome to Leap Motion App Home!'
-    xButton: true
-    onClose: onClose
-
-  guiders.createGuider
-    buttons: [
-      name: String i18n.translate 'Launch Orientation'
-      classString: 'next'
+      name: String i18n.translate 'Launch Playground'
+      classString: 'orientation fa fa-rocket'
       onclick: ->
         do _launchOrientation
-        tilesReady = setInterval ->
-          if $('.tile.store').length
-            clearInterval tilesReady
-            do guiders.next
-        , 50
+        setTimeout ->
+          do guiders.next
+        , 1000
+    ,
+      name: String i18n.translate 'Next'
+      classString: 'next'
+      onclick: guiders.next
     ]
-    description: String i18n.translate "Reach out and experience what your device can do with the Orientation app."
+    title: String i18n.translate "Tip 1: Leap Motion Basics"
+    description: String i18n.translate "Learn the basics of how to use the Leap Motion Controller by going through Playground."
     id: 'g_orientation'
     next: 'g_apps'
-    title: String i18n.translate 'Learn About the Controller'
-    attachTo: '#orientation'
+    heading: String i18n.translate 'Welcome to Leap Motion App Home'
+    attachTo: '#playground'
     position: 6
-    highlight: '#orientation'
+    highlight: '#playground'
     onClose: onClose
 
   guiders.createGuider
@@ -53,10 +44,10 @@ makeGuides = ->
       classString: 'next'
       onclick: guiders.next
     ]
-    description: String i18n.translate "We've set you up with some great apps for free to get you started. It's time to play, create, and explore."
+    title: String i18n.translate "Tip 2: Starter Apps"
+    description: String i18n.translate "We thought you'd like to dive right in, so we handpicked these free apps for you."
     id: 'g_apps'
     next: 'g_store'
-    title: String i18n.translate 'Try your new apps'
     attachTo: '.tile.store' # picks the first one
     position: 6
     highlight: '.tile.store'
@@ -68,16 +59,21 @@ makeGuides = ->
       classString: 'back'
       onclick: guiders.prev
     ,
-      name: String i18n.translate 'Done'
+      name: String i18n.translate 'Launch App Store'
       classString: 'primary'
-      onclick: guiders.hideAll
+      onclick: ->
+        oauth.getAccessToken (err, accessToken) ->
+          unless err
+            nwGui.Shell.openExternal(config.AuthWithAccessTokenUrl + '?' + qs.stringify({ access_token: accessToken, _r: config.AirspaceURL }))
+        do guiders.hideAll
     ]
-    description: String i18n.translate "Leap Motion App Store is the place for you to browse and download the latest games, creative tools, and more."
+    title: String i18n.translate "Tip 3: Ready for More?"
+    description: String i18n.translate "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
     id: 'g_store'
     title: String i18n.translate 'Discover new apps'
-    attachTo: '#airspace-store'
+    attachTo: '#leap-motion-app-store'
     position: 3
-    highlight: '#airspace-store'
+    highlight: '#leap-motion-app-store'
     onClose: onClose
     onHide: ->
       ga.trackEvent 'tutorial/oobe/finished'
@@ -113,7 +109,7 @@ start = ->
   unless uiGlobals.inTutorial
     uiGlobals.inTutorial = true
     uiGlobals.trigger 'goto', 0
-    guiders.show 'g_start'
+    guiders.show 'g_orientation'
 
 
 module.exports.start = start

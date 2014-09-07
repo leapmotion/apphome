@@ -16,7 +16,39 @@
 
 ### Running (dev mode)
 
-    node bin/airspace
+Copy over oauth2 access token from production central:
+
+```ruby
+ActiveRecord::Base.connection.execute('select * from oauth2_clients limit 1').to_a
+```
+
+In to your local database:
+
+```ruby
+ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, updated_at, name, redirect_uri, website, identifier, secret) VALUES (NOW(), NOW(), 'launcher', 'http://local.leapmotion:3010/', 'http://local.leapmotion:3010/', '73fde9aa45ef818ecb137aeacd886253', '8daf22818f30f4a9f86201d1b276b39c')")
+```
+
+
+```
+    # add these in .bashrc
+
+    # localhost
+    alias airspace='cd $HOME/homebase; CENTRAL_URL=http://local.leapmotion:3010/ WAREHOUSE_URL=http://local.leapmotion:5001/  AIRSPACE_URL=http://local.leapmotion:5002/ LEAPHOME_ENV=development bin/airspace'
+    alias oobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/;  airspace'
+
+    # staging (disabled HTTP Basic Auth)
+    alias stairspace='cd $HOME/homebase; CENTRAL_URL=https://lm-s-central-oobeghost.leapmotion.com/ WAREHOUSE_URL=https://lm-s-warehouse-oobeghost.leapmotion.com/ AIRSPACE_URL=https://lm-s-airspace-oobeghost.leapmotion.com/ LEAPHOME_ENV=staging bin/airspace'
+    alias stoobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; stairspace'
+
+    # production
+    alias prairspace='cd $HOME/homebase;bin/airspace'
+    alias proobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; prairspace'
+
+    # use the airspace alias for localhost (have central and warehouse running)
+    airspace
+```
+
+All staging and dev machines seem to be using sandbox 1 for pubnub.
 
 ### Testing
 
@@ -41,6 +73,10 @@ To build, run:
 Outputs to: <code>build/</code>
 
 Building for Windows requires building on Windows, unfortunately.
+
+### Troubleshooting
+
+Use the [Konami code](http://en.wikipedia.org/wiki/Konami_Code) to open the debugger in production.
 
 ### App Manifest
 
@@ -72,3 +108,7 @@ Builtin tiles can be uploaded with:
 * You may want to set <code>ulimit -n 1200</code> on OS X to get around the low default max number of open files.
   (In release builds, this gets done automatically.)
 
+### Get ahXXXX version
+```
+ git log --reverse --oneline | cat -n
+```

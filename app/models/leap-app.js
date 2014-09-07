@@ -41,6 +41,7 @@ var LeapAppTypes = enumerable.make([
 
 var LeapApp = BaseModel.extend({
   initialize: function() {
+    var leapApp = this;
     var state = this.get('state');
     if (state === LeapApp.States.Moving ||
         (this.hasUpdate() && (
@@ -71,15 +72,15 @@ var LeapApp = BaseModel.extend({
     }.bind(this));
 
     this.on('change:iconUrl', function() {
-      if (this.get('iconUrl')) {
-        this.downloadIcon();
-      }
+      this.downloadIcon(function() {
+        leapApp.trigger('change:iconPath');
+      });
     }.bind(this));
 
     this.on('change:tileUrl', function() {
-      if (this.get('tileUrl')) {
-        this.downloadTile();
-      }
+      this.downloadTile(function() {
+        leapApp.trigger('change:tilePath');
+      });
     }.bind(this));
 
     this.set('slug', urlify(this.get('name')));
@@ -88,13 +89,12 @@ var LeapApp = BaseModel.extend({
     });
 
     this.on('add', function() {
-      if (this._shouldDownloadTile()) {
-        this.downloadTile();
-      }
-
-      if (this._shouldDownloadIcon()) {
-        this.downloadIcon();
-      }
+      this.downloadTile(function() {
+        leapApp.trigger('change:tilePath');
+      });
+      this.downloadIcon(function(err) {
+        leapApp.trigger('change:iconPath');
+      });
     }.bind(this));
   },
 
@@ -122,6 +122,9 @@ var LeapApp = BaseModel.extend({
     db.saveObj(config.DbKeys.InstalledApps, uiGlobals.myApps.toJSON());
   },
 
+  // This retarded method decides to use letters, rather than numbers, for a sort ranking
+  // This prevents individual apps from having their own ranking factors.
+  // this prefixes letters to set ordering alphabetically
   sortScore: function() {
     if (uiGlobals.labOptions['recent-launch-sort']) {
       return (this.isBuiltinTile() ?
@@ -131,12 +134,53 @@ var LeapApp = BaseModel.extend({
                   (this.get('installedAt') ?
                     'c_' + this.get('installedAt') :
                     (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt'))));
+
     } else {
-      return (this.isBuiltinTile() ?
-          'a_' + this.get('name') :
-          (this.get('installedAt') ?
-            'c_' + this.get('installedAt') :
-            (!this.isUninstalled() ? 'd_' : 'e_') + this.get('firstSeenAt')));
+
+      var str = '';
+
+      if (this.isBuiltinTile()) {
+
+        str += 'a_'; // l1
+
+        if (this.get('isLeapMotion')) {
+          str += 'a_'; // l2
+        } else {
+          str += 'b_'; // l2
+        }
+
+        str += this.get('name');
+
+      } else {
+
+        if (this.get('is_v2')) {
+
+          str += 'b_'; // l1
+
+        } else {
+
+          str += 'c_'; // l1
+
+        }
+
+        if (this.get('installedAt')) {
+
+          str += 'a_' + this.get('installedAt'); // l2
+
+        } else {
+
+          if (this.isUninstalled()) {
+            str += 'c_'; // l2
+          } else {
+            str += 'b_'; // l2
+          }
+
+          str += this.get('firstSeenAt');
+        }
+
+      }
+
+      return str;
     }
   },
 
@@ -216,28 +260,6 @@ var LeapApp = BaseModel.extend({
     }
   },
 
-  _shouldDownloadTile: function() {
-    try {
-      var tilePath = this.get('tilePath');
-      return this.get('tileUrl') &&
-             (!tilePath ||
-              !fs.existsSync(tilePath));
-    } catch(err) {
-      return true;
-    }
-  },
-
-  _shouldDownloadIcon: function() {
-    try {
-      var iconPath = this.get('iconPath');
-      return this.get('iconUrl') &&
-             (!iconPath ||
-              !fs.existsSync(iconPath));
-    } catch(err) {
-      return true;
-    }
-  },
-
   standardIconPath: function() {
     return this._standardAssetPath(config.AppSubdir.AppIcons);
   },
@@ -262,8 +284,10 @@ var LeapApp = BaseModel.extend({
 
   getShortDescription: function() {
     var NonStandardAppDescriptions = {
+      'Airspace Store': i18n.translate("Leap Motion App Store is the place for you to browse and download new games, creative tools, and more."),
       'Leap Motion App Store': i18n.translate("Leap Motion App Store is the place for you to browse and download new games, creative tools, and more."),
       "Orientation": i18n.translate("Reach out and experience what your controller can do."),
+      "Playground": i18n.translate("Reach out and experience what your controller can do."),
       "Google Earth": i18n.translate("Interact with the world in a whole new way."),
       'Community': i18n.translate("Connect with other users to discuss projects, ideas, and your favorite apps")
     };

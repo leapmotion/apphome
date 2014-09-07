@@ -4,8 +4,9 @@ var enumerable = require('../app/utils/enumerable.js');
 
 var AppsDir = 'AirspaceApps';
 var AppsUserDataDir = 'AirspaceApps';
-var CENTRAL = process.env.CENTRAL_URL || 'https://central.leapmotion.com/';
+var CENTRAL   = process.env.CENTRAL_URL   || 'https://central.leapmotion.com/';
 var WAREHOUSE = process.env.WAREHOUSE_URL || 'https://warehouse.leapmotion.com/';
+var AIRSPACE =  process.env.AIRSPACE_URL  || 'https://airspace.leapmotion.com/';
 
 var config = {
 
@@ -26,7 +27,12 @@ var config = {
 
   AuthWithAccessTokenUrl: CENTRAL,
 
-  PubnubSubscribeKey: 'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe',
+  AirspaceURL: AIRSPACE,
+
+  // todo - test production by default.
+  PubnubSubscribeKey: process.env.LEAPHOME_ENV == 'production' ?
+                                'sub-c-65b7dd2c-c255-11e2-883f-02ee2ddab7fe' : // airspace T4 https://admin.pubnub.com/#/user/222170/app/219026
+                                'sub-c-8603c6d4-c1b7-11e2-883f-02ee2ddab7fe', // My First PubNub App (1) - shared w/ dev and staging.
 
   NonStoreAppManifestUrl: WAREHOUSE + 'api/app_home_manifests/v4.json',
 
@@ -80,6 +86,7 @@ var config = {
     DismissedNotifications: 'DismissedNotifications',
     LabOptionStates: 'LabOptionStates',
     PreviousLabOptionStates: 'PreviousLabOptionStates',
+    SeenTutorialV2: 'SeenTutorialV2'
   },
 
   LabOptions: {

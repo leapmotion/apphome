@@ -44,7 +44,7 @@ module.exports = BaseView.extend({
 
     this.authorizationView = new AuthorizationView();
 
-    if (uiGlobals.embeddedDevice) {
+    if (uiGlobals.embeddedDevice && os.platform() === 'win32') {
 
       this.$el.find('#actions').addClass('disabled');
 

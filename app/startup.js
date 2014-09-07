@@ -267,7 +267,8 @@ function startMainApp(cb) {
 
   windowChrome.paintMainPage();
 
-  if (uiGlobals.isFirstRun) {
+  if (!db.fetchObj(config.DbKeys.SeenTutorialV2)) {
+    db.saveObj(config.DbKeys.SeenTutorialV2, true);
     tutorial.start();
   }
 
@@ -276,13 +277,15 @@ function startMainApp(cb) {
   if (uiGlobals.isFirstRun && uiGlobals.embeddedDevice && uiGlobals.canInstallPrebundledApps) {
     p = handlePrebundledApps()
       .then(api.sendDeviceData)
-      .then(api.connectToStoreServer);
+      .then(api.connectToStoreServer)
+      .fail(function(reason) {
+          console.warn(reason);
+      });
   } else {
     p = Q(api.connectToStoreServer())
-      .then(function() {
-        api.sendDeviceData().fail(function(reason) {
-          return;
-        });
+      .then(api.sendDeviceData)
+      .fail(function(reason) {
+          console.warn(reason);
       });
   }
 

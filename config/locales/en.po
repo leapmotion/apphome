@@ -547,8 +547,8 @@ msgstr "You will receive an email with instructions about how to reset your pass
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "Connect with other users to discuss projects, ideas, and your favorite apps"
 
-msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "These are experimental features which may crash Leap Motion App Home. Enable at your own risk. You will need to restart Airspace before your changes take effect."
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart app home before your changes take effect."
+msgstr "These are experimental features which may crash Leap Motion App Home. Enable at your own risk. You will need to restart App Home before your changes take effect."
 
 msgid "save"
 msgstr "Save"
@@ -597,3 +597,30 @@ msgstr "Please restart Leap Motion App Home"
 
 msgid "please restart leap motion app home to see your changes"
 msgstr "Please restart Leap Motion App Home to see your changes"
+
+msgid "welcome to leap motion app home"
+msgstr "Welcome to Leap Motion App Home"
+
+msgid "tip 1: leap motion basics"
+msgstr "Tip 1: Leap Motion Basics"
+
+msgid "learn the basics of how to use the leap motion controller by going through playground."
+msgstr "Learn the basics of how to use the Leap Motion Controller by going through Playground."
+
+msgid "launch playground"
+msgstr "Launch Playground"
+
+msgid "tip 2: starter apps"
+msgstr "Tip 2: Starter Apps"
+
+msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
+msgstr "We thought you'd like to dive right in, so we handpicked these free apps for you."
+
+msgid "tip 3: ready for more?"
+msgstr "Tip 3: Ready for More?"
+
+msgid "visit the app store to discover and download 200+ games, educational tools, and music apps, and more."
+msgstr "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
+
+msgid "launch app store"
+msgstr "Launch App Store"

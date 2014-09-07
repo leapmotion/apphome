@@ -1,5 +1,6 @@
 var os = require('os');
 
+var Q = require('q');
 var api = require('../../utils/api.js');
 var i18n = require('../../utils/i18n.js');
 var installManager = require('../../utils/install-manager.js');
@@ -32,7 +33,7 @@ module.exports = Modal.extend({
 
     function reinstallApp(app) {
       // Need this to reset the binaryUrl
-      api.getAppJson(app.get('appId')).then(function(appJson) {
+      Q(api.getAppJson, app.get('appId')).then(function(appJson) {
         app.set(appJson);
         app.save();
 

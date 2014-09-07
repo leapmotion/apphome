@@ -63,6 +63,10 @@ promptForLogin = (cb) ->
 
 accessTokenExpiry = undefined
 accessToken = undefined
+
+resetAccessToken = ->
+  accessToken = undefined
+
 getAccessToken = (cb) ->
   now = (new Date()).getTime()
   if accessToken and accessTokenExpiry and (now < accessTokenExpiry)
@@ -107,5 +111,6 @@ module.exports.getAuthorizationUrl = getAuthorizationUrl
 module.exports.getRefreshToken = getRefreshToken
 module.exports.authorizeWithCode = authorizeWithCode
 module.exports.getAccessToken = getAccessToken
+module.exports.resetAccessToken = resetAccessToken
 module.exports.logOut = logOut
 module.exports.logOutUrl = logOutUrl

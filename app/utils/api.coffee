@@ -14,6 +14,7 @@ drm = require("./drm.js")
 enumerable = require("./enumerable.js")
 httpHelper = require("./http-helper.js")
 installManager = require("./install-manager.js")
+embeddedLeap = require('./embedded-leap.js')
 oauth = require("./oauth.js")
 pubnub = require("./pubnub.js")
 
@@ -28,6 +29,7 @@ cleanAppJson = (appJson) ->
     versionId: appJson.id
     appType: appJson.appType
     name: appJson.name
+    is_v2: appJson.is_v2
     platform: config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
     iconUrl: appJson.icon_url
     tileUrl: appJson.tile_url
@@ -51,7 +53,7 @@ handleAppJson = (appJson, silent=false) ->
     appJson = cleanAppJson appJson
 
   unless appJson.urlToLaunch? or appJson.findByScanning? or (appJson.platform? and appJson.platform is os.platform())
-    console.log "Skipping invalid app for this platform:", appJson.name
+    console.log "Skipping invalid app for this platform:", appJson
     return
 
   myApps = uiGlobals.myApps
@@ -86,9 +88,16 @@ syncToCollection = (appJsonList, collection, appTest) ->
       existingAppsById[app.get('name')] = app
 
   appJsonList.forEach (appJson) ->
-    existingApp = existingAppsById[appJson.name]
+    key = appJson.name
+    existingApp = existingAppsById[key]
+    if !existingApp and key == 'Leap Motion App Store'
+      key = 'Airspace Store'
+      existingApp = existingAppsById[key]
+    if !existingApp and key == 'Playground'
+      key = 'Orientation'
+      existingApp = existingAppsById[key]
     if existingApp
-      delete existingAppsById[appJson.name]
+      delete existingAppsById[key]
       existingApp.set appJson
     else
       handleAppJson appJson
@@ -101,22 +110,44 @@ syncToCollection = (appJsonList, collection, appTest) ->
 
 subscribeToUserReloadChannel = (userId) ->
   pubnub.subscribe userId + ".user.reload", () ->
-    # steal focus
+    console.log 'Update user identity'
     nwGui.Window.get().focus()
+    console.log 'Reset access token'
+    oauth.resetAccessToken()
+    console.log 'Reconnect to server'
     connectToStoreServer()
 
 
 subscribeToUserChannel = (userId) ->
-  pubnub.subscribe userId + ".user.purchased", (appJson) ->
-    # steal focus
-    nwGui.Window.get().focus()
+  pubnub.subscribe(
+    userId + ".user.purchased",
+    (appJson) ->
+      # steal focus
+      nwGui.Window.get().focus()
 
-    unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
-      return Q()
+      # a notification is sent out for each platform, we select only ours
+      unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
+        return Q()
 
-    getAppJson(appJson.app_id).then (appJson) ->
-      handleAppJson appJson
-    .done()
+      getAppJson(appJson.app_id).then (appJson) ->
+        handleAppJson appJson
+      .done()
+  , {
+      connect: ->
+        # checks for apps purchased after /myapps delivers the manifest and before channel resubscription.
+        pubnub.history 20, "#{userId}.user.purchased", (data)->
+
+          for appJson in data
+            if appJson
+
+              # these lines must match the above.  :-/
+              if (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
+                getAppJson(appJson.app_id).then (appJson) ->
+                  handleAppJson appJson
+                .done()
+    }
+
+  )
 
 subscribeToAppChannel = (appId) ->
   pubnub.subscribe appId + ".app.updated", (appJson) ->
@@ -167,6 +198,7 @@ _getStoreManifest = ->
       access_token: accessToken
       platform: platform
       language: uiGlobals.locale
+      client_version: uiGlobals.appVersion
     console.log "Getting store manifest from", apiEndpoint
     httpHelper.getJson(apiEndpoint).then (messages) ->
       if messages.errors
@@ -212,8 +244,9 @@ _setGlobalUserInformation = (user) ->
   uiGlobals.username = user.username
   uiGlobals.email = user.email
   uiGlobals.user_id = user.user_id
-  subscribeToUserChannel user.user_id
-  subscribeToUserReloadChannel user.user_id
+  console.log('User with ID ' + user.user_id + ' logged in successfully')
+  subscribeToUserChannel user.user_id # purchases
+  subscribeToUserReloadChannel user.user_id # reload /myapps
   uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
@@ -223,12 +256,13 @@ getUserInformation = (cb) ->
 
 connectToStoreServer = ->
   _getStoreManifest().then (messages) ->
+
     unless messages?
       return
 
-    console.log "Connected to store server.", messages.length - 1, "apps found."
     $("body").removeClass "loading"
 
+    # subscribes to new user and userReload channels?
     _setGlobalUserInformation messages.shift();
 
     messages.forEach (message) ->
@@ -236,6 +270,7 @@ connectToStoreServer = ->
 
         subscribeToAppChannel message.appId
         handleAppJson message
+
 
 getAppJson = (appId) ->
   Q.nfcall(oauth.getAccessToken).then (accessToken) ->
@@ -248,9 +283,11 @@ getAppJson = (appId) ->
     url = url.replace(":id", appId)
 
     console.log "Getting app details via url: " + url
-    httpHelper.getJson(url).then (appJson) ->
+    Q(httpHelper.getJson, url).then (appJson) ->
       appJson.appType = LeapApp.Types.StoreApp
       cleanAppJson appJson
+    .fail (e) ->
+      console.log(arguments)
 
 sendDeviceData = ->
   if uiGlobals.metricsDisabled
@@ -265,7 +302,7 @@ sendDeviceData = ->
   authDataFile = path.join(dataDir, "lastauth")
 
   if not fs.existsSync authDataFile
-    console.warn "Auth data file doesn't exist"
+    console.log "Auth data file doesn't exist"
     if uiGlobals.embeddedDevice
       throw new Error "Auth data file doesn't exist"
     else
@@ -286,7 +323,7 @@ sendDeviceData = ->
     # with TYPE_KEYBOARD_STANDALONE. This is a super hack, but needed to
     # ensure entitlements don't get granted to Standalone keyboards.
     #
-    if (uiGlobals.embeddedDevice == 'keyboard' && !uiGlobals.canInstallPrebundledApps)
+    if (embeddedLeap.getEmbeddedDevice() == 'keyboard' && !uiGlobals.canInstallPrebundledApps)
       device_type_override = 'TYPE_KEYBOARD_STANDALONE'
 
     Q.nfcall(oauth.getAccessToken).then (accessToken) ->

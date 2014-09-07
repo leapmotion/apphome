@@ -3,7 +3,7 @@ path = require("path")
 os = require("os")
 config = require("../../config/config.js")
 
-isProduction = false #not /^(development|test)$/.test(process.env.LEAPHOME_ENV)
+isProduction = not /^(development|test)$/.test(process.env.LEAPHOME_ENV)
 pathToLog = path.join config.PlatformDirs[os.platform()], 'Airspace', 'log.txt'
 if (fs.existsSync pathToLog) and (/\n(WARN|ERROR)/g.test fs.readFileSync pathToLog, {encoding: 'utf8'})
   console.log "Saving previous log"
@@ -19,6 +19,10 @@ log = (message) ->
 process.on "exit", ->
   do logStream.close
 
+getLogContents = (cb)->
+  logStream.close ->
+    content = fs.readFileSync pathToLog, {encoding: 'utf8'}
+    cb(content)
 
 getLogger = (level) ->
   level = level or "log"
@@ -32,7 +36,7 @@ getLogger = (level) ->
     ).join(" ") + " (" + sourceFile + ")"
 
     log str
-    if isProduction and (level is "warn" or level is "error") and not uiGlobals.metricsDisabled
+    if isProduction and (level is "error") and not uiGlobals.metricsDisabled
       window.Raven.captureMessage str,
         tags:
           appVersion: uiGlobals.appVersion
@@ -43,3 +47,4 @@ console.debug = window.console.debug = getLogger("debug")
 console.info = window.console.info = getLogger("info")
 console.warn = window.console.warn = getLogger("warn")
 console.error = window.console.error = getLogger("error")
+module.exports.getLogContents = getLogContents

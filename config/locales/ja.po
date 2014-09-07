@@ -547,8 +547,8 @@ msgstr "パスワードのリセット方法をご案内するメールが、数
 msgid "connect with other users to discuss projects, ideas, and your favorite apps"
 msgstr "他のユーザーとつながり、プロジェクトやアイデア、お気に入りのアプリについて話し合おう"
 
-msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart airspace before your changes take effect."
-msgstr "これらは実験的な機能であり、 Leap Motion App Home がクラッシュする可能性があります。ご自分の責任において有効にしてください。変更を有効にするには Airspace を再起動する必要があります。"
+msgid "these are experimental features which may crash leap motion app home. enable at your own risk. you will need to restart app home before your changes take effect."
+msgstr "これらは実験的な機能であり、 Leap Motion App Home がクラッシュする可能性があります。ご自分の責任において有効にしてください。変更を有効にするには App Home を再起動する必要があります。"
 
 msgid "save"
 msgstr "保存"
@@ -597,3 +597,30 @@ msgstr "Leap Motion App Homeを再起動してください"
 
 msgid "please restart leap motion app home to see your changes"
 msgstr "変更を見るためにはLeap Motion App Homeを再起動してください"
+
+msgid "welcome to leap motion app home"
+msgstr "Welcome to Leap Motion App Home"
+
+msgid "tip 1: leap motion basics"
+msgstr "Tip 1: Leap Motion Basics"
+
+msgid "learn the basics of how to use the leap motion controller by going through playground."
+msgstr "Learn the basics of how to use the Leap Motion Controller by going through Playground."
+
+msgid "launch playground"
+msgstr "Launch Playground"
+
+msgid "tip 2: starter apps"
+msgstr "Tip 2: Starter Apps"
+
+msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
+msgstr "We thought you'd like to dive right in, so we handpicked these free apps for you."
+
+msgid "tip 3: ready for more?"
+msgstr "Tip 3: Ready for More?"
+
+msgid "visit the app store to discover and download 200+ games, educational tools, and music apps, and more."
+msgstr "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
+
+msgid "launch app store"
+msgstr "Launch App Store"
