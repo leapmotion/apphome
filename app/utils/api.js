@@ -48,7 +48,7 @@
       versionId: appJson.id,
       appType: appJson.appType,
       name: appJson.name,
-      is_v2: appJson.is_v2,
+      isV2: appJson.is_v2,
       platform: config.ServerPlatformToNodePlatform[appJson.platform] || appJson.platform,
       iconUrl: appJson.icon_url,
       tileUrl: appJson.tile_url,

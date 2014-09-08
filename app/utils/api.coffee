@@ -23,13 +23,14 @@ LeapApp = require("../models/leap-app.js")
 cleanAppJson = (appJson) ->
   appJson = appJson or {}
   releaseDate = appJson.certified_at or appJson.created_at
+
   cleanedAppJson =
     id: appJson.app_id
     appId: appJson.app_id
     versionId: appJson.id
     appType: appJson.appType
     name: appJson.name
-    is_v2: appJson.is_v2
+    isV2: appJson.is_v2
     platform: config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
     iconUrl: appJson.icon_url
     tileUrl: appJson.tile_url
