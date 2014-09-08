@@ -27,19 +27,26 @@ messageState(state, tileOpacity = .7)
   position relative
   -webkit-user-drag element
   width $tileW
-  /*box-shadow 0 0 24px 4px rgba(0, 0, 0, 0.6)*/
 
   &.v2-required
     .tile-bg
-      /*opacity 0.5*/
       -webkit-filter: grayscale(0.8);
       filter: grayscale(0.5);
     h3
       margin-bottom 0.5em
-    .v2-required-warning
-      margin 0
-      margin-bottom 0.5em
-      color: #81d41d
+
+    .hover-overlay
+      .description.v2-required-warning
+        margin 0
+        margin-bottom 0.5em
+        color: #81d41d
+        display block
+
+    &.ready:hover, &.ready.highlight
+      .tile-bg
+        -webkit-filter blur(5px) grayscale(0.8)
+        filter blur(5px) grayscale(0.8)
+
 
   messageState(notyetinstalled, .7)
   messageState(waiting, .5)
@@ -105,7 +112,7 @@ messageState(state, tileOpacity = .7)
       display block
 
     .tile-bg
-      -webkit-filter blur(5px) grayscale(0.8)
+      -webkit-filter blur(5px)
       -webkit-transform blur(5px)
       -webkit-transition .15s
       -webkit-transition-timing-function ease-in-out
@@ -140,6 +147,12 @@ messageState(state, tileOpacity = .7)
       display -webkit-box
       -webkit-line-clamp 4
       -webkit-box-orient vertical
+
+      &.v2-required-warning
+        display none
+
+
+
 
   .install-overlay
     background -webkit-linear-gradient(top, #272c31 0%, #141719 100%)
