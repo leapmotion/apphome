@@ -49,7 +49,6 @@ getTrackFn = (eventName, namespace) ->
   (args) ->
     unless /^(development|test)$/.test(process.env.LEAPHOME_ENV)
       if !uiGlobals.metricsDisabled && visitor != null
-        console.log "Tracking Google Analytics event: " + eventName
         namespace = namespace or uiGlobals.appName
         namespace = namespace.toLowerCase().replace(' ', '_')
         eventName = eventName.toLowerCase().replace(' ', '_')
@@ -57,10 +56,6 @@ getTrackFn = (eventName, namespace) ->
         page_url = '/' + namespace + '/' + uiGlobals.appVersion + '/' + eventName;
         page_title = uiGlobals.appName + ' (' + uiGlobals.appVersion + ') ' + embedded_text
         visitor.pageview(page_url, page_title, page_title).send();
-      else
-        console.log "Would have tracked Google Analytics event, but metrics are disabled."
-    else
-      console.log "Would have tracked Google Analytics event in a release build: " + eventName
 
 module.exports =
   initialize: initialize
