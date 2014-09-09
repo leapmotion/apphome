@@ -59,6 +59,7 @@
       tagline: appJson.tagline,
       releaseDate: (releaseDate ? new Date(releaseDate).toLocaleDateString() : null),
       noAutoInstall: appJson.noAutoInstall,
+      markedForRemoval: appJson.marked_for_removal,
       cleaned: true
     };
     Object.keys(cleanedAppJson).forEach(function(key) {
@@ -92,9 +93,11 @@
       } else {
         existingApp.set(appJson);
       }
+      if (existingApp.get('markedForRemoval')) {
+        existingApp.uninstall();
+      }
       app = existingApp;
-    } else {
-      console.log('Adding', appJson.name);
+    } else if (appJson.markedForRemoval !== true) {
       try {
         app = myApps.add(appJson, {
           validate: true,
@@ -226,7 +229,11 @@
             appJson.executable = appJson.executable.replace(/^%USER_DIR%/, userHomeDir);
           }
           if (appJson.state === LeapApp.States.Uninstalled) {
-            _results.push(uiGlobals.uninstalledApps.add(appJson));
+            if (appJson.markedForRemoval !== true) {
+              _results.push(uiGlobals.uninstalledApps.add(appJson));
+            } else {
+              _results.push(void 0);
+            }
           } else {
             _results.push(handleAppJson(appJson));
           }

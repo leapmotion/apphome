@@ -60,7 +60,6 @@ module.exports = LeapApp.extend({
         cb && cb(err);
       }.bind(this));
     } else {
-      console.log('Installing:', this.get('name'), this);
 
       if (fs.existsSync(this._findExecutable())) {
         console.log('Existing app binary found.  Skipping download.');
@@ -285,6 +284,10 @@ module.exports = LeapApp.extend({
   },
 
   uninstall: function(deleteIconAndTile, deleteUserData, cb) {
+    if (this.get('state') == LeapApp.States.Uninstalled){
+      return
+    }
+
     this.set('state', LeapApp.States.Uninstalling);
     console.log('Uninstalling: ' + this.get('name'));
     try {
@@ -321,7 +324,11 @@ module.exports = LeapApp.extend({
       return this._failUninstallation(err, cb);
     } finally {
       uiGlobals.myApps.remove(this);
-      uiGlobals.uninstalledApps.add(this);
+
+      if (this.get('markedForRemoval') !== true) {
+        uiGlobals.uninstalledApps.add(this);
+      }
+
       this.set('state', LeapApp.States.Uninstalled);
 
       // Erase information about where it used to be installed, so if the directory

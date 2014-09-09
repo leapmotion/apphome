@@ -40,6 +40,7 @@ cleanAppJson = (appJson) ->
     tagline: appJson.tagline
     releaseDate: (if releaseDate then new Date(releaseDate).toLocaleDateString() else null)
     noAutoInstall: appJson.noAutoInstall
+    markedForRemoval: appJson.marked_for_removal
     cleaned: true
 
   Object.keys(cleanedAppJson).forEach (key) ->
@@ -59,6 +60,7 @@ handleAppJson = (appJson, silent=false) ->
   myApps = uiGlobals.myApps
   uninstalledApps = uiGlobals.uninstalledApps
   existingApp = myApps.get(appJson.id) or uninstalledApps.get(appJson.id)
+
   if existingApp
     if appJson.versionId > existingApp.get("versionId")
       console.log "Upgrade available for " + existingApp.get("name") + ". New version: " + appJson.version
@@ -66,11 +68,14 @@ handleAppJson = (appJson, silent=false) ->
     else
       existingApp.set appJson
 
+    if existingApp.get('markedForRemoval')
+      existingApp.uninstall();
+
     app = existingApp
-  else
-    console.log 'Adding', appJson.name
+  else if appJson.markedForRemoval != true
 
     try
+      # appJson gets converted to app by leap-app-collection#model
       app = myApps.add appJson,
         validate: true
         silent: silent
@@ -177,7 +182,8 @@ hydrateCachedModels = ->
           appJson.executable = appJson.executable.replace /^%USER_DIR%/, userHomeDir
 
         if appJson.state is LeapApp.States.Uninstalled
-          uiGlobals.uninstalledApps.add appJson
+          if appJson.markedForRemoval != true
+            uiGlobals.uninstalledApps.add appJson
         else
           handleAppJson appJson
 
