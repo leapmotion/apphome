@@ -62,7 +62,6 @@
       var embedded_text, page_title, page_url;
       if (!/^(development|test)$/.test(process.env.LEAPHOME_ENV)) {
         if (!uiGlobals.metricsDisabled && visitor !== null) {
-          console.log("Tracking Google Analytics event: " + eventName);
           namespace = namespace || uiGlobals.appName;
           namespace = namespace.toLowerCase().replace(' ', '_');
           eventName = eventName.toLowerCase().replace(' ', '_');
@@ -70,11 +69,7 @@
           page_url = '/' + namespace + '/' + uiGlobals.appVersion + '/' + eventName;
           page_title = uiGlobals.appName + ' (' + uiGlobals.appVersion + ') ' + embedded_text;
           return visitor.pageview(page_url, page_title, page_title).send();
-        } else {
-          return console.log("Would have tracked Google Analytics event, but metrics are disabled.");
         }
-      } else {
-        return console.log("Would have tracked Google Analytics event in a release build: " + eventName);
       }
     };
   };

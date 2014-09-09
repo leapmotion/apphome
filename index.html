@@ -23,7 +23,7 @@
   <script src="./static/js/jquery.parallax.js"></script>
   <script src="./static/js/konami.js"></script>
   <script src="./static/guiders-js/guiders.js"></script>
-  <script src="./static/js/leap.min.js"></script>
+  <script src="./static/js/leap-0.6.2.min.js"></script>
 </head>
 <body class="startup">
 
@@ -51,7 +51,7 @@
 
       global.leapController = new Leap.Controller({'enableGestures': true});
       // disable the focus loop so as not to conflict with OS control apps.
-      global.leapController.connection.startFocusLoop = function(){}
+      global.leapController.connection.startFocusLoop = function(){};
       global.leapController.connect();
 
       window.document.title = global.uiGlobals.appName;

@@ -58,6 +58,7 @@ var Tile = BaseView.extend({
       store_app:            this.model.isStoreApp(),
       app_slug:             this.model.get('slug'),
       short_description:    this.model.getShortDescription(),
+      v2_required:          this.model.v2Required(),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
       downloading_label:    i18n.translate('Downloading...'),
@@ -65,7 +66,8 @@ var Tile = BaseView.extend({
       moving_label:         i18n.translate('Moving...'),
       opening_label:        i18n.translate('Opening...'),
       launching_label:      i18n.translate('Launching...'),
-      clickToInstall_label: i18n.translate('Click to Install')
+      clickToInstall_label: i18n.translate('Click to Install'),
+      v2_required_label:    "Requires V2 Tracking"
     }));
 
     this.$el.addClass(this._stateToClass(this.model.get('state')));
@@ -96,15 +98,19 @@ var Tile = BaseView.extend({
         this._promptForInstall();
       } else if (this.model.isUpdatable()) {
         this._promptForUpdate();
+      } else if (this.model.v2Required()){
+        nwGui.Shell.openExternal("http://www.leapmotion.com/setup?source=ah-v2required");
       } else if (this.model.isRunnable()) {
         this._launchApp();
       }
 
       evt.stopPropagation();
 
+      // this hides the focus and launcher warning, maybe?
       setTimeout(function() {
         $('body').click();
       }, 3000);
+
     }.bind(this));
 
     this.$('.cancel').click(function(evt) {
