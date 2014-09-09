@@ -624,3 +624,6 @@ msgstr "Visit the App Store to discover and download 200+ games, educational too
 
 msgid "launch app store"
 msgstr "Launch App Store"
+
+msgid "sign up or sign in"
+msgstr "Sign Up or Sign In"

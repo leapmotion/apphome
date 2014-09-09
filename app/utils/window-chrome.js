@@ -102,7 +102,7 @@
     accountMenu = new nwGui.Menu();
     if (uiGlobals.is_ghost) {
       accountMenu.append(new nwGui.MenuItem({
-        label: i18n.translate("Sign Up"),
+        label: i18n.translate("Sign Up or Sign In"),
         click: function() {
           return oauth.getAccessToken(function(err, accessToken) {
             var urlToLaunch;
