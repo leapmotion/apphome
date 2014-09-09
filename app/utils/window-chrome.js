@@ -36,7 +36,12 @@
 
   appWindowBindings = function() {
     uiGlobals.on(uiGlobals.Event.SignIn, function() {
-      return rebuildMenuBar(true);
+      rebuildMenuBar(true);
+      return $('#loading-icon').css('visibility', 'hidden');
+    });
+    uiGlobals.on(uiGlobals.Event.Connecting, function() {
+      rebuildMenuBar(false);
+      return $('#loading-icon').css('visibility', 'visible');
     });
     $("body").on("click", "a", function(evt) {
       var href;

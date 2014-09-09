@@ -113,6 +113,7 @@ subscribeToUserReloadChannel = (userId) ->
     console.log 'Update user identity'
     nwGui.Window.get().focus()
     console.log 'Reset access token'
+    guiders?.hideAll()
     oauth.resetAccessToken()
     console.log 'Reconnect to server'
     connectToStoreServer()
@@ -247,14 +248,15 @@ _setGlobalUserInformation = (user) ->
   console.log('User with ID ' + user.user_id + ' logged in successfully')
   subscribeToUserChannel user.user_id # purchases
   subscribeToUserReloadChannel user.user_id # reload /myapps
-  uiGlobals.trigger uiGlobals.Event.SignIn
 
 getUserInformation = (cb) ->
   _getStoreManifest (manifest) ->
     _setGlobalUserInformation manifest.shift()
+    uiGlobals.trigger uiGlobals.Event.SignIn
     cb?(null)
 
 connectToStoreServer = ->
+  uiGlobals.trigger uiGlobals.Event.Connecting
   _getStoreManifest().then (messages) ->
 
     unless messages?
@@ -265,11 +267,11 @@ connectToStoreServer = ->
     # subscribes to new user and userReload channels?
     _setGlobalUserInformation messages.shift();
 
-    messages.forEach (message) ->
-      _.defer ->
-
+    _.defer ->
+      messages.forEach (message) ->
         subscribeToAppChannel message.appId
         handleAppJson message
+      uiGlobals.trigger uiGlobals.Event.SignIn
 
 
 getAppJson = (appId) ->

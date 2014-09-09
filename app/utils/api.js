@@ -147,6 +147,9 @@
       console.log('Update user identity');
       nwGui.Window.get().focus();
       console.log('Reset access token');
+      if (typeof guiders !== "undefined" && guiders !== null) {
+        guiders.hideAll();
+      }
       oauth.resetAccessToken();
       console.log('Reconnect to server');
       return connectToStoreServer();
@@ -314,29 +317,31 @@
     uiGlobals.user_id = user.user_id;
     console.log('User with ID ' + user.user_id + ' logged in successfully');
     subscribeToUserChannel(user.user_id);
-    subscribeToUserReloadChannel(user.user_id);
-    return uiGlobals.trigger(uiGlobals.Event.SignIn);
+    return subscribeToUserReloadChannel(user.user_id);
   };
 
   getUserInformation = function(cb) {
     return _getStoreManifest(function(manifest) {
       _setGlobalUserInformation(manifest.shift());
+      uiGlobals.trigger(uiGlobals.Event.SignIn);
       return typeof cb === "function" ? cb(null) : void 0;
     });
   };
 
   connectToStoreServer = function() {
+    uiGlobals.trigger(uiGlobals.Event.Connecting);
     return _getStoreManifest().then(function(messages) {
       if (messages == null) {
         return;
       }
       $("body").removeClass("loading");
       _setGlobalUserInformation(messages.shift());
-      return messages.forEach(function(message) {
-        return _.defer(function() {
+      return _.defer(function() {
+        messages.forEach(function(message) {
           subscribeToAppChannel(message.appId);
           return handleAppJson(message);
         });
+        return uiGlobals.trigger(uiGlobals.Event.SignIn);
       });
     });
   };

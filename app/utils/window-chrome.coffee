@@ -20,6 +20,11 @@ LabModalView = require('../views/lab-modal/lab-modal.js')
 appWindowBindings = ->
   uiGlobals.on uiGlobals.Event.SignIn, ->
     rebuildMenuBar true
+    $('#loading-icon').css('visibility', 'hidden')
+
+  uiGlobals.on uiGlobals.Event.Connecting, ->
+    rebuildMenuBar false
+    $('#loading-icon').css('visibility', 'visible')
 
   # This code redirects links in app description/changelog
   # markdown to open in the default browser, instead of
