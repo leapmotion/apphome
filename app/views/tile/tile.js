@@ -99,7 +99,7 @@ var Tile = BaseView.extend({
       } else if (this.model.isUpdatable()) {
         this._promptForUpdate();
       } else if (this.model.v2Required()){
-        nwGui.Shell.openExternal("http://www.leapmotion.com/setup?source=ah-v2required");
+        nwGui.Shell.openExternal("https://www.leapmotion.com/setup?source=ah-v2required");
       } else if (this.model.isRunnable()) {
         this._launchApp();
       }
