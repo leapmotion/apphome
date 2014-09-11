@@ -58,6 +58,7 @@ var Tile = BaseView.extend({
       store_app:            this.model.isStoreApp(),
       app_slug:             this.model.get('slug'),
       short_description:    this.model.getShortDescription(),
+      is_v2:                this.model.get('isV2'),
       v2_required:          this.model.v2Required(),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
