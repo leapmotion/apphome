@@ -36,11 +36,6 @@ getLogger = (level) ->
     ).join(" ") + " (" + sourceFile + ")"
 
     log str
-    if isProduction and (level is "error") and not uiGlobals.metricsDisabled
-      window.Raven.captureMessage str,
-        tags:
-          appVersion: uiGlobals.appVersion
-          embeddedDevice: uiGlobals.embeddedDevice
 
 console.log = window.console.log = getLogger("log")
 console.debug = window.console.debug = getLogger("debug")

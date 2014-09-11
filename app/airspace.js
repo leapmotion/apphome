@@ -28,8 +28,7 @@ process.on('uncaughtException', function(err) {
     try {
       logging.getLogContents(function(data) {
         var lines = data.substring(data.length-1000, data.length-1);
-        window.Raven.captureMessage("Crash report\n\nLast lines of log.txt for user " + uiGlobals.user_id +
-            " running " + uiGlobals.appVersion+ ":\n\n" + lines + "\n..until..\n" + errormsg);
+        window.Raven.captureMessage("Crash report " + (uiGlobals.user_id ? "for user " + uiGlobals.user_id : '') + "on " + uiGlobals.appVersion + (uiGlobals.embeddedDevice ? "using" + uiGlobals.embeddedDevice : '') + "\n\n" + lines + "\n..until..\n" + errormsg);
       });
     } catch(e){console.log(e);}
   }
