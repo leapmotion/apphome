@@ -1,35 +1,8 @@
-msgid "welcome"
-msgstr "Welcome"
-
 msgid "welcome to a whole new world"
 msgstr "Welcome to a whole new world"
 
-msgid "below are a few tips to get you started"
-msgstr "Below are a few tips to get you started"
-
-msgid "i agree to the leap motion %1$s"
-msgstr "I agree to the Leap Motion %1$s"
-
-msgid "end user license agreement"
-msgstr "End User License Agreement"
-
-msgid "continue"
-msgstr "Continue"
-
-msgid "airspace, the leap motion app store"
-msgstr "Airspace, the Leap Motion app store"
-
-msgid "discover, download, and launch your leap motion apps from airspace - the first-ever place for first-ever apps."
-msgstr "Discover, download, and launch your Leap Motion apps from Airspace - the first-ever place for first-ever apps."
-
-msgid "launch airspace"
-msgstr "Launch Airspace"
-
 msgid "leap motion end user software license agreement"
 msgstr "Leap Motion End User Software License Agreement"
-
-msgid "continue with mouse only"
-msgstr "Continue with mouse only"
 
 msgid "find and launch your leap motion apps"
 msgstr "Find and launch your Leap Motion apps"
@@ -283,20 +256,8 @@ msgstr "A complete birthdate is required"
 msgid "password is too short (minimum is 6 characters)"
 msgstr "Password is too short (minimum is 6 characters)"
 
-msgid "about airspace"
-msgstr "About Airspace"
-
-msgid "hide airspace"
-msgstr "Hide Airspace"
-
-msgid "hide others"
-msgstr "Hide Others"
-
 msgid "show all"
 msgstr "Show All"
-
-msgid "quit airspace"
-msgstr "Quit Airspace"
 
 msgid "edit"
 msgstr "Edit"
@@ -394,35 +355,11 @@ msgstr "Upgrade All Apps"
 msgid "update all"
 msgstr "Update All"
 
-msgid "update all applications"
-msgstr "Update All Applications"
-
-msgid "update all apps"
-msgstr "Update All Apps"
-
 msgid "cancel all"
 msgstr "Cancel All"
 
-msgid "cancel all downloads"
-msgstr "Cancel all downloads"
-
-msgid "cancel all pending downloads"
-msgstr "Cancel all pending downloads"
-
-msgid "recycle bin"
-msgstr "Recycle Bin"
-
-msgid "archive"
-msgstr "Archive"
-
 msgid "reinstall all"
 msgstr "Reinstall All"
-
-msgid "restore all"
-msgstr "Restore All"
-
-msgid "unarchive all"
-msgstr "Unarchive All"
 
 msgid "click to reinstall"
 msgstr "Click to Reinstall"
