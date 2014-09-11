@@ -390,7 +390,7 @@ var LeapApp = BaseModel.extend({
 
     mv(sourcePath, destPath, function(err) {
       if (err) {
-        console.err(err.stack || err);
+        console.error(err.stack || err);
         cb && cb(err);
       } else {
         this.set(pathAttrName, destPath);
