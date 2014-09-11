@@ -599,31 +599,31 @@ msgid "please restart leap motion app home to see your changes"
 msgstr "Riavvia Leap Motion App Home per visualizzare le tue modifiche"
 
 msgid "welcome to leap motion app home"
-msgstr "Welcome to Leap Motion App Home"
+msgstr "Benvenuti al Leap Motion App Home"
 
 msgid "tip 1: leap motion basics"
-msgstr "Tip 1: Leap Motion Basics"
+msgstr "Suggerimento 1: Fondamenti di Leap Motion"
 
 msgid "learn the basics of how to use the leap motion controller by going through playground."
-msgstr "Learn the basics of how to use the Leap Motion Controller by going through Playground."
+msgstr "Impara le nozioni di base su come utilizzare il Leap Motion Controller dal Playground."
 
 msgid "launch playground"
-msgstr "Launch Playground"
+msgstr "Lancia il Playground"
 
 msgid "tip 2: starter apps"
-msgstr "Tip 2: Starter Apps"
+msgstr "Suggerimento 2: Avviamento delle applicazioni"
 
 msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
-msgstr "We thought you'd like to dive right in, so we handpicked these free apps for you."
+msgstr "Abbiamo pensato che ti piacerebbe iniziare subito, così abbiamo scelto accuratamente queste applicazioni gratuite per te."
 
 msgid "tip 3: ready for more?"
-msgstr "Tip 3: Ready for More?"
+msgstr "Suggerimento 3: Pronto per altro ancora?"
 
 msgid "visit the app store to discover and download 200+ games, educational tools, and music apps, and more."
-msgstr "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
+msgstr "Visita l'App Store per conoscere e scaricare oltre 200 giochi, strumenti didattici, applicazioni musicali ed altro ancora."
 
 msgid "launch app store"
-msgstr "Launch App Store"
+msgstr "Lancia l'App Store"
 
 msgid "sign up or sign in"
-msgstr "Sign Up or Sign In"
+msgstr "Registrati o accedi"

@@ -599,31 +599,31 @@ msgid "please restart leap motion app home to see your changes"
 msgstr "変更を見るためにはLeap Motion App Homeを再起動してください"
 
 msgid "welcome to leap motion app home"
-msgstr "Welcome to Leap Motion App Home"
+msgstr "Leap Motion App Homeへようこそ"
 
 msgid "tip 1: leap motion basics"
-msgstr "Tip 1: Leap Motion Basics"
+msgstr "ヒント1: Leap Motionの基本"
 
 msgid "learn the basics of how to use the leap motion controller by going through playground."
-msgstr "Learn the basics of how to use the Leap Motion Controller by going through Playground."
+msgstr "プレイグラウンドでLeap Motion Controllerの使い方の基本を学びましょう。"
 
 msgid "launch playground"
-msgstr "Launch Playground"
+msgstr "プレイグラウンドを起動"
 
 msgid "tip 2: starter apps"
-msgstr "Tip 2: Starter Apps"
+msgstr "ヒント2: 最初のアプリ"
 
 msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
-msgstr "We thought you'd like to dive right in, so we handpicked these free apps for you."
+msgstr "すぐに楽しめるように無料のアプリを集めておきました。"
 
 msgid "tip 3: ready for more?"
-msgstr "Tip 3: Ready for More?"
+msgstr "ヒント3: 先に進む用意はいいですか?"
 
 msgid "visit the app store to discover and download 200+ games, educational tools, and music apps, and more."
-msgstr "Visit the App Store to discover and download 200+ games, educational tools, and music apps, and more."
+msgstr "App Storeに行ってゲーム、教育用ツール、音楽アプリなどを見つけてダウンロードしましょう。その数は200以上です。"
 
 msgid "launch app store"
-msgstr "Launch App Store"
+msgstr "App Storeを起動"
 
 msgid "sign up or sign in"
-msgstr "Sign Up or Sign In"
+msgstr "サインアップまたはサインイン"
