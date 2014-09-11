@@ -73,7 +73,8 @@
   };
 
   getJson = function(targetUrl) {
-    return Q(window.$.getJSON(targetUrl)).then(function(json) {
+    return Q(window.$.getJSON(targetUrl)).then(function(json, e) {
+      console.log('getJson', targetUrl, 'result', e);
       nwGui.App.clearCache();
       return json;
     });

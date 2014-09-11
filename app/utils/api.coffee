@@ -287,16 +287,17 @@ getAppJson = (appId) ->
     url = config.AppJsonEndpoint + "?" + qs.stringify
       access_token: accessToken
       platform: platform
-      langauge: uiGlobals.locale
+      language: uiGlobals.locale
 
     url = url.replace(":id", appId)
 
     console.log "Getting app details via url: " + url
-    Q(httpHelper.getJson, url).then (appJson) ->
+    Q(httpHelper.getJson(url)).then (appJson) ->
+      console.log(appJson) # function
       appJson.appType = LeapApp.Types.StoreApp
       cleanAppJson appJson
     .fail (e) ->
-      console.log(arguments)
+      {}
 
 sendDeviceData = ->
   if uiGlobals.metricsDisabled

@@ -62,7 +62,8 @@ getToDisk = (targetUrl, opts) ->
   deferred.promise
 
 getJson = (targetUrl) ->
-  Q(window.$.getJSON(targetUrl)).then (json) ->
+  Q(window.$.getJSON(targetUrl)).then (json, e) ->
+    console.log('getJson',targetUrl,'result',e)
     nwGui.App.clearCache()
     json
 

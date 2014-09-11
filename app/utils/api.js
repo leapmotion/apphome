@@ -360,15 +360,16 @@
       url = config.AppJsonEndpoint + "?" + qs.stringify({
         access_token: accessToken,
         platform: platform,
-        langauge: uiGlobals.locale
+        language: uiGlobals.locale
       });
       url = url.replace(":id", appId);
       console.log("Getting app details via url: " + url);
-      return Q(httpHelper.getJson, url).then(function(appJson) {
+      return Q(httpHelper.getJson(url)).then(function(appJson) {
+        console.log(appJson);
         appJson.appType = LeapApp.Types.StoreApp;
         return cleanAppJson(appJson);
       }).fail(function(e) {
-        return console.log(arguments);
+        return {};
       });
     });
   };
