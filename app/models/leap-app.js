@@ -153,7 +153,7 @@ var LeapApp = BaseModel.extend({
 
       } else {
 
-        if (this.get('is_v2')) {
+        if (this.get('isV2')) {
 
           str += 'b_'; // l1
 
