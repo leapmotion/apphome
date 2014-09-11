@@ -199,6 +199,9 @@
     mainMenu = new nwGui.Menu({
       type: "menubar"
     });
+    if (os.platform() === 'darwin') {
+      mainMenu.createMacBuiltin("Leap Motion App Home");
+    }
     if (os.platform() === "win32") {
       mainMenu.append(buildFileMenu());
     }
