@@ -219,19 +219,6 @@ var LeapApp = BaseModel.extend({
     return this.get('state') === LeapApp.States.Ready;
   },
 
-  // a v2 app, but v2 tracking not available
-  // for starters, just the former
-  v2Required: function() {
-    var version = leapController.connection.protocol.serviceVersion;
-
-    // not connected to leapd, can't get a full confirmation that v2 is not installed.
-    if (!version) return false;
-
-    var majorVersion = parseInt(version.split('.')[0], 10);
-
-    return this.get('isV2') && majorVersion < 2;
-  },
-
   isRunnable: function() {
     return this.get('state') === LeapApp.States.Ready;
   },

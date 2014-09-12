@@ -59,7 +59,6 @@ var Tile = BaseView.extend({
       app_slug:             this.model.get('slug'),
       short_description:    this.model.getShortDescription(),
       is_v2:                this.model.get('isV2'),
-      v2_required:          this.model.v2Required(),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
       downloading_label:    i18n.translate('Downloading...'),
@@ -67,8 +66,7 @@ var Tile = BaseView.extend({
       moving_label:         i18n.translate('Moving...'),
       opening_label:        i18n.translate('Opening...'),
       launching_label:      i18n.translate('Launching...'),
-      clickToInstall_label: i18n.translate('Click to Install'),
-      v2_required_label:    "Requires V2 Tracking"
+      clickToInstall_label: i18n.translate('Click to Install')
     }));
 
     this.$el.addClass(this._stateToClass(this.model.get('state')));
@@ -99,8 +97,6 @@ var Tile = BaseView.extend({
         this._promptForInstall();
       } else if (this.model.isUpdatable()) {
         this._promptForUpdate();
-      } else if (this.model.v2Required()){
-        nwGui.Shell.openExternal("https://www.leapmotion.com/setup?source=ah-v2required");
       } else if (this.model.isRunnable()) {
         this._launchApp();
       }
