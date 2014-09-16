@@ -25,7 +25,13 @@ ActiveRecord::Base.connection.execute('select * from oauth2_clients limit 1').to
 In to your local database:
 
 ```ruby
-ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, updated_at, name, redirect_uri, website, identifier, secret) VALUES (NOW(), NOW(), 'launcher', 'http://local.leapmotion:3010/', 'http://local.leapmotion:3010/', '73fde9aa45ef818ecb137aeacd886253', '8daf22818f30f4a9f86201d1b276b39c')")
+Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'http://local.leapmotion:3010/', website: 'http://local.leapmotion.com:3010/', identifier: '73fde9aa45ef818ecb137aeacd886253', secret: '8daf22818f30f4a9f86201d1b276b39c')
+```
+
+Or staging:
+
+```ruby
+Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'https://lm-s-warehouse-amnesia.leapmotion.com/', website: 'https://lm-s-warehouse-amnesia.leapmotion.com/', identifier: '73fde9aa45ef818ecb137aeacd886253', secret: '8daf22818f30f4a9f86201d1b276b39c')
 ```
 
 
@@ -37,7 +43,7 @@ ActiveRecord::Base.connection.execute("insert into oauth2_clients (created_at, u
     alias oobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/;  airspace'
 
     # staging (disabled HTTP Basic Auth)
-    alias stairspace='cd $HOME/homebase; CENTRAL_URL=https://lm-s-central-oobeghost.leapmotion.com/ WAREHOUSE_URL=https://lm-s-warehouse-oobeghost.leapmotion.com/ AIRSPACE_URL=https://lm-s-airspace-oobeghost.leapmotion.com/ LEAPHOME_ENV=staging bin/airspace'
+    alias stairspace='cd $HOME/homebase; CENTRAL_URL=https://lm-s-central-amnesia.leapmotion.com/ WAREHOUSE_URL=https://lm-s-warehouse-amnesia.leapmotion.com/ AIRSPACE_URL=https://lm-s-airspace-amnesia.leapmotion.com/ LEAPHOME_ENV=staging bin/airspace'
     alias stoobe='cd $HOME/homebase;rm -rf $HOME/Library/Application\ Support/Leap\ Motion/ $HOME/Library/Application\ Support/Airspace ; rm -rf $HOME/Applications/AirspaceApps/; stairspace'
 
     # production
