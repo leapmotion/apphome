@@ -25,13 +25,13 @@ ActiveRecord::Base.connection.execute('select * from oauth2_clients limit 1').to
 In to your local database:
 
 ```ruby
-Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'http://local.leapmotion:3010/', website: 'http://local.leapmotion.com:3010/', identifier: '73fde9aa45ef818ecb137aeacd886253', secret: '8daf22818f30f4a9f86201d1b276b39c')
+Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'http://local.leapmotion:3010/', website: 'http://local.leapmotion.com:3010/') { |c| c.identifier='73fde9aa45ef818ecb137aeacd886253'; c.secret='8daf22818f30f4a9f86201d1b276b39c' }
 ```
 
 Or staging:
 
 ```ruby
-Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'https://lm-s-warehouse-amnesia.leapmotion.com/', website: 'https://lm-s-warehouse-amnesia.leapmotion.com/', identifier: '73fde9aa45ef818ecb137aeacd886253', secret: '8daf22818f30f4a9f86201d1b276b39c')
+Devise::Oauth2Providable::Client.create!(name: 'launcher', redirect_uri: 'https://lm-s-warehouse-amnesia.leapmotion.com/', website: 'https://lm-s-warehouse-amnesia.leapmotion.com/') { |c| c.identifier='73fde9aa45ef818ecb137aeacd886253'; c.secret='8daf22818f30f4a9f86201d1b276b39c' }
 ```
 
 
