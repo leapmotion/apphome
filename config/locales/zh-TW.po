@@ -616,9 +616,11 @@ msgstr "啟動 Shortcuts"
 msgid "tip 2: starter apps"
 msgstr "提示 2：新手應用程式"
 
-msgid "we thought you’d like to dive right in, so we handpicked some free apps for you. try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgid "we thought you’d like to dive right in, so we handpicked some free apps for you."
 msgstr "我們知道你一定想馬上開始使用，所以我們精心為你挑選了這些免費應用程式。"
 
+msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgstr "先嘗試捷徑應用程式，並以全新方式控制您的音樂、畫面捲動和桌面視窗！"
 msgid "tip 3: ready for more?"
 msgstr "提示 3：準備好獲到更多？"
 

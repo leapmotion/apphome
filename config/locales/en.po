@@ -553,8 +553,11 @@ msgstr "Launch Shortcuts"
 msgid "tip 2: starter apps"
 msgstr "Tip 2: Starter Apps"
 
-msgid "we thought you’d like to dive right in, so we handpicked some free apps for you. try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
-msgstr "We thought you’d like to dive right in, so we handpicked some free apps for you. Try the Shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgid "we thought you’d like to dive right in, so we handpicked some free apps for you."
+msgstr "We thought you’d like to dive right in, so we handpicked some free apps for you."
+
+msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgstr "Try the Shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
 
 msgid "tip 3: ready for more?"
 msgstr "Tip 3: Ready for More?"

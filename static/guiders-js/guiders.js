@@ -28,6 +28,7 @@ window.guiders = (function($) {
     classString: null,
     closeOnEscape: true,
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    appDescription: null,
     highlight: true,
     isHashable: true,
     maxWidth: null,
@@ -172,7 +173,17 @@ window.guiders = (function($) {
       return;
     }
 
-    var attachTo = $(myGuider.attachTo + ':first');
+    var attachTo = $(myGuider.attachTo);
+
+    myGuider.elem.removeClass('guiders_has_app');
+    if (attachTo.length > 0) {
+      if (myGuider.appDescription) {
+        myGuider.elem.addClass('guiders_has_app');
+      }
+    } else {
+      attachTo = $(myGuider.attachToAlternative);
+    }
+
 
     var myHeight = myGuider.elem.innerHeight() * global.uiGlobals.scaling;
     var myWidth = myGuider.elem.innerWidth() * global.uiGlobals.scaling;
@@ -474,6 +485,11 @@ window.guiders = (function($) {
     guiderElement.find(".guiders_heading").html(myGuider.heading);
 
     guiderElement.find(".guiders_description").html(myGuider.description);
+    if (myGuider.appDescription) {
+      var $appDescription = $('<span class="guiders_app_description"></span>');
+      $appDescription.text(' ' + myGuider.appDescription);
+      guiderElement.find(".guiders_description").append($appDescription);
+    }
 
     guiders._addButtons(myGuider);
 
@@ -517,7 +533,7 @@ window.guiders = (function($) {
     $(".guider").fadeOut("fast");
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (currentGuider && currentGuider.highlight) {
-      guiders._dehighlightElement(currentGuider.highlight);
+      guiders._dehighlightElement(currentGuider.attachTo);
     }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
@@ -543,7 +559,7 @@ window.guiders = (function($) {
       var omitHidingOverlay = nextGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
       if (currentGuider && currentGuider.highlight) {
-        guiders._dehighlightElement(currentGuider.highlight);
+        guiders._dehighlightElement(currentGuider.attachTo);
       }
 
       if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
@@ -579,7 +595,7 @@ window.guiders = (function($) {
       var omitHidingOverlay = myGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
       if (prevGuider && prevGuider.highlight) {
-        guiders._dehighlightElement(prevGuider.highlight);
+        guiders._dehighlightElement(prevGuider.attachTo);
       }
       guiders.show(prevGuiderId);
       return myGuider;
