@@ -15,8 +15,11 @@ var Tile = BaseView.extend({
   initializeTile: function() {
     this.injectCss();
 
-    this.iconPath = this.model.get('iconPath') ? this._makeFileUrl(this.model.get('iconPath')) : '';
-    this.tilePath = this._makeFileUrl(this.model.get('tilePath') || config.DefaultTilePath);
+    this.iconPath = this.model.get('iconPath') ? this._makeFileUrl(this.model.get('iconPath'), true) : '';
+    this.tilePath = this._makeFileUrl(
+      (this.model.get('tilePath') || config.DefaultTilePath)
+      , true
+    );
 
     this.listenTo(this.model, 'change:iconPath', function() {
       this.$('.icon').attr('src', this._makeFileUrl(this.model.get('iconPath'), true));
