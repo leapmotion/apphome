@@ -54,7 +54,7 @@ makeGuides = ->
     description: String i18n.translate "We thought you’d like to dive right in, so we handpicked some free apps for you. Try the Shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
     id: 'g_apps'
     next: 'g_store'
-    attachTo: '#shortcuts' # picks the first one
+    attachTo: '#shortcuts'
     position: 6
     highlight: '#shortcuts'
     onClose: onClose
