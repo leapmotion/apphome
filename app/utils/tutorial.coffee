@@ -38,8 +38,10 @@ makeGuides = ->
       name: String i18n.translate 'Launch Shortcuts'
       classString: 'orientation fa fa-rocket guiders_app_button'
       onclick: ->
-        $(this).remove()
-        $('#shortcuts').click()
+        unless $(this).hasClass('disabled')
+          $(this).addClass('disabled')
+          $(this).css('background-color', 'gray')
+          $('#shortcuts').click()
     ,
       name: String i18n.translate 'Back'
       classString: 'back'

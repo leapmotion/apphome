@@ -52,8 +52,11 @@
           name: String(i18n.translate('Launch Shortcuts')),
           classString: 'orientation fa fa-rocket guiders_app_button',
           onclick: function() {
-            $(this).remove();
-            return $('#shortcuts').click();
+            if (!$(this).hasClass('disabled')) {
+              $(this).addClass('disabled');
+              $(this).css('background-color', 'gray');
+              return $('#shortcuts').click();
+            }
           }
         }, {
           name: String(i18n.translate('Back')),
