@@ -36,6 +36,22 @@ var Tile = BaseView.extend({
       this._showOrHideIcon();
     });
 
+    this.listenTo(this.model, 'change:isV2', function() {
+      var isV2 = this.model.get('isV2');
+      if (isV2) {
+        this.$('.ribbon-container').css('visibility', 'visible')
+      } else {
+        this.$('.ribbon-container').css('visibility', 'hidden')
+      }
+
+      // http://stackoverflow.com/questions/7005411/sorting-a-backbone-collection-after-initialization
+      // playground and app store (apparently) have no collection
+      if (this.model.collection){
+        this.model.collection.sort();
+      }
+
+    });
+
     this.listenTo(this.model, 'change:description', function() {
       var description = this.model.getShortDescription();
       this.$('.description').text(description);
