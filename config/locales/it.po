@@ -621,6 +621,7 @@ msgstr "Abbiamo pensato che ti piacerebbe iniziare subito, così abbiamo scelto 
 
 msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
 msgstr "Prova prima l'applicazione Shortcuts e controlla la musica, lo scorrimento e le finestre del desktop in un modo totalmente nuovo!"
+
 msgid "tip 3: ready for more?"
 msgstr "Suggerimento 3: Pronto per altro ancora?"
 

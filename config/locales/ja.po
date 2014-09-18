@@ -621,6 +621,7 @@ msgstr "すぐに楽しめるように無料のアプリを集めておきまし
 
 msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
 msgstr "まずはShortcutsアプリお試しいただき、音楽操作やスクロール、デスクトップウィンドウの操作をまったく新しい形で体験してください。"
+
 msgid "tip 3: ready for more?"
 msgstr "ヒント3: 先に進む用意はいいですか?"
 

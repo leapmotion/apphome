@@ -621,6 +621,7 @@ msgstr "我们知道您希望尽快沉浸于 Leap Motion 的神奇体验中，�
 
 msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
 msgstr "请先尝试 Shortcuts 应用，它能让你以全新的方式来控制你的音乐，屏幕滚动，还有桌面窗口！"
+
 msgid "tip 3: ready for more?"
 msgstr "小贴士 3：准备好迎接更多精彩？"
 
