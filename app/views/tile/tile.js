@@ -15,8 +15,11 @@ var Tile = BaseView.extend({
   initializeTile: function() {
     this.injectCss();
 
-    this.iconPath = this.model.get('iconPath') ? this._makeFileUrl(this.model.get('iconPath')) : '';
-    this.tilePath = this._makeFileUrl(this.model.get('tilePath') || config.DefaultTilePath);
+    this.iconPath = this.model.get('iconPath') ? this._makeFileUrl(this.model.get('iconPath'), true) : '';
+    this.tilePath = this._makeFileUrl(
+      (this.model.get('tilePath') || config.DefaultTilePath)
+      , true
+    );
 
     this.listenTo(this.model, 'change:iconPath', function() {
       this.$('.icon').attr('src', this._makeFileUrl(this.model.get('iconPath'), true));
@@ -31,6 +34,23 @@ var Tile = BaseView.extend({
         this.$('.tile-bg').attr('src', this._makeFileUrl(config.DefaultTilePath));
       }
       this._showOrHideIcon();
+    });
+
+    this.listenTo(this.model, 'change:isV2', function() {
+      var isV2 = this.model.get('isV2');
+      if (isV2) {
+        this.$('.ribbon-container').css('visibility', 'visible')
+      } else {
+        this.$('.ribbon-container').css('visibility', 'hidden')
+      }
+
+      // http://stackoverflow.com/questions/7005411/sorting-a-backbone-collection-after-initialization
+      // playground and app store (apparently) have no collection
+      if (this.model.collection){
+        // sort triggers a redraw.
+        this.model.collection.sort();
+      }
+
     });
 
     this.listenTo(this.model, 'change:description', function() {
