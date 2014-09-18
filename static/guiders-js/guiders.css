@@ -119,6 +119,13 @@
   position: relative;
 }
 
+.guiders_app_description, .guiders_app_button {
+    display: none;
+}
+.guiders_has_app .guiders_app_description, .guiders_has_app .guiders_app_button {
+    display: inline;
+}
+
 .guiders_content h2, .guiders_content h1 {
   color: #444;
   float: left;

@@ -610,11 +610,17 @@ msgstr "Conozca la información básica necesaria de cómo usar el Leap Motion C
 msgid "launch playground"
 msgstr "Iniciar Playground"
 
+msgid "launch shortcuts"
+msgstr "Iniciar Shortcuts"
+
 msgid "tip 2: starter apps"
 msgstr "Consejo 2: Aplicaciones básicas"
 
-msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
+msgid "we thought you’d like to dive right in, so we handpicked some free apps for you."
 msgstr "Consideramos que le gustaría sumergirse de lleno, por lo que seleccionamos personalemente estas aplicaciones gratis para usted."
+
+msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgstr "¡Prueba la aplicación Shortcut primero y controla tu música, desplazamiento y ventanas de escritorio de una forma totalmente nueva!"
 
 msgid "tip 3: ready for more?"
 msgstr "Consejo 3: ¿Preparado para más?"

@@ -610,11 +610,17 @@ msgstr "Playground를 통해 기초적인 Leap Motion Controller 사용법을 �
 msgid "launch playground"
 msgstr "Playground 실행"
 
+msgid "launch shortcuts"
+msgstr "Shortcuts 실행"
+
 msgid "tip 2: starter apps"
 msgstr "팁 2: 초보자를 위한 앱"
 
-msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
+msgid "we thought you’d like to dive right in, so we handpicked some free apps for you."
 msgstr "바로 뛰어들 준비가 되신 것 같은 여러분을 위해 몇몇 공짜 앱을 엄선해 보았습니다."
+
+msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgstr "Shortcuts 앱을 우선 사용해보시고 완전히 새로운 방법으로 당신의 음악과 스크롤링 그리고 데스크탑 윈도우를 조작하세요!"
 
 msgid "tip 3: ready for more?"
 msgstr "팁 3: 준비되셨죠?"
