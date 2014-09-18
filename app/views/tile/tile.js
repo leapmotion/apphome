@@ -47,6 +47,7 @@ var Tile = BaseView.extend({
       // http://stackoverflow.com/questions/7005411/sorting-a-backbone-collection-after-initialization
       // playground and app store (apparently) have no collection
       if (this.model.collection){
+        // sort triggers a redraw.
         this.model.collection.sort();
       }
 
