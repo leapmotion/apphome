@@ -610,10 +610,13 @@ msgstr "前往 Playground 了解如何使用 Leap Motion Controller 的基础知
 msgid "launch playground"
 msgstr "启动 Playground"
 
+msgid "launch shortcuts"
+msgstr "启动 Shortcuts"
+
 msgid "tip 2: starter apps"
 msgstr "小贴士 2：新手应用"
 
-msgid "we thought you'd like to dive right in, so we handpicked these free apps for you."
+msgid "we thought you’d like to dive right in, so we handpicked some free apps for you. try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
 msgstr "我们知道您希望尽快沉浸于 Leap Motion 的神奇体验中，因此我们为您精选了这些免费应用。"
 
 msgid "tip 3: ready for more?"

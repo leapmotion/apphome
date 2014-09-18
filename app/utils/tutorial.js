@@ -50,6 +50,13 @@
     guiders.createGuider({
       buttons: [
         {
+          name: String(i18n.translate('Launch Shortcuts')),
+          classString: 'orientation fa fa-rocket',
+          onclick: function() {
+            $(this).remove();
+            return $('#shortcuts').click();
+          }
+        }, {
           name: String(i18n.translate('Back')),
           classString: 'back',
           onclick: guiders.prev
@@ -60,12 +67,12 @@
         }
       ],
       title: String(i18n.translate("Tip 2: Starter Apps")),
-      description: String(i18n.translate("We thought you'd like to dive right in, so we handpicked these free apps for you.")),
+      description: String(i18n.translate("We thought you’d like to dive right in, so we handpicked some free apps for you. Try the Shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!")),
       id: 'g_apps',
       next: 'g_store',
-      attachTo: '.tile.store',
+      attachTo: '#shortcuts',
       position: 6,
-      highlight: '.tile.store',
+      highlight: '#shortcuts',
       onClose: onClose
     });
     guiders.createGuider({
