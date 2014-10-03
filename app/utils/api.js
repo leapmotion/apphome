@@ -375,7 +375,7 @@
   };
 
   sendDeviceData = function() {
-    var authDataFile, dataDir;
+    var authDataFile, dataDir, waitForDeviceData;
     if (uiGlobals.metricsDisabled) {
       console.log("Would have sent device data if metrics were enabled.");
       return Q();
@@ -386,42 +386,53 @@
       return Q.reject(new Error("Leap Motion data dir unknown for operating system: " + os.platform()));
     }
     authDataFile = path.join(dataDir, "lastauth");
-    if (!fs.existsSync(authDataFile)) {
-      console.log("Auth data file doesn't exist");
-      if (uiGlobals.embeddedDevice) {
-        throw new Error("Auth data file doesn't exist");
+    waitForDeviceData = function(retries, cb) {
+      if (fs.existsSync(authDataFile)) {
+        return cb();
       } else {
-        return Q();
+        if (retries < 1) {
+          if (uiGlobals.embeddedDevice) {
+            throw new Error("Auth data file doesn't exist");
+          } else {
+            return Q();
+          }
+        }
+        console.log("Auth data file " + authDataFile + " not present, trying " + retries + " more times");
+        return Q.delay(config.S3ConnectRetryMs).then(function() {
+          return waitForDeviceData(retries - 1, cb);
+        });
       }
-    }
-    return Q.nfcall(fs.readFile, authDataFile, "utf-8").then(function(authData) {
-      var device_type_override;
-      if (!authData) {
-        console.warn("Auth data file is empty.");
-        throw new Error("Auth data file is empty.");
-      }
-      device_type_override = '';
-      if (embeddedLeap.getEmbeddedDevice() === 'keyboard' && !uiGlobals.canInstallPrebundledApps) {
-        device_type_override = 'TYPE_KEYBOARD_STANDALONE';
-      }
-      return Q.nfcall(oauth.getAccessToken).then(function(accessToken) {
-        return httpHelper.post(config.DeviceDataEndpoint, {
-          access_token: accessToken,
-          data: authData,
-          device_type_override: device_type_override
-        }).then(function() {
-          return console.log("Sent device data.");
+    };
+    return waitForDeviceData(3, function() {
+      return Q.nfcall(fs.readFile, authDataFile, "utf-8").then(function(authData) {
+        var device_type_override;
+        if (!authData) {
+          console.warn("Auth data file is empty.");
+          throw new Error("Auth data file is empty.");
+        }
+        device_type_override = '';
+        if (embeddedLeap.getEmbeddedDevice() === 'keyboard' && !uiGlobals.canInstallPrebundledApps) {
+          device_type_override = 'TYPE_KEYBOARD_STANDALONE';
+        }
+        return Q.nfcall(oauth.getAccessToken).then(function(accessToken) {
+          return httpHelper.post(config.DeviceDataEndpoint, {
+            access_token: accessToken,
+            data: authData,
+            device_type_override: device_type_override
+          }).then(function() {
+            return console.log("Sent device data.");
+          }, function(reason) {
+            console.error("Failed to send device data: " + ((reason != null ? reason.stack : void 0) || reason));
+            throw reason;
+          });
         }, function(reason) {
-          console.error("Failed to send device data: " + ((reason != null ? reason.stack : void 0) || reason));
+          console.warn("Failed to get an access token: " + ((reason != null ? reason.stack : void 0) || reason));
           throw reason;
         });
       }, function(reason) {
-        console.warn("Failed to get an access token: " + ((reason != null ? reason.stack : void 0) || reason));
+        console.warn("Error reading auth data file.");
         throw reason;
       });
-    }, function(reason) {
-      console.warn("Error reading auth data file.");
-      throw reason;
     });
   };
 
