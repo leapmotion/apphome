@@ -309,7 +309,7 @@ sendDeviceData = ->
     console.error "Leap Motion data dir unknown for operating system: " + os.platform()
     return Q.reject new Error "Leap Motion data dir unknown for operating system: " + os.platform()
 
-  authDataFile = path.join(dataDir, "lastauth")
+  authDataFile = path.join(dataDir, "lastauth") # written by control panel on startup and device connect
 
   waitForDeviceData = (retries, cb) ->
     if fs.existsSync authDataFile
