@@ -11,10 +11,13 @@ isFirstGreaterThanSecond = (firstVersion, secondVersion) ->
   secondVersion = parseVersionString(secondVersion)
 
   for i in [0...NumVersionParts]
+    firstVersion[i] ?= 0
+    secondVersion[i] ?= 0
     if firstVersion[i] > secondVersion[i]
       return true
-    else # less than or equal to
+    else if firstVersion[i] < secondVersion[i]
       return false
+  return false # they are equal
 
 areEqual = (firstVersion, secondVersion) ->
   firstVersion = parseVersionString(firstVersion)

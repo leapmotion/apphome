@@ -4,6 +4,7 @@ fs = require("fs-extra")
 os = require("os")
 path = require("path")
 qs = require("querystring")
+semver = require("./semver.js")
 url = require("url")
 
 Q = require("q")
@@ -63,7 +64,7 @@ handleAppJson = (appJson, silent=false) ->
   existingApp = myApps.get(appJson.id) or uninstalledApps.get(appJson.id)
 
   if existingApp
-    if appJson.versionId > existingApp.get("versionId")
+    if semver.isFirstGreaterThanSecond(appJson.version, existingApp.get("version"))
       console.log "Upgrade available for " + existingApp.get("name") + ". New version: " + appJson.version
       existingApp.set "availableUpdate", appJson
     else

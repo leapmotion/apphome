@@ -24,12 +24,19 @@
     firstVersion = parseVersionString(firstVersion);
     secondVersion = parseVersionString(secondVersion);
     for (i = _i = 0; 0 <= NumVersionParts ? _i < NumVersionParts : _i > NumVersionParts; i = 0 <= NumVersionParts ? ++_i : --_i) {
+      if (firstVersion[i] == null) {
+        firstVersion[i] = 0;
+      }
+      if (secondVersion[i] == null) {
+        secondVersion[i] = 0;
+      }
       if (firstVersion[i] > secondVersion[i]) {
         return true;
-      } else {
+      } else if (firstVersion[i] < secondVersion[i]) {
         return false;
       }
     }
+    return false;
   };
 
   areEqual = function(firstVersion, secondVersion) {
