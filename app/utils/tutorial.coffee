@@ -8,6 +8,7 @@ config = require '../../config/config.js'
 ga = require('./ga.js');
 
 guidesMade = false
+osControlSelector = '#touchless-windows,#bettertouchtool,#shortcuts'
 
 makeGuides = ->
   guiders.createGuider
@@ -32,10 +33,12 @@ makeGuides = ->
     attachTo: '#playground'
     position: 6
     onClose: onClose
+    onShow: ->
+      uiGlobals.trigger 'goto', 0, true
 
   guiders.createGuider
     buttons: [
-      name: String i18n.translate 'Launch Shortcuts'
+      name: String i18n.translate('Launch %1$s').fetch($(osControlSelector).find('.name:first').html())
       classString: 'orientation fa fa-rocket guiders_app_button'
       onclick: ->
         unless $(this).hasClass('disabled')
@@ -53,13 +56,15 @@ makeGuides = ->
     ]
     title: String i18n.translate "Tip 2: Starter Apps"
     description: String i18n.translate "We thought you’d like to dive right in, so we handpicked some free apps for you."
-    appDescription: String i18n.translate "Try the Shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
+    appDescription: String i18n.translate("Try the %1$s app first and control your music, scrolling, and desktop windows in a brand new way!").fetch($(osControlSelector).find('.name:first').html())
     id: 'g_apps'
     next: 'g_store'
-    attachTo: '#shortcuts'
+    attachTo: osControlSelector
     attachToAlternative: '.tile.store:first'
     position: 6
     onClose: onClose
+    onShow: ->
+      uiGlobals.trigger 'goto', $('.slides-holder .slide').index($(osControlSelector).closest('.slide').eq(0)), true
 
   guiders.createGuider
     buttons: [
@@ -82,6 +87,8 @@ makeGuides = ->
     attachTo: '#leap-motion-app-store'
     position: 3
     onClose: onClose
+    onShow: ->
+      uiGlobals.trigger 'goto', 0, true
     onHide: ->
       ga.trackEvent 'tutorial/oobe/finished'
       uiGlobals.inTutorial = false
@@ -115,7 +122,6 @@ start = ->
 
   unless uiGlobals.inTutorial
     uiGlobals.inTutorial = true
-    uiGlobals.trigger 'goto', 0
     guiders.show 'g_orientation'
 
 

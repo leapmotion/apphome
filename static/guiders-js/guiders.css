@@ -80,7 +80,7 @@
   font-size: 16px;
   margin-left: 6px;
   min-width: 40px;
-  padding: 12px 50px;
+  padding: 12px 40px;
   text-align: center;
   text-decoration: none;
 }
@@ -88,17 +88,22 @@
 .guiders_button.back {
   background-color: #bfbfbf;
 }
-
-.guiders_button.next {
-  background-color: #5daa00;
+.guiders_button.back:hover {
+  background-color: #ccc !important;
 }
 
-.guiders_button.primary {
+.guiders_button.primary,
+.guiders_button.next,
+.guiders_button.orientation {
   background-color: #5daa00;
+  transition: 0.15s;
+}
+
+.guiders_button:hover {
+  background-color: #6bc300 !important;
 }
 
 .guiders_button.orientation {
-  background-color: #5daa00;
   float: left;
   margin-left: 0;
 }

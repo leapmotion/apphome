@@ -610,8 +610,8 @@ msgstr "プレイグラウンドでLeap Motion Controllerの使い方の基本�
 msgid "launch playground"
 msgstr "プレイグラウンドを起動"
 
-msgid "launch shortcuts"
-msgstr "Launch Shortcuts"
+msgid "launch %1$s"
+msgstr "Launch %1$s"
 
 msgid "tip 2: starter apps"
 msgstr "ヒント2: 最初のアプリ"
@@ -619,8 +619,8 @@ msgstr "ヒント2: 最初のアプリ"
 msgid "we thought you’d like to dive right in, so we handpicked some free apps for you."
 msgstr "すぐに楽しめるように無料のアプリを集めておきました。"
 
-msgid "try the shortcuts app first and control your music, scrolling, and desktop windows in a brand new way!"
-msgstr "まずはShortcutsアプリお試しいただき、音楽操作やスクロール、デスクトップウィンドウの操作をまったく新しい形で体験してください。"
+msgid "try the %1$s app first and control your music, scrolling, and desktop windows in a brand new way!"
+msgstr "まずは%1$sアプリお試しいただき、音楽操作やスクロール、デスクトップウィンドウの操作をまったく新しい形で体験してください。"
 
 msgid "tip 3: ready for more?"
 msgstr "ヒント3: 先に進む用意はいいですか?"
