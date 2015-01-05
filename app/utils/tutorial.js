@@ -52,7 +52,7 @@
     guiders.createGuider({
       buttons: [
         {
-          name: String(i18n.translate('Launch %1$s').fetch($(config.OsControlApps).find('.name:first').html())),
+          name: 'Launch OS control',
           classString: 'orientation fa fa-rocket guiders_app_button',
           onclick: function() {
             if (!$(this).hasClass('disabled')) {
@@ -73,14 +73,18 @@
       ],
       title: String(i18n.translate("Tip 2: Starter Apps")),
       description: String(i18n.translate("We thought you’d like to dive right in, so we handpicked some free apps for you.")),
-      appDescription: String(i18n.translate("Try the %1$s app first and control your music, scrolling, and desktop windows in a brand new way!").fetch($(config.OsControlApps).find('.name:first').html())),
+      appDescription: ' ',
       id: 'g_apps',
       next: 'g_store',
       attachTo: config.OsControlApps,
       attachToAlternative: '.tile.store:first',
       position: 6,
       onClose: onClose,
-      onShow: function() {
+      onShow: function(guider) {
+        var appName;
+        appName = $(config.OsControlApps).find('.name:first').html();
+        $(guider.elem).find('.guiders_app_description').html(String(i18n.translate("Try the %1$s app first and control your music, scrolling, and desktop windows in a brand new way!").fetch(appName)));
+        $(guider.elem).find('.guiders_app_button').html(String(i18n.translate('Launch %1$s').fetch(appName)));
         return uiGlobals.trigger('goto', $('.slides-holder .slide').index($(config.OsControlApps).closest('.slide').eq(0)), true);
       }
     });

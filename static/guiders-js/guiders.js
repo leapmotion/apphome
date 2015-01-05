@@ -487,8 +487,8 @@ window.guiders = (function($) {
     guiderElement.find(".guiders_description").html(myGuider.description);
     if (myGuider.appDescription) {
       var $appDescription = $('<span class="guiders_app_description"></span>');
-      $appDescription.text(' ' + myGuider.appDescription);
-      guiderElement.find(".guiders_description").append($appDescription);
+      guiderElement.find(".guiders_description").append(' ')
+                                                .append($appDescription);
     }
 
     guiders._addButtons(myGuider);
