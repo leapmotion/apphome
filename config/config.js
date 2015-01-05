@@ -10,6 +10,8 @@ var AIRSPACE =  process.env.AIRSPACE_URL  || 'https://airspace.leapmotion.com/';
 
 var config = {
 
+  OsControlApps: '#touchless-windows,#bettertouchtool,#shortcuts',
+
   oauth: {
     endpoint: CENTRAL + 'oauth/',
     client_id: '73fde9aa45ef818ecb137aeacd886253',
