@@ -43,7 +43,7 @@ makeGuides = ->
         unless $(this).hasClass('disabled')
           $(this).addClass('disabled')
           $(this).css('background-color', 'gray')
-          $('#shortcuts').click()
+          $(config.OsControlApps).eq(0).click()
     ,
       name: String i18n.translate 'Back'
       classString: 'back'

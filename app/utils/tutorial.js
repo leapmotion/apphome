@@ -58,7 +58,7 @@
             if (!$(this).hasClass('disabled')) {
               $(this).addClass('disabled');
               $(this).css('background-color', 'gray');
-              return $('#shortcuts').click();
+              return $(config.OsControlApps).eq(0).click();
             }
           }
         }, {
