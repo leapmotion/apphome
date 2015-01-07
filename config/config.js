@@ -65,7 +65,7 @@ var config = {
   ServerConnectRetryMs: 30 * 1000, // 30 seconds
   S3ConnectRetryMs: 10 * 1000, // 10 seconds
   FsScanIntervalMs: 5 * 1000, // 3 seconds
-  AuthLoadTimeoutMs: 30 * 1000, // 30 seconds
+  AuthLoadTimeoutMs: 10 * 1000, // 30 seconds
 
   DownloadChunkSize: 1024 * 1024 * 5, // 5 MB
 

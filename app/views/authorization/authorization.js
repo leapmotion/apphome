@@ -347,7 +347,7 @@ module.exports = BaseView.extend({
   _clearLoadTimeout: function() {
     if (this._loadTimeout) {
       clearTimeout(this._loadTimeout);
-      this._loadTimeoutId = null;
+      this._loadTimeout = null;
     }
   },
 

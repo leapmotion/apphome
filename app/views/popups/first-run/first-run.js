@@ -79,13 +79,15 @@ module.exports = BaseView.extend({
     this._showAuth(true);
   },
 
-  _showAuth: function(newUser) {
+  _showAuth: function(newUser, count) {
+    if (count && count > 4) return;
     this.$el.remove();
 
     var _this = this;
     this.authorizationView.authorize(function(err) {
       if (err) {
         console.warn('Error logging in: ' + err.stack || err);
+        this._showAuth(newUser, (count || 0) + 1);
       } else {
         _this.options.onLoggedIn();
       }
