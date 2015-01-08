@@ -242,6 +242,18 @@ window.guiders = (function($) {
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
 
+    // We need to make sure guider fits the screen. If not, replace the default position with a better one (if found).
+    var offsetIndexPriorityList = [ 6, 9, 3, 12, 4, 5, 7, 1, 2, 8, 10, 11];
+    offsetIndexPriorityList.unshift(myGuider.position); // default position
+    for (var i=0; i < 12; i++) {
+        var index = offsetIndexPriorityList[i];
+        var betterOffset = offsetMap[index];
+        if (  (top+ betterOffset[0] +myGuider.elem.outerHeight() + 60 < $(window).height() && top+ betterOffset[0] > 0) &&
+              (left+ betterOffset[1] +myGuider.elem.outerWidth() + 52 < $(window).width() && left+ betterOffset[1] > 0) ) {
+            myGuider.position = index;
+            break;
+        }
+    }
     var offset = offsetMap[myGuider.position];
     top += offset[0];
     left += offset[1];
