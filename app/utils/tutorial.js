@@ -55,11 +55,7 @@
           name: 'Launch OS control',
           classString: 'orientation fa fa-rocket guiders_app_button',
           onclick: function() {
-            if (!$(this).hasClass('disabled')) {
-              $(this).addClass('disabled');
-              $(this).css('background-color', 'gray');
-              return $(config.OsControlApps).eq(0).click();
-            }
+            return $(config.OsControlApps).eq(0).click();
           }
         }, {
           name: String(i18n.translate('Back')),

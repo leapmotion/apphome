@@ -40,10 +40,7 @@ makeGuides = ->
       name: 'Launch OS control'
       classString: 'orientation fa fa-rocket guiders_app_button'
       onclick: ->
-        unless $(this).hasClass('disabled')
-          $(this).addClass('disabled')
-          $(this).css('background-color', 'gray')
-          $(config.OsControlApps).eq(0).click()
+        $(config.OsControlApps).eq(0).click()
     ,
       name: String i18n.translate 'Back'
       classString: 'back'
