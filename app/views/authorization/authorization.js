@@ -58,7 +58,6 @@ module.exports = BaseView.extend({
               this._startLoadTimeout(cb);
             }.bind(this));
 
-            this._interceptPopupLinks($('body', iframeWindow.document));
             this._clearLoadTimeout();
             this._performActionBasedOnUrl(iframeWindow.location.href, cb);
           } else {
@@ -183,7 +182,7 @@ module.exports = BaseView.extend({
       }
 
       if (($(this).prop('tagName') == 'LABEL') && $(this).hasClass('checkbox')) {
-        $(this).html($(this).html().replace(/I agree to the .*a>\./, i18n.translate('I agree to the %1$s').fetch('<a href="https://www.leapmotion.com/legal/airspace_store_terms_of_service" data-airspace-home-popup="true" target="_blank">' + i18n.translate('App Store Terms of Service') + '</a>.')));
+        $(this).html($(this).html().replace(/I agree to the .*a>\./, i18n.translate('I agree to the %1$s').fetch('<a href="https://www.leapmotion.com/legal/airspace_store_terms_of_service" target="_blank">' + i18n.translate('App Store Terms of Service') + '</a>.')));
         $(this).html($(this).html().replace('Email me Leap Motion news and updates.', i18n.translate('Email me Leap Motion news and updates.')));
       }
     });
@@ -299,25 +298,6 @@ module.exports = BaseView.extend({
     this.$noInternet.hide();
     this.$waiting.show().removeClass('before after').addClass('logout');
     this.$el.css('margin-top', -250);
-  },
-
-  _interceptPopupLinks: function($elem) {
-    $elem.on('click', 'a[data-airspace-home-popup]', function(evt) {
-      evt.preventDefault();
-      var href = $(this).attr('href');
-      if (href) {
-        nwGui.Window.open(href, {
-          width: 640,
-          height: 480,
-          x: 50,
-          y: 50,
-          toolbar: false,
-          icon: 'static/icon/icon.png',
-          'new-instance': true,
-          nodejs: false
-        });
-      }
-    });
   },
 
   _resizeIframe: function() {
