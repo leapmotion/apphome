@@ -433,8 +433,8 @@ msgstr "インストール先を設定して下さい..."
 msgid "i agree to the %1$s"
 msgstr "私は %1$s に同意します"
 
-msgid "airspace terms of service"
-msgstr "Airspace 利用規約"
+msgid "app store terms of service"
+msgstr "App Store 利用規約"
 
 msgid "day"
 msgstr "日"

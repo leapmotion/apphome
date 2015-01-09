@@ -370,8 +370,8 @@ msgstr "Set Install Directory..."
 msgid "i agree to the %1$s"
 msgstr "I agree to the %1$s"
 
-msgid "airspace terms of service"
-msgstr "Airspace Terms of Service"
+msgid "app store terms of service"
+msgstr "App Store Terms of Service"
 
 msgid "day"
 msgstr "Day"

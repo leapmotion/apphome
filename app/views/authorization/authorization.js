@@ -183,7 +183,7 @@ module.exports = BaseView.extend({
       }
 
       if (($(this).prop('tagName') == 'LABEL') && $(this).hasClass('checkbox')) {
-        $(this).html($(this).html().replace(/I agree to the .*a>\./, i18n.translate('I agree to the %1$s').fetch('<a href="https://www.leapmotion.com/legal/airspace_store_terms_of_service" data-airspace-home-popup="true" target="_blank">' + i18n.translate('Airspace Terms of Service') + '</a>.')));
+        $(this).html($(this).html().replace(/I agree to the .*a>\./, i18n.translate('I agree to the %1$s').fetch('<a href="https://www.leapmotion.com/legal/airspace_store_terms_of_service" data-airspace-home-popup="true" target="_blank">' + i18n.translate('App Store Terms of Service') + '</a>.')));
         $(this).html($(this).html().replace('Email me Leap Motion news and updates.', i18n.translate('Email me Leap Motion news and updates.')));
       }
     });

@@ -424,8 +424,8 @@ msgstr "Installationsverzeichnis angeben..."
 msgid "i agree to the %1$s"
 msgstr "Ich stimme den %1$s zu"
 
-msgid "airspace terms of service"
-msgstr "Airspace Geschäftsbedingungen"
+msgid "app store terms of service"
+msgstr "App Store Geschäftsbedingungen"
 
 msgid "day"
 msgstr "Tag"

@@ -433,8 +433,8 @@ msgstr "Création du répertoire d'installation..."
 msgid "i agree to the %1$s"
 msgstr "J'accepte les %1$s"
 
-msgid "airspace terms of service"
-msgstr "Conditions d'utilisation d'Airspace"
+msgid "app store terms of service"
+msgstr "Conditions d'utilisation d'App Store"
 
 msgid "day"
 msgstr "Jour"

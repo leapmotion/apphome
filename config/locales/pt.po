@@ -433,8 +433,8 @@ msgstr "Escolha a pasta para instalação..."
 msgid "i agree to the %1$s"
 msgstr "Concordo com os %1$s"
 
-msgid "airspace terms of service"
-msgstr "Termos de Serviço do Airspace"
+msgid "app store terms of service"
+msgstr "Termos de Serviço do App Store"
 
 msgid "day"
 msgstr "Dia"

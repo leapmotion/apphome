@@ -433,8 +433,8 @@ msgstr "設定安裝目錄..."
 msgid "i agree to the %1$s"
 msgstr "我同意遵守 %1$s"
 
-msgid "airspace terms of service"
-msgstr "Airspace 使用條款"
+msgid "app store terms of service"
+msgstr "App Store 使用條款"
 
 msgid "day"
 msgstr "日"

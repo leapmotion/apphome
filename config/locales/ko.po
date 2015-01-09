@@ -433,8 +433,8 @@ msgstr "설치 디랙토리 설정..."
 msgid "i agree to the %1$s"
 msgstr "%1$s에 동의합니다"
 
-msgid "airspace terms of service"
-msgstr "Airspace 이용 약관"
+msgid "app store terms of service"
+msgstr "App Store 이용 약관"
 
 msgid "day"
 msgstr "일"
