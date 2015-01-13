@@ -249,7 +249,7 @@ window.guiders = (function($) {
         var index = offsetIndexPriorityList[i];
         var betterOffset = offsetMap[index];
         if (  (top+ betterOffset[0] +myGuider.elem.outerHeight() + 60 < $(window).height() && top+ betterOffset[0] > 0) &&
-              (left+ betterOffset[1] +myGuider.elem.outerWidth() + 58 < $(window).width() && left+ betterOffset[1] > 0) ) {
+              (left+ betterOffset[1] +myGuider.elem.outerWidth() + 100 < $(window).width() && left+ betterOffset[1] > 0) ) {
             myGuider.position = index;
             break;
         }
