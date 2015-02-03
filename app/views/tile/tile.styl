@@ -99,9 +99,9 @@ messageState(state, tileOpacity = .7)
     letter-spacing 0.0825em
     span
       display block
-      padding 5px 24px
+      padding 4px 24px
       position relative
-      background #81d41d
+      background #5daa00
       overflow visible
       margin-left 0
       margin-bottom 7px
@@ -109,6 +109,7 @@ messageState(state, tileOpacity = .7)
       text-decoration none
       width auto
       text-align center
+      border-radius 3px
       &:after
         box-sizing border-box
         content ""
@@ -116,20 +117,21 @@ messageState(state, tileOpacity = .7)
         width 0
         display block
         position absolute
-        bottom -7px
-        right 0
-        border-top 7px solid rgba(255,255,255,0.5)
-        border-right 7px solid transparent
+        bottom -5px
+        right 2px
+        border-top 5px solid rgba(52, 93, 0, 0.8)
+        border-right 5px solid transparent
       &:before
         box-sizing border-box
         content ""
-        height 4px
+        height 2px
         background rgba(0, 0, 0, 0.2)
         display block
         position absolute
-        bottom -5px
+        bottom -2px
         left 5px
         right 7px
+        border-bottom-left-radius 3px
 
   .update-notification
     background-color #222
