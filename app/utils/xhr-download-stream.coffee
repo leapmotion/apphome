@@ -36,6 +36,7 @@ XHRDownloadStream = (targetUrl, canceller, chunkSize) ->
     do @unpipe
 
   @_bytesSoFar = 0
+  @_errorsInLastChunk = 0
   @_fileSize = 0
   @_chunkSize = chunkSize
   @_targetUrl = targetUrl
@@ -59,17 +60,24 @@ XHRDownloadStream::_read = (size) ->
 
   @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>
     @_bytesSoFar += data?.length or 0
+    console.log('We got ' + @_bytesSoFar + ' bytes')
 
     if data?.length < chunkSize or (@_fileSize and @_fileSize == @_bytesSoFar)
       @_done = true
 
+    @_errorsInLastChunk = 0
     @push data
   , undefined
   , (bytesLoadedByCurrentRequest) =>
     percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
     @emit "progress", percentComplete
   .fail (reason) =>
-    @emit "error", reason
+    @_errorsInLastChunk += 1
+    if @_errorsInLastChunk >= 4
+      @emit "error", reason
+    else
+      console.log('Error in chunk ' + @_bytesSoFar + ' - ' + (@_bytesSoFar + chunkSize) + ' but trying again ' + (4-@_errorsInLastChunk) + ' more times.')
+      @_read(size)
   .done()
 
 XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->

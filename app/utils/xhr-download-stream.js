@@ -46,6 +46,7 @@
       });
     }
     this._bytesSoFar = 0;
+    this._errorsInLastChunk = 0;
     this._fileSize = 0;
     this._chunkSize = chunkSize;
     this._targetUrl = targetUrl;
@@ -73,9 +74,11 @@
     return this._downloadChunk(this._targetUrl, this._bytesSoFar, this._bytesSoFar + chunkSize).then((function(_this) {
       return function(data) {
         _this._bytesSoFar += (data != null ? data.length : void 0) || 0;
+        console.log('We got ' + _this._bytesSoFar + ' bytes');
         if ((data != null ? data.length : void 0) < chunkSize || (_this._fileSize && _this._fileSize === _this._bytesSoFar)) {
           _this._done = true;
         }
+        _this._errorsInLastChunk = 0;
         return _this.push(data);
       };
     })(this), void 0, (function(_this) {
@@ -88,7 +91,13 @@
       };
     })(this)).fail((function(_this) {
       return function(reason) {
-        return _this.emit("error", reason);
+        _this._errorsInLastChunk += 1;
+        if (_this._errorsInLastChunk >= 4) {
+          return _this.emit("error", reason);
+        } else {
+          console.log('Error in chunk ' + _this._bytesSoFar + ' - ' + (_this._bytesSoFar + chunkSize) + ' but trying again ' + (4 - _this._errorsInLastChunk) + ' more times.');
+          return _this._read(size);
+        }
       };
     })(this)).done();
   };
