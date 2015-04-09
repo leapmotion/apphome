@@ -3,8 +3,6 @@ events = require "events"
 stream = require "stream"
 filesize = require "filesize"
 util = require "util"
-url = require "url"
-oauth = require "./oauth"
 
 Q = require "q"
 
@@ -60,40 +58,27 @@ XHRDownloadStream::_read = (size) ->
     else
       throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
 
-  sendChunkRequest = () =>
-    @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>
-      @_bytesSoFar += data?.length or 0
+  @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>
+    @_bytesSoFar += data?.length or 0
+    console.log('We got ' + @_bytesSoFar + ' bytes')
 
-      if data?.length < chunkSize or (@_fileSize and @_fileSize == @_bytesSoFar)
-        @_done = true
+    if data?.length < chunkSize or (@_fileSize and @_fileSize == @_bytesSoFar)
+      @_done = true
 
-      @_errorsInLastChunk = 0
-      @push data
-    , undefined
-    , (bytesLoadedByCurrentRequest) =>
-      percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
-      @emit "progress", percentComplete
-    .fail (reason) =>
-      @_errorsInLastChunk += 1
-      if @_errorsInLastChunk >= 4
-        @emit "error", reason
-      else
-        console.log('Error in chunk ' + @_bytesSoFar + ' - ' + (@_bytesSoFar + chunkSize) + ' but trying again ' + (4-@_errorsInLastChunk) + ' more times.')
-        setTimeout () =>
-          @_read(size)
-        , 1000
-    .done()
-  urlParts = url.parse(@_targetUrl, true)
-  if urlParts.query.access_token
-    Q.nfcall(oauth.getAccessToken).then (accessToken) =>
-      urlParts.query.access_token = accessToken
-      delete urlParts.search
-      @_targetUrl = url.format(urlParts)
-      sendChunkRequest()
-    .fail (reason) =>
+    @_errorsInLastChunk = 0
+    @push data
+  , undefined
+  , (bytesLoadedByCurrentRequest) =>
+    percentComplete = (@_bytesSoFar + bytesLoadedByCurrentRequest) / @_fileSize if @_fileSize
+    @emit "progress", percentComplete
+  .fail (reason) =>
+    @_errorsInLastChunk += 1
+    if @_errorsInLastChunk >= 4
       @emit "error", reason
-  else
-    sendChunkRequest()
+    else
+      console.log('Error in chunk ' + @_bytesSoFar + ' - ' + (@_bytesSoFar + chunkSize) + ' but trying again ' + (4-@_errorsInLastChunk) + ' more times.')
+      @_read(size)
+  .done()
 
 XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
   xhr = new window.XMLHttpRequest()
@@ -110,9 +95,6 @@ XHRDownloadStream::_downloadChunk = (requestUrl, start, end) ->
     if @status >= 200 and @status <= 299
       # Must use window.Uint8Array instead of the Node.js Uint8Array here because of node-webkit memory wonkiness.
       deferred.resolve new Buffer new window.Uint8Array @response
-    else if @status == 401
-      oauth.resetAccessToken()
-      deferred.reject new Error "Got permission denied – Is your computer clock correct? – Trying to get a new access token for you."
     else
       deferred.reject new Error "Got status code: " + @status + " for chunk " + start + '-' + end
 
