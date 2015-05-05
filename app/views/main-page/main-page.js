@@ -29,6 +29,7 @@ module.exports = BaseView.extend({
       get_support_label: i18n.translate('Get Support'),
       update_label: i18n.translate('Update All'),
       cancel_label: i18n.translate('Cancel All'),
+      signup_label: i18n.translate('Sign Up'),
     }));
     this._initUiClearEvents();
     this._initCarousel();

@@ -261,11 +261,11 @@ _setGlobalUserInformation = (user) ->
   console.log('User with ID ' + user.user_id + ' logged in successfully')
   subscribeToUserChannel user.user_id # purchases
   subscribeToUserReloadChannel user.user_id # reload /myapps
-  unless uiGlobals.is_ghost
-    win = nwGui.Window.get()
-    win.show()
-    win.focus()
-    $('#login-status').css('display', 'none')
+  if uiGlobals.is_ghost
+    $('#login-status').css('display', 'block')
+  win = nwGui.Window.get()
+  win.show()
+  win.focus()
 
 getUserInformation = (cb) ->
   _getStoreManifest (manifest) ->

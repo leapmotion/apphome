@@ -336,12 +336,12 @@
     console.log('User with ID ' + user.user_id + ' logged in successfully');
     subscribeToUserChannel(user.user_id);
     subscribeToUserReloadChannel(user.user_id);
-    if (!uiGlobals.is_ghost) {
-      win = nwGui.Window.get();
-      win.show();
-      win.focus();
-      return $('#login-status').css('display', 'none');
+    if (uiGlobals.is_ghost) {
+      $('#login-status').css('display', 'block');
     }
+    win = nwGui.Window.get();
+    win.show();
+    return win.focus();
   };
 
   getUserInformation = function(cb) {
