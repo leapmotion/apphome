@@ -149,21 +149,29 @@
 
   subscribeToUserReloadChannel = function(userId) {
     return pubnub.subscribe(userId + ".user.reload", function() {
+      var win;
       console.log('Update user identity');
-      nwGui.Window.get().focus();
       console.log('Reset access token');
       if (typeof guiders !== "undefined" && guiders !== null) {
         guiders.hideAll();
       }
       oauth.resetAccessToken();
       console.log('Reconnect to server');
-      return connectToStoreServer();
+      connectToStoreServer();
+      win = nwGui.Window.get();
+      win.show();
+      win.focus();
+      return $('#login-status').css('display', 'none');
     });
   };
 
   subscribeToUserChannel = function(userId) {
     return pubnub.subscribe(userId + ".user.purchased", function(appJson) {
-      nwGui.Window.get().focus();
+      var win;
+      win = nwGui.Window.get();
+      win.show();
+      win.focus();
+      $('#login-status').css('display', 'none');
       if (!((appJson != null) && (config.ServerPlatformToNodePlatform[appJson.platform] || appJson.platform) === os.platform())) {
         return Q();
       }
@@ -318,6 +326,7 @@
   };
 
   _setGlobalUserInformation = function(user) {
+    var win;
     drm.writeXml(user.auth_id, user.secret_token);
     uiGlobals.display_name = user.display_name;
     uiGlobals.is_ghost = user.is_ghost;
@@ -326,7 +335,13 @@
     uiGlobals.user_id = user.user_id;
     console.log('User with ID ' + user.user_id + ' logged in successfully');
     subscribeToUserChannel(user.user_id);
-    return subscribeToUserReloadChannel(user.user_id);
+    subscribeToUserReloadChannel(user.user_id);
+    if (!uiGlobals.is_ghost) {
+      win = nwGui.Window.get();
+      win.show();
+      win.focus();
+      return $('#login-status').css('display', 'none');
+    }
   };
 
   getUserInformation = function(cb) {

@@ -31,8 +31,16 @@ appWindowBindings = ->
   # trying to open in node-webkit.
   $("body").on "click", "a", (evt) ->
     evt.preventDefault()
-    href = $(this).attr("href")
-    nwGui.Shell.openExternal href  if href
+    if href = $(this).attr("href")
+      nwGui.Shell.openExternal href
+    else if $(this).hasClass("sign-to-app-store")
+      oauth.getAccessToken (err, accessToken) ->
+        unless err
+          urlToLaunch = config.oauth.sign_up_url + '?' + qs.stringify(
+            access_token: accessToken
+            _r: config.AirspaceURL + '?sign_up=true'
+          )
+          nwGui.Shell.openExternal urlToLaunch
 
   nwGui.Window.get().on "close", ->
     @hide()

@@ -118,20 +118,25 @@ syncToCollection = (appJsonList, collection, appTest) ->
 subscribeToUserReloadChannel = (userId) ->
   pubnub.subscribe userId + ".user.reload", () ->
     console.log 'Update user identity'
-    nwGui.Window.get().focus()
     console.log 'Reset access token'
     guiders?.hideAll()
     oauth.resetAccessToken()
     console.log 'Reconnect to server'
     connectToStoreServer()
+    win = nwGui.Window.get()
+    win.show()
+    win.focus()
+    $('#login-status').css('display', 'none')
 
 
 subscribeToUserChannel = (userId) ->
   pubnub.subscribe(
     userId + ".user.purchased",
     (appJson) ->
-      # steal focus
-      nwGui.Window.get().focus()
+      win = nwGui.Window.get()
+      win.show()
+      win.focus()
+      $('#login-status').css('display', 'none')
 
       # a notification is sent out for each platform, we select only ours
       unless appJson? and (config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform) is os.platform()
@@ -256,6 +261,11 @@ _setGlobalUserInformation = (user) ->
   console.log('User with ID ' + user.user_id + ' logged in successfully')
   subscribeToUserChannel user.user_id # purchases
   subscribeToUserReloadChannel user.user_id # reload /myapps
+  unless uiGlobals.is_ghost
+    win = nwGui.Window.get()
+    win.show()
+    win.focus()
+    $('#login-status').css('display', 'none')
 
 getUserInformation = (cb) ->
   _getStoreManifest (manifest) ->

@@ -46,9 +46,19 @@
     $("body").on("click", "a", function(evt) {
       var href;
       evt.preventDefault();
-      href = $(this).attr("href");
-      if (href) {
+      if (href = $(this).attr("href")) {
         return nwGui.Shell.openExternal(href);
+      } else if ($(this).hasClass("sign-to-app-store")) {
+        return oauth.getAccessToken(function(err, accessToken) {
+          var urlToLaunch;
+          if (!err) {
+            urlToLaunch = config.oauth.sign_up_url + '?' + qs.stringify({
+              access_token: accessToken,
+              _r: config.AirspaceURL + '?sign_up=true'
+            });
+            return nwGui.Shell.openExternal(urlToLaunch);
+          }
+        });
       }
     });
     nwGui.Window.get().on("close", function() {
