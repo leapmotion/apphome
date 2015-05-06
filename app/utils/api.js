@@ -51,6 +51,7 @@
       appType: appJson.appType,
       name: appJson.name,
       isV2: appJson.is_v2,
+      ribbonText: appJson.ribbon || false,
       platform: config.ServerPlatformToNodePlatform[appJson.platform] || appJson.platform,
       iconUrl: appJson.icon_url,
       tileUrl: appJson.tile_url,
@@ -65,7 +66,7 @@
       cleaned: true
     };
     Object.keys(cleanedAppJson).forEach(function(key) {
-      if (!cleanedAppJson[key]) {
+      if (cleanedAppJson[key] === void 0) {
         return delete cleanedAppJson[key];
       }
     });

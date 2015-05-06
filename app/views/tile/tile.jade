@@ -1,9 +1,9 @@
 li.tile(draggable=true, id=app_slug, class=(store_app ? ' store ' : ''))
   img.tile-bg(src=app.tilePath)
   img.icon(src=app.iconPath)
-  .ribbon-container(style=('visibility: ' + (is_v2 ? 'visible ' : 'hidden ')))
+  .ribbon-container(style=('visibility: ' + (ribbon_text ? 'visible ' : 'hidden ')))
     span
-      = 'V2'
+      = ribbon_text
   i.update-notification.icon-circle-arrow-up
   .hover-overlay-wrapper
     .hover-overlay

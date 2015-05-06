@@ -36,21 +36,22 @@ var Tile = BaseView.extend({
       this._showOrHideIcon();
     });
 
-    this.listenTo(this.model, 'change:isV2', function() {
-      var isV2 = this.model.get('isV2');
-      if (isV2) {
-        this.$('.ribbon-container').css('visibility', 'visible')
+    this.listenTo(this.model, 'change:ribbonText', function() {
+      var ribbon = this.model.get('ribbonText');
+      if (ribbon) {
+        this.$('.ribbon-container').css('visibility', 'visible').find('span:first').text(ribbon);
       } else {
-        this.$('.ribbon-container').css('visibility', 'hidden')
+        this.$('.ribbon-container').css('visibility', 'hidden');
       }
+    });
 
+    this.listenTo(this.model, 'change:isV2', function() {
       // http://stackoverflow.com/questions/7005411/sorting-a-backbone-collection-after-initialization
       // playground and app store (apparently) have no collection
       if (this.model.collection){
         // sort triggers a redraw.
         this.model.collection.sort();
       }
-
     });
 
     this.listenTo(this.model, 'change:description', function() {
@@ -78,7 +79,7 @@ var Tile = BaseView.extend({
       store_app:            this.model.isStoreApp(),
       app_slug:             this.model.get('slug'),
       short_description:    this.model.getShortDescription(),
-      is_v2:                this.model.get('isV2'),
+      ribbon_text:          this.model.get('ribbonText'),
       waiting_label:        i18n.translate('Waiting...'),
       connecting_label:     i18n.translate('Connecting...'),
       downloading_label:    i18n.translate('Downloading...'),

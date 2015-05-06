@@ -32,6 +32,7 @@ cleanAppJson = (appJson) ->
     appType: appJson.appType
     name: appJson.name
     isV2: appJson.is_v2
+    ribbonText: (appJson.ribbon or false)
     platform: config.ServerPlatformToNodePlatform[appJson.platform] or appJson.platform
     iconUrl: appJson.icon_url
     tileUrl: appJson.tile_url
@@ -46,7 +47,7 @@ cleanAppJson = (appJson) ->
     cleaned: true
 
   Object.keys(cleanedAppJson).forEach (key) ->
-    delete cleanedAppJson[key]  unless cleanedAppJson[key]
+    delete cleanedAppJson[key]  if cleanedAppJson[key] == undefined
 
   cleanedAppJson
 
