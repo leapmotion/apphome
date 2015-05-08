@@ -58,7 +58,8 @@ XHRDownloadStream::_read = (size) ->
     unless (@_fileSize and @_bytesSoFar isnt @_fileSize)
       return @push null
     else
-      throw new Error "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
+      @emit "error", "Expected file of size: " + filesize(@_fileSize) + " but got: " + filesize(@_bytesSoFar)
+
 
   sendChunkRequest = () =>
     @_downloadChunk(@_targetUrl, @_bytesSoFar, @_bytesSoFar + chunkSize).then (data) =>

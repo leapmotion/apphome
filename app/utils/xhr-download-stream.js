@@ -72,7 +72,7 @@
       if (!(this._fileSize && this._bytesSoFar !== this._fileSize)) {
         return this.push(null);
       } else {
-        throw new Error("Expected file of size: " + filesize(this._fileSize) + " but got: " + filesize(this._bytesSoFar));
+        this.emit("error", "Expected file of size: " + filesize(this._fileSize) + " but got: " + filesize(this._bytesSoFar));
       }
     }
     sendChunkRequest = (function(_this) {
