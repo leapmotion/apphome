@@ -8,9 +8,12 @@ $tileW = 320px
 
 messageState(state, tileOpacity = .7)
   &.{state}
+    if state is notyetinstalled
+      &:hover
+        .tile-bg
+          -webkit-filter blur(5px)
     .install-overlay
-      unless state is notyetinstalled
-        display block
+      display block
 
       .{state}
         display block
