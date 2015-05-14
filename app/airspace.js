@@ -1,6 +1,7 @@
 var config = require('../config/config.js');
 var installManager = require('./utils/install-manager.js');
 var logging = require('./utils/logging.js');
+var i18n = require('./utils/i18n.js');
 
 var startup = require('./startup.js');
 var crashCounter = require('./utils/crash-counter.js');
@@ -16,6 +17,11 @@ process.on('uncaughtException', function(err) {
   var isProduction = !/^(development|test)$/.test(process.env.LEAPHOME_ENV) && /-/.test(uiGlobals.appVersion); // example release version: 2.1.3-42fd17
   if (IgnoredErrorRegex.test(err.code) || IgnoredErrorRegex.test(err.message)) {
     console.log('Ignoring uncaught network exception: ' + (err.stack || err));
+    return;
+  }
+
+  if (/ENOSPC/.test(err.code) || /ENOSPC/.test(err.message)) {
+    window.alert(i18n.translate('Disk full.'));
     return;
   }
 

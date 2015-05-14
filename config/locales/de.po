@@ -624,3 +624,6 @@ msgstr "App Store starten"
 
 msgid "sign up or sign in"
 msgstr "Anmelden oder einloggen"
+
+msgid "disk full."
+msgstr "Datenträger voll."

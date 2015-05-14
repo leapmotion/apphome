@@ -633,3 +633,6 @@ msgstr "App Storeを起動"
 
 msgid "sign up or sign in"
 msgstr "サインアップまたはサインイン"
+
+msgid "disk full."
+msgstr "ディスクがいっぱいです。"

@@ -633,3 +633,6 @@ msgstr "Lancia l'App Store"
 
 msgid "sign up or sign in"
 msgstr "Registrati o accedi"
+
+msgid "disk full."
+msgstr "Disco pieno."

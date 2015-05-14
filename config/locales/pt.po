@@ -633,3 +633,6 @@ msgstr "Abrir App Store"
 
 msgid "sign up or sign in"
 msgstr "Inscrever-se ou Entrar"
+
+msgid "disk full."
+msgstr "Disco cheio."

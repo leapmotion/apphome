@@ -633,3 +633,6 @@ msgstr "启动 App Store"
 
 msgid "sign up or sign in"
 msgstr "注册或登录"
+
+msgid "disk full."
+msgstr "磁盘已满。"

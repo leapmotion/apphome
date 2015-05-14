@@ -633,3 +633,6 @@ msgstr "App Store 실행"
 
 msgid "sign up or sign in"
 msgstr "로그인 또는 가입"
+
+msgid "disk full."
+msgstr "디스크가 꽉 찼습니다."

@@ -570,3 +570,6 @@ msgstr "Launch App Store"
 
 msgid "sign up or sign in"
 msgstr "Sign Up or Sign In"
+
+msgid "disk full."
+msgstr "Disk full."
