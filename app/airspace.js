@@ -20,6 +20,8 @@ process.on('uncaughtException', function(err) {
     return;
   }
 
+  installManager.cancelAll();
+
   if (/ENOSPC/.test(err.code) || /ENOSPC/.test(err.message)) {
     var footer = $('.footer').css('background', 'red');
     footer.children().hide();
@@ -27,8 +29,6 @@ process.on('uncaughtException', function(err) {
     window.alert(i18n.translate('Disk full.'));
     return;
   }
-
-  installManager.cancelAll();
 
   var errormsg = (err.stack || JSON.stringify(err));
   console.log('closing the app');
