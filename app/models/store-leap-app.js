@@ -129,7 +129,8 @@ module.exports = LeapApp.extend({
         _this.set('state', LeapApp.States.Downloading);
         var downloadPromise = httpHelper.getToDisk(binaryUrl, {
           accessToken: accessToken,
-          canceller: canceller.promise
+          canceller: canceller.promise,
+          finalDir: _this._appDir()
         }).then(function(tempFilename) {
           _this.set('state', LeapApp.States.Installing);
           console.debug('Downloaded ' + _this.get('name') + ' to ' + tempFilename);

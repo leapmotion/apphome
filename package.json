@@ -42,7 +42,8 @@
     "minimatch": "1.0.0",
     "universal-analytics": "~0.3.4",
     "unzip": "git://github.com/leapmotion/node-unzip.git",
-    "adm-zip": "^0.4.4"
+    "adm-zip": "^0.4.4",
+    "diskspace": "0.1.7"
   },
   "devDependencies": {
     "chai": "1.8.x",

@@ -3,6 +3,9 @@ os = require "os"
 path = require "path"
 qs = require "querystring"
 url = require "url"
+db = require("./db")
+i18n = require "./i18n"
+diskspace = require('diskspace')
 
 Q = require "q"
 
@@ -10,6 +13,21 @@ config = require "../../config/config.js"
 
 workingFile = require "./working-file.js"
 XHRDownloadStream = require "./xhr-download-stream.js"
+
+checkPath = (pathToTest) ->
+  if os.platform() == 'win32'
+    pathToTest[0]
+  else
+    path.dirname(pathToTest)
+
+printablePath = (pathToTest) ->
+  if os.platform() == 'win32'
+    pathToTest[0] + ":"
+  else
+    path.dirname(pathToTest)
+
+bytesToMB = (bytecount) ->
+  Math.round(bytecount/10485)/100 + " MB"
 
 getToDisk = (targetUrl, opts) ->
   deferred = Q.defer()
@@ -25,6 +43,7 @@ getToDisk = (targetUrl, opts) ->
   canceller = opts.canceller
 
   destPath = opts.destPath or workingFile.newTempPlatformArchive()
+  finalDir = opts.finalDir or db.fetchObj(config.DbKeys.AppInstallDir)
 
   downloadStream = new XHRDownloadStream targetUrl, canceller, config.DownloadChunkSize
   writeStream = fs.createWriteStream destPath
@@ -56,8 +75,33 @@ getToDisk = (targetUrl, opts) ->
       catch err
         console.warn "Could not cleanup cancelled download: " + (err.stack or err)
 
-  # Get it flowing
-  downloadStream.pipe writeStream
+  console.log('launching getFileSize')
+  downloadStream.getFileSize().then (fileSize) ->
+    # Preference is to check disk space in both temp and final drives, but bail if not possible.
+    diskspace.check checkPath(destPath), (err, total, free, status) =>
+      if fileSize > free
+        window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + printablePath(destPath) + ": " + bytesToMB(free))
+        er = new Error(i18n.translate('Disk full.'))
+        er.cancelled = true
+        deferred.reject er
+      else
+        console.log('Need ' + (fileSize) + 'B from temp directory, got ' + free + ', good to go!')
+        diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
+          # We need to check if the disks in temp and final are the same or different, and demand disk space based on that
+          fileSize2 = fileSize * (if total==total2 && free == free2 then 2.8 else 1.8)
+          if fileSize2 > free2
+            window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize2) + "\n" + printablePath(finalDir) + ": " + bytesToMB(free2))
+            er = new Error(i18n.translate('Disk full.'))
+            er.cancelled = true
+            deferred.reject er
+          else
+            console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!')
+            # Get it flowing
+            downloadStream.pipe writeStream
+  .fail ->
+    # Get it flowing
+    downloadStream.pipe writeStream
+
 
   deferred.promise
 

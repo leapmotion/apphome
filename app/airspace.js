@@ -21,6 +21,9 @@ process.on('uncaughtException', function(err) {
   }
 
   if (/ENOSPC/.test(err.code) || /ENOSPC/.test(err.message)) {
+    var footer = $('.footer').css('background', 'red');
+    footer.children().hide();
+    $("<div class='footer-link' style='color:white' />").text(i18n.translate('Disk full.') + ' ' + i18n.translate('Please restart Leap Motion App Home')).appendTo(footer);
     window.alert(i18n.translate('Disk full.'));
     return;
   }

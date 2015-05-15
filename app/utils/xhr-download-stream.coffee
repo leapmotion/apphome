@@ -8,28 +8,6 @@ oauth = require "./oauth"
 
 Q = require "q"
 
-getFileSize = (requestUrl) ->
-  size = undefined
-  xhr = new window.XMLHttpRequest()
-  deferred = Q.defer()
-
-  xhr.open "HEAD", requestUrl
-
-  xhr.onload = (evt) ->
-    size = Number @getResponseHeader 'Content-Length'
-
-    unless size?
-      deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
-    else
-      console.log 'Downloading', filesize(size), 'file from', requestUrl
-      deferred.resolve(size)
-
-  xhr.onerror = (evt) ->
-    deferred.reject new Error "Error determining filesize for URL: " + requestUrl
-
-  xhr.send()
-  deferred.promise
-
 XHRDownloadStream = (targetUrl, canceller, chunkSize) ->
   stream.Readable.call this
 
@@ -44,12 +22,34 @@ XHRDownloadStream = (targetUrl, canceller, chunkSize) ->
   @_targetUrl = targetUrl
   @_done = false
 
-  getFileSize(targetUrl).then (fileSize) =>
-    @_fileSize = fileSize
-
   return null
 
 util.inherits XHRDownloadStream, stream.Readable
+
+XHRDownloadStream::getFileSize = () ->
+  xhrstream = this
+  requestUrl = @_targetUrl
+  size = undefined
+  xhr = new window.XMLHttpRequest()
+  deferred = Q.defer()
+
+  xhr.open "HEAD", requestUrl
+
+  xhr.onload = (evt) ->
+    size = Number @getResponseHeader 'Content-Length'
+
+    unless size?
+      deferred.reject(new Error("Could not determine filesize for URL: " + requestUrl))
+    else
+      console.log 'Downloading', filesize(size), 'file from', requestUrl
+      deferred.resolve(xhrstream._fileSize = size)
+
+  xhr.onerror = (evt) ->
+    deferred.reject new Error "Error determining filesize for URL: " + requestUrl
+
+  xhr.send()
+  deferred.promise
+
 
 XHRDownloadStream::_read = (size) ->
   chunkSize = @_chunkSize or size
