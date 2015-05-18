@@ -71,7 +71,7 @@ getToDisk = (targetUrl, opts) ->
 
   console.log('launching getFileSize')
   diskFullMessage = (fileSize, path, pathFree) ->
-    window.alert(i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n")
+    window.alert(i18n.translate('Leap Motion App Home') + ': '+ i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n")
 
   downloadStream.getFileSize().then (fileSize) ->
     if finalDir
@@ -82,6 +82,7 @@ getToDisk = (targetUrl, opts) ->
           er = new Error(i18n.translate('Disk full.'))
           er.cancelled = true
           deferred.reject er
+          require('./install-manager').cancelAll()
         else
           console.log('Need ' + (fileSize) + 'B from temp directory, got ' + free + ', good to go!')
           diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
@@ -93,6 +94,7 @@ getToDisk = (targetUrl, opts) ->
               er = new Error(i18n.translate('Disk full.'))
               er.cancelled = true
               deferred.reject er
+              require('./install-manager').cancelAll()
             else
               console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!')
               # Get it flowing

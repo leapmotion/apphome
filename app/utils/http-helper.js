@@ -89,7 +89,7 @@
     }
     console.log('launching getFileSize');
     diskFullMessage = function(fileSize, path, pathFree) {
-      return window.alert(i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n");
+      return window.alert(i18n.translate('Leap Motion App Home') + ': ' + i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n");
     };
     downloadStream.getFileSize().then(function(fileSize) {
       if (finalDir) {
@@ -100,7 +100,8 @@
               diskFullMessage(fileSize, destPath, free);
               er = new Error(i18n.translate('Disk full.'));
               er.cancelled = true;
-              return deferred.reject(er);
+              deferred.reject(er);
+              return require('./install-manager').cancelAll();
             } else {
               console.log('Need ' + fileSize + 'B from temp directory, got ' + free + ', good to go!');
               return diskspace.check(checkPath(finalDir), function(err2, total2, free2, status2) {
@@ -110,7 +111,8 @@
                   diskFullMessage(fileSize2, finalDir, free2);
                   er = new Error(i18n.translate('Disk full.'));
                   er.cancelled = true;
-                  return deferred.reject(er);
+                  deferred.reject(er);
+                  return require('./install-manager').cancelAll();
                 } else {
                   console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!');
                   return downloadStream.pipe(writeStream);
