@@ -70,12 +70,15 @@ getToDisk = (targetUrl, opts) ->
         console.warn "Could not cleanup cancelled download: " + (err.stack or err)
 
   console.log('launching getFileSize')
+  diskFullMessage = (fileSize, path, pathFree) ->
+    window.alert(i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n")
+
   downloadStream.getFileSize().then (fileSize) ->
     if finalDir
       # Preference is to check disk space in both temp and final drives, but bail if not possible.
       diskspace.check checkPath(destPath), (err, total, free, status) =>
         if fileSize > free
-          window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(destPath) + ": " + bytesToMB(free) + "\n")
+          diskFullMessage(fileSize, destPath, free)
           er = new Error(i18n.translate('Disk full.'))
           er.cancelled = true
           deferred.reject er
@@ -83,9 +86,10 @@ getToDisk = (targetUrl, opts) ->
           console.log('Need ' + (fileSize) + 'B from temp directory, got ' + free + ', good to go!')
           diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
             # We need to check if the disks in temp and final are the same or different, and demand disk space based on that
-            fileSize2 = fileSize * (if total==total2 && free == free2 then 2.8 else 1.8)
+            # The ratio 1 (package) : 2.3 (extracted package3) is the approximate ratio of the total space required.
+            fileSize2 = fileSize * (if total==total2 && free == free2 then 3.3 else 2.3)
             if fileSize2 > free2
-              window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize2) + "\n" + checkPath(finalDir) + ": " + bytesToMB(free2) + "\n")
+              diskFullMessage(fileSize2, finalDir, free2)
               er = new Error(i18n.translate('Disk full.'))
               er.cancelled = true
               deferred.reject er

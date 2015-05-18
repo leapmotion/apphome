@@ -39,7 +39,7 @@
   };
 
   getToDisk = function(targetUrl, opts) {
-    var canceller, deferred, destPath, downloadStream, finalDir, urlParts, writeStream;
+    var canceller, deferred, destPath, diskFullMessage, downloadStream, finalDir, urlParts, writeStream;
     deferred = Q.defer();
     opts = opts || {};
     if (!targetUrl) {
@@ -88,13 +88,16 @@
       });
     }
     console.log('launching getFileSize');
+    diskFullMessage = function(fileSize, path, pathFree) {
+      return window.alert(i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n");
+    };
     downloadStream.getFileSize().then(function(fileSize) {
       if (finalDir) {
         return diskspace.check(checkPath(destPath), (function(_this) {
           return function(err, total, free, status) {
             var er;
             if (fileSize > free) {
-              window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(destPath) + ": " + bytesToMB(free) + "\n");
+              diskFullMessage(fileSize, destPath, free);
               er = new Error(i18n.translate('Disk full.'));
               er.cancelled = true;
               return deferred.reject(er);
@@ -102,9 +105,9 @@
               console.log('Need ' + fileSize + 'B from temp directory, got ' + free + ', good to go!');
               return diskspace.check(checkPath(finalDir), function(err2, total2, free2, status2) {
                 var fileSize2;
-                fileSize2 = fileSize * (total === total2 && free === free2 ? 2.8 : 1.8);
+                fileSize2 = fileSize * (total === total2 && free === free2 ? 3.3 : 2.3);
                 if (fileSize2 > free2) {
-                  window.alert(i18n.translate('Disk full.') + "\n\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize2) + "\n" + checkPath(finalDir) + ": " + bytesToMB(free2) + "\n");
+                  diskFullMessage(fileSize2, finalDir, free2);
                   er = new Error(i18n.translate('Disk full.'));
                   er.cancelled = true;
                   return deferred.reject(er);
