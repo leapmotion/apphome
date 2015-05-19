@@ -78,7 +78,7 @@ getToDisk = (targetUrl, opts) ->
       # Preference is to check disk space in both temp and final drives, but bail if not possible.
       diskspace.check checkPath(destPath), (err, total, free, status) =>
         diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
-          # The ratio 1 (package) : 4.2 (extracted package3) is the approximate ratio of the total space required.
+          # The ratio 1 (package) : X (extracted package3) is the approximate ratio of the total space required.
           fileSize2 = fileSize * 4
           console.log('We have ' + free2 + ' of ' + fileSize2 + ' in final directory, ' + free + ' of ' + fileSize + ' in download directory')
           if fileSize2 > free2 || fileSize > free
