@@ -6,6 +6,7 @@ url = require "url"
 db = require("./db")
 i18n = require "./i18n"
 diskspace = require('./diskspace/diskspace')
+popup = require("../views/popups/popup.js")
 
 Q = require "q"
 
@@ -71,7 +72,7 @@ getToDisk = (targetUrl, opts) ->
 
   console.log('launching getFileSize')
   diskFullMessage = (fileSize, path, pathFree) ->
-    window.alert(i18n.translate('Leap Motion App Home') + ': '+ i18n.translate('Disk full.') + "\n" + i18n.translate('File') + ': ' + bytesToMB(fileSize) + "\n" + checkPath(path) + ": " + bytesToMB(pathFree) + "\n")
+    popup.open "disk-full", { required: bytesToMB(fileSize), diskName: checkPath(path) + ':', free: bytesToMB(pathFree) }
 
   downloadStream.getFileSize().then (fileSize) ->
     if finalDir
