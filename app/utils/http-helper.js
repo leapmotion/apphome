@@ -97,7 +97,8 @@
           return function(err, total, free, status) {
             return diskspace.check(checkPath(finalDir), function(err2, total2, free2, status2) {
               var er, fileSize2;
-              fileSize2 = fileSize * (total === total2 && free === free2 ? 3.3 : 2.3);
+              fileSize2 = fileSize * 4;
+              console.log('We have ' + free2 + ' of ' + fileSize2 + ' in final directory, ' + free + ' of ' + fileSize + ' in download directory');
               if (fileSize2 > free2 || fileSize > free) {
                 if (fileSize2 > free2) {
                   diskFullMessage(fileSize2, finalDir, free2);
