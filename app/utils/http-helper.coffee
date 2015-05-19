@@ -77,28 +77,24 @@ getToDisk = (targetUrl, opts) ->
     if finalDir
       # Preference is to check disk space in both temp and final drives, but bail if not possible.
       diskspace.check checkPath(destPath), (err, total, free, status) =>
-        if fileSize > free
-          diskFullMessage(fileSize, destPath, free)
-          er = new Error(i18n.translate('Disk full.'))
-          er.cancelled = true
-          deferred.reject er
-          require('./install-manager').cancelAll()
-        else
-          console.log('Need ' + (fileSize) + 'B from temp directory, got ' + free + ', good to go!')
-          diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
-            # We need to check if the disks in temp and final are the same or different, and demand disk space based on that
-            # The ratio 1 (package) : 2.3 (extracted package3) is the approximate ratio of the total space required.
-            fileSize2 = fileSize * (if total==total2 && free == free2 then 3.3 else 2.3)
+        diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
+          # We need to check if the disks in temp and final are the same or different, and demand disk space based on that
+          # The ratio 1 (package) : 2.3 (extracted package3) is the approximate ratio of the total space required.
+          fileSize2 = fileSize * (if total==total2 && free == free2 then 3.3 else 2.3)
+          if fileSize2 > free2 or fileSize > free
+            # Prefer to show the stricter requirement first.
             if fileSize2 > free2
               diskFullMessage(fileSize2, finalDir, free2)
-              er = new Error(i18n.translate('Disk full.'))
-              er.cancelled = true
-              deferred.reject er
-              require('./install-manager').cancelAll()
             else
-              console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!')
-              # Get it flowing
-              downloadStream.pipe writeStream
+              diskFullMessage(fileSize, destPath, free)
+            er = new Error(i18n.translate('Disk full.'))
+            er.cancelled = true
+            deferred.reject er
+            require('./install-manager').cancelAll()
+          else
+            console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!')
+            # Get it flowing
+            downloadStream.pipe writeStream
     else
       # Just start the download if there's no final app dir.
       downloadStream.pipe writeStream

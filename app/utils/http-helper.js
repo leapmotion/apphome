@@ -95,30 +95,24 @@
       if (finalDir) {
         return diskspace.check(checkPath(destPath), (function(_this) {
           return function(err, total, free, status) {
-            var er;
-            if (fileSize > free) {
-              diskFullMessage(fileSize, destPath, free);
-              er = new Error(i18n.translate('Disk full.'));
-              er.cancelled = true;
-              deferred.reject(er);
-              return require('./install-manager').cancelAll();
-            } else {
-              console.log('Need ' + fileSize + 'B from temp directory, got ' + free + ', good to go!');
-              return diskspace.check(checkPath(finalDir), function(err2, total2, free2, status2) {
-                var fileSize2;
-                fileSize2 = fileSize * (total === total2 && free === free2 ? 3.3 : 2.3);
+            return diskspace.check(checkPath(finalDir), function(err2, total2, free2, status2) {
+              var er, fileSize2;
+              fileSize2 = fileSize * (total === total2 && free === free2 ? 3.3 : 2.3);
+              if (fileSize2 > free2 || fileSize > free) {
                 if (fileSize2 > free2) {
                   diskFullMessage(fileSize2, finalDir, free2);
-                  er = new Error(i18n.translate('Disk full.'));
-                  er.cancelled = true;
-                  deferred.reject(er);
-                  return require('./install-manager').cancelAll();
                 } else {
-                  console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!');
-                  return downloadStream.pipe(writeStream);
+                  diskFullMessage(fileSize, destPath, free);
                 }
-              });
-            }
+                er = new Error(i18n.translate('Disk full.'));
+                er.cancelled = true;
+                deferred.reject(er);
+                return require('./install-manager').cancelAll();
+              } else {
+                console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!');
+                return downloadStream.pipe(writeStream);
+              }
+            });
           };
         })(this));
       } else {
