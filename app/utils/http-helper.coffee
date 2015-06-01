@@ -15,10 +15,14 @@ config = require "../../config/config.js"
 workingFile = require "./working-file.js"
 XHRDownloadStream = require "./xhr-download-stream.js"
 
-checkPath = (pathToTest) ->
+checkPathEnsuringItExists = (pathToTest) ->
   if os.platform() == 'win32'
     pathToTest[0]
   else
+    try
+      fs.mkdirpSync path.dirname(pathToTest)
+    catch mkdirErr
+      console.warn "Error ensuring path exists: " + (err.stack or err)
     path.dirname(pathToTest)
 
 bytesToMB = (bytecount) ->
@@ -72,13 +76,13 @@ getToDisk = (targetUrl, opts) ->
 
   console.log('launching getFileSize')
   diskFullMessage = (fileSize, path, pathFree) ->
-    popup.open "disk-full", { required: bytesToMB(fileSize), diskName: checkPath(path) + ':', free: bytesToMB(pathFree) }
+    popup.open "disk-full", { required: bytesToMB(fileSize), diskName: checkPathEnsuringItExists(path) + ':', free: bytesToMB(pathFree) }
 
   downloadStream.getFileSize().then (fileSize) ->
     if finalDir
       # Preference is to check disk space in both temp and final drives, but bail if not possible.
-      diskspace.check checkPath(destPath), (err, total, free, status) =>
-        diskspace.check checkPath(finalDir), (err2, total2, free2, status2) =>
+      diskspace.check checkPathEnsuringItExists(destPath), (err, total, free, status) =>
+        diskspace.check checkPathEnsuringItExists(finalDir), (err2, total2, free2, status2) =>
           # The ratio 1 (package) : X (extracted package3) is the approximate ratio of the total space required.
           fileSize2 = fileSize * 4
           console.log('We have ' + free2 + ' of ' + fileSize2 + ' in final directory, ' + free + ' of ' + fileSize + ' in download directory')
