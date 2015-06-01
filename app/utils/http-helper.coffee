@@ -1,4 +1,5 @@
 fs = require "fs"
+fsExtra = require "fs-extra"
 os = require "os"
 path = require "path"
 qs = require "querystring"
@@ -20,9 +21,9 @@ checkPathEnsuringItExists = (pathToTest) ->
     pathToTest[0]
   else
     try
-      fs.mkdirpSync path.dirname(pathToTest)
+      fsExtra.mkdirpSync path.dirname(pathToTest)
     catch mkdirErr
-      console.warn "Error ensuring path exists: " + (err.stack or err)
+      console.warn "Error ensuring path exists: " + (mkdirErr.stack or mkdirErr)
     path.dirname(pathToTest)
 
 bytesToMB = (bytecount) ->
