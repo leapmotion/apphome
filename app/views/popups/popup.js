@@ -34,11 +34,15 @@ function openPopup(popupName, options) {
 
     popup.on('close', function() {
       delete singletonPopups[popupName];
-      popup.close(true);
-      popup = null;
+      if (popup) {
+        popup.close(true);
+        popup = null;
+      }
     });
   } else {
-    popup.focus();
+    popup.on('loaded', function() {
+      popup.focus();
+    });
   }
   return popup;
 }
