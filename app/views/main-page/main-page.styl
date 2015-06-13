@@ -56,11 +56,16 @@
     #search-form
       right 80px
 
-      .icon-search
+      .icon-remove, .icon-search
         cursor pointer
-
         &:hover
           color #a1abc9
+
+      .icon-remove
+        font-size 28px
+        margin-right 5px
+        vertical-align middle
+        display none
 
       input#search
         background none
@@ -86,6 +91,9 @@
         .icon-search
           color white
           cursor default
+
+        .icon-remove
+          display inline-block
 
   .page-container
     width 100%
