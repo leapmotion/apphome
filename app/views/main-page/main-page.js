@@ -53,13 +53,20 @@ module.exports = BaseView.extend({
       }
     }).bind(this));
 
-    $('body').click(function(evt) {
-      if ($(evt.target).is('.tile')) {
-        setTimeout(function() {
+    $('body').on('click', '.icon-remove', function(evt) {
+      uiGlobals.trigger('clear-ui');
+    });
+
+    var $search = this.$('#search');
+    $('body').click('.icon-remove', function(evt) {
+      if ($search.val() === '') {
+        if ($(evt.target).is('.tile')) {
+          setTimeout(function() {
+            uiGlobals.trigger('clear-ui');
+          }, 200);
+        } else {
           uiGlobals.trigger('clear-ui');
-        }, 200);
-      } else {
-        uiGlobals.trigger('clear-ui');
+        }
       }
     });
   },
