@@ -1,5 +1,7 @@
 var config = require('../../../config/config.js');
 var i18n = require('../../utils/i18n.js');
+var oauth = require('../../utils/oauth.js');
+var qs = require('querystring');
 
 var BaseView = require('../base-view.js');
 var Slide = require('../slide/slide.js');
@@ -26,7 +28,27 @@ var CarouselView = BaseView.extend({
     this._allTiles = {};
 
     var $emptyMessage = this.$('.empty-message');
-    $emptyMessage.text(options.emptyMessage || i18n.translate('No apps to display.'));
+
+    var titleMessage = options.emptyMessage || i18n.translate('no apps to display.');
+    var $emptyTitle = $('<div>').text(titleMessage);
+    $emptyMessage.append($emptyTitle);
+
+    var discoverMessage = options.discoverMessage || i18n.translate('discover new apps');
+    var $discoverLink = $('<span/>')
+      .addClass('button primary discover')
+      .text(discoverMessage)
+      .on('click', function () {
+        oauth.getAccessToken(function (err, accessToken) {
+          if (err) { return; }
+          nwGui.Shell.openExternal(config.AuthWithAccessTokenUrl + '?' + qs.stringify({
+            access_token: accessToken,
+            _r: config.AirspaceURL
+          }));
+        });
+      });
+    var $emptyBody = $('<div>').addClass('actions').append($discoverLink);
+
+    $emptyMessage.append($emptyBody);
     $emptyMessage.height(config.Layout.emptyMessageHeight);
 
     this._updateSlides();

@@ -59,7 +59,7 @@ var config = {
     nextSlideHeight: 624,
     nextSlideOffset: 16,
     minSlidePadding: 200,
-    emptyMessageHeight: 32
+    emptyMessageHeight: 112
   },
 
   ServerConnectRetryMs: 30 * 1000, // 30 seconds
