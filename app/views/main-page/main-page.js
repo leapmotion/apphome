@@ -53,12 +53,12 @@ module.exports = BaseView.extend({
       }
     }).bind(this));
 
-    $('body').on('click', '.icon-remove', function(evt) {
+    $('body').on('click', '.search-reset-action', function(evt) {
       uiGlobals.trigger('clear-ui');
     });
 
     var $search = this.$('#search');
-    $('body').click('.icon-remove', function(evt) {
+    $('body').click('.search-reset-action', function(evt) {
       if ($search.val() === '') {
         if ($(evt.target).is('.tile')) {
           setTimeout(function() {

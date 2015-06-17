@@ -56,16 +56,22 @@
     #search-form
       right 80px
 
-      .icon-remove, .icon-search
+      .icon-search, .search-reset-action
         cursor pointer
         &:hover
           color #a1abc9
 
-      .icon-remove
-        font-size 28px
-        margin-right 5px
+      .search-reset-action
+        background-image url(static/images/close-icon@2x.png)
+        background-repeat no-repeat
+        background-size 16px 16px
+        width 16px
+        height 16px
+        margin-right 6px
         vertical-align middle
         display none
+        &:hover
+          background-image url(static/images/close-icon-hover@2x.png)
 
       input#search
         background none
@@ -92,7 +98,7 @@
           color white
           cursor default
 
-        .icon-remove
+        .search-reset-action
           display inline-block
 
   .page-container
