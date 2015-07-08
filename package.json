@@ -38,6 +38,7 @@
     "filesize": "~2.0.0",
     "walker": "~1.0.5",
     "nw-gyp": "~0.10.9",
+    "request": "2.53.0",
     "rimraf": "2.2.8",
     "minimatch": "1.0.0",
     "universal-analytics": "~0.3.4",
