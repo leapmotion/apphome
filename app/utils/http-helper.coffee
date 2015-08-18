@@ -79,33 +79,35 @@ getToDisk = (targetUrl, opts) ->
   diskFullMessage = (fileSize, path, pathFree) ->
     popup.open "disk-full", { required: bytesToMB(fileSize), diskName: checkPathEnsuringItExists(path) + ':', free: bytesToMB(pathFree) }
 
-  downloadStream.getFileSize().then (fileSize) ->
+  downloadStream.getFileSize().then (fileSize1) ->
     if finalDir
       # Preference is to check disk space in both temp and final drives, but bail if not possible.
-      diskspace.check checkPathEnsuringItExists(destPath), (err, total, free, status) =>
+      diskspace.check checkPathEnsuringItExists(destPath), (err1, total1, free1, status1) =>
         diskspace.check checkPathEnsuringItExists(finalDir), (err2, total2, free2, status2) =>
           # The ratio 1 (package) : X (extracted package3) is the approximate ratio of the total space required.
-          fileSize2 = fileSize * 4
-          console.log('We have ' + free2 + ' of ' + fileSize2 + ' in final directory, ' + free + ' of ' + fileSize + ' in download directory')
-          if fileSize2 > free2 || fileSize > free
+          fileSize2 = fileSize1 * 4
+          console.log "We have #{free2} of #{fileSize2} in final directory, #{free1} of #{fileSize1} in download directory"
+          if total1 is 0 and total2 is 0
+            console.error err1 if err1
+            console.error err2 if err2
+            console.log "Invalid disk space check result, trying to install anyway..."
+            downloadStream.pipe writeStream
+          else if fileSize2 > free2 || fileSize1 > free1
             # Prefer to show the stricter requirement first.
             if fileSize2 > free2
               diskFullMessage(fileSize2, finalDir, free2)
             else
-              diskFullMessage(fileSize, destPath, free)
+              diskFullMessage(fileSize1, destPath, free1)
             er = new Error(i18n.translate('Disk full.'))
             er.cancelled = true
             deferred.reject er
             require('./install-manager').cancelAll()
           else
-            console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!')
-            # Get it flowing
+            console.log "Need #{fileSize2}B from final directory, got #{free2}, good to go!"
             downloadStream.pipe writeStream
     else
-      # Just start the download if there's no final app dir.
       downloadStream.pipe writeStream
   .fail ->
-    # Get it flowing
     downloadStream.pipe writeStream
 
 

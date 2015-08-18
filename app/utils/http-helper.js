@@ -106,26 +106,35 @@
         free: bytesToMB(pathFree)
       });
     };
-    downloadStream.getFileSize().then(function(fileSize) {
+    downloadStream.getFileSize().then(function(fileSize1) {
       if (finalDir) {
         return diskspace.check(checkPathEnsuringItExists(destPath), (function(_this) {
-          return function(err, total, free, status) {
+          return function(err1, total1, free1, status1) {
             return diskspace.check(checkPathEnsuringItExists(finalDir), function(err2, total2, free2, status2) {
               var er, fileSize2;
-              fileSize2 = fileSize * 4;
-              console.log('We have ' + free2 + ' of ' + fileSize2 + ' in final directory, ' + free + ' of ' + fileSize + ' in download directory');
-              if (fileSize2 > free2 || fileSize > free) {
+              fileSize2 = fileSize1 * 4;
+              console.log("We have " + free2 + " of " + fileSize2 + " in final directory, " + free1 + " of " + fileSize1 + " in download directory");
+              if (total1 === 0 && total2 === 0) {
+                if (err1) {
+                  console.error(err1);
+                }
+                if (err2) {
+                  console.error(err2);
+                }
+                console.log("Invalid disk space check result, trying to install anyway...");
+                return downloadStream.pipe(writeStream);
+              } else if (fileSize2 > free2 || fileSize1 > free1) {
                 if (fileSize2 > free2) {
                   diskFullMessage(fileSize2, finalDir, free2);
                 } else {
-                  diskFullMessage(fileSize, destPath, free);
+                  diskFullMessage(fileSize1, destPath, free1);
                 }
                 er = new Error(i18n.translate('Disk full.'));
                 er.cancelled = true;
                 deferred.reject(er);
                 return require('./install-manager').cancelAll();
               } else {
-                console.log('Need ' + fileSize2 + 'B from final directory, got ' + free2 + ', good to go!');
+                console.log("Need " + fileSize2 + "B from final directory, got " + free2 + ", good to go!");
                 return downloadStream.pipe(writeStream);
               }
             });
