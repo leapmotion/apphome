@@ -34,7 +34,7 @@ fi
 _retries=0
 while [ ${_retries} -lt 5 -a ! -d build_products ]; do
   mv windows build_products && true
-  ((_retries++))
+  _retries=$((_retries+1))
   sleep 5
 done
 
