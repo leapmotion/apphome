@@ -193,10 +193,7 @@ function buildForWindows(cb) {
 
     async.series([
       getExecFn(setIconCommand),
-      getExecFn(setExeDetailsCommand),
-      function (cb) {
-        fs.copy(path.join(__dirname, '..', 'script', 'Airspace_NoGPU.cmd'), path.join(buildDir(platform), 'Airspace_NoGPU.cmd'), cb);
-      }
+      getExecFn(setExeDetailsCommand)
     ], function(err) {
       if (err) {
         return cb(err);
