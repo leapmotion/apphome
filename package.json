@@ -38,7 +38,7 @@
     "filesize": "~2.0.0",
     "walker": "~1.0.5",
     "nw-gyp": "~0.10.9",
-    "request": "2.51.0",
+    "request": "2.88.2",
     "node-uuid" : "1.4.2",
     "rimraf": "2.2.8",
     "minimatch": "1.0.0",
