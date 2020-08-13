@@ -106,16 +106,16 @@ function vcp() {
     _src=${_dst}
     _dst=${_a}
   done
-  
+
   #if present in the _dst string the mounted share root
   #will be replaced with an scp user, server, directory specification
-  _scp_dst=${_dst/${SHARE_ROOT}/tombuilder@ocuserv2:\/var}
+  _scp_dst=${_dst/${SHARE_ROOT}/tombuilder@lm-filer-01:\/var}
 
   #if a substitution was done and the source is a regular file
   #use scp instead. this is a workaround for the problem of files
   #disappearing from the share folders. fedora samba is the current suspect.
   #if this fixes it we know that's where to look.
-  if [ "$(hostname)" != "ocuserv2.leap.corp" -a -f "${_src}" -a "${_dst}" != "${_scp_dst}" -a "${LOCAL_BUILD}" != "true" ]; then
+  if [ "$(hostname)" != "lm-filer-01.leap.corp" -a -f "${_src}" -a "${_dst}" != "${_scp_dst}" -a "${LOCAL_BUILD}" != "true" ]; then
     echo "${_src} --> ${_scp_dst}"
     if scp -pB "${_src}" "${_scp_dst}"; then
       return 0

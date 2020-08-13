@@ -32,7 +32,7 @@ if [ "$(whoami)" = 'bherrera-laptop\benn' ]; then
   #when missing.
   #export WORKSPACE="${HOME}/LeapMotion/platform"
   #so local test builds don't get copied to actual share locations.
-  #also saves on network copying of //ocuserv2/common/Docs - local (probably out of date) copy
+  #also saves on network copying of //lm-filer-01/common/Docs - local (probably out of date) copy
   #exists in /c/LeapMotion/Common/Docs to allow the test build to run.
   export SHARE_ROOT="/c/LeapMotion"
   
