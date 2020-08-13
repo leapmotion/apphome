@@ -35,7 +35,7 @@ _default_build_plat=win
 
 export SHARE_ROOT
 if [ ! -n "${SHARE_ROOT}" ]; then
-  SHARE_ROOT="//lm-filer-01"
+  SHARE_ROOT="//lm-filer-01/Archive"
 fi
 
 # avoid overriding _plat_script_dir as environ.sh is called by others
