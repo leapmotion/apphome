@@ -6,7 +6,7 @@
 - [node-webkit](https://github.com/rogerwang/node-webkit#downloads)
 - [chromedriver](https://github.com/rogerwang/node-webkit/wiki/chromedriver) for running tests
 
-### Copy node-webkit to your /opt/local or C:\Libraries-x86, depending on your OS (i.e.):
+### Copy node-webkit to your /opt/local or C:\Libraries-x86_vc141, depending on your OS (i.e.):
 
     sudo cp -r ~/Downloads/node-webkit-v*.*.*-osx-ia32/node-webkit.app /opt/local/Libraries/node-webkit-v*.*.*-osx-ia32/
 

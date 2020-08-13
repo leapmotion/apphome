@@ -160,7 +160,7 @@ var config = {
   },
 
   PlatformLibrariesDir: {
-    win32:  'C:\\Libraries-x86',
+    win32:  'C:\\Libraries-x86_vc141',
     darwin: '/opt/local/Libraries',
     linux:  '/opt/local/Libraries',
   },
