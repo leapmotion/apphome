@@ -13,8 +13,8 @@ fi
 
 cd "${AIRSPACE_REPO_DIR}"
 mkdir -p node_modules
-"${NPM}" install archiver
-"${NPM}" install 
+"${NPM}" install archiver@1.2.0
+"${NPM}" install
 
 cd "${AIRSPACE_REPO_DIR}/bin"
 _winnode=$(echo "${NODE}" | sed 's/\//\\/g' | sed 's/\\c\\/C:\\/')
