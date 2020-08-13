@@ -13,7 +13,7 @@ fi
 
 cd "${AIRSPACE_REPO_DIR}"
 mkdir -p node_modules
-"${NPM}" install archiver@1.2.0
+"${NPM}" install archiver@1.2.0 fs-extra@0.6.1 readable-stream@2.2.2 tar-stream@1.5.2 glob@7.1.1 async@2.1.4 lodash@4.17.2
 "${NPM}" install
 
 cd "${AIRSPACE_REPO_DIR}/bin"
