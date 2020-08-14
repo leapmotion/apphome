@@ -115,19 +115,24 @@ function vcp() {
   #use scp instead. this is a workaround for the problem of files
   #disappearing from the share folders. fedora samba is the current suspect.
   #if this fixes it we know that's where to look.
-  if [ "$(hostname)" != "lm-filer-01.leap.corp" -a -f "${_src}" -a "${_dst}" != "${_scp_dst}" -a "${LOCAL_BUILD}" != "true" ]; then
-    echo "${_src} --> ${_scp_dst}"
-    if scp -pB "${_src}" "${_scp_dst}"; then
-      return 0
-    fi
-  else
-    if cp -v "${@}"; then
-      return 0
-    fi
+  
+  # if [ "$(hostname)" != "lm-filer-01.leap.corp" -a -f "${_src}" -a "${_dst}" != "${_scp_dst}" -a "${LOCAL_BUILD}" != "true" ]; then
+  #   echo "${_src} --> ${_scp_dst}"
+  #   if scp -pB "${_src}" "${_scp_dst}"; then
+  #     return 0
+  #   fi
+  # else
+  #   if cp -v "${@}"; then
+  #     return 0
+  #   fi
+  # fi
+
+  if cp -v "${@}"; then
+    return 0
   fi
-  
+
   1>&2 echo "Error: File copy failed - Exiting."
-  
+
   exit 1
 }
 
